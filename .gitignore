@@ -34,3 +34,5 @@ build/
 
 src/main/resources/**/*.xml
 src/main/resources/*.properties
+
+.dbeaver
