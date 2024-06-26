@@ -34,3 +34,4 @@ build/
 
 src/main/resources/**/*.xml
 src/main/resources/*.properties
+**/.DS_Store
