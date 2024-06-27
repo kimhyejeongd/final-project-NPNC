@@ -193,7 +193,7 @@
             <ul class="friend-list">
                 <c:forEach var="m" items="${members}">
                     <c:if test="${m.memberId != loginMember.memberId}">
-                        <li class="friend-item" data-member-no="${m.memberNo}">
+                        <li class="friend-item" data-member-no="${m.memberKey}">
                             <img src="profile1.jpg" alt="프로필 사진">
                             <div class="friend-info">
                                 <div class="friend-name">${m.memberId}</div>
@@ -237,7 +237,7 @@
             <ul class="friend-list" id="modalFriendList">
                 <c:forEach var="m" items="${members}">
                     <c:if test="${m.memberId != loginMember.memberId}">
-                        <li class="friend-item" data-member-no="${m.memberNo}">
+                        <li class="friend-item" data-member-no="${m.memberKey}">
                             <img src="profile1.jpg" alt="프로필 사진">
                             <div class="friend-info">
                                 <div class="friend-name">${m.memberId}</div>
@@ -322,7 +322,7 @@
             $('<input>').attr({
                 'type': 'hidden',
                 'name': 'memberNo',
-                'value': '${loginMember.memberNo}'
+                'value': '${loginMember.memberKey}'
             }).appendTo(form);
 
             // 폼을 body에 추가하고 전송
@@ -394,25 +394,25 @@
         });
 
         function subscribeToRoom(roomId, recentMessageElement) {
-            var socket = new SockJS('http://localhost:8082/sock/ws-stomp');
+            var socket = new SockJS('http://localhost:8080/ws-stomp');
             var stompClient = Stomp.over(socket);
             stompClient.connect({}, function(frame) {
                 console.log('Connected to room ' + roomId + ': ' + frame);
                 stompClient.subscribe('/room/' + roomId, function(chatMessage) {
                     var message = JSON.parse(chatMessage.body);
-                    recentMessageElement.text(message.message);
+                    recentMessageElement.text(message.chatMsgDetail);
                 });
             });
         }
         
-        function loadChat(roomId, recentMessageElement) {
+        function loadChat(chatRoomKey, recentMessageElement) {
             $.ajax({
                 url: '${path}/loadRecentChat', // 서버 요청 URL
                 type: 'POST',
-                data: { roomId: roomId },
+                data: { chatRoomKey: chatRoomKey },
                 success: function(response) {
                     console.log(response + "===loadRecentChat======");
-                    var recentMessage = response.length > 0 ? response[response.length-1].message : '최근 메시지 없음';
+                    var recentMessage = response.length > 0 ? response[response.length-1].chatMsgDetail : '최근 메시지 없음';
                     recentMessageElement.text(recentMessage);
                 },
                 error: function(error) {
