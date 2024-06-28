@@ -175,7 +175,7 @@
     }
 
     function connect() {
-        var socket = new SockJS('http://localhost:8082/sock/ws-stomp');
+        var socket = new SockJS('http://localhost:8080/ws-stomp');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             setConnected(true);
@@ -207,10 +207,10 @@ function sendChat() {
 
     stompClient.send("/send/" + roomId, {},
         JSON.stringify({
-            'roomId': roomId,
-            'memberNo': '${loginMember.memberNo}', 
-            'message': message,
-            'sendDate': new Date().toISOString()
+            'chatRoomKey': roomId,
+            'memberKey': '${loginMember.memberKey}', 
+            'chatMsgDetail': message,
+            'chatMsgTime': new Date().toISOString()
         }));
     $('#message').val('');
     $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
@@ -229,57 +229,30 @@ function formatDateTime(timestamp) {
 }
 //loadChat 함수
 function loadChat(chatList) {
+    console.log("loadChat");
     if (chatList != null) {
         for (var chat in chatList) {
             (function(chat) { // 클로저를 사용하여 각 chat 변수를 고정
-                var messageClass = chatList[chat].memberNo.toString() === '${loginMember.memberNo}' ? 'sent' : 'received';
-                console.log("dsanlkdsankl++++++" + chatList[chat].memberNo);
-                console.log("dsanlkdsankl++++++" + '${loginMember.memberNo}' + "멤버");
+                var messageClass = chatList[chat].memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
+                console.log("dsanlkdsankl++++++" + chatList[chat].memberKey);
+                console.log("dsanlkdsankl++++++" + '${loginMember.memberKey}' + "멤버");
 
-                var formattedTime = formatDateTime(chatList[chat].sendDate);
+                var formattedTime = formatDateTime(chatList[chat].chatMsgTime);
 
-                $.ajax({
-                    url: '${path}/updateReadStatus',
-                    method: 'POST',
-                    data: {
-                        chatId: chatList[chat].chatId,
-                        memberNo: '${loginMember.memberNo}'
-                    },
-                    success: function(response) {
-                        console.log("Read status updated successfully for chatId: " + chatList[chat].chatId);
+                // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
+                var unreadCount = 0;
+                var messageElement = $(
+                    '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
+                    + '<div class="sender">' + chatList[chat].memberKey + '</div>'
+                    + chatList[chat].chatMsgDetail 
+                    + '<div class="sendDate">' + formattedTime + '</div>'
+                    + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 추가된 부분
+                    + '</div></div>'
+                );
 
-                        // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
-                        var unreadCount = chatList[chat].readCount > 0 ? chatList[chat].readCount - 1 : 0;
-                        var messageElement = $(
-                            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                            + '<div class="sender">' + chatList[chat].memberNo + '</div>'
-                            + chatList[chat].message 
-                            + '<div class="sendDate">' + formattedTime + '</div>'
-                            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 추가된 부분
-                            + '</div></div>'
-                        );
+                $("#chatting").append(messageElement);
+                $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
 
-                        $("#chatting").append(messageElement);
-                        $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-                    },
-                    error: function(error) {
-                        console.log("Error updating read status for chatId: " + chatList[chat].chatId, error);
-
-                        // 읽음 상태 업데이트 실패 시 원래의 unreadCount로 메시지를 화면에 표시
-                        var unreadCount = chatList[chat].readCount;
-                        var messageElement = $(
-                            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                            + '<div class="sender">' + chatList[chat].memberNo + '</div>'
-                            + chatList[chat].message 
-                            + '<div class="sendDate">' + formattedTime + '</div>'
-                            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 추가된 부분
-                            + '</div></div>'
-                        );
-
-                        $("#chatting").append(messageElement);
-                        $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-                    }
-                });
             })(chat); // 클로저 사용
         }
     }
@@ -288,8 +261,9 @@ function loadChat(chatList) {
 
 
 
+
 // showChat 함수
-function showChat(chatMessage) {
+/* function showChat(chatMessage) {
     var message = JSON.parse(chatMessage.body);
     console.log(message);
 
@@ -298,17 +272,17 @@ function showChat(chatMessage) {
         method: 'POST',
         data: {
             chatId: message.chatId,
-            memberNo: '${loginMember.memberNo}'
+            memberNo: '${loginMember.memberKey}'
         },
         success: function(response) {
             console.log("Read status updated successfully.");
 
             // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
-            var messageClass = message.memberNo.toString() === '${loginMember.memberNo}' ? 'sent' : 'received';
+            var messageClass = message.memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
             var unreadCount = message.readCount > 0 ? message.readCount - 1 : 0;
             var messageElement = $(
                 '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                + '<div class="sender">' + message.memberNo + '</div>'
+                + '<div class="sender">' + message.memberKey + '</div>'
                 + message.message 
                 + '<div class="sendDate">' + formatDateTime(message.sendDate) + '</div>'
                 + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 수정된 부분
@@ -322,7 +296,28 @@ function showChat(chatMessage) {
             console.log("Error updating read status:", error);
         }
     });
+} */
+
+function showChat(chatMessage) {
+    var message = JSON.parse(chatMessage.body);
+    console.log(message);
+
+    // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
+    var messageClass = message.memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
+    var unreadCount = 0;
+    var messageElement = $(
+        '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
+        + '<div class="sender">' + message.memberKey + '</div>'
+        + message.chatMsgDetail 
+        + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'
+        + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 수정된 부분
+        + '</div></div>'
+    );
+
+    $("#chatting").append(messageElement);
+    $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
 }
+
 
 
 
