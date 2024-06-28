@@ -17,9 +17,9 @@ public class JobDaoImpl implements JobDao {
 	}
 
 	@Override
-	public int insertJob(SqlSession session, Job j) {
+	public int insertJob(SqlSession session, String jobName) {
 		
-		return session.insert("job.insertJob",j);
+		return session.insert("job.insertJob",jobName);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class JobDaoImpl implements JobDao {
 	}
 
 	@Override
-	public int deleteJob(SqlSession session, int jobKey) {
+	public int deleteJob(SqlSession session, String jobKey) {
 		return session.delete("job.deleteJob",jobKey);
 	}
 

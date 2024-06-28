@@ -7,8 +7,8 @@ import com.project.npnc.job.model.dto.Job;
 public interface JobService {
 	
 	List<Job> selectJobAll();
-	int insertJob(Job j);
+	int insertJob(String jobName);
 	int updateJob(Job j);
-	int deleteJob(int jobKey);
+	int deleteJob(String jobKey);
 	
 }

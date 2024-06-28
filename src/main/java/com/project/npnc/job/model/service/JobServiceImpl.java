@@ -24,9 +24,9 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public int insertJob(Job j) {
+	public int insertJob(String jobName) {
 		
-		return dao.insertJob(session, j);
+		return dao.insertJob(session, jobName);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public int deleteJob(int jobKey) {
+	public int deleteJob(String jobKey) {
 		
 		return dao.deleteJob(session, jobKey);
 	}

@@ -19,20 +19,19 @@ public class JobController {
 	private final JobService service;
 	
 	
-	@GetMapping("/insertjob.do")
-	public void insertJob() {}
-	
-	@PostMapping("/insertjobend.do")
-	public String insertJob(Job j,Model m) {
-		int result=service.insertJob(j);
+	@PostMapping("/insertjob.do")
+	public String insertJob(String jobName,Model m) {
+		int result=service.insertJob(jobName);
 		String msg,loc;
 		if(result>0) {
 			msg="등록성공";
-			loc="/";
+			loc="/job/selectjoball.do";
 		}else {
 			msg="등록실패";
-			loc="/";
+			loc="/job/selectjoball.do";
 		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
 		return "common/msg";
 	}
 	
@@ -43,21 +42,23 @@ public class JobController {
 	}
 	
 	@PostMapping("/deletejob.do")
-	public String deleteJob(int jobKey,Model m) {
-		int result=service.deleteJob(jobKey);
+	public String deleteJob(String key,Model m) {
+		int result=service.deleteJob(key);
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/";
+			loc="/job/selectjoball.do";
 		}else {
 			msg="삭제실패";
-			loc="/";
+			loc="/job/selectjoball.do";
 		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
 		return "common/msg";
 	}
 	
 	@PostMapping("/updatejob.do")
-	public String updateJob(int key,int jobName,Model m) {
+	public String updateJob(String key,String jobName,Model m) {
 		m.addAttribute("key",key);
 		m.addAttribute("jobName",jobName);
 		
@@ -72,11 +73,14 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="수정성공";
-			loc="/joblist";
+			loc="/job/selectjoball.do";
 		}else {
 			msg="수정실패";
-			loc="/joblist";
+			loc="/job/selectjoball.do";
 		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		
 		return "common/msg";
 	}
 	

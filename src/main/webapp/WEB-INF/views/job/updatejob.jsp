@@ -8,9 +8,9 @@
 </head>
 <body>
 	<form action="${path }/job/updatejobend.do" method="post">
-		직급코드<input type="text" name="jobKey" value="${key}">
+		직급코드<input type="text" name="jobKey" value="${key}" readonly>
 		직급명<input type="text" name="jobName" value="${jobName}">
-		<input type="submit" value="등록">
+		<input type="submit" value="수정">
 	</form>
 </body>
 </html>

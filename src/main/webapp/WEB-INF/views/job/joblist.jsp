@@ -9,8 +9,7 @@
 </head>
 <body>
 	<div>	
-		<form action="${path }/job/insertjobend.do" method="post">
-			직급코드<input type="text" name="jobKey">
+		<form action="${path }/job/insertjob.do" method="post">
 			직급명<input type="text" name="jobName">
 			<input type="submit" value="등록">
 		</form>
@@ -26,10 +25,10 @@
 					<td>${j.jobKey }</td>
 					<td>${j.jobName }</td>
 					<td>
-						<button onclick="">수정</button>
+						<button onclick="updateJob('${j.jobKey }','${j.jobName }');">수정</button>
 					</td>
 					<td>
-						<button onclick="">삭제</button>
+						<button onclick="deleteJob('${j.jobKey}');">삭제</button>
 					</td>
 					
 				</tr>
@@ -38,8 +37,50 @@
 		
 	</table>
 	<script>
-		const updateJob=()=>{
-			
+		const updateJob=(key,name)=>{
+            let form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "${path}/job/updatejob.do");
+
+            let $key = document.createElement("input");
+            $key.setAttribute("type", "hidden");
+            $key.setAttribute("name", "key");
+            $key.setAttribute("value", key);
+            
+            let names= document.createElement("input");
+            names.setAttribute("type", "hidden");
+            names.setAttribute("name", "jobName");
+            names.setAttribute("value",name );
+
+           
+            form.appendChild($key);
+            form.appendChild(names);
+
+            document.body.appendChild(form);
+            form.submit();
+		}
+		
+		
+		const deleteJob=(key)=>{
+		   if(confirm("정말 삭제 하시겠습니까?")){
+	           let form = document.createElement("form");
+	           form.setAttribute("method", "post");
+	           form.setAttribute("action", "${path}/job/deletejob.do");
+	
+	           let $key = document.createElement("input");
+	           $key.setAttribute("type", "hidden");
+	           $key.setAttribute("name", "key");
+	           $key.setAttribute("value", key);
+	 
+	           form.appendChild($key);
+	
+	
+	           document.body.appendChild(form);
+	           form.submit();
+		   }else{
+			   alert("삭제가 취소되었습니다.");
+		   }
+		   
 		}
 	</script>
 </body>
