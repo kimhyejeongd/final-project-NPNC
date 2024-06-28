@@ -13,6 +13,8 @@
 	    <input type="text" name="inputValue">
 	    <button type="submit">채팅</button>
 	</form>
+	
+	<a href="${path }/calendar.do">테스트</a>
 	<h2>나의 부트 페이지</h2>
 </body>
 </html>
