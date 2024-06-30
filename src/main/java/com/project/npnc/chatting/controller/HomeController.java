@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.google.gson.Gson;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.service.ChatService;
@@ -44,14 +43,20 @@ public class HomeController {
 			param.put("memberSize", memberNo.size());
 			roomId = service.selectRoomId(param);
 		}
-//		Member loginMember = (Member)session.getAttribute("loginMember");
+		Member loginMember = (Member)session.getAttribute("loginMember");
 		System.out.println("HomeController Chat");
 		
-		List<ChattingMessage> chats = service.selectRoomChatList(roomId);
-//		service.updateChatStatus(loginMember.getMemberNo());
+		int loginMemberKey = loginMember.getMemberKey();
+		
+		int countRoomMember = service.countRoomMember(roomId);
+		Map<String, Object> readInfo = new HashMap<>();
+		readInfo.put("loginMemberKey", loginMemberKey);
+		readInfo.put("roomId", roomId);
+		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
+		model.addAttribute("countRoomMember",countRoomMember);
 
 		return "chatting/chat";
 	}
@@ -76,7 +81,9 @@ public class HomeController {
 	@PostMapping("loadRecentChat")
 	@ResponseBody
 	public List<ChattingMessage> loadChat(@RequestParam int chatRoomKey) {
-	    List<ChattingMessage> chats = service.selectRoomChatList(chatRoomKey);
+		Map<String, Object> readInfo = new HashMap<>();
+		readInfo.put("roomId", chatRoomKey);
+	    List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
 	    System.out.println("=====");
 	    for(ChattingMessage c : chats) {
 	    	System.out.println(c);

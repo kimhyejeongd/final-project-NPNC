@@ -331,6 +331,8 @@
             // 폼 전송 후 히든 필드 제거
             form.find('input[type="hidden"]').remove();
         });
+        
+        
 
         // 채팅방 더블 클릭 시 채팅방 입장
         $('.room-item').dblclick(function() {
@@ -396,7 +398,7 @@
         function subscribeToRoom(roomId, recentMessageElement) {
             var socket = new SockJS('http://localhost:8080/ws-stomp');
             var stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
+            stompClient.connect({"type":"room"}, function(frame) {
                 console.log('Connected to room ' + roomId + ': ' + frame);
                 stompClient.subscribe('/room/' + roomId, function(chatMessage) {
                     var message = JSON.parse(chatMessage.body);

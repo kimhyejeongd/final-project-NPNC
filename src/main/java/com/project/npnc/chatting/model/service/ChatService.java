@@ -30,9 +30,12 @@ public class ChatService {
 		//내 방에 있는 멤버의 넘버들
 		System.out.println(chat.getChatRoomKey()+"roomKey");
 		System.out.println(chat+"room");
-		List<ChattingGroup> myRoomMembers = dao.selectMyRoomMembers(session,chat.getChatRoomKey());
+		List<ChattingGroup> myRoomMembers = dao.selectMyRoomMembers(session,chat);
 		System.out.println(myRoomMembers.size()+"roomMemberSize");
 		int readCount = 0;
+		if(myRoomMembers!=null) readCount = myRoomMembers.size();
+		System.out.println(readCount+"readCount");
+
 	    chatInfo.put("readCount", readCount);
 			dao.insertChat(session,chatInfo);
 	    for (ChattingGroup m : myRoomMembers) {
@@ -41,6 +44,7 @@ public class ChatService {
 				
 	            System.out.println("Member details: " + member.toString());
 	            chatInfo.put("member", member);
+	            dao.insertChattingIsRead(session, chatInfo);
 
 //	            	int result = dao.insertChatStatus(session, chatInfo);       
 //	            System.out.println(result+"dsadsaasddas+++====");
@@ -51,14 +55,24 @@ public class ChatService {
 			
 	  //  	readCount= dao.selectReadCount(session,chatInfo);
 	    	chatInfo.put("readCount", readCount);
-
-//	    dao.updateChatReadCount(session, chatInfo);
 		return chatInfo;
 		}
 	
 	
-		public List<ChattingMessage> selectRoomChatList(int roomNo){
-			return dao.selectRoomChatList(session,roomNo);
+		public List<ChattingMessage> selectRoomChatList(Map<String, Object>readInfo){
+			int roomId = (int)readInfo.get("roomId");
+			List<ChattingMessage> chatList = dao.selectRoomChatList(session, roomId);
+			System.out.println(chatList.toString()+"chatListToString");
+			System.out.println(readInfo.get("loginMemberKey")+"loginMemberKey");
+			if(chatList!=null && readInfo.get("loginMemberKey")!=null) {
+				for(int i=0;chatList.size()>i;i++) {
+					readInfo.put("chatList", chatList.get(i));
+					System.out.println(chatList.get(i)+"chatList.get(i)");
+					dao.deleteChatRead(session,readInfo);
+					dao.updateChatReadCount(session, readInfo);
+				}
+			}
+			return dao.selectRoomChatList(session,roomId);
 		}
 
 		public List<Member> selectAllMembers(){
@@ -73,6 +87,7 @@ public class ChatService {
 				roomId = dao.selectRoomId(session,param);
 				System.out.println(roomId+"charserviceRommIDdkasnkdlasndlaskdnaslkdlkjnsadlnk");
 				}
+			
 			return roomId;
 		}
 		
@@ -91,15 +106,9 @@ public class ChatService {
 		public void updateChatStatus(int roomId) {
 			dao.updateChatStatus(session,roomId);
 		}
-		// 메시지 읽음 상태 업데이트
-//	    public void updateReadStatus(int chatId, int memberNo) {
-//	    	System.out.println("updateReadStatus");
-//	        Map<String, Object> param = new HashMap<>();
-//	        param.put("seq", chatId);
-//	        param.put("memberNo", memberNo);
-//	        dao.updateReadStatus(session, param); //
-//	        int readCount = dao.selectReadCount(session, param);
-//	        param.put("readCount", readCount);
-//	        dao.updateChatReadCount(session, param);
-//	    }
+		
+		public int countRoomMember(int roomId) {
+			return dao.countRoomMember(session,roomId);
+		}
+
 }
