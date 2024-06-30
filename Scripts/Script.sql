@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 SELECT * FROM CHATTING_IS_READ cir ;
 
 
@@ -15,3 +16,12 @@ DELETE FROM chatting_message;
 DELETE FROM CHATTING_GROUP;
 DELETE FROM CHATTING_ROOM;
 DELETE FROM chatting_IS_READ;
+=======
+
+SELECT * FROM job;
+SELECT * FROM MEMBER;
+DELETE FROM MEMBER;
+CREATE SEQUENCE SEQ_JOB;
+DROP SEQUENCE SEQ_JOB;
+DELETE FROM JOB;
+>>>>>>> branch 'dev' of https://github.com/JinHyung-dev/NPNC.git
