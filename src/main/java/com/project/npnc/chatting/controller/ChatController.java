@@ -4,7 +4,9 @@ package com.project.npnc.chatting.controller;
 
 import static com.project.npnc.chatting.model.dto.ChattingMessage.createChattingMessage;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +16,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.npnc.chatting.model.dto.ChattingMessage;
@@ -38,7 +42,9 @@ public class ChatController {
 //		System.out.println(session);
 		
 		System.out.println("Received message: " + message);
-        // 채팅 저장
+//		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
+		// 채팅 저장
+
         
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
@@ -66,5 +72,14 @@ public class ChatController {
     	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
+	@PostMapping("loadRecentChat")
+	@ResponseBody
+	public List<ChattingMessage> loadChat(@RequestParam int chatRoomKey) {
+		Map<String, Object> readInfo = new HashMap<>();
+		readInfo.put("roomId", chatRoomKey);
+	    List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+
+	    return chats;
+	}
 	
 }

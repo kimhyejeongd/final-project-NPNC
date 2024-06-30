@@ -1,5 +1,6 @@
 package com.project.npnc.chatting.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.project.npnc.chatting.model.dao.ChatDao;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
+import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -28,32 +30,18 @@ public class ChatService {
 		chatInfo.put("memberNo", chat.getMemberKey());
 		
 		//내 방에 있는 멤버의 넘버들
-		System.out.println(chat.getChatRoomKey()+"roomKey");
-		System.out.println(chat+"room");
+
 		List<ChattingGroup> myRoomMembers = dao.selectMyRoomMembers(session,chat);
-		System.out.println(myRoomMembers.size()+"roomMemberSize");
 		int readCount = 0;
 		if(myRoomMembers!=null) readCount = myRoomMembers.size();
-		System.out.println(readCount+"readCount");
-
+		dao.updateRecentChat(session, chatInfo);
 	    chatInfo.put("readCount", readCount);
 			dao.insertChat(session,chatInfo);
 	    for (ChattingGroup m : myRoomMembers) {
-	            System.out.println("Processing member no: " + m.getMemberKey()); // 이거 한번밖에 안나옴
-	            Member member = dao.selectMemberByNo(session, m.getMemberKey());
-				
-	            System.out.println("Member details: " + member.toString());
+	            Member member = dao.selectMemberByNo(session, m.getMemberKey());				
 	            chatInfo.put("member", member);
 	            dao.insertChattingIsRead(session, chatInfo);
-
-//	            	int result = dao.insertChatStatus(session, chatInfo);       
-//	            System.out.println(result+"dsadsaasddas+++====");
 	    }
-	    System.out.println(chatInfo.get("seq"));
-	    
-
-			
-	  //  	readCount= dao.selectReadCount(session,chatInfo);
 	    	chatInfo.put("readCount", readCount);
 		return chatInfo;
 		}
@@ -62,12 +50,10 @@ public class ChatService {
 		public List<ChattingMessage> selectRoomChatList(Map<String, Object>readInfo){
 			int roomId = (int)readInfo.get("roomId");
 			List<ChattingMessage> chatList = dao.selectRoomChatList(session, roomId);
-			System.out.println(chatList.toString()+"chatListToString");
-			System.out.println(readInfo.get("loginMemberKey")+"loginMemberKey");
+
 			if(chatList!=null && readInfo.get("loginMemberKey")!=null) {
 				for(int i=0;chatList.size()>i;i++) {
 					readInfo.put("chatList", chatList.get(i));
-					System.out.println(chatList.get(i)+"chatList.get(i)");
 					dao.deleteChatRead(session,readInfo);
 					dao.updateChatReadCount(session, readInfo);
 				}
@@ -91,14 +77,23 @@ public class ChatService {
 			return roomId;
 		}
 		
-		public Map<Integer,List<Member>> selectMyRoomList(int memberNo){
+		public Map<Integer,List<Member>> selectMyRoomMemberList(int memberNo){
+			
 			Map<Integer, List<Member>>roomMemberInfo = new HashMap<>();
 			List<Integer> myRoomId = dao.selectMyRoomId(session,memberNo);
 			for(int i:myRoomId) {
-				roomMemberInfo.put(i, dao.selectRoomList(session,i));
+//				이거 사실 selectRoomMemberList임 
+				roomMemberInfo.put(i , dao.selectMyRoomMemberList(session,i)); 
 			}
 			return roomMemberInfo;
 		}
+		
+		public List<ChattingRoom> selectMyChatRoomList(int memberNo){
+			
+			return dao.selectMyChatRoomList(session,memberNo);
+		}
+		
+
 		
 		public Member selectMemberById(String memberId) {
 			return dao.selectMemberById(session,memberId);

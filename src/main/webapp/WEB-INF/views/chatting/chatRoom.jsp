@@ -206,23 +206,21 @@
         </div>
         <div id="chat" class="content active">
             <ul class="room-list">
-                <c:forEach var="entry" items="${roomList}">
-                    <!-- room-item 요소 내 input 태그 추가 -->
-					<li class="room-item">
-					    <form class="roomForm" method="post" action="${path}/chat">
-					        <input type="hidden" name="roomId" value="${entry.key }">
-					        <img src="room_icon.jpg" alt="방 아이콘">
-					        <div class="room-info">
-					            <div class="room-title">
-					                <c:forEach var="member" items="${entry.value}">
-					                    ${member.memberId}
-					                </c:forEach>
-					            </div>
-					            <div class="recent-message-${entry.key }">최근 메시지 내용</div>
-					        </div>
-					    </form>
-					</li>
-
+                   <c:forEach var="room" items="${mychatRoomList}">
+                    <li class="room-item">
+                        <form class="roomForm" method="post" action="${path}/chat">
+                            <input type="hidden" name="roomId" value="${room.chatRoomKey}">
+                            <img src="room_icon.jpg" alt="방 아이콘">
+                            <div class="room-info">
+                                <div class="room-title">
+                                    <c:forEach var="member" items="${myRoomMemberList[room.chatRoomKey]}">
+                                        ${member.memberId}
+                                    </c:forEach>
+                                </div>
+                                <div class="recent-message-${room.chatRoomKey}"></div>
+                            </div>
+                        </form>
+                    </li>
                 </c:forEach>
             </ul>
         </div> 
@@ -304,6 +302,7 @@
 
         // 새로운 채팅방 만들기
         $('#createNewChatButton').click(function() {
+        	
             var form = $('<form>', {
                 'method': 'post',
                 'action': '${path}/chat'

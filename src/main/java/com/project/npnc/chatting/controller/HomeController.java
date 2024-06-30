@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.google.gson.Gson;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
+import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
 import com.project.npnc.member.model.dto.Member;
 
@@ -60,47 +62,46 @@ public class HomeController {
 
 		return "chatting/chat";
 	}
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
+//	@GetMapping("/")
+//	public String index() {
+//		return "index";
+//	}
 
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
 		Member member = service.selectMemberById(inputValue);
         session.setAttribute("loginMember", member); 
-		Map<Integer,List<Member>>roomList = service.selectMyRoomList(member.getMemberKey());
+		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
 //		model.addAttribute("roomId",roomId);
-		model.addAttribute("roomList",roomList);
+		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
+		
+		model.addAttribute("myRoomMemberList",myRoomMemberList);
+		model.addAttribute("mychatRoomList",mychatRoomList);
 		List<Member>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
 		return "chatting/chatRoom";
 	}
-	@PostMapping("loadRecentChat")
-	@ResponseBody
-	public List<ChattingMessage> loadChat(@RequestParam int chatRoomKey) {
-		Map<String, Object> readInfo = new HashMap<>();
-		readInfo.put("roomId", chatRoomKey);
-	    List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
-	    System.out.println("=====");
-	    for(ChattingMessage c : chats) {
-	    	System.out.println(c);
-	    }
-	    return chats;
-	}
-//	@PostMapping("/updateReadStatus")
-//    @ResponseBody
-//    public ResponseEntity<?> updateReadStatus(@RequestParam int chatId, @RequestParam int memberNo) {
-//        try {
-//            service.updateReadStatus(chatId, memberNo);
-//            return ResponseEntity.ok("Read status updated successfully.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating read status.");
-//        }
-//    }
+	
+	 
 
+		
+
+
+    @PostMapping("/login")
+    public String login(@RequestParam("memberKey") String memberKey, HttpSession session) {
+		Member loginMember = service.selectMemberById(memberKey);
+        session.setAttribute("loginMember", loginMember);
+        
+        return "redirect:/"; // 로그인 후 리다이렉트할 페이지
+    }
+
+    @PostMapping("/logout")
+    public String logout(SessionStatus sessionStatus) {
+        sessionStatus.setComplete(); // 세션에서 사용자 정보 제거
+        return "redirect:/"; // 로그아웃 후 리다이렉트할 페이지
+    }
 
 	
 }
