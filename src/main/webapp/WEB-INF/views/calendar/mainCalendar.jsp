@@ -6,133 +6,103 @@
 <html lang='ko'>
   <head>
     <meta charset='utf-8' />
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css' rel='stylesheet' />
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js'></script>
+    <link rel="stylesheet" href="${path }/resources/bm/css//fullcalendar.min.css" />
+    <link rel="stylesheet" href='${path }/resources/bm/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href='${path }/resources/bm/css/bootstrap-datetimepicker.min.css' />
+    
+    
     <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
    
+    
   </head>
   <body>
-  	<div id="modalTest" style="display: none;">
-  		<div id="cont" style="text-align: center;">
-			<br>
-			<h1>모달테스트</h1>
-			시작일 <input type="text" id="schStart" value=""><br>
-			종료일 <input type="text" id="schEnd" value=""><br>
-			제목 <input type="text" id="schTitle" value=""><br>
-			하루종일 <input type="checkbox" id="allDay"><br>
-			배경색<input type="color" id="schBColor" value=""><br>
-			글자색<input type="color" id="schFColor" value=""><br>
-			<button onclick="fCalAdd()">추가</button><br>
-			<button onclick="fMClose()">X</button>
+  	<div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
+  		<div class="modal-dialog" role="document">
+  			<div class="modal-content">
+  				<div class="modal-header">
+  					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  						<span aria-hidden="true">&times;</span>
+  					</button>
+  					<h4 class="modal-title"></h4>
+  				</div>
+  				<div class="modal-body">
+  					
+  					<div class="row">
+  						<div class="col-xs-12">
+  							<label class="col-xs-4" for="edit-allDay">하루</label>
+  							<input class="inputM" type="text" name="edit-title" id="edit-title" required/>
+  						</div>
+  					</div>
+  					<div class="row">
+  						<div class="col-xs-12">
+  							<label class="col-xs-4" for="edit-start">시작</label>
+  							<input class="inputM" type="text" name="edit-start" id="edit-start"/> 							
+  						</div>
+  					</div>
+  					<div>
+  						<div class="col-xs-12">
+  							<label class="col-xs-4" for="edit-end">끝</label>
+  							<input class="inputM" type="text" name="edit-end" id="edit-end"/>
+  						</div>					
+  					</div>
+  					<div class="row">
+  						<div class="col-xs-12">
+  						
+  							<label class="col-xs-4" for="edit-type">구분</label>
+  							<select class="inputM" type="text" name="edit-type" id="edit-type">
+  								<option value="카테고리1">카테고리1</option>
+  								<option value="카테고리2">카테고리2</option>
+  								<option value="카테고리3">카테고리3</option>
+  								<option value="카테고리4">카테고리4</option>
+  								<option value="카테고리5">카테고리5</option>
+  							</select>	
+  						</div>		
+  					</div>
+  					<div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-color">색상</label>
+                                <select class="inputM" name="color" id="edit-color">
+                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
+                                    <option value="#9775fa" style="color:#9775fa;">보라색</option>
+                                    <option value="#ffa94d" style="color:#ffa94d;">주황색</option>
+                                    <option value="#74c0fc" style="color:#74c0fc;">파란색</option>
+                                    <option value="#f06595" style="color:#f06595;">핑크색</option>
+                                    <option value="#63e6be" style="color:#63e6be;">연두색</option>
+                                    <option value="#a9e34b" style="color:#a9e34b;">초록색</option>
+                                    <option value="#4d638c" style="color:#4d638c;">남색</option>
+                                    <option value="#495057" style="color:#495057;">검정색</option>
+                                </select>
+                            </div>
+                     </div>
+                     <div class="row">
+                     	<div class="col-xs-12">
+                     		<label class="col-xs-4" for="edit-desc">설명</label>
+                     		<textarea rows="4" cols="50" class="inputM" name="edit-desc" id="edit-desc"></textarea>
+                     	</div>
+                     </div>		
+  				</div>
+  				<div class="modal-footer">
+  					<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+  					<button type="button" class="btn btn-primary" id="eventSave">저장</button>
+  				</div>
+  				<div class="modal-footer">
+  					<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+  					<button type="button" class="btn btn-danger" id="eventDelete">삭제</button>
+  					<button type="button" class="btn btn-primary" id="eventUpdate">저장</button>
+  				</div>
+  			</div>
   		</div>
   	</div>
   
   	
     <div id='calendar'></div>
     
-     <script>
-     	const ModalTest = document.querySelector("#modalTest");
-     	const calendarEl = document.querySelector("#calendar");
-     	const mySchStart = document.querySelector("#schStart");
-     	const mySchEnd = document.querySelector("#schEnd");
-     	const mySchTitle = document.querySelector("#schTitle");
-     	const mySchAllday = document.querySelector("#allDay");
-     	const mySchBColor = document.querySelector("#schBColor");
-     	const mySchFColor = document.querySelector("#schFColor");
-     
-     	const headerToolbar = {
-     			left: 'prevYear,prev,next,nextYear today',
-     			center: 'title',
-     			right: 'dayGridMonth,dayGridWeek,timeGridDay'
-     	}
-     	const calendarOption ={
-     			height: '700px', //calendar 높이설정
-     			expandRows: true, // 화면에 맞게 높이 재설정
-     			slotMinTime: '09:00', //day 캘린더 시작 시간
-     			slotMaxTime: '18:00', //day 캘린더 종료 시간
-     			//헤더지정
-     			headerToolbar: headerToolbar,
-     			initialView: 'dayGridMonth', // default: dayGridMonth
-     			locale: 'kr', //언어설정
-     			selectable: true, //영역 선택
-     			selectMirror: true, //오직 TimeGrid view에만 적용됨. default false
-     			navLinks: true, //날짜, WeekNumber 클릭 여부, defalut false
-     			weekNumbers:true, //WeekNumber 출력여부, default false
-     			editable: true, //event(일정)
-
-     			//시작일 및 기간 수정가능여부
-     			//eventStartEditable: false,
-     			///eventDurationEditable: true
-     			dayMaxEventRows: true, //Row높이보다 많으면 +숫자 more 링크 보임!
-     			
-     			nowIndicator: true
-     			/* eventSource: [
-     					'/commonEvents.json',
-     					'/KVREvents.json',
-     					'/SVREvents.json'
-     				
-     				
-     			]     */			
-     	};
-     	const calendar = new FullCalendar.Calendar(calendarEl, calendarOption);
-     	calendar.render();
-     
-     	calendar.on("eventAdd", info=> console.log("Add:",info));
-     	 calendar.on("eventChange", info => console.log("Change:", info));
-         calendar.on("eventRemove", info => console.log("Remove:", info));
-         calendar.on("eventClick", info => {
-             console.log("eClick:", info);
-             console.log('Event: ', info.event.extendedProps);
-             console.log('Coordinates: ', info.jsEvent);
-             console.log('View: ', info.view);
-        
-             info.el.style.borderColor = 'red';
-         });
-         calendar.on("eventMouseEnter", info => console.log("eEnter:", info));
-         calendar.on("eventMouseLeave", info => console.log("eLeave:", info));
-         calendar.on("dateClick", info => console.log("dateClick:", info));
-     	calendar.on("select", info => {
-              console.log("체크:", info);
-
-              mySchStart.value = info.startStr;
-              mySchEnd.value = info.endStr;
-
-              ModalTest.style.display = "block";
-          });
-     	
-     	 function fCalAdd(){
-             let event = {
-               title: mySchTitle.value,
-               start: mySchStart.value,
-               end: mySchEnd.value,
-               allDay: mySchAllday.checked,
-               backgroundColor: mySchBColor.value,
-               textColor: mySchFColor.value
-             };
-             calendar.addEvent(event);
-             var inputData={"title":mySchTitle.value,"startd":mySchStart.value,"endd":mySchEnd.value};
-             console.log("들어가나요");
-             $.ajax({
-            	 url: "${path}/calendar/insert.do",
-            	 type: "post",
-            	 data: JSON.stringify(inputData),
-            	 contentType:"application/json;charset=UTF-8",
-            	 dataType:"json",
-            	 success: function(data){
-            		 console.log(data);
-            	 }
-            	 
-             });
-             ModalTest.style.display = "none";
-           }
-
-           function fMClose() {
-             ModalTest.style.display = "none";
-           }
-     
-   
-	
-    </script>
+    <script src="${path }/resources/bm/js/bootstrap.min.js"></script>
+    <script src="${path }/resources/bm/js/moment.min.js"></script>
+    <script src="${path }/resources/bm/js/fullcalendar.min.js"></script>
+    <script src="${path }/resources/bm/js/ko.js"></script>
+    
+    <script src="${path }/resources/bm/js/calendar.js"></script>
     
   </body>
 </html>
