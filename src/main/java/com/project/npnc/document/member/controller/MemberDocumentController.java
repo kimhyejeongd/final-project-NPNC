@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/document")
 public class MemberDocumentController {
 	@GetMapping("/home")
-	public void test() {
-	}
+	public void docHome() {}
+	@GetMapping("/form")
+	public void formChoice(){}
 }
