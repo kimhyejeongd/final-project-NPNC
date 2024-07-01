@@ -62,9 +62,9 @@
                       </div>
                     </div>
                     <!-- 양식폴더 출력 -->
-                    <div class="card-list py-4">
+                    <div class="card-list">
                     <c:forEach var="f" items="${folderlist }">
-                      <button class="btn item-list border rounded w-100 mb-2">
+                      <button class="btn item-list border rounded w-100 mt-2" id="formfolder${f.ER_FORM_FOLDER_KEY}" onclick="viewFormList(${f.ER_FORM_FOLDER_KEY});">
                         <div class="ms-3">
                         	<i class="icon-drawer"></i>
                         </div>
@@ -88,8 +88,8 @@
                   </div>
                  <div class="card-list p-4 ">
                   <!-- 양식 출력 -->
-                  	
-                    <c:forEach var="f" begin="1" end="3" step="1">
+                  	<c:if test="${not empty formlist }">
+                    <c:forEach var="f" items="${formlist }">
                       <button class="btn item-list border rounded w-100 mb-2">
                         <div class="ms-3">
                         	<i class="icon-drawer"></i>
@@ -99,6 +99,12 @@
                         </div>
                       </button>
                       </c:forEach> 
+                      </c:if>
+                      <c:if test="${empty formlist }">
+                      	<div class="info-user">
+                          <h5 class="">양식 폴더를 선택하세요</h5>
+                        </div>
+                      </c:if>
                     </div>
                 </div>
               </div>
@@ -107,4 +113,8 @@
         </div>
         </div>
   </body>
+<script>
+	const path = "${path}";
+</script>
+<script src="${path}/resources/jh/js/document.js"></script>
 </html>
