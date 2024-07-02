@@ -29,6 +29,11 @@ public class ViewTest {
 		return "starter-template";
 	}
 
+	@RequestMapping("/starter-template23")
+	public String test3() {
+		return "starter-template";
+	}
+
 	@RequestMapping("/widgets")
 	public String test4() {
 		return "widgets";
