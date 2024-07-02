@@ -24,6 +24,8 @@ public class ViewTest {
 		return "starter-template";
 	}
 
+
+
 	@RequestMapping("/starter-template2")
 	public String test3() {
 		return "starter-template";
@@ -38,6 +40,7 @@ public class ViewTest {
 	public String test4() {
 		return "widgets";
 	}
+
 	
 	@RequestMapping("/jsvectormap")
 	public String test5() {
