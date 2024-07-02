@@ -15,20 +15,32 @@ public class ViewTest {
 	public String test2() {
 		return "sidebar-style-2";
 	}
-	
-	
-	
+
+
+
+
 	@RequestMapping("/starter-template")
 	public String test3() {
 		return "starter-template";
 	}
-	
-	
-	
-//	@RequestMapping("/widgets")
-//	public String test4() {
-//		return "widgets";
-//	}
+
+
+
+	@RequestMapping("/starter-template2")
+	public String test3() {
+		return "starter-template";
+	}
+
+	@RequestMapping("/starter-template23")
+	public String test3() {
+		return "starter-template";
+	}
+
+	@RequestMapping("/widgets")
+	public String test4() {
+		return "widgets";
+	}
+
 	
 	@RequestMapping("/jsvectormap")
 	public String test5() {
