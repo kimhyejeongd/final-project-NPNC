@@ -60,7 +60,7 @@
 		}
 		
 		
-		const deleteJob=(key)=>{
+		const deleteDept=(key)=>{
 		   if(confirm("정말 삭제 하시겠습니까?")){
 	           let form = document.createElement("form");
 	           form.setAttribute("method", "post");
