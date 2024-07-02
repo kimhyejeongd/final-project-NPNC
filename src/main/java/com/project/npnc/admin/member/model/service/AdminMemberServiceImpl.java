@@ -6,16 +6,16 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
-import com.project.npnc.admin.member.model.dao.MemberDao;
+import com.project.npnc.admin.member.model.dao.AdminMemberDao;
 import com.project.npnc.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class AdminMemberServiceImpl implements AdminMemberService {
 	
-	private final MemberDao dao;
+	private final AdminMemberDao dao;
 	private SqlSession session;
 	
 	@Override

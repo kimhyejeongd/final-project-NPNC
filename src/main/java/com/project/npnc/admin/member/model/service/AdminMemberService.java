@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.project.npnc.member.model.dto.Member;
 
-public interface MemberService {
+public interface AdminMemberService {
 	
 	List<Member> selectMemeberAll(Map<String,Integer> page);
 	int selectMemberCount();

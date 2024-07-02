@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.project.npnc.member.model.dto.Member;
 
-public interface MemberDao {
+public interface AdminMemberDao {
 
 	List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page);
 	int selectMemberCount(SqlSession session);

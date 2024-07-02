@@ -28,5 +28,5 @@ public class Member {
 	private String memberName;
 	private String memberGender;
 	private String memberState;
-
+	private Date memberBirthdate;
 }

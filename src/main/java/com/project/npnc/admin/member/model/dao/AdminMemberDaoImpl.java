@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.npnc.member.model.dto.Member;
 
 @Repository
-public class MemberDaoImpl implements MemberDao {
+public class AdminMemberDaoImpl implements AdminMemberDao {
 
 	@Override
 	public List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page) {
