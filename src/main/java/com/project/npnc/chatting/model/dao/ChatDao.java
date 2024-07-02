@@ -9,12 +9,19 @@ import org.springframework.stereotype.Repository;
 
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
+import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.member.model.dto.Member;
 
 @Repository
 public class ChatDao {
-	public List<ChattingGroup> selectMyRoomMembers(SqlSessionTemplate session, int roomNo){
-		return session.selectList("chat.selectMyRoomMembers",roomNo);
+	public List<ChattingRoom> selectMyChatRoomList(SqlSessionTemplate session, int memberNo){
+		return session.selectList("chat.selectMyChatRoomList",memberNo);
+	}
+	public void updateRecentChat(SqlSessionTemplate session, Map<String, Object> chatInfo) {
+		session.update("chat.updateRecentChat",chatInfo);
+	}
+	public List<ChattingGroup> selectMyRoomMembers(SqlSessionTemplate session, ChattingMessage chat){
+		return session.selectList("chat.selectMyRoomMembers",chat);
 	}
 
 	public Member selectMemberById(SqlSessionTemplate session,String memberId) {
@@ -27,12 +34,16 @@ public class ChatDao {
 		return session.selectOne("chat.selectChatSeq");
 	}
 	
-	public int insertChatStatus(SqlSessionTemplate session,Map<String, Object> chatInfo) {
-		return session.insert("chat.insertChatStatus",chatInfo);
+	public int insertChattingIsRead(SqlSessionTemplate session,Map<String, Object> chatInfo) {
+		return session.insert("chat.insertChattingIsRead",chatInfo);
 	}
 	
 	public int insertChat(SqlSessionTemplate session,Map<String, Object> chatInfo) {
-		return session.insert("chat.insertChat",chatInfo);
+		return	session.insert("chat.insertChat",chatInfo);
+	}
+	public int deleteChatRead(SqlSessionTemplate session,Map<String, Object> chatInfo) {
+		int result =session.delete("chat.deleteChatRead",chatInfo);
+		return result;
 	}
 	
 	public int selectReadCount(SqlSessionTemplate session,Map<String, Object> chatInfo) {
@@ -62,8 +73,8 @@ public class ChatDao {
         }
         return roomId;
     }
-	public List<Member> selectRoomList(SqlSessionTemplate session, int roomId){
-		return session.selectList("chat.selectRoomList",roomId);
+	public List<Member> selectMyRoomMemberList(SqlSessionTemplate session, int roomId){
+		return session.selectList("chat.selectMyRoomMemberList",roomId);
 	}
 	public List<Integer> selectMyRoomId(SqlSessionTemplate session, int memberNo){
 		return session.selectList("chat.selectMyRoomId",memberNo);
@@ -72,11 +83,14 @@ public class ChatDao {
 		session.update("chat.updateChatStatus",memberNo);
 	}
 	public void updateChatReadCount(SqlSessionTemplate session, Map<String,Object>chatInfo) {
-		session.update("chat.updateChatReadCount",chatInfo);
+			
+			session.update("chat.updateChatReadCount",chatInfo);
 	}
 //	public void updateReadStatus(SqlSessionTemplate session, Map<String, Object> param) {
 //        session.update("chat.updateReadStatus", param);
 //    }
-
+	public int countRoomMember(SqlSessionTemplate session,int roomId) {
+		return session.selectOne("chat.countRoomMember",roomId);
+	}
 
 }

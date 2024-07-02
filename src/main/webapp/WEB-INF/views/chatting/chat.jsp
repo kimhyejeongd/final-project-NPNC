@@ -160,9 +160,12 @@
 </div>
 
 <script type="text/javascript">
+    var sessionCount = 0;
+
     var stompClient = null;
     var roomId = ${roomId};
     var chatList = ${chatList};
+    var countRoomMember = ${countRoomMember};
 
     function setConnected(connected) {
         if (connected) {
@@ -177,14 +180,30 @@
     function connect() {
         var socket = new SockJS('http://localhost:8080/ws-stomp');
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
+        stompClient.connect({"type":"chat","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame);
-            loadChat(chatList); // 저장된 채팅 불러오기
+            
+            // 저장된 채팅 불러오기
+            loadChat(chatList);
+
+            // 세션 수 초기화
+            console.log("getInitialSessionCount")
+            getInitialSessionCount();
+
+            updateUnreadCounts();
             
             // 구독
-            stompClient.subscribe('/room/' + roomId, function (chatMessage) {
+            stompClient.subscribe('${path}/room/' + roomId, function (chatMessage) {
                 showChat(chatMessage);
+            });
+
+            stompClient.subscribe("${path}/room/" + roomId + "/sessionCount", function (message) {
+                sessionCount = JSON.parse(message.body);
+                console.log("Current chat session count: " + sessionCount);
+                $("#chatSessionCount").text(sessionCount);
+
+                updateUnreadCounts();
             });
         });
     }
@@ -197,129 +216,125 @@
         console.log("Disconnected");
     }
 
-    // html에서 입력값, roomId를 받아서 Controller로 전달
-// sendChat 함수
-function sendChat() {
-    var message = $("#message").val();
-    if (message.trim() === "") {
-        return; // 입력값이 없으면 전송하지 않음
+    function sendChat() {
+        var message = $("#message").val();
+        if (message.trim() === "") {
+            return; // 입력값이 없으면 전송하지 않음
+        }
+
+        stompClient.send("/send/" + roomId, {},
+            JSON.stringify({
+                'chatRoomKey': roomId,
+                'memberKey': '${loginMember.memberKey}', 
+                'chatMsgDetail': message,
+                'chatMsgTime': new Date().toISOString()
+            }));
+        $('#message').val('');
+        $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
+        
+
     }
 
-    stompClient.send("/send/" + roomId, {},
-        JSON.stringify({
-            'chatRoomKey': roomId,
-            'memberKey': '${loginMember.memberKey}', 
-            'chatMsgDetail': message,
-            'chatMsgTime': new Date().toISOString()
-        }));
-    $('#message').val('');
-    $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
-}
+    function getInitialSessionCount() {
+        $.ajax({
+            url: "${path}/room/" + roomId + "/sessionCount",
+            method: "GET",
+            success: function (count) {
+                console.log("Initial chat session count: " + count);
+                sessionCount = count;
+                $("#chatSessionCount").text(count); 
+            },
+            error: function (error) {
+                console.log("Error fetching initial chat session count:", error);
+            }
+        });
+    }
 
+    function formatDateTime(timestamp) {
+        var date = new Date(timestamp);
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var period = hours >= 12 ? '오후' : '오전';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // 0시를 12시로 변경
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return period + ' ' + hours + ': ' + minutes;
+    }
 
-function formatDateTime(timestamp) {
-    var date = new Date(timestamp);
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var period = hours >= 12 ? '오후' : '오전';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // 0시를 12시로 변경
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return period + ' ' + hours + ': ' + minutes;
-}
-//loadChat 함수
-function loadChat(chatList) {
-    console.log("loadChat");
-    if (chatList != null) {
-        for (var chat in chatList) {
-            (function(chat) { // 클로저를 사용하여 각 chat 변수를 고정
-                var messageClass = chatList[chat].memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
-                console.log("dsanlkdsankl++++++" + chatList[chat].memberKey);
-                console.log("dsanlkdsankl++++++" + '${loginMember.memberKey}' + "멤버");
+    function loadChat(chatList) {
+        console.log("loadChat");
+        if (chatList != null) {
+            for (var chat in chatList) {
+                (function(chat) {
+                    var messageClass = chatList[chat].memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
 
-                var formattedTime = formatDateTime(chatList[chat].chatMsgTime);
+                    var formattedTime = formatDateTime(chatList[chat].chatMsgTime);
 
-                // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
-                var unreadCount = 0;
-                var messageElement = $(
-                    '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                    + '<div class="sender">' + chatList[chat].memberKey + '</div>'
-                    + chatList[chat].chatMsgDetail 
-                    + '<div class="sendDate">' + formattedTime + '</div>'
-                    + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 추가된 부분
-                    + '</div></div>'
-                );
+                    var unreadCount = chatList[chat].chatReadCount;
+                    if (sessionCount + unreadCount > countRoomMember) {
+                        unreadCount -= 1;
+                    }
+                    var messageElement = $(
+                        '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
+                        + '<div class="sender">' + chatList[chat].memberKey + '</div>'
+                        + chatList[chat].chatMsgDetail 
+                        + '<div class="sendDate">' + formattedTime + '</div>'
+                        + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
+                        + '</div></div>'
+                    );
 
-                $("#chatting").append(messageElement);
-                $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-
-            })(chat); // 클로저 사용
+                    $("#chatting").append(messageElement);
+                    $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
+                })(chat);
+                
+            }
+            updateUnreadCounts();
         }
     }
-}
 
+    function showChat(chatMessage) {
+        var message = JSON.parse(chatMessage.body);
+        console.log(message);
 
+        var messageClass = message.memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
+        var unreadCount = message.chatReadCount;
 
-
-
-// showChat 함수
-/* function showChat(chatMessage) {
-    var message = JSON.parse(chatMessage.body);
-    console.log(message);
-
-    $.ajax({
-        url: '${path}/updateReadStatus',
-        method: 'POST',
-        data: {
-            chatId: message.chatId,
-            memberNo: '${loginMember.memberKey}'
-        },
-        success: function(response) {
-            console.log("Read status updated successfully.");
-
-            // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
-            var messageClass = message.memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
-            var unreadCount = message.readCount > 0 ? message.readCount - 1 : 0;
-            var messageElement = $(
-                '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                + '<div class="sender">' + message.memberKey + '</div>'
-                + message.message 
-                + '<div class="sendDate">' + formatDateTime(message.sendDate) + '</div>'
-                + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 수정된 부분
-                + '</div></div>'
-            );
-
-            $("#chatting").append(messageElement);
-            $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-        },
-        error: function(error) {
-            console.log("Error updating read status:", error);
+        // unreadCount 업데이트 로직
+        if (sessionCount + unreadCount > countRoomMember) {
+            unreadCount -= 1;
         }
+
+        var messageElement = $(
+            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
+            + '<div class="sender">' + message.memberKey + '</div>'
+            + message.chatMsgDetail 
+            + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'
+            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
+            + '</div></div>'
+        );
+
+        $("#chatting").append(messageElement);
+        $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
+        
+        updateUnreadCounts();
+    }
+
+    
+    window.addEventListener('focus', function() {
+        updateUnreadCounts();
     });
-} */
 
-function showChat(chatMessage) {
-    var message = JSON.parse(chatMessage.body);
-    console.log(message);
+    function updateUnreadCounts() {
+        $(".unreadCount").each(function() {
+            var unreadCountText = $(this).text().replace("미확인 ", "").replace("명", "").trim();
+            var unreadCount = parseInt(unreadCountText);
 
-    // 읽지 않은 사람 수를 줄인 후 메시지를 화면에 표시
-    var messageClass = message.memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
-    var unreadCount = 0;
-    var messageElement = $(
-        '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-        + '<div class="sender">' + message.memberKey + '</div>'
-        + message.chatMsgDetail 
-        + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'
-        + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'  // 수정된 부분
-        + '</div></div>'
-    );
-
-    $("#chatting").append(messageElement);
-    $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-}
-
-
-
+            if (sessionCount + unreadCount > countRoomMember) {
+                unreadCount -= 1;
+                $(this).text("미확인 " + unreadCount + "명");
+            }
+        });
+    }
 
 
     $(function () {
@@ -330,7 +345,6 @@ function showChat(chatMessage) {
         });
 
         $('#send').on('click', function() {
-        	
             sendChat();
         });
 
@@ -347,7 +361,6 @@ function showChat(chatMessage) {
 
         $('#message').on('compositionend', function(event) {
             isComposing = false;
-            // Enter 키가 눌렸을 때는 compositionend가 발생하므로 여기서도 sendChat을 호출
             if (event.originalEvent.data === '\n') {
                 sendChat();
                 event.preventDefault(); // 입력창에서 Enter 키 눌렀을 때 폼이 제출되지 않도록 함
@@ -355,7 +368,6 @@ function showChat(chatMessage) {
         });
     });
 
-    // 창 키면 바로 연결
     window.onload = function () {
         connect();
     }
@@ -364,6 +376,12 @@ function showChat(chatMessage) {
         disconnect();
     }
 </script>
+
+
+<!-- 
+ <div>
+    현재 채팅 세션 수: <span id="chatSessionCount"></span>
+</div>  -->
 
 
 
