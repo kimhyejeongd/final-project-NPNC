@@ -40,11 +40,12 @@
                 <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
 					<div class="input-group">
 						<div class="input-group-prepend pe-1">
-							<button type="submit" class="btn btn-search pe-1">
+							<div class="btn-search pe-1">
 								<i class="fa fa-search search-icon"></i>
-							</button>
+							</div>
 						</div>
-						<input type="text" placeholder="양식명으로 검색" class="form-control">
+						<input type="text" placeholder="양식명으로 검색" class="form-control" id="formsearchtarget">
+						<button class="btn btn-primary" id="formsearchbtn">검색</button>
 					</div>
 				</nav>
               </div>
@@ -64,7 +65,7 @@
                     <!-- 양식폴더 출력 -->
                     <div class="card-list">
                     <c:forEach var="f" items="${folderlist }">
-                      <button class="btn item-list border rounded w-100 mt-2" id="formfolder${f.ER_FORM_FOLDER_KEY}" onclick="viewFormList(${f.ER_FORM_FOLDER_KEY});">
+                      <button class="btn item-list border rounded w-100 mt-2" id="formfolder${f.ER_FORM_FOLDER_KEY}" onclick="viewFormList(${f.ER_FORM_FOLDER_KEY}, '${f.ER_FORM_FOLDER_NAME}');">
                         <div class="ms-3">
                         	<i class="icon-drawer"></i>
                         </div>
@@ -77,18 +78,18 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-8">
+              <div class="col-md-8" style="display:none;" id="formlistdiv">
                 <div class="card card-round">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">Transaction History</div>
+                      <div class="card-title" id="formfoldername"></div>
                       <div class="card-tools">
                       </div>
                     </div>
                   </div>
-                 <div class="card-list p-4 ">
+                 <div class="card-list p-4 " id="formlist">
                   <!-- 양식 출력 -->
-                  	<c:if test="${not empty formlist }">
+                  <%-- 	<c:if test="${not empty formlist }">
                     <c:forEach var="f" items="${formlist }">
                       <button class="btn item-list border rounded w-100 mb-2">
                         <div class="ms-3">
@@ -99,12 +100,12 @@
                         </div>
                       </button>
                       </c:forEach> 
-                      </c:if>
-                      <c:if test="${empty formlist }">
+                      </c:if> --%>
+                     <%--  <c:if test="${empty formlist }"> --%>
                       	<div class="info-user">
                           <h5 class="">양식 폴더를 선택하세요</h5>
                         </div>
-                      </c:if>
+                      <%-- </c:if> --%>
                     </div>
                 </div>
               </div>

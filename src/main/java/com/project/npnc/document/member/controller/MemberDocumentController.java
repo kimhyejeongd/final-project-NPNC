@@ -40,4 +40,13 @@ public class MemberDocumentController {
 //		m.addAttribute("formlist", result);
 		return result;
 	}
+	@PostMapping("/formsearch.do")
+	@ResponseBody
+	public List<DocumentForm> formList(String target, Model m) {
+		log.debug("----전자문서 양식명 "+ target+" 조회----");
+		List<DocumentForm> result = serv.selectFormsBySearch(target);
+		log.debug("{}", result);
+//		m.addAttribute("formlist", result);
+		return result;
+	}
 }

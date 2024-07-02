@@ -21,4 +21,9 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.selectList("document.selectForms", no);
 	}
 
+	@Override
+	public List<DocumentForm> selectFormsBySearch(SqlSession session, String target) {
+		return session.selectList("document.selectFormsBySearch", "%"+target+"%");
+	}
+
 }
