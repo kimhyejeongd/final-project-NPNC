@@ -1,5 +1,8 @@
 package com.project.npnc.note.service;
 
-public class NoteService {
+import com.project.npnc.note.dto.NoteDto;
 
+public interface NoteService {
+	
+	public int noteOneWrite(NoteDto note);
 }
