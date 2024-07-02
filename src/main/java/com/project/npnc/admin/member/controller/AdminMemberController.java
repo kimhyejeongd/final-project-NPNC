@@ -28,7 +28,7 @@ private final AdminMemberService service;
 		
 		List<Member> members= service.selectMemeberAll(null);
 		m.addAttribute("members",members);
-		return "member/memberlist";
+		return "admin/member/memberlist";
 	
 		
 	}
@@ -37,7 +37,7 @@ private final AdminMemberService service;
 	public String selectMemberByNo(int memberKey,Model m) {
 		Member member=service.selectMemberByNo(memberKey);
 		m.addAttribute("member",member);
-		return "member/memberdetail";
+		return "admin/member/memberdetail";
 	}
 	
 	@PostMapping("/insertmember.do")

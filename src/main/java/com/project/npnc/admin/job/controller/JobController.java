@@ -38,7 +38,7 @@ public class JobController {
 	@GetMapping("/selectjoball.do")
 	public String selectJobAll(Model m) {
 		m.addAttribute("job",service.selectJobAll());
-		return "job/joblist";
+		return "admin/job/joblist";
 	}
 	
 	@PostMapping("/deletejob.do")
@@ -62,7 +62,7 @@ public class JobController {
 		m.addAttribute("key",key);
 		m.addAttribute("jobName",jobName);
 		
-		return "job/updatejob";
+		return "admin/job/updatejob";
 	}
 	
 	

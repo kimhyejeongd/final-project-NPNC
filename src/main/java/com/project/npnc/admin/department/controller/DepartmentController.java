@@ -43,7 +43,7 @@ private final DepartmentService service;
 	public String selectDeptAll(Model m) {
 		List<Department> d=service.selectDeptAll();
 		m.addAttribute("dept",d);
-		return "dept/deptlist";
+		return "admin/dept/deptlist";
 	}
 	
 	@PostMapping("/deletedept.do")
@@ -67,7 +67,7 @@ private final DepartmentService service;
 		m.addAttribute("key",key);
 		m.addAttribute("deptName",deptName);
 		
-		return "dept/updatedept";
+		return "admin/dept/updatedept";
 	}
 	
 	
