@@ -66,6 +66,7 @@
                   href="#dashboard"
                   class="collapsed"
                   aria-expanded="false"
+                  href="${path }/document/home"
                 >
                   <i class="fas fa-home"></i>
                   <p>전자결재 Home</p>

@@ -6,7 +6,7 @@
 <html lang="ko">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>결재 Home</title>
+    <title>문서 작성</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -36,141 +36,85 @@
               class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
             >
               <div>
-                <h3 class="fw-bold mb-3">문서 양식 선택</h3>
+                <h3 class="fw-bold mb-3">문서 작성</h3>
+                <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+					<div class="input-group">
+						<div class="input-group-prepend pe-1">
+							<button type="submit" class="btn btn-search pe-1">
+								<i class="fa fa-search search-icon"></i>
+							</button>
+						</div>
+						<input type="text" placeholder="양식명으로 검색" class="form-control">
+					</div>
+				</nav>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
               </div>
             </div>
             <div class="row">
-              <div class="">
+              <div class="col-md-4">
                 <div class="card card-round">
-                  <div class="card-header">
+                  <div class="card-body">
                     <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">상신 문서 현황</div>
+                      <div class="card-title">양식 목록</div>
                       <div class="card-tools">
-                        <div class="dropdown">
-                          <button
-                            class="btn btn-icon btn-clean me-0"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </div>
-                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                        <thead class="thead-light">
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="col" colspan="">항목</th>
-                            <th scope="col" class="">문서 제목</th>
-                            <th scope="col" class="">상신 일자</th>
-                            <th scope="col" class="">상태</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="row">
-                              Payment from #10231
-                            </th>
-                            <td class="">$250.00</td>
-                            <td class="">Mar 19, 2020, 2.45pm</td>
-                            <td class="">
-                              <span class="badge badge-success">Completed</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <!-- 양식폴더 출력 -->
+                    <div class="card-list">
+                    <c:forEach var="f" items="${folderlist }">
+                      <button class="btn item-list border rounded w-100 mt-2" id="formfolder${f.ER_FORM_FOLDER_KEY}" onclick="viewFormList(${f.ER_FORM_FOLDER_KEY});">
+                        <div class="ms-3">
+                        	<i class="icon-drawer"></i>
+                        </div>
+                        <div class="info-user ms-3">
+                          <div class="username text-start">${f.ER_FORM_FOLDER_NAME }</div>
+                        </div>
+                      </button>
+                      </c:forEach> 
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-		<div class="">
+              <div class="col-md-8">
                 <div class="card card-round">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">결재 대기 문서</div>
+                      <div class="card-title">Transaction History</div>
                       <div class="card-tools">
-                        <div class="dropdown">
-                          <button
-                            class="btn btn-icon btn-clean me-0"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                        <thead class="thead-light">
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="col" colspan=""> 항목</th>
-                            <th scope="col" class="">문서 제목</th>
-                            <th scope="col" class="">상신 일자</th>
-                            <th scope="col" class="">상태</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                           <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="row">
-                              Payment from #10231
-                            </th>
-                            <td class="">$250.00</td>
-                            <td class="">Mar 19, 2020, 2.45pm</td>
-                            <td class="">
-                              <span class="badge badge-success">Completed</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                 <div class="card-list p-4 ">
+                  <!-- 양식 출력 -->
+                  	<c:if test="${not empty formlist }">
+                    <c:forEach var="f" items="${formlist }">
+                      <button class="btn item-list border rounded w-100 mb-2">
+                        <div class="ms-3">
+                        	<i class="icon-drawer"></i>
+                        </div>
+                        <div class="info-user ms-3">
+                          <div class="username text-start">기본 양식</div>
+                        </div>
+                      </button>
+                      </c:forEach> 
+                      </c:if>
+                      <c:if test="${empty formlist }">
+                      	<div class="info-user">
+                          <h5 class="">양식 폴더를 선택하세요</h5>
+                        </div>
+                      </c:if>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
+        </div>
   </body>
+<script>
+	const path = "${path}";
+</script>
+<script src="${path}/resources/jh/js/document.js"></script>
 </html>
