@@ -7,7 +7,10 @@ const viewFormList =(no)=>{
 		type: "post",
 		data: {"folderNo" : no},
 		success: function(data){
-			console.dir(data);
+			let formArr = data;
+			formArr.forEach((e)=>{
+				console.log(e);
+			});
 		}
 	});
 };
