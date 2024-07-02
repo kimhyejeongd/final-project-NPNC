@@ -39,7 +39,7 @@
 		const updateDept=(key,name)=>{
             let form = document.createElement("form");
             form.setAttribute("method", "post");
-            form.setAttribute("action", "${path}/dept/updatedept.do");
+            form.setAttribute("action", "${path}/admin/dept/updatedept.do");
 
             let $key = document.createElement("input");
             $key.setAttribute("type", "hidden");
@@ -64,7 +64,7 @@
 		   if(confirm("정말 삭제 하시겠습니까?")){
 	           let form = document.createElement("form");
 	           form.setAttribute("method", "post");
-	           form.setAttribute("action", "${path}/dept/deletedept.do");
+	           form.setAttribute("action", "${path}/admin/dept/deletedept.do");
 	
 	           let $key = document.createElement("input");
 	           $key.setAttribute("type", "hidden");

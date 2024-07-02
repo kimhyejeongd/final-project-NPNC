@@ -40,7 +40,7 @@
 		const updateJob=(key,name)=>{
             let form = document.createElement("form");
             form.setAttribute("method", "post");
-            form.setAttribute("action", "${path}/job/updatejob.do");
+            form.setAttribute("action", "${path}/admin/job/updatejob.do");
 
             let $key = document.createElement("input");
             $key.setAttribute("type", "hidden");
@@ -65,7 +65,7 @@
 		   if(confirm("정말 삭제 하시겠습니까?")){
 	           let form = document.createElement("form");
 	           form.setAttribute("method", "post");
-	           form.setAttribute("action", "${path}/job/deletejob.do");
+	           form.setAttribute("action", "${path}/admin/job/deletejob.do");
 	
 	           let $key = document.createElement("input");
 	           $key.setAttribute("type", "hidden");
