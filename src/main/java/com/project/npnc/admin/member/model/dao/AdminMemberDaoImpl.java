@@ -15,7 +15,7 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 	@Override
 	public List<AdminMember> selectMemeberAll(SqlSession session, Map<String,Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("member.selectMemeberAll",null,rb);
+		return session.selectList("member.selectMemberAll",null,rb);
 	}
 
 	@Override

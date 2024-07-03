@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminMemberServiceImpl implements AdminMemberService {
 	
 	private final AdminMemberDao dao;
-	private SqlSession session;
+	private final SqlSession session;
 	
 	@Override
 	public List<AdminMember> selectMemeberAll(Map<String,Integer> page) {

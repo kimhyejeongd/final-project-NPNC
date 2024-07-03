@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DepartmentController {
 	
-private final DepartmentService service;
+	private final DepartmentService service;
 	
 	
 	@PostMapping("/insertdept.do")

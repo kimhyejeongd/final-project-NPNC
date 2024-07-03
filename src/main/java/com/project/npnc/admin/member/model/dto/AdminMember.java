@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -16,14 +17,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AdminMember {
 	private int memberKey;
-	private Department departmentKey;
-	private Job jobKey;
+	private Department department;
+	private Job job;
 	private String memberId;
 	private String memberPw;
 	private String memberPhone;
 	private String memberEmail;
 	private String memberMessage;
-	private Date enrollDate;
+	private Date memberEnrollDate;
 	private Date memberLeaveDate;
 	private String memberTell;
 	private String memberAddress;
