@@ -1,12 +1,12 @@
-package com.project.npnc.job.model.service;
+package com.project.npnc.admin.job.model.service;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
-import com.project.npnc.job.model.dao.JobDao;
-import com.project.npnc.job.model.dto.Job;
+import com.project.npnc.admin.job.model.dao.JobDao;
+import com.project.npnc.admin.job.model.dto.Job;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -9,38 +9,37 @@
 </head>
 <body>
 	<div>	
-		<form action="${path }/job/insertjob.do" method="post">
-			직급명<input type="text" name="jobName">
+		<form action="${path }/dept/insertdept.do" method="post">
+			부서명<input type="text" name="deptName">
 			<input type="submit" value="등록">
 		</form>
 	</div>
 	<table>
 		<tr>
-			<th>직급번호</th>
-			<th>직급명</th>
+			<th>부서코드</th>
+			<th>부서명</th>
 		</tr>
-		<c:if test="${not empty job}">
-			<c:forEach var="j" items="${job}">
+		<c:if test="${not empty dept}">
+			<c:forEach var="d" items="${dept}">
 				<tr>
-					<td>${j.jobKey }</td>
-					<td>${j.jobName }</td>
+					<td>${d.deptKey }</td>
+					<td>${d.deptName }</td>
 					<td>
-						<button onclick="updateJob('${j.jobKey }','${j.jobName }');">수정</button>
+						<button onclick="updateDept('${d.deptKey }','${d.deptName }');">수정</button>
 					</td>
 					<td>
-						<button onclick="deleteJob('${j.jobKey}');">삭제</button>
+						<button onclick="deleteDept('${d.deptKey}');">삭제</button>
 					</td>
-					
 				</tr>
 			</c:forEach>
 		</c:if>
 		
 	</table>
 	<script>
-		const updateJob=(key,name)=>{
+		const updateDept=(key,name)=>{
             let form = document.createElement("form");
             form.setAttribute("method", "post");
-            form.setAttribute("action", "${path}/job/updatejob.do");
+            form.setAttribute("action", "${path}/admin/dept/updatedept.do");
 
             let $key = document.createElement("input");
             $key.setAttribute("type", "hidden");
@@ -49,7 +48,7 @@
             
             let names= document.createElement("input");
             names.setAttribute("type", "hidden");
-            names.setAttribute("name", "jobName");
+            names.setAttribute("name", "deptName");
             names.setAttribute("value",name );
 
            
@@ -61,11 +60,11 @@
 		}
 		
 		
-		const deleteJob=(key)=>{
+		const deleteDept=(key)=>{
 		   if(confirm("정말 삭제 하시겠습니까?")){
 	           let form = document.createElement("form");
 	           form.setAttribute("method", "post");
-	           form.setAttribute("action", "${path}/job/deletejob.do");
+	           form.setAttribute("action", "${path}/admin/dept/deletedept.do");
 	
 	           let $key = document.createElement("input");
 	           $key.setAttribute("type", "hidden");

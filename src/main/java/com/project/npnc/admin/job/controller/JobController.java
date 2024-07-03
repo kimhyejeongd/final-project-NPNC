@@ -1,4 +1,4 @@
-package com.project.npnc.job.controller;
+package com.project.npnc.admin.job.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.project.npnc.job.model.dto.Job;
-import com.project.npnc.job.model.service.JobService;
+import com.project.npnc.admin.job.model.dto.Job;
+import com.project.npnc.admin.job.model.service.JobService;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/job")
+@RequestMapping("/admin/job")
 @RequiredArgsConstructor
 public class JobController {
 
@@ -38,7 +38,7 @@ public class JobController {
 	@GetMapping("/selectjoball.do")
 	public String selectJobAll(Model m) {
 		m.addAttribute("job",service.selectJobAll());
-		return "job/joblist";
+		return "admin/job/joblist";
 	}
 	
 	@PostMapping("/deletejob.do")
@@ -62,7 +62,7 @@ public class JobController {
 		m.addAttribute("key",key);
 		m.addAttribute("jobName",jobName);
 		
-		return "job/updatejob";
+		return "admin/job/updatejob";
 	}
 	
 	

@@ -1,4 +1,4 @@
-package com.project.npnc.job.model.dto;
+package com.project.npnc.admin.job.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

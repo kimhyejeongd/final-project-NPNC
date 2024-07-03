@@ -1,10 +1,10 @@
-package com.project.npnc.job.model.dao;
+package com.project.npnc.admin.job.model.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.project.npnc.job.model.dto.Job;
+import com.project.npnc.admin.job.model.dto.Job;
 
 public interface JobDao {
 

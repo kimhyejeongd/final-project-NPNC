@@ -1,8 +1,8 @@
-package com.project.npnc.job.model.service;
+package com.project.npnc.admin.job.model.service;
 
 import java.util.List;
 
-import com.project.npnc.job.model.dto.Job;
+import com.project.npnc.admin.job.model.dto.Job;
 
 public interface JobService {
 	
