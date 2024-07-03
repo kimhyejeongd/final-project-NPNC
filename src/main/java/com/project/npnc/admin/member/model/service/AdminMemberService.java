@@ -3,16 +3,16 @@ package com.project.npnc.admin.member.model.service;
 import java.util.List;
 import java.util.Map;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.admin.member.model.dto.AdminMember;
 
 public interface AdminMemberService {
 	
-	List<Member> selectMemeberAll(Map<String,Integer> page);
+	List<AdminMember> selectMemeberAll(Map<String,Integer> page);
 	int selectMemberCount();
-	Member selectMemberByNo(int memberKey);
+	AdminMember selectMemberByNo(int memberKey);
 	
-	int insertMember(Member m);
-	int updateMember(Member m);
+	int insertMember(AdminMember m);
+	int updateMember(AdminMember m);
 	int deleteMember(int memberKey);
 	
 	

@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.admin.member.model.dao.AdminMemberDao;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.admin.member.model.dto.AdminMember;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	private SqlSession session;
 	
 	@Override
-	public List<Member> selectMemeberAll(Map<String,Integer> page) {
+	public List<AdminMember> selectMemeberAll(Map<String,Integer> page) {
 
 		return dao.selectMemeberAll(session, page);
 	}
@@ -31,19 +31,19 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	}
 
 	@Override
-	public Member selectMemberByNo(int memberkey) {
+	public AdminMember selectMemberByNo(int memberkey) {
 		
 		return dao.selectMemberByNo(session, memberkey);
 	}
 
 	@Override
-	public int insertMember(Member m) {
+	public int insertMember(AdminMember m) {
 
 		return dao.insertMember(session, m);
 	}
 
 	@Override
-	public int updateMember(Member m) {
+	public int updateMember(AdminMember m) {
 
 		return dao.updateMember(session, m);
 	}

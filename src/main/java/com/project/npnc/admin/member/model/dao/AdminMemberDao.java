@@ -5,16 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.admin.member.model.dto.AdminMember;
 
 public interface AdminMemberDao {
 
-	List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page);
+	List<AdminMember> selectMemeberAll(SqlSession session, Map<String,Integer> page);
 	int selectMemberCount(SqlSession session);
-	Member selectMemberByNo(SqlSession session,int memberKey);
+	AdminMember selectMemberByNo(SqlSession session,int memberKey);
 	
-	int insertMember(SqlSession session,Member m);
-	int updateMember(SqlSession session,Member m);
+	int insertMember(SqlSession session,AdminMember m);
+	int updateMember(SqlSession session,AdminMember m);
 	int deleteMember(SqlSession session,int memberKey);
 	
 }

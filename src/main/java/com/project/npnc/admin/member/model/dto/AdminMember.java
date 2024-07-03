@@ -1,6 +1,9 @@
-package com.project.npnc.member.model.dto;
+package com.project.npnc.admin.member.model.dto;
 
 import java.sql.Date;
+
+import com.project.npnc.admin.department.model.dto.Department;
+import com.project.npnc.admin.job.model.dto.Job;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class AdminMember {
 	private int memberKey;
-	private String departmentKey;
-	private String jobKey;
+	private Department departmentKey;
+	private Job jobKey;
 	private String memberId;
 	private String memberPw;
 	private String memberPhone;
