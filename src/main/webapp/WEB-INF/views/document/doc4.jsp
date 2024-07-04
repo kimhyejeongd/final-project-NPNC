@@ -478,7 +478,7 @@ var ui = $.summernote.ui;
 	// Initialize Summernote
 	$('#summernote').summernote({
 	    height: '100%', 
-	    focus: true, // set focus to editable area after initializing summernote
+	    focus: false, 
 	    callbacks: {
 	        onInit: function() {
 	            // Set initial content
