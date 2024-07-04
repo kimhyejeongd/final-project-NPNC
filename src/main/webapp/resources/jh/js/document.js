@@ -14,12 +14,11 @@ const viewFormList =(no, name)=>{
 			$("div#formlist").html('');
 			$("div#foldername").html('');
 			formArr.forEach((e)=>{
-				console.log(e.ER_FORM_NAME);
 				let $icondiv = $("<div>").addClass('ms-3');
 				$("<i>").addClass('icon-drawer').appendTo($icondiv);
 				let $namediv = $("<div>").addClass('info-user ms-3');
 				$("<div>").addClass('username text-start').text(e.ER_FORM_NAME).appendTo($namediv)
-				let $button = $("<button>").addClass('btn item-list border rounded w-100 mb-2');
+				let $button = $("<button>").addClass('btn item-list border rounded w-100 mb-2').attr('onclick', `writedoc(${e.ER_FORM_KEY});`);
 				$icondiv.appendTo($button);
 				$namediv.appendTo($button);
 				$button.appendTo($("div#formlist"));
@@ -38,7 +37,7 @@ $("#formsearchbtn").click(e=>{
 			let formArr = data;
 			console.log(formArr);
 			$("#formlistdiv").css("display", "block");
-			$("div#formfoldername").text(formArr[0].ER_FORM_FOLDER_NAME);//포함된 폴더명
+			$("div#formfoldername").text('검색결과');
 			//TODO 검색 결과 화면 레이아웃에 맞춰 화면에 출력
 			$("div#formlist").html('');
 			$("div#foldername").html('');
@@ -57,3 +56,6 @@ $("#formsearchbtn").click(e=>{
 		}
 	});
 });
+const writedoc=(formNo)=>{
+	location.assign(`${path}/document/write?form=${formNo}`);
+}

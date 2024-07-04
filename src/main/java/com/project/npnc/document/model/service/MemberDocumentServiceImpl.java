@@ -28,5 +28,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<DocumentForm> selectFormsBySearch(String target) {
 		return dao.selectFormsBySearch(session, target);
 	}
+	@Override
+	public DocumentForm selectFormByNo(int no) {
+		return dao.selectFormByNo(session, no);
+	}
 
 }

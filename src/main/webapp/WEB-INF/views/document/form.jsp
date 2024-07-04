@@ -22,7 +22,7 @@
       <!-- Sidebar -->
       <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
-
+	</div>
       <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">

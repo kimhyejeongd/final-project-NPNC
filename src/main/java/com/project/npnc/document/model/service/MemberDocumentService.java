@@ -10,4 +10,5 @@ public interface MemberDocumentService {
 	List<DocumentFormFolder> selectformFolders();
 	List<DocumentForm> selectForms(int no);
 	List<DocumentForm> selectFormsBySearch(String target);
+	DocumentForm selectFormByNo(int no);
 }

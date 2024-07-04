@@ -13,7 +13,6 @@
     />
     <link
       rel="icon"
-      href="${path}/resources/assets/img/kaiadmin/favicon.ico"
       type="image/x-icon"
     />
   </head>
