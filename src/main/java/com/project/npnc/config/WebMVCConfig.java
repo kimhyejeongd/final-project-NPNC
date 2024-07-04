@@ -11,7 +11,8 @@ public class WebMVCConfig implements WebMvcConfigurer{
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/job/insertjob.do").setViewName("admin/job/insertjob");
+		registry.addViewController("admin/job/insertjob.do").setViewName("admin/job/insertjob");
+		registry.addViewController("admin/member/insertmember.do").setViewName("admin/member/insertmember");
 	}
 
 	

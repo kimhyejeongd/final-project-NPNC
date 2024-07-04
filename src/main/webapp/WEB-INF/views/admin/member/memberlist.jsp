@@ -26,38 +26,72 @@
 		                      >
 		                        <thead>
 		                          <tr>
-		                            <th>Name</th>
-		                            <th>Position</th>
-		                            <th>Office</th>
-		                            <th>Age</th>
-		                            <th>Start date</th>
-		                            <th>Salary</th>
+		                            <th>아이디</th>
+		                            <th>이름</th>
+		                            <th>부서</th>
+		                            <th>직급</th>
+		                            <th>사내번호</th>
+		                            <th>근속상태</th>
 		                          </tr>
 		                        </thead>
 		                        <tbody>	
-		                          <tr>
-		                            <td>Tiger Nixon</td>
-		                            <td>System Architect</td>
-		                            <td>Edinburgh</td>
-		                            <td>61</td>
-		                            <td>2011/04/25</td>
-		                            <td>$320,800</td>
-		                          </tr>
-		                          <tr>
-		                            <td>Garrett Winters</td>
-		                            <td>Accountant</td>
-		                            <td>Tokyo</td>
-		                            <td>63</td>
-		                            <td>2011/07/25</td>
-		                            <td>$170,750</td>
-		                          </tr>
+		                        <c:if test="${not empty members }">
+		                        	<c:forEach var="m" items="${members }">
+				                          <tr>
+				                            <td>${m.memberId }</td>
+				                            <td>${m.memberName }</td>
+				                            <td>${m.department.deptName }</td>
+				                            <td>${m.job.jobName }</td>
+				                            <td>${m.memberTell }</td>
+				                            <td>${m.memberState }</td>
+				                            <td>
+				                            	<button onclick="deleteMember('${m.memberKey}');">삭제</button>
+				                            </td>
+				                          </tr>
+			                        </c:forEach>
+		                         </c:if>
+		                         <c:if test="${empty members }">
+		                         	<tr>
+		                         		<td><h3>등록된 사원이 없습니다.</h3></td>
+		                         	</tr>
+		                         	
+		                         </c:if>
+		                         
 		                        </tbody>
 		                      </table>
 		                    </div>
-					  <button>등록</button>
+					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')">등록</button>
 		                  </div>
 		                </div>
 		              </div>
 			</div>
+			<script>
+			
+				const deleteMember=(key)=>{
+					   if(confirm("정말 삭제 하시겠습니까?")){
+				           let form = document.createElement("form");
+				           form.setAttribute("method", "post");
+				           form.setAttribute("action", "${path}/admin/member/deletemember.do");
+				
+				           let $key = document.createElement("input");
+				           $key.setAttribute("type", "hidden");
+				           $key.setAttribute("name", "memberKey");
+				           $key.setAttribute("value", key);
+				 
+				           form.appendChild($key);
+				
+				
+				           document.body.appendChild(form);
+				           form.submit();
+					   }else{
+						   alert("삭제가 취소되었습니다.");
+					   }
+					   
+					}
+
+			
+			</script>
+			
+			
 </body>
 </html>

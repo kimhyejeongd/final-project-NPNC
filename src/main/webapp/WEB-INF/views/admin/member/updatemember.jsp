@@ -7,6 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+		<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
+				
+
 
 </body>
 </html>

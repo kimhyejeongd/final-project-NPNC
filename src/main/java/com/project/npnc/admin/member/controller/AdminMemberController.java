@@ -48,7 +48,7 @@ private final AdminMemberService service;
 		return "admin/member/memberdetail";
 	}
 	
-	@PostMapping("/insertmember.do")
+	@PostMapping("/insertmemberend.do")
 	public String insertMember(AdminMember mem,Model m) {
 		int result=service.insertMember(mem);
 		String msg,loc;
