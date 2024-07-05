@@ -10,17 +10,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.npnc.admin.department.model.dto.Department;
+import com.project.npnc.admin.department.model.service.DepartmentService;
+import com.project.npnc.admin.job.model.dto.Job;
+import com.project.npnc.admin.job.model.service.JobService;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/member")
+@Slf4j
 public class AdminMemberController {
 	
-private final AdminMemberService service;
+	private final AdminMemberService service;
+	private final DepartmentService deptService;
+	private final JobService jobService;
 	
 	
 	@GetMapping("/selectmemberall.do")
@@ -48,8 +56,21 @@ private final AdminMemberService service;
 		return "admin/member/memberdetail";
 	}
 	
+	@GetMapping("/insertmember.do")
+	public void insertMember(Model m) {
+		List<Department> dept=deptService.selectDeptAll();
+		List<Job> job=jobService.selectJobAll();
+		m.addAttribute("dept",dept);
+		m.addAttribute("job",job);
+	}
+	
+	
 	@PostMapping("/insertmemberend.do")
-	public String insertMember(AdminMember mem,Model m) {
+	public String insertMember(AdminMember mem,String jobKey,String deptKey,Model m) {
+		mem.setJob(Job.builder().jobKey(jobKey).build());
+		mem.setDepartment(Department.builder().deptKey(deptKey).build());
+		log.info("{}",mem);
+		System.out.println(mem);
 		int result=service.insertMember(mem);
 		String msg,loc;
 		if(result>0) {

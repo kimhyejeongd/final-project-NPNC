@@ -10,7 +10,7 @@
 </head>
 <body>
 		<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
-		<form action="${path}/admin/member/insertmemberend.do">
+		<form action="${path}/admin/member/insertmemberend.do" method="post">
 		 <div class="container">
           <div class="page-inner">
             <div class="page-header">
@@ -84,6 +84,22 @@
                             />
                           </div>
                		</div>
+               		<div class="form-group form-inline">
+                          <label
+                            for="memberTell"
+                            class="col-md-3 col-form-label"
+                            >사내번호</label
+                          >
+                          <div class="col-md-9 p-0">
+                            <input
+                              type="text"
+                              class="form-control input-full"
+                              id="memberTell"
+                              name="memberTell"
+                              placeholder="사내번호"
+                            />
+                          </div>
+               		</div>
 						<div class="form-group">
                           <label for="memberEmail">Email Address</label>
                           <input
@@ -113,7 +129,7 @@
                			</div>
                		</div>
                		
-               		<div class="form-group">
+               		<!-- <div class="form-group">
 	            		<div class="form-group form-inline">
 	                          <label
 	                            for="memberLeaveDate"
@@ -126,6 +142,24 @@
 	                              class="form-control input-full"
 	                              id="memberLeaveDate"
 	                              name="memberLeaveDate"
+	                            />
+	                          </div>
+               			</div>
+               		</div> -->
+               		
+               		<div class="form-group">
+	            		<div class="form-group form-inline">
+	                          <label
+	                            for="memberBirthdate"
+	                            class="col-md-3 col-form-label"
+	                            >생년월일</label
+	                          >
+	                          <div class="col-md-9 p-0">
+	                            <input
+	                              type="date"
+	                              class="form-control input-full"
+	                              id="memberBirthdate"
+	                              name="memberBirthdate"
 	                            />
 	                          </div>
                			</div>
@@ -175,14 +209,19 @@
                           <select
                             class="form-select"
                             id="department"
-                            name="department"
+                            name="deptKey"
                           >
-                            <option value="">경영지원팀</option>
-                            <option value="">인사/총무팀</option>
-                            <option value="">고객지원팀</option>
-                            <option value="">기술지원팀</option>
-                            <option value="">영업팀</option>
+	                          <c:if test="${not empty dept}">
+	                          	<c:forEach var="d" items="${dept }">
+	                            <option value="${d.deptKey }">${d.deptName }</option>
+	                            </c:forEach>
+	                           </c:if>
+	                           <c:if test="${empty dept}">
+	                            <option value="">select</option>
+	                           </c:if>
                           </select>
+                          
+                          
                         </div>
                         <div class="form-group">
                           <label for="job"
@@ -191,12 +230,16 @@
                           <select
                             class="form-select"
                             id="job"
-                            name="job"
+                            name="jobKey"
                           >
-                            <option value="">대표이사</option>
-                            <option value="">팀장</option>
-                            <option value="">대리</option>
-                            <option value="">사원</option>
+                            <c:if test="${not empty job}">
+	                          	<c:forEach var="j" items="${job }">
+	                            <option value="${j.jobKey }">${j.jobName }</option>
+	                            </c:forEach>
+	                           </c:if>
+	                           <c:if test="${empty job}">
+	                            <option value="">select</option>
+	                           </c:if>
                           </select>
                         </div>
                         <div class="form-group">
@@ -208,9 +251,9 @@
                             id="memberState"
                             name="memberState"
                           >
-                            <option value="">재직</option>
-                            <option value="">휴직</option>
-                            <option value="">퇴사</option>
+                            <option value="재직">재직</option>
+                            <option value="휴직">휴직</option>
+                            <option value="퇴사">퇴사</option>
                           </select>
                         </div>
  
@@ -220,39 +263,30 @@
                             <label class="selectgroup-item">
                               <input
                                 type="checkbox"
-                                name="value"
-                                value=""
+                                name="accessKey"
+                                value="1"
                                 class="selectgroup-input"
                                 checked=""
-                              />
-                              <span class="selectgroup-button">인사</span>
-                            </label>
-                            <label class="selectgroup-item">
-                              <input
-                                type="checkbox"
-                                name="value"
-                                value="CSS"
-                                class="selectgroup-input"
-                              />
-                              <span class="selectgroup-button">결재</span>
-                            </label>
-                            <label class="selectgroup-item">
-                              <input
-                                type="checkbox"
-                                name="value"
-                                value="PHP"
-                                class="selectgroup-input"
                               />
                               <span class="selectgroup-button">관리자</span>
                             </label>
                             <label class="selectgroup-item">
                               <input
                                 type="checkbox"
-                                name="value"
-                                value="JavaScript"
+                                name="accessKey"
+                                value="2"
                                 class="selectgroup-input"
                               />
                               <span class="selectgroup-button">사원</span>
+                            </label>
+                            <label class="selectgroup-item">
+                              <input
+                                type="checkbox"
+                                name="accessKey"
+                                value="3"
+                                class="selectgroup-input"
+                              />
+                              <span class="selectgroup-button">인사</span>
                             </label>
                           </div>
                         </div>

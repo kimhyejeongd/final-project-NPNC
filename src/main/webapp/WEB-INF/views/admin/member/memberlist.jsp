@@ -37,6 +37,7 @@
 		                        <tbody>	
 		                        <c:if test="${not empty members }">
 		                        	<c:forEach var="m" items="${members }">
+				                        <a href="location.assign('${path}/admin/member/updatemember.do')">
 				                          <tr>
 				                            <td>${m.memberId }</td>
 				                            <td>${m.memberName }</td>
@@ -47,7 +48,11 @@
 				                            <td>
 				                            	<button onclick="deleteMember('${m.memberKey}');">삭제</button>
 				                            </td>
+				                            <td>
+				                            	<button onclick="deleteMember('${m.memberKey}');">삭제</button>
+				                            </td>
 				                          </tr>
+				                       	</a>
 			                        </c:forEach>
 		                         </c:if>
 		                         <c:if test="${empty members }">
