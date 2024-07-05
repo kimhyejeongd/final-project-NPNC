@@ -25,5 +25,8 @@ public class Member {
 	private String memberTell;
 	private String memberAddress;
 	private int accessKey;
-
+	private String memberName;
+	private String memberGender;
+	private String memberState;
+	private Date memberBirthdate;
 }
