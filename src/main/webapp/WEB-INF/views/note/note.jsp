@@ -1,25 +1,58 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
-
-</head>
-<body>
-
-  
-  <!-- script gather -->
+	
+  <head>
+  	<meta charset="UTF-8">
+  	
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="${path}/resources/assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
     
-    <%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
-   
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	
+    <!-- Fonts and icons -->
+    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["${path}/resources/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
 
- 
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
+  </head>
+  <body>
     <div class="wrapper">
       <!-- Sidebar -->
       <div class="sidebar" data-background-color="dark">
@@ -299,54 +332,154 @@
       <!-- End Sidebar -->
 
       <div class="main-panel">
-          <!-- header_bar  -->
+        <!-- header_bar  -->
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+       
 
         <div class="container">
+        <!-- page-inner -->
           <div class="page-inner">
-          	<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Accordion Item #1
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        Accordion Item #2
-      </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        Accordion Item #3
-      </button>
-    </h2>
-    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-</div>
-          
+          <div>
+          <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+           <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Greetings</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+            </div>
+                      
+           <h2> 쪽지</h2>
+           
+           <div>
+           	    <c:forEach var="d" items="${list}">
+           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
+           	  	<p>${d.memberKey}<p>
+           	  </c:forEach> 
+           		<input type="number" name="memberKey" id="memberKey">
+           		<input type="text" name="postMsgDetail" id="postMsgDetail">
+           	   <button class="btn btn-success" onclick="notego();">Submit</button>
+           </div>
+           
+           <!-- 다중 전송 메소드 -->
+           <form action="${path}/notewrite2">
+           	  <c:forEach var="d" items="${list}">
+           	    <input type="checkbox"  name="reMemberKey" value="${d.memberKey }">
+           	  	<p>${d.memberKey}<p>
+           	  </c:forEach>
+           		<input type="number" name="memberKey">
+           		<input type="text" name="postMsgDetail">
+           	   <button class="btn btn-success">Submit</button>
+           </form>
           </div>
         </div>
+                    
+        
+        
+		<script>
+		    var stompClient = null;
+				
+		    function setConnected(connected) {
+		        $("#connect").prop("disabled", connected);
+		        $("#disconnect").prop("disabled", !connected);
+		        if (connected) {
+		            $("#conversation").show();
+		        }
+		        else {
+		            $("#conversation").hide();
+		        }
+		        $("#greetings").html("");
+		    }
+		    
+		    
+            // 선택된 라디오 버튼의 값을 가져옴
+			
+            
+		    function notego(){
 
-       <!-- footer -->
+	           
+	            var selectedRadio = document.getElementsByName('reMemberKey1');
+	            var reMemberKey1=null;
+	            	  for(let i=0; i<selectedRadio.length;i++){
+	                        if(selectedRadio[i].checked){
+	                              var reMemberKey1=selectedRadio[i].value;  
+	                         }
+	                  }
+				
+	            // 나머지 인풋 값들을 가져옴
+	            var memberKey = document.getElementById('memberKey').value;
+	            var postMsgDetail = document.getElementById('postMsgDetail').value;
+
+		    	$.ajax({
+		    		url : '${path}/notewrite',
+		    		type : 'POST',
+		    		data : {
+		    			"reMemberKey" : reMemberKey1,
+		    			"memberKey" : memberKey,
+		    			"postMsgDetail" : postMsgDetail
+		    			
+		    		},
+		    		success : function(){
+		    			alert('성공');
+		    				
+		    			send(reMemberKey1, memberKey);
+		    		}
+		    	});
+		    	 
+		    }
+            function notelistgo(){
+            	
+            }
+
+		    function connect() {
+		        let socket = new SockJS('http://localhost:8080/ws-stomp');
+		        stompClient = Stomp.over(socket);
+		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
+		            setConnected(true);
+		            console.log('Connected: ' + frame);
+		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
+		                console.log('구독 중', msg);
+		            });
+		        });
+		    }
+		   
+		   	function send(reMemberKey1, memberKey){
+		   	 console.log('send보내짐');
+		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
+		   			JSON.stringify({
+		   				'reMemberKey' : reMemberKey1,
+		   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
+		   				
+		   			})
+		   				
+		   		);
+		   	} 
+		   
+		    
+		    function disconnect() {
+		        if (stompClient !== null) {
+		            stompClient.disconnect();
+		        }
+		        setConnected(false);
+		        console.log("Disconnected");
+		    }
+			
+		    window.onload = function () {
+		        connect();
+		    }
+
+		    window.onbeforeunload = function () {
+		        disconnect();
+		    }
+		    
+		
+		</script>
+        <!-- footer -->
           <%@ include file="/WEB-INF/views/common/footer.jsp" %>
       </div>
 
@@ -545,7 +678,69 @@
       </div>
       <!-- End Custom template -->
     </div>
-    
-  
+    <!--   Core JS Files   -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="${path}/resources/assets/js/setting-demo.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script>
+    <script>
+      $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#177dff",
+        fillColor: "rgba(23, 125, 255, 0.14)",
+      });
+
+      $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#f3545d",
+        fillColor: "rgba(243, 84, 93, .14)",
+      });
+
+      $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#ffa534",
+        fillColor: "rgba(255, 165, 52, .14)",
+      });
+    </script>
   </body>
 </html>
