@@ -29,6 +29,7 @@ public class AdminMemberController {
 	private final AdminMemberService service;
 	private final DepartmentService deptService;
 	private final JobService jobService;
+
 	
 	
 	@GetMapping("/selectmemberall.do")
@@ -70,7 +71,10 @@ public class AdminMemberController {
 		mem.setJob(Job.builder().jobKey(jobKey).build());
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
 		log.info("{}",mem);
-		System.out.println(mem);
+		//패스워드 암호화
+		
+		
+		
 		int result=service.insertMember(mem);
 		String msg,loc;
 		if(result>0) {
@@ -86,8 +90,23 @@ public class AdminMemberController {
 		return "common/msg";
 	}
 	
+	
 	@PostMapping("/updatemember.do")
-	public String updateMember(AdminMember mem,Model m) {
+	public String updateMember(Model m,int memberKey) {
+		AdminMember member =service.selectMemberByNo(memberKey);
+		List<Department> dept=deptService.selectDeptAll();
+		List<Job> job=jobService.selectJobAll();
+		m.addAttribute("dept",dept);
+		m.addAttribute("job",job);
+		m.addAttribute("member",member);
+		
+		return "admin/member/updatemember";
+	}
+	
+	@PostMapping("/updatememberend.do")
+	public String updateMember(AdminMember mem,String jobKey,String deptKey,Model m) {
+		mem.setJob(Job.builder().jobKey(jobKey).build());
+		mem.setDepartment(Department.builder().deptKey(deptKey).build());
 		int result=service.updateMember(mem);
 		String msg,loc;
 		if(result>0) {

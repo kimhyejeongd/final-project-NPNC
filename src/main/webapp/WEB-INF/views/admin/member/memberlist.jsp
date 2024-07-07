@@ -16,7 +16,7 @@
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
-		                    <h4 class="card-title">Multi Filter Select</h4>
+		                    <h4 class="card-title">전체사원관리</h4>
 		                  </div>
 		                  <div class="card-body">
 		                    <div class="table-responsive">
@@ -46,10 +46,10 @@
 				                            <td>${m.memberTell }</td>
 				                            <td>${m.memberState }</td>
 				                            <td>
-				                            	<button onclick="deleteMember('${m.memberKey}');">삭제</button>
+				                            	<button onclick="updateMember('${m.memberKey}');" class="btn btn-dark">수정</button>
 				                            </td>
 				                            <td>
-				                            	<button onclick="deleteMember('${m.memberKey}');">삭제</button>
+				                            	<button onclick="deleteMember('${m.memberKey}');" class="btn btn-dark">삭제</button>
 				                            </td>
 				                          </tr>
 				                       	</a>
@@ -65,12 +65,30 @@
 		                        </tbody>
 		                      </table>
 		                    </div>
-					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')">등록</button>
+					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')" class="btn btn-success">등록</button>
 		                  </div>
 		                </div>
 		              </div>
 			</div>
 			<script>
+				
+				const updateMember=(key)=>{
+				            let form = document.createElement("form");
+				            form.setAttribute("method", "post");
+				            form.setAttribute("action", "${path}/admin/member/updatemember.do");
+
+				            let $key = document.createElement("input");
+				            $key.setAttribute("type", "hidden");
+				            $key.setAttribute("name", "memberKey");
+				            $key.setAttribute("value", key);
+
+				            form.appendChild($key);
+
+				            document.body.appendChild(form);
+				            form.submit();
+						}
+				
+				
 			
 				const deleteMember=(key)=>{
 					   if(confirm("정말 삭제 하시겠습니까?")){
