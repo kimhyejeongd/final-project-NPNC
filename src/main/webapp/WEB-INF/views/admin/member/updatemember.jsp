@@ -118,7 +118,7 @@
 		                              id="memberTell"
 		                              name="memberTell"
 									  value="${member.memberTell}"
-		                              placeholder="사내번호"
+		                              placeholder="사내번호 예)845-0000"
 		                            />
 		                          </div>
 		               		</div>
@@ -167,6 +167,7 @@
 				                              class="form-control input-full"
 				                              id="memberLeaveDate"
 				                              name="memberLeaveDate"
+											  value="0001-01-01"
 				                            />
 				                          </div>
 			               			</div>

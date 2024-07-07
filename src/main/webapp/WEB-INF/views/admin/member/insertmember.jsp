@@ -49,6 +49,7 @@
                               id="memberName"
                               name="memberName"
                               placeholder="이름"
+							  required
                             />
                           </div>
                		</div>
@@ -65,6 +66,7 @@
                               id="memberAddress"
                               name="memberAddress"
                               placeholder="주소"
+							  required
                             />
                           </div>
                		</div>
@@ -80,7 +82,8 @@
                               class="form-control input-full"
                               id="memberPhone"
                               name="memberPhone"
-                              placeholder="핸드폰번호"
+                              placeholder=" -없이 입력해주세요 예)01012341234"
+							  required
                             />
                           </div>
                		</div>
@@ -96,7 +99,8 @@
                               class="form-control input-full"
                               id="memberTell"
                               name="memberTell"
-                              placeholder="사내번호"
+                              placeholder="사내번호 예)845-0000"
+							  required
                             />
                           </div>
                		</div>
@@ -108,6 +112,7 @@
                             id="memberEmail"
                             name="memberEmail"
                             placeholder="Enter Email"
+							required
                           />
                         </div>
                         
@@ -124,6 +129,7 @@
 	                              class="form-control input-full"
 	                              id="memberEnrollDate"
 	                              name="memberEnrollDate"
+								  required
 	                            />
 	                          </div>
                			</div>
@@ -142,6 +148,7 @@
 	                              class="form-control input-full"
 	                              id="memberLeaveDate"
 	                              name="memberLeaveDate"
+								  required
 	                            />
 	                          </div>
                			</div>
@@ -160,6 +167,7 @@
 	                              class="form-control input-full"
 	                              id="memberBirthdate"
 	                              name="memberBirthdate"
+								  required
 	                            />
 	                          </div>
                			</div>
@@ -175,6 +183,7 @@
                                 name="memberGender"
                                 id="memberGender"
                                 value="M"
+								required
                               />
                               <label
                                 class="form-check-label"
@@ -190,7 +199,7 @@
                                 name="memberGender"
                                 id="memberGender2"
                                 value="F"
-                                checked
+                                required
                               />
                               <label
                                 class="form-check-label"
@@ -210,6 +219,7 @@
                             class="form-select"
                             id="department"
                             name="deptKey"
+							required
                           >
 	                          <c:if test="${not empty dept}">
 	                          	<c:forEach var="d" items="${dept }">
@@ -231,6 +241,7 @@
                             class="form-select"
                             id="job"
                             name="jobKey"
+							required
                           >
                             <c:if test="${not empty job}">
 	                          	<c:forEach var="j" items="${job }">
@@ -250,6 +261,7 @@
                             class="form-select"
                             id="memberState"
                             name="memberState"
+							required
                           >
                             <option value="재직">재직</option>
                             <option value="휴직">휴직</option>
@@ -266,7 +278,7 @@
                                 name="accessKey"
                                 value="1"
                                 class="selectgroup-input"
-                                checked=""
+								
                               />
                               <span class="selectgroup-button">관리자</span>
                             </label>
@@ -276,6 +288,7 @@
                                 name="accessKey"
                                 value="2"
                                 class="selectgroup-input"
+								
                               />
                               <span class="selectgroup-button">사원</span>
                             </label>
@@ -285,6 +298,7 @@
                                 name="accessKey"
                                 value="3"
                                 class="selectgroup-input"
+								
                               />
                               <span class="selectgroup-button">인사</span>
                             </label>

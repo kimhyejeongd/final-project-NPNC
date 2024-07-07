@@ -29,6 +29,7 @@ public class AdminMemberController {
 	private final AdminMemberService service;
 	private final DepartmentService deptService;
 	private final JobService jobService;
+//	private final BCryptPasswordEncoder pwencoder;
 
 	
 	
@@ -72,8 +73,8 @@ public class AdminMemberController {
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
 		log.info("{}",mem);
 		//패스워드 암호화
-		
-		
+//		String encodePw=pwencoder.encode(mem.getMemberPw());
+//		mem.setMemberPw(encodePw);
 		
 		int result=service.insertMember(mem);
 		String msg,loc;
