@@ -155,7 +155,7 @@
         </div>
       </div>
       <!-- End Sidebar -->
-          <!--   Core JS Files   -->
+    <!--   Core JS Files   -->
     <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
     <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
