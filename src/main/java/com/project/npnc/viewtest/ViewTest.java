@@ -20,7 +20,7 @@ public class ViewTest {
 
 
 	@RequestMapping("/starter-template")
-	public String test3() {
+	public String test31() {
 		return "starter-template";
 	}
 
