@@ -142,7 +142,7 @@ $(document).ready(function() {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
 				// iframe 데이터 확인
-				let framedata = document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling.innerHTML;
+				let framedata = (document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
 				console.log(framedata);
 				
 				let opinion = $('#input-field').val();
