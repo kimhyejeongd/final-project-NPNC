@@ -120,6 +120,7 @@
           </div>
          </div>
        </div>
+       </div>
 <!-- SweetAlert2 초기화 및 모달 관련 스크립트 -->
 <script>
 $(document).ready(function() {
@@ -140,7 +141,12 @@ $(document).ready(function() {
 			if (result.isConfirmed) {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
+				// iframe 데이터 확인
+				let framedata = document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling.innerHTML;
+				console.log(framedata);
+				
 				let opinion = $('#input-field').val();
+				$("<input>").val(framedata).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
 				$("#docForm").submit();
 			}
@@ -166,8 +172,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-	// iframe 초기화 관련 스크립트 추가 필요 (생략됨)
 
 });
 </script>

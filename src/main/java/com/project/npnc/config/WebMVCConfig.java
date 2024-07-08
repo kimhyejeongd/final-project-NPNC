@@ -2,6 +2,7 @@ package com.project.npnc.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,5 +21,10 @@ public class WebMVCConfig implements WebMvcConfigurer{
                 .allowedMethods("*");  // 모든 HTTP 메소드 허용
     }
 	
-	
+	@Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 문서 기안 요청을 클래스패스(static)의 /uploads/dochtml 디렉토리로 매핑
+        registry.addResourceHandler("/document/writeend/**")
+                .addResourceLocations("classpath:/static/uploads/dochtml/");
+    }
 }
