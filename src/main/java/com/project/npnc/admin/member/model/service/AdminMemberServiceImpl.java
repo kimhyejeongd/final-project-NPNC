@@ -53,5 +53,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return dao.deleteMember(session, memberKey);
 	}
 
+	@Override
+	public int selectMemberKeyById(String MemberId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }
