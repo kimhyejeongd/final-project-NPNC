@@ -10,6 +10,7 @@ public interface AdminMemberService {
 	List<AdminMember> selectMemeberAll(Map<String,Integer> page);
 	int selectMemberCount();
 	AdminMember selectMemberByNo(int memberKey);
+	int selectMemberKeyById(String MemberId);
 	
 	int insertMember(AdminMember m);
 	int updateMember(AdminMember m);

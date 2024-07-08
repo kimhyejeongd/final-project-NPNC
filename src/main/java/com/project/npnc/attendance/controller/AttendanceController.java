@@ -1,6 +1,8 @@
 package com.project.npnc.attendance.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
@@ -32,12 +34,11 @@ public class AttendanceController{
 	
 	@PostMapping("/startattendance.do")
 	public String startAttendance(Attendance a,Model m,Authentication authentication) {
-		String memberId = authentication.getName();
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDateTime attendanceStart=LocalDateTime.now();
 		int attendanceHour=attendanceStart.getHour();
-		a.setMember(AdminMember.builder().memberId(memberId).build());
+		a.setMember(AdminMember.builder().memberKey(memberKey).build());
 		a.setAttendanceStart(attendanceStart);
-		
 		if(attendanceHour < 9) {
 			a.setAttendanceState("출근");
 		}else {
@@ -45,8 +46,29 @@ public class AttendanceController{
 		}
 		int result=attendanceService.startAttendance(a);
 		m.addAttribute("attenance",a);
-		return "/";
+		return "redirect:/";
 		
+	}
+	
+	@PostMapping("endattendance.do")
+	public String endAttendance(Attendance a,Model m,Authentication authentication) {
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		LocalDateTime attendanceEnd=LocalDateTime.now();
+		int attendanceHour=attendanceEnd.getHour();
+		LocalDate today=LocalDate.now();
+		a.setMember(AdminMember.builder().memberKey(memberKey).build());
+		a.setAttendanceEnd(attendanceEnd);
+		a.setAttendanceDate(today);
+		if(attendanceHour < 18) {
+			a.setAttendanceState("조퇴");
+		}else {
+			a.setAttendanceState("출근");
+		}
+		
+		int result=attendanceService.endAttendance(a);
+		m.addAttribute("attenance",a);
+		
+		return "redirect:/";
 	}
 	
 	
