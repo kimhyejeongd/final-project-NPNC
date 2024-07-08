@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.approversList;
 import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -71,8 +74,12 @@ public class MemberDocumentController {
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
-	@PostMapping("/writeend")
-	public void insertDoc() {
-		
+	@PostMapping("/writeend") //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
+	public String insertDoc(String msg, Document doc, @ModelAttribute approversList request) {
+		int no = 3; //로그인 사원번호
+		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
+		log.debug("{}", doc);
+		log.debug("{}", request);
+		return "redirect:home"; //기안 성공시 홈으로
 	}
 }
