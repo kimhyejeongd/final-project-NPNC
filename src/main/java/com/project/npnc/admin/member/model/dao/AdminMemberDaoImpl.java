@@ -47,5 +47,12 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 		
 		return session.delete("member.deleteMember",memberKey);
 	}
+
+	@Override
+	public int selectMemberKeyById(SqlSession session, String memberId) {
+		
+		return session.selectOne("member.selectMemberKeyById",memberId);
+	}
+	
 	
 }

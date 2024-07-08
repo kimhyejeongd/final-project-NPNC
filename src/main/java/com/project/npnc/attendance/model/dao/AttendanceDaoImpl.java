@@ -29,16 +29,18 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	}
 
 	@Override
-	public List<Attendance> selectAttendanceAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Attendance> selectAttendanceAll(SqlSession session) {
+		
+		return session.selectList("attendance.selectAttendanceAll");
 	}
 
 	@Override
-	public Attendance selectAttendanceById() {
+	public Attendance selectAttendanceById(SqlSession session, int memberKey) {
 		// TODO Auto-generated method stub
-		return null;
+		return session.selectOne("attendance.selectAttendanceById",memberKey);
 	}
+
+
 
 	
 	

@@ -55,8 +55,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
 	@Override
 	public int selectMemberKeyById(String MemberId) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return dao.selectMemberKeyById(session, MemberId);
 	}
 
 	

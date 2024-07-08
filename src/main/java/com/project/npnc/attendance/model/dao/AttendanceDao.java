@@ -9,8 +9,8 @@ import com.project.npnc.attendance.model.dto.Attendance;
 
 public interface AttendanceDao {
 
-	List<Attendance> selectAttendanceAll();
-	Attendance selectAttendanceById();
+	List<Attendance> selectAttendanceAll(SqlSession session);
+	Attendance selectAttendanceById(SqlSession session,int memberKey);
 	
 	
 	int startAttendance(SqlSession session, Attendance a);

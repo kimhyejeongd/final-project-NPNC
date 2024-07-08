@@ -16,6 +16,7 @@ import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.job.model.service.JobService;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
+import com.project.npnc.common.PageFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class AdminMemberController {
 	private final DepartmentService deptService;
 	private final JobService jobService;
 //	private final BCryptPasswordEncoder pwencoder;
+	private final PageFactory pageFactory;
 
 	
 	
@@ -43,7 +45,7 @@ public class AdminMemberController {
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectMemberCount();
 		List<AdminMember> members= service.selectMemeberAll(page);
-		
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("members",members);
 		m.addAttribute("totalContents",totaldata);
 		return "admin/member/memberlist";

@@ -9,7 +9,12 @@
 </head>
 <body>
 	<div>
-		
+	<button onclick="location.assign('startattendance.do')">
+		출근
+	</button>
+	<button onclick="location.assign('endattendance.do')">
+		퇴근
+	</button>
 		
 	</div>
 </body>
