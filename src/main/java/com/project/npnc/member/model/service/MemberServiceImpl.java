@@ -53,5 +53,6 @@ public class MemberServiceImpl implements MemberService {
 		return dao.deleteMember(session, memberKey);
 	}
 
+
 	
 }

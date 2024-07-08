@@ -114,6 +114,7 @@
                 </a>
                 <div class="collapse" id="base">
                   <ul class="nav nav-collapse">
+               
                     <li>
                       <a href="components/avatars.html">
                         <span class="sub-item">Avatars</span>

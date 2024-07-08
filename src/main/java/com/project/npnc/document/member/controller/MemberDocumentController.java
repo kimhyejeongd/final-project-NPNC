@@ -40,4 +40,39 @@ public class MemberDocumentController {
 //		m.addAttribute("formlist", result);
 		return result;
 	}
+	@PostMapping("/formsearch.do")
+	@ResponseBody
+	public List<DocumentForm> formList(String target, Model m) {
+		log.debug("----전자문서 양식명 "+ target+" 조회----");
+		List<DocumentForm> result = serv.selectFormsBySearch(target);
+		log.debug("{}", result);
+//		m.addAttribute("formlist", result);
+		return result;
+	}
+	@GetMapping("/write")
+	public String formWrite(int form, Model m) {
+		switch(form) {
+		case 1 :
+			//log.debug("----전자문서 작성시작----");
+			//DocumentForm f = serv.selectFormByNo(form);
+			return "/document/write/normal";
+		}
+		return "/document/formlist.do";
+	}
+	@GetMapping("/doc1")
+	public void doc1Write() {
+	}
+	@GetMapping("/doc2")
+	public void doc2Write() {
+	}
+	@GetMapping("/doc3")
+	public void doc3Write() {
+	}
+	@GetMapping("/doc4")
+	public void doc4Write() {
+	}
+	@PostMapping("/writeend")
+	public void insertDoc() {
+		
+	}
 }
