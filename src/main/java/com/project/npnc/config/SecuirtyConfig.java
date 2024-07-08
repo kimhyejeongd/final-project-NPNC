@@ -25,15 +25,15 @@ public class SecuirtyConfig {
 					.csrf(csrf -> csrf.disable()) //csfr보호 기능 비활성화, 개발 초기 단계나 특정 요구사항이 있을 때 사용됨(람다를 매개변수로 받음)
 					.authorizeHttpRequests(request->request //()-> 요청에 대한 것을 처리
 							.requestMatchers(req->CorsUtils.isPreFlightRequest(req)).permitAll()
-							.requestMatchers("/","/loginpage","/WEB-INF/views/**").permitAll()//루트 경로에 대한 모든 요청을 허용
-							.requestMatchers("/api/**","/boad/**").hasAnyAuthority(MyAuthority.USER.name()) //'/api/'로 시작하는 모든 경로에 대해 user 권한을 가진 사용자만 접근할 수 있게 함
+							.requestMatchers("/loginpage","/WEB-INF/views/**").permitAll()//루트 경로에 대한 모든 요청을 허용
+							//.requestMatchers("/api/**","/boad/**").hasAnyAuthority(MyAuthority.USER.name()) //'/api/'로 시작하는 모든 경로에 대해 user 권한을 가진 사용자만 접근할 수 있게 함
 							.requestMatchers("/admin/**")
 									.hasAnyAuthority(MyAuthority.ADMIN.name())
 							.anyRequest().authenticated() // 위에서 지정한 경로를 제외한 모든 요청에 대해 인증을 요구
 					)
 					.authenticationProvider(provider) //인증 제공자를 설정(실제 인증 로직을 구현한 클래스를 등록해야함) 
 					.formLogin(form->form
-							.loginProcessingUrl("/logintest")
+							.loginProcessingUrl("/loginpage")
 							.loginPage("/loginpage")
 							.successForwardUrl("/")
 							)
