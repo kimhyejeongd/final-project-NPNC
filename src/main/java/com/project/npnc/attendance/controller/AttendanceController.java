@@ -1,5 +1,7 @@
 package com.project.npnc.attendance.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -28,15 +30,24 @@ public class AttendanceController{
 		
 	}
 	
-//	@PostMapping("/startattendance.do")
-//	public String startAttendance(Attendance a,Model m,Authentication authentication) {
-//		String memberId = authentication.getName();
-//		a.setMember(AdminMember.builder().memberId(memberId).build());
-//		int result=attendanceService.startAttendance(a);
-//		
-//		return "/";
-//		
-//	}
+	@PostMapping("/startattendance.do")
+	public String startAttendance(Attendance a,Model m,Authentication authentication) {
+		String memberId = authentication.getName();
+		LocalDateTime attendanceStart=LocalDateTime.now();
+		int attendanceHour=attendanceStart.getHour();
+		a.setMember(AdminMember.builder().memberId(memberId).build());
+		a.setAttendanceStart(attendanceStart);
+		
+		if(attendanceHour < 9) {
+			a.setAttendanceState("출근");
+		}else {
+			a.setAttendanceState("지각");
+		}
+		int result=attendanceService.startAttendance(a);
+		m.addAttribute("attenance",a);
+		return "/";
+		
+	}
 	
 	
 }
