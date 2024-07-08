@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl2 implements MemberService {
 	
 	private final MemberDao dao;
 	private final SqlSession session;
