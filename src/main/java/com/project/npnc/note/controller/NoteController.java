@@ -32,6 +32,11 @@ public class NoteController {
 		
 		return "note/notein";
 	}
+	@RequestMapping("/notehome")
+	public String notehome() {
+		
+		return "note/notehome";
+	}
 	
 	@RequestMapping("/notesession")
 	public String notesession(@RequestParam(defaultValue="1") int memberKey, HttpSession session) {

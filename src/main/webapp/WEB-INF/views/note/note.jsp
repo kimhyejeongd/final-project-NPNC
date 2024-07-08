@@ -367,16 +367,36 @@
            </div>
            
            <!-- 다중 전송 메소드 -->
-           <form action="${path}/notewrite2">
+           <%-- <form action="${path}/notewrite2"> --%>
+           <div>
            	  <c:forEach var="d" items="${list}">
            	    <input type="checkbox"  name="reMemberKey" value="${d.memberKey }">
            	  	<p>${d.memberKey}<p>
            	  </c:forEach>
-           		<input type="number" name="memberKey">
-           		<input type="text" name="postMsgDetail">
-           	   <button class="btn btn-success">Submit</button>
-           </form>
+           		<input type="number" name="memberKey" id="memberKey2">
+           		<input type="text" name="postMsgDetail" id="postMsgDetail2">
+           	   <button class="btn btn-success" onclick="notelistgo();">Submit</button>
+           </div>
+           
+           <!-- 전체발송 메소드 -->
+           <button class="btn btn-success" onclick="allnotego();">Submit</button>
           </div>
+          <!--  -->
+           <form action="${path}/schedule/message" method="post">
+		        <label for="second">초:</label>
+		        <input type="number" id="second" name="second" min="0" max="59" required><br><br>
+		        <label for="minute">분:</label>
+		        <input type="number" id="minute" name="minute" min="0" max="59" required><br><br>
+		        <label for="hour">시:</label>
+		        <input type="number" id="hour" name="hour" min="0" max="23" required><br><br>
+		        <label for="dayOfMonth">일:</label>
+		        <input type="number" id="dayOfMonth" name="dayOfMonth" min="1" max="31" required><br><br>
+		        <label for="month">월:</label>
+		        <input type="number" id="month" name="month" min="1" max="12" required><br><br>
+		        <label for="dayOfWeek">요일:</label>
+		        <input type="number" id="dayOfWeek" name="dayOfWeek" min="0" max="7" required><br><br>
+		        <input type="submit" value="예약 발송">
+    		</form>
         </div>
                     
         
@@ -432,8 +452,42 @@
 		    	});
 		    	 
 		    }
+            /* 알람 다중 전송 */
             function notelistgo(){
-            	
+            	var selectedCheck = document.getElementsByName('reMemberKey');
+ 	            let reMemberKey=[];
+ 	           for(let i=0; i<selectedCheck.length;i++){
+                   if(selectedCheck[i].checked){
+                         reMemberKey.push(selectedCheck[i].value);  
+                    }
+             }
+ 	          var memberKey = document.getElementById('memberKey2').value;
+	           var postMsgDetail = document.getElementById('postMsgDetail2').value;
+
+ 	       	$.ajax({
+	    		url : '${path}/notewrite2',
+	    		type : 'POST',
+	    		data : {
+	    			"reMemberKey" : reMemberKey,
+	    			"memberKey" : memberKey,
+	    			"postMsgDetail" : postMsgDetail
+	    			
+	    		},
+	    		success : function(){
+	    			alert('성공');
+	    			for (let i=0; i<reMemberKey.length;i++)	{
+	    				send(reMemberKey[i], memberKey);
+	    			}
+	    		}
+	    	});
+
+            }
+            /* 전체 note 발송 */
+            
+            function allnotego(){
+   	          var memberKey =${loginMember.memberKey};
+			
+            	sendAll(memberKey);
             }
 
 		    function connect() {
@@ -443,6 +497,9 @@
 		            setConnected(true);
 		            console.log('Connected: ' + frame);
 		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
+		                console.log('구독 중', msg);
+		            });
+		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
 		            });
 		        });
@@ -459,6 +516,18 @@
 		   				
 		   		);
 		   	} 
+		   	
+		   	function sendAll(memberKey){
+			   	 console.log('send보내짐');
+			   		stompClient.send("/pub/all",{},
+			   			JSON.stringify({
+			   				
+			   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
+			   				
+			   			})
+			   				
+			   		);
+			   	} 
 		   
 		    
 		    function disconnect() {

@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Member {
 	private int memberKey;
-	private int departmentKey;
-	private int jobKey;
+	private String departmentKey;
+	private String jobKey;
 	private String memberId;
 	private String memberPw;
 	private String memberPhone;
