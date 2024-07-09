@@ -8,11 +8,11 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.chatting.model.dao.ChatDao;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class ChatService {
 	    chatInfo.put("readCount", readCount);
 			dao.insertChat(session,chatInfo);
 	    for (ChattingGroup m : myRoomMembers) {
-	            Member member = dao.selectMemberByNo(session, m.getMemberKey());				
+	            AdminMember member = dao.selectMemberByNo(session, m.getMemberKey());				
 	            chatInfo.put("member", member);
 	            dao.insertChattingIsRead(session, chatInfo);
 	    }
@@ -61,7 +61,7 @@ public class ChatService {
 			return dao.selectRoomChatList(session,roomId);
 		}
 
-		public List<Member> selectAllMembers(){
+		public List<AdminMember> selectAllMembers(){
 			return dao.selectAllMembers(session);
 		};
 		public int selectRoomId(Map<String,Object> param) {
@@ -77,9 +77,9 @@ public class ChatService {
 			return roomId;
 		}
 		
-		public Map<Integer,List<Member>> selectMyRoomMemberList(int memberNo){
+		public Map<Integer,List<AdminMember>> selectMyRoomMemberList(int memberNo){
 			
-			Map<Integer, List<Member>>roomMemberInfo = new HashMap<>();
+			Map<Integer, List<AdminMember>>roomMemberInfo = new HashMap<>();
 			List<Integer> myRoomId = dao.selectMyRoomId(session,memberNo);
 			for(int i:myRoomId) {
 //				이거 사실 selectRoomMemberList임 
@@ -95,7 +95,7 @@ public class ChatService {
 		
 
 		
-		public Member selectMemberById(String memberId) {
+		public AdminMember selectMemberById(String memberId) {
 			return dao.selectMemberById(session,memberId);
 		}
 		public void updateChatStatus(int roomId) {

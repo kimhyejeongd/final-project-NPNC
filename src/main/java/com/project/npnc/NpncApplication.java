@@ -2,8 +2,11 @@ package com.project.npnc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication //환경설정 전체에 대한 설정 
+
+@SpringBootApplication
+@EnableScheduling
 public class NpncApplication{
 	
 	public static void main(String[] args) {

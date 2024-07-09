@@ -9,7 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class ExceptionHandler implements AccessDeniedHandler {
+public class ExceptionHandler implements AccessDeniedHandler { //security에서 접근 거부가 발생했을 때 사용자 정의 처리를 제공하는 AccessDeniedHandler를 구현함/ 사용자가 접근 권한이 없는 자원에 접근하려고 할 때 호출됨
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
