@@ -1,6 +1,7 @@
 package com.project.npnc.attendance.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -11,6 +12,8 @@ public interface AttendanceDao {
 
 	List<Attendance> selectAttendanceAll(SqlSession session);
 	Attendance selectAttendanceById(SqlSession session,int memberKey);
+	int selectAttendanceByMemberKeyAndDate(SqlSession session,Map ac);
+	int selectAttendanceKeyByMemberKeyAndDate(SqlSession session,Map ac);
 	
 	
 	int startAttendance(SqlSession session, Attendance a);

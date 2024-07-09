@@ -1,6 +1,7 @@
 package com.project.npnc.attendance.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -40,7 +41,20 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAttendanceById",memberKey);
 	}
 
+	@Override
+	public int selectAttendanceByMemberKeyAndDate(SqlSession session, Map ac) {
+		
+		return session.selectOne("attendance.selectAttendanceByMemberKeyAndDate", ac);
+	}
 
+	@Override
+	public int selectAttendanceKeyByMemberKeyAndDate(SqlSession session, Map ac) {
+		
+		return session.selectOne("attendance.selectAttendanceKeyByMemberKeyAndDate", ac);
+	}
+
+	
+	
 
 	
 	

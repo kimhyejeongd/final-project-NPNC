@@ -11,9 +11,20 @@
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
 	<insert id="startAttendance" parameterType="attendance">
-		INSERT INTO ATTENDANCE VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE,#{attendanceStart},
+		INSERT INTO ATTENDANCE VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE, TO_DATE(SYSDATE || #{attendanceStart}, 'YYYY-MM-DD HH24:MI:SS'),
 			NULL,#{attendanceState},NULL)
 	</insert>
 	
+	<select id="selectAttendanceByMemberKeyAndDate" parameterType="Map" resultType="_int">
+		SELECT COUNT(*) FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=#{date}
+	</select>
+	
+	<select id="selectAttendanceKeyByMemberKeyAndDate" parameterType="Map" resultType="_int">
+		SELECT ATTENDANCE_KEY FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=#{date}
+	</select>
+
+	<update id="endAttendance" parameterType="attendance">
+		UPDATE ATTENDANCE SET ATTENDANCE_END=TO_DATE(SYSDATE || #{attendanceEnd}, 'YYYY-MM-DD HH24:MI:SS'),ATTENDANCE_STATE=#{attendanceState} WHERE ATTENDANCE_KEY=#{attendanceKey}
+	</update>
 
 </mapper>

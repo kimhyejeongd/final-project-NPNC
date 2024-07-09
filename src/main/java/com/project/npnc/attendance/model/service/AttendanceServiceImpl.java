@@ -1,6 +1,7 @@
 package com.project.npnc.attendance.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public Attendance selectAttendanceById(int memberKey) {
 
 		return attendanceDao.selectAttendanceById(session, memberKey);
+	}
+
+	@Override
+	public int selectAttendanceByMemberKeyAndDate(Map ac) {
+		
+		return attendanceDao.selectAttendanceByMemberKeyAndDate(session, ac);
+	}
+
+	@Override
+	public int selectAttendanceKeyByMemberKeyAndDate(Map ac) {
+		
+		return attendanceDao.selectAttendanceKeyByMemberKeyAndDate(session, ac);
 	}
 	
 	
