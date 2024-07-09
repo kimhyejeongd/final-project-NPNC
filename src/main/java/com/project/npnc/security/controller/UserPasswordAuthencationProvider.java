@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.project.npnc.security.common.mappers.MemberMapper;
 import com.project.npnc.security.dto.Member;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import lombok.RequiredArgsConstructor;
 
 @Component//자바 bean에 등록하라고 알려줌
@@ -24,9 +25,13 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 		//아이디 패스워드의 값을 authentication이 가지고 있음
 		String userId=authentication.getName(); //아이디 들어옴
 		String password=(String)authentication.getCredentials();
-		
+		System.out.println(userId);
+		System.out.println(password);
 		Member loginMember=mapper.selectMemberById(userId);
-		if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
+		System.out.println(loginMember);
+		//if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
+		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
+			System.out.println("이우석");
 			return new UsernamePasswordAuthenticationToken(loginMember,loginMember.getPassword(),loginMember.getAuthorities());
 		}else {
 			throw new BadCredentialsException("인증실패");
