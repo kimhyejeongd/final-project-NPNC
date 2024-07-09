@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Document {
 	private String erDocKey;
-	private String erDocWriter;
+	private int erDocWriter;
 	private String erDocTitle;
 	private String erDocContent;
 	private Date erDocCreateDate;
@@ -22,4 +22,5 @@ public class Document {
 	private String erDocDeleteYn;
 	private Date erDocUpdateDate;
 	private String erDocStorage;
+	private String erDocFilename;
 }

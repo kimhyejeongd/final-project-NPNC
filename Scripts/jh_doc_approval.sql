@@ -40,3 +40,5 @@ NOMINVALUE
 NOMAXVALUE
 NOCYCLE
 CACHE 20;
+
+NSERT INTO ER_APROVER ea values(SEQ_ER_APPROVER_KEY.nextval, #{memberKey}, #{memberName}, #{memberJob}, null, #{erDocEmergencyYn}, default, ${erDocStorage}, ${erDocFilename});

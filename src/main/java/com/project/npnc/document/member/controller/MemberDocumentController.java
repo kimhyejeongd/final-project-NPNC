@@ -66,9 +66,9 @@ public class MemberDocumentController {
 		case 1 :
 			//log.debug("----전자문서 작성시작----");
 			//DocumentForm f = serv.selectFormByNo(form);
-			return "/document/write/normal";
+			return "document/write/normal";
 		}
-		return "/document/formlist.do";
+		return "document/formlist.do";
 	}
 	@GetMapping("/doc1")
 	public void doc1Write() {
@@ -85,6 +85,9 @@ public class MemberDocumentController {
 	@PostMapping("/writeend") //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	public String insertDoc(String msg, Document doc, String html, @ModelAttribute approversList request, Model m) {
 		int no = 3; //로그인 사원번호
+		doc.setErDocKey("D2-"+"F3"); //문서구분키 생성을 위한 사전세팅
+		doc.setErDocKey("보관함명"); //문서보관함 임시세팅
+		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
 		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
 		log.debug(html);
 		

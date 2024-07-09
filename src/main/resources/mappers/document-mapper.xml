@@ -19,7 +19,7 @@
 		 order by er_form_orderby
 	</select>
 	<insert id="insertDoc" parameterType="document">
-		INSERT INTO ER_document values(SEQ_ER_FORM.nextval, #{erDocWriter}, #{erDocContent}, default, 1, 'Y', '', '', SEQ_ER_FORM_ORDERBY.NEXTVAL);
+		INSERT INTO ER_document values(TO_CHAR(SYSDATE, 'YYMMDD') || '-' || #{erDocKey} || '-' || SEQ_ER_FORM.nextval, #{erDocWriter}, #{erDocTitle}, default, null, #{erDocEmergencyYn}, default, ${erDocStorage}, ${erDocFilename});
 	</insert>
 	<insert id="insertApproval" parameterType="list">
 		
