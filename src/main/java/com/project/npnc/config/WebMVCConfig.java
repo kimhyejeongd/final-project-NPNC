@@ -13,6 +13,7 @@ public class WebMVCConfig implements WebMvcConfigurer{
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/job/insertjob.do").setViewName("admin/job/insertjob");
+		registry.addViewController("/loginpage").setViewName("Login");
 	}
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -20,6 +21,7 @@ public class WebMVCConfig implements WebMvcConfigurer{
                 .allowedOrigins("*")  // 모든 출처에서의 요청 허용
                 .allowedMethods("*");  // 모든 HTTP 메소드 허용
     }
+
 	
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
