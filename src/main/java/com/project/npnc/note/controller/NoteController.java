@@ -33,7 +33,7 @@ public class NoteController {
 	}
 	@RequestMapping("/notehome")
 	public String notehome(@RequestParam(defaultValue="1") int cPage, 
-			@RequestParam(defaultValue = "7") int numPerpage ,  Model m) {
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		m.addAttribute("notelist",notelist);
 		System.out.println(notelist);
