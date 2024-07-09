@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div>	
-		<form action="${path }/dept/insertdept.do" method="post">
+		<form action="${path }/admin/dept/insertdept.do" method="post">
 			부서명<input type="text" name="deptName">
 			<input type="submit" value="등록">
 		</form>

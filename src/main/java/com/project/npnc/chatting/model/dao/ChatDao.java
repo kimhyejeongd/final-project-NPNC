@@ -7,10 +7,10 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
 
 @Repository
 public class ChatDao {
@@ -24,10 +24,10 @@ public class ChatDao {
 		return session.selectList("chat.selectMyRoomMembers",chat);
 	}
 
-	public Member selectMemberById(SqlSessionTemplate session,String memberId) {
+	public AdminMember selectMemberById(SqlSessionTemplate session,String memberId) {
 		return session.selectOne("chattingMember.selectMemberById",memberId);
 	}
-	public Member selectMemberByNo(SqlSessionTemplate session,int memberNo) {
+	public AdminMember selectMemberByNo(SqlSessionTemplate session,int memberNo) {
 		return session.selectOne("chattingMember.selectMemberByNo",memberNo);
 	}
 	public int selectChatSeq(SqlSessionTemplate session) {
@@ -54,7 +54,7 @@ public class ChatDao {
 		return session.selectList("chat.selectRoomChatList",roomNo);
 	}
 	
-	public List<Member>selectAllMembers(SqlSessionTemplate session){
+	public List<AdminMember>selectAllMembers(SqlSessionTemplate session){
 		return session.selectList("chattingMember.selectAllMembers");
 	}
 	public Integer selectRoomId(SqlSessionTemplate session,Map<String,Object>param) {
@@ -73,7 +73,7 @@ public class ChatDao {
         }
         return roomId;
     }
-	public List<Member> selectMyRoomMemberList(SqlSessionTemplate session, int roomId){
+	public List<AdminMember> selectMyRoomMemberList(SqlSessionTemplate session, int roomId){
 		return session.selectList("chat.selectMyRoomMemberList",roomId);
 	}
 	public List<Integer> selectMyRoomId(SqlSessionTemplate session, int memberNo){

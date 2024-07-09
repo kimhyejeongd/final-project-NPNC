@@ -14,6 +14,7 @@ public class WebMVCConfig implements WebMvcConfigurer{
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/job/insertjob.do").setViewName("admin/job/insertjob");
 		registry.addViewController("/loginpage").setViewName("Login");
+
 	}
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
