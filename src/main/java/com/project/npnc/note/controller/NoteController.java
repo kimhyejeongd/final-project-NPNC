@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.project.npnc.common.NotePageFactory;
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.member.model.service.MemberService;
 import com.project.npnc.note.dto.Note;
@@ -24,7 +25,7 @@ public class NoteController {
 	
 	private final NoteService noteService;
 	private final MemberService memberService;
-	
+	private final NotePageFactory pageBar;
 	
 	@RequestMapping("/notein")
 	public String notein() {
@@ -35,7 +36,11 @@ public class NoteController {
 	public String notehome(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		int totalData=noteService.noteSelectTotalData();
+		
+		
 		m.addAttribute("notelist",notelist);
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepaging"));
 		System.out.println(notelist);
 		return "note/notehome";
 	}

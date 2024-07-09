@@ -145,14 +145,14 @@
                         <thead>
                           <tr>
                             <th>Number</th>
-                            <th>MemberKey</th>
+                            <th>보낸이</th>
                             <th>Detail</th>
                             <th>Date</th>
                             
                           </tr>
                         </thead>
                        
-                        <tbody>
+                        <tbody id="pagingtbody">
                       <c:forEach var="d" items="${notelist}">
            	    			<tr>
            	  					<th>${d.postMsgKey}<p>
@@ -161,13 +161,43 @@
            	  					<th>${d.postMsgTime}<p>
            	  				</tr>
           		 	  </c:forEach>
+          		 	  	<tr>${pageBar}</tr>
                         </tbody>
+                        
                       </table>
+                      <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
                     </div>
                   </div>
                 </div>
               </div>
-          
+          	<script>
+          		function fn_paging(pageNo){
+					$.ajax({
+						url : '${path}/notepaging',
+						type : 'POST',
+						data : {cPage : pageNo},
+						success : function(response){
+							var tbody=$('#pagingtbody');
+							tbody.empty();
+						  	 console.log(response.notepagelist);
+
+						   $.each(response.notepagelist, function(index, item) {
+				                    var row = `<tr>
+				                        <td>\${item.postMsgKey}</td>
+				                        <td>\${item.memberKey}</td>
+				                        <td>\${item.postMsgDetail}</td>
+				                        <td>\${item.postMsgTime}</td>
+				                    </tr>`;
+				                    tbody.append(row);
+				                });
+						   var row2=`<tr>\${response.pagebar}</tr>`;
+							   tbody.append(row2);
+						}
+					});
+          			
+          		}	
+          	
+          	</script>
           
             
           </div>

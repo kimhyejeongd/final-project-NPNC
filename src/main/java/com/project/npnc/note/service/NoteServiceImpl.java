@@ -63,6 +63,12 @@ public class NoteServiceImpl implements NoteService{
 		return dao.selectNoteAll(session, page);
 	}
 
+	@Override
+	public int noteSelectTotalData() {
+		
+		return dao.noteSelectTotalData(session);
+	}
+
 
 
 }

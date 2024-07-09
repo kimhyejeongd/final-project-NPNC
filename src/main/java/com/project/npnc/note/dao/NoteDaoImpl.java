@@ -20,6 +20,12 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
+	public int noteSelectTotalData(SqlSession session) {
+		
+		return session.selectOne("note.noteSelectTotalData");
+	}
+
+	@Override
 	public List<Note> selectNoteAll(SqlSession session, Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		return session.selectList("note.noteSelectAll",null,rb);

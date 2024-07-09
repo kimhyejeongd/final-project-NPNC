@@ -13,4 +13,6 @@ public interface NoteService {
 	public int noteOneWrite(int reMemberKey, NoteDto note);
 	public int noteWrites(int[] reMemberKey, NoteDto note);
 	public List<Note> selectNoteAll(Map<String,Integer> page) ;
+	public int noteSelectTotalData();
+
 }

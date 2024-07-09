@@ -14,5 +14,6 @@ public interface NoteDao {
 	public int noteReciver(SqlSession session, Map<String, Object> param);
 	public int noteMsgKey(SqlSession session);
 	public List<Note> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
+	public int noteSelectTotalData(SqlSession session);
 	
 }
