@@ -37,7 +37,7 @@
 	</select>
 	
 	<select id="selectMemberKeyById" parameterType="string" resultType="_int">
-		SELECT MEMBER_KEY FROM MEMBER WHERE MEMBER_ID=${memberId}
+		SELECT MEMBER_KEY FROM MEMBER WHERE MEMBER_ID='${memberId}'
 	</select>
 	
 	<insert id="insertMember" parameterType="adminmember">

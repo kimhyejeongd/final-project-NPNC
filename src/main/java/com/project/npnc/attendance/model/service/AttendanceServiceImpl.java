@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceServiceImpl implements AttendanceService {
 
 	private final AttendanceDao attendanceDao;
-	private SqlSession session;
+	private final SqlSession session;
 	
 	@Override
 	public int startAttendance(Attendance a) {

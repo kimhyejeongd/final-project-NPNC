@@ -2,12 +2,12 @@ package com.project.npnc.attendance.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,7 +32,7 @@ public class AttendanceController{
 		
 	}
 	
-	@PostMapping("/startattendance.do")
+	@GetMapping("/startattendance.do")
 	public String startAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDateTime attendanceStart=LocalDateTime.now();
@@ -44,13 +44,14 @@ public class AttendanceController{
 		}else {
 			a.setAttendanceState("지각");
 		}
+		System.out.println(a);
 		int result=attendanceService.startAttendance(a);
 		m.addAttribute("attenance",a);
 		return "redirect:/";
 		
 	}
 	
-	@PostMapping("endattendance.do")
+	@GetMapping("endattendance.do")
 	public String endAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDateTime attendanceEnd=LocalDateTime.now();

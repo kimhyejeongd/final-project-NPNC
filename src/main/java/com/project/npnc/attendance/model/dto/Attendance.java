@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Attendance {
-	private int attenanceKey;
+	private int attendanceKey;
 	private AdminMember member;
 	private LocalDate attendanceDate;
 	private LocalDateTime attendanceStart;

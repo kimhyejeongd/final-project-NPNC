@@ -13,7 +13,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	@Override
 	public int startAttendance(SqlSession session, Attendance a) {
 
-		return session.update("attendance.startAttendance",a);
+		return session.insert("attendance.startAttendance",a);
 	}
 
 	@Override
