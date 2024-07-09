@@ -5,14 +5,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.member.model.service.MemberService;
+import com.project.npnc.note.dto.Note;
 import com.project.npnc.note.dto.NoteDto;
 import com.project.npnc.note.service.NoteService;
 
@@ -54,8 +53,10 @@ public class NoteController {
 		
 	
 		List<Member> list=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		System.out.println(list);
 		m.addAttribute("list",list);
+		m.addAttribute("notelist",notelist);
 		
 		return "note/note";
 	}
