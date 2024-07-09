@@ -32,8 +32,11 @@ public class NoteController {
 		return "note/notein";
 	}
 	@RequestMapping("/notehome")
-	public String notehome() {
-		
+	public String notehome(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "7") int numPerpage ,  Model m) {
+		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		m.addAttribute("notelist",notelist);
+		System.out.println(notelist);
 		return "note/notehome";
 	}
 	
@@ -53,10 +56,10 @@ public class NoteController {
 		
 	
 		List<Member> list=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
-		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+	
 		System.out.println(list);
 		m.addAttribute("list",list);
-		m.addAttribute("notelist",notelist);
+	
 		
 		return "note/note";
 	}
