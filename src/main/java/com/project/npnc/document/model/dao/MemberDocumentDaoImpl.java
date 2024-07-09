@@ -35,13 +35,12 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
 	public int insertDoc(SqlSession session, Document d) {
-		return 0;
+		return session.insert("document.insertDoc", d);
 	}
 
 	@Override
-	public int insertDocFile(SqlSession session, approversList request) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertApproval(SqlSession session, approversList request) {
+		return session.insert("document.insertApproval", request.getApprovers());
 	}
 
 }

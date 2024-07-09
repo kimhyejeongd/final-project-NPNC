@@ -41,7 +41,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		int result = dao.insertDoc(session, d); //문서 등록
 		if(result>0) {
 			log.debug("[1]문서 insert 성공");
-			result=dao.insertDocFile(session, request); //결재자 등록
+			result=dao.insertApproval(session, request); //결재자 등록
 		}else {
 			log.debug("[1]문서 insert 실패");
 		}

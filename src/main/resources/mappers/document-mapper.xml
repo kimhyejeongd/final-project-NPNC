@@ -18,4 +18,10 @@
 		 where ER_FORM_YN = 'Y' and er_form_name like #{target} 
 		 order by er_form_orderby
 	</select>
+	<insert id="insertDoc" parameterType="document">
+		INSERT INTO ER_document values(SEQ_ER_FORM.nextval, #{erDocWriter}, #{erDocContent}, default, 1, 'Y', '', '', SEQ_ER_FORM_ORDERBY.NEXTVAL);
+	</insert>
+	<insert id="insertApproval" parameterType="list">
+		
+	</insert>
 </mapper>
