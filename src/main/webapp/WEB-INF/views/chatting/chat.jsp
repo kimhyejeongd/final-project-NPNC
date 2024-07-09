@@ -6,16 +6,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
-
-<c:set var="loginMember" value="${sessionScope.loginMember}"/>
-<meta charset="UTF-8">
-<title>Chat Room</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<c:set var="path" value="${pageContext.request.contextPath}"/>
+	
+	<c:set var="loginMember" value="${sessionScope.loginMember}"/>
+	<meta charset="UTF-8">
+	<title>Chat Room</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+        #fileButton {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+        #message {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px 0 0 10px;
+            outline: none;
+        }
+
+#roomMemberList {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
+#roomMemberList li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Add a bottom border */
+}
+
+#roomMemberList li:last-child {
+    border-bottom: none; /* Remove the bottom border from the last item */
+}
 	.unreadCount {
     font-size: 0.75em;
     color: #FF0000;
@@ -23,10 +56,14 @@
     text-align: right;
 }
 	
-    #send {
-        right: 24px;
-        position: absolute;
-    }
+            #send {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 10px 10px 0;
+        }
     body {
         font-family: Arial, sans-serif;
         background-color: #f9f9f9;
@@ -55,13 +92,14 @@
         text-align: center;
         font-size: 1.5em;
     }
-    #conversation {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: 10px;
-        overflow-y: auto;
-    }
+        #conversation {
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: scroll;
+            background-color: #fff;
+        }
     #chatting {
         display: flex;
         flex-direction: column;
@@ -71,6 +109,7 @@
         display: flex;
         border-top: 1px solid #ddd;
         padding: 10px;
+        flex-direction: column;
     }
     .chat-input input {
         flex-grow: 1;
@@ -78,6 +117,7 @@
         border: 1px solid #ddd;
         border-radius: 20px;
         margin-right: 10px;
+        width: 40%
     }
     .chat-input button {
         padding: 10px 20px;
@@ -140,12 +180,49 @@
         margin-top: 5px;
         text-align: right;
     }
+    .sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.menu-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+}
+     .exit-button {
+            position: absolute;
+            bottom: 20px;
+            width: 90%;
+            left: 5%; /* 중앙 정렬 */
+            padding: 10px 0;
+            text-align: center;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
 </style>
 </head>
 <body>
-
 <div class="container" id="chat-container">
+
     <div class="header">채팅방</div>
+    <!-- 메뉴 버튼 -->
+    <button id="menuButton" class="menu-button">&#9776;</button>
+
     <div id="conversation">
         <div id="chatting">
             <!-- 채팅 내용이 여기에 추가됩니다 -->
@@ -153,19 +230,111 @@
     </div>
     <div class="chat-input">
         <form id="chatForm">
+            <button type="button" id="fileButton">&#128206;</button>
+            <input type="file" id="fileInput">
             <input type="text" id="message" placeholder="메시지를 입력하세요">
             <button id="send">보내기</button>
         </form>
     </div>
 </div>
 
-<script type="text/javascript">
-    var sessionCount = 0;
+<div class="sidebar" style="display:none;">
+    <ul id="roomMemberList"></ul>
+    <!-- 기타 메뉴 항목들 -->
+    <div class="exit-button">나가기</div>
+</div>
 
-    var stompClient = null;
-    var roomId = ${roomId};
-    var chatList = ${chatList};
-    var countRoomMember = ${countRoomMember};
+<script type="text/javascript">
+var sessionCount = 0;
+
+var stompClient = null;
+var roomId = ${roomId};
+var chatList = ${chatList};
+var countRoomMember = ${countRoomMember};
+
+
+$('#fileButton').on('click', function() {
+    $('#fileInput').click();
+});
+
+$('#fileInput').on('change', function(event) {
+    var file = event.target.files[0];
+    if (file) {
+        var formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            url: '${path}/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('파일 업로드 성공: ' + response.fileName);
+                    console.log('파일 저장 경로: ' + response.filePath);
+                } else {
+                    alert('파일 업로드 실패: ' + response.message);
+                }
+                // 파일 입력 요소 초기화
+                $('#fileInput').val('');
+
+            },
+            error: function(error) {
+                console.error('파일 업로드 중 오류 발생:', error);
+                alert('파일 업로드 중 오류 발생');
+            }
+        });
+    }
+});
+
+
+$(document).ready(function() {
+	 var roomMembers = ${roomMembers}; // JSP EL을 사용하여 서버에서 받은 유저 리스트를 할당
+     roomMembers.forEach(function(member) {
+         $('#roomMemberList').append('<li>' + member.memberId + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
+     });
+    // 메뉴 버튼 클릭 이벤트
+    $('#menuButton').click(function() {
+        $('.sidebar').toggle(); // 클래스 선택자로 변경
+    });
+
+    // 나가기 버튼 클릭 이벤트
+$('.exit-button').click(function() {
+    if (confirm('정말로 채팅방을 나가시겠습니까?')) {
+        alert('채팅방에서 나갔습니다.');
+
+        // AJAX 요청으로 폼 제출
+        $.ajax({
+            url: '${path}/exitChatRoom',
+            type: 'POST',
+            data: {
+                roomId: roomId,
+                memberId: '${loginMember.memberId}'
+            },
+            success: function(response) {
+            	if (window.opener) {
+                    window.opener.$('#room-' + roomId).remove();
+                }
+                // 성공적으로 제출된 후 창 닫기
+                window.close();
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+});
+
+    // 외부 클릭 시 사이드바 닫기
+    $(document).click(function(event) {
+        if (!$(event.target).closest('#menuButton, .sidebar').length) {
+            $('.sidebar').hide();
+        }
+    });
+});
+
+
 
     function setConnected(connected) {
         if (connected) {
@@ -222,10 +391,12 @@
             return; // 입력값이 없으면 전송하지 않음
         }
 
+        console.log(${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey));
         stompClient.send("/send/" + roomId, {},
             JSON.stringify({
                 'chatRoomKey': roomId,
                 'memberKey': '${loginMember.memberKey}', 
+                'receiverKey': ${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey),
                 'chatMsgDetail': message,
                 'chatMsgTime': new Date().toISOString()
             }));
@@ -378,10 +549,10 @@
 </script>
 
 
-<!-- 
- <div>
+
+<!--   <div>
     현재 채팅 세션 수: <span id="chatSessionCount"></span>
-</div>  -->
+</div>   -->
 
 
 
