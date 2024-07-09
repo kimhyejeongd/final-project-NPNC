@@ -161,10 +161,11 @@
            	  					<th>${d.postMsgTime}<p>
            	  				</tr>
           		 	  </c:forEach>
-          		 	  	<tr>${pageBar}</tr>
+          		 	
                         </tbody>
                         
                       </table>
+                      <div id="pageBarList">${pageBar}</div>
                       <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
                     </div>
                   </div>
@@ -181,7 +182,7 @@
 							tbody.empty();
 						  	 console.log(response.notepagelist);
 
-						   $.each(response.notepagelist, function(index, item) {
+						  $.each(response.notepagelist, function(index, item) {
 				                    var row = `<tr>
 				                        <td>\${item.postMsgKey}</td>
 				                        <td>\${item.memberKey}</td>
@@ -189,9 +190,11 @@
 				                        <td>\${item.postMsgTime}</td>
 				                    </tr>`;
 				                    tbody.append(row);
-				                });
-						   var row2=`<tr>\${response.pagebar}</tr>`;
-							   tbody.append(row2);
+				                }); 
+						  	var pageBarList=$('#pageBarList');
+						  	pageBarList.empty();
+						  	pageBarList.append(response.pagebar);
+						    
 						}
 					});
           			

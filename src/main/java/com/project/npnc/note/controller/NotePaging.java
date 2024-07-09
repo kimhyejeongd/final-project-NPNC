@@ -21,6 +21,8 @@ public class NotePaging {
 	@RequestMapping("/notepaging")
 	public Map<String,Object> pagingNote(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ){
+		System.out.println(cPage);
+		System.out.println(numPerpage);
 		  Map<String, Object> response = new HashMap<>();
 		  int totalData= noteService.noteSelectTotalData();
 		  response.put("notepagelist", noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage)));
@@ -29,4 +31,6 @@ public class NotePaging {
 		return response	;
 
 	}
+	
+	
 }

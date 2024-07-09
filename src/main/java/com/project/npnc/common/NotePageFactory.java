@@ -12,7 +12,7 @@ public String getPage(int cPage,int numPerpage,int totalData,String url) {
 		int pageEnd=pageNo+pageBarSize-1;
 		
 		StringBuffer sb=new StringBuffer();
-		sb.append("<ul class='pagination justify-content-center pagination-sm'>");
+		sb.append("<ul class='pagination justify-content-center pagination-sm' >");
 		if(pageNo==1) {
 			sb.append("<li class='page-item disabled'>");
 			sb.append("<a class='page-link' href='#'>이전</a>");
