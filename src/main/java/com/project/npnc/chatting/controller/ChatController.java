@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.service.ChatService;
@@ -44,8 +45,7 @@ public class ChatController {
 		System.out.println("Received message: " + message);
 //		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
 		// 채팅 저장
-
-        
+		
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
       
@@ -54,11 +54,11 @@ public class ChatController {
         System.out.println("After insertChat call"+ message);
         System.out.println("After insertChat call"+ message);
 
+        webSocketEventListener.broadcastOpenedSession(Integer.toString(roomId));
+        
         return chat;
-    
 	}
 	
-
     @GetMapping("/room/{roomId}/users")
     @ResponseBody
     public Set<String> getUsersInRoom(@PathVariable String roomId) {
@@ -72,14 +72,43 @@ public class ChatController {
     	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
-	@PostMapping("loadRecentChat")
+    //
+	@PostMapping("/loadRecentChat")
 	@ResponseBody
-	public List<ChattingMessage> loadChat(@RequestParam int chatRoomKey) {
+	public Map<String, Object> loadChat(@RequestParam int chatRoomKey ,@RequestParam int memberId) {
 		Map<String, Object> readInfo = new HashMap<>();
 		readInfo.put("roomId", chatRoomKey);
-	    List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+	    readInfo.put("memberKey", memberId);
 
-	    return chats;
+	    List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+	    int unreadCount = service.selectUnreadCount(readInfo);
+	    readInfo.put("chats", chats);
+	    readInfo.put("unreadCount", unreadCount);
+	    
+	    return readInfo;
 	}
+	
+	//채팅방이 열려있을 때 부재중 메시지 카운트를 업데이트 해주는 메소드
+	@PostMapping("/deleteReadBadge")
+	@ResponseBody
+	public void deleteReadBadge(@RequestParam int currRoomId, @RequestParam List<Integer> currMemberKey) {
+		//매개변수로 현재 열려있는 창의 방번호와 멤버 키를 가져옴
+		//그리고 방번호에 해당하는 메시지를 선택해서 그중 멤버키와 같은 isRead로우를 삭제 
+		service.deleteReadBadge(currRoomId,currMemberKey);
+	}
+	
+	@PostMapping("/exitChatRoom")
+	@ResponseBody
+	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberId) {
+		System.out.println(roomId);
+		System.out.println(memberId);
+		System.out.println("===================================");
+		Map<String, Integer> exitInfo = new HashMap<>();
+		exitInfo.put("roomId", roomId);
+		exitInfo.put("memberId", memberId);
+		service.exitChatRoom(exitInfo);
+	}
+	
+	
 	
 }
