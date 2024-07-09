@@ -3,5 +3,8 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="member"/>
+			<typeAlias type="com.project.npnc.chatting.model.dto.ChattingMessage" alias="chattingMessage"/>		
+		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingGroup" alias="chattingGroup"/>		
+		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingRoom" alias="chattingRoom"/>	
 	</typeAliases>
 </configuration>
