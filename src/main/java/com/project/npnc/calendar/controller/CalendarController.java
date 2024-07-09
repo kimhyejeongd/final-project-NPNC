@@ -11,6 +11,6 @@ public class CalendarController {
 	
 	@GetMapping("/calendar.do")
 	public String test() {
-		return "/calendar/mainCalendar";
+		return "calendar/mainCalendar";
 	}
 }
