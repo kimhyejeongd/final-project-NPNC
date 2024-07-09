@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div>	
-		<form action="${path }/job/insertjob.do" method="post">
+		<form action="${path }/admin/job/insertjob.do" method="post">
 			직급명<input type="text" name="jobName">
 			<input type="submit" value="등록">
 		</form>

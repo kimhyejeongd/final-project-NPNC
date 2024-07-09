@@ -7,15 +7,15 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.admin.member.model.dto.AdminMember;
 
 @Repository
 public class AdminMemberDaoImpl implements AdminMemberDao {
 
 	@Override
-	public List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page) {
+	public List<AdminMember> selectMemeberAll(SqlSession session, Map<String,Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("member.selectMemeberAll",null,rb);
+		return session.selectList("member.selectMemberAll",null,rb);
 	}
 
 	@Override
@@ -25,19 +25,19 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 	}
 
 	@Override
-	public Member selectMemberByNo(SqlSession session, int memberKey) {
+	public AdminMember selectMemberByNo(SqlSession session, int memberKey) {
 		
 		return session.selectOne("member.selectMemberByNo",memberKey);
 	}
 
 	@Override
-	public int insertMember(SqlSession session, Member m) {
+	public int insertMember(SqlSession session, AdminMember m) {
 		
 		return session.insert("member.insertMember",m);
 	}
 
 	@Override
-	public int updateMember(SqlSession session, Member m) {
+	public int updateMember(SqlSession session, AdminMember m) {
 		
 		return session.update("member.updateMember",m);
 	}
@@ -47,5 +47,12 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 		
 		return session.delete("member.deleteMember",memberKey);
 	}
+
+	@Override
+	public int selectMemberKeyById(SqlSession session, String memberId) {
+		
+		return session.selectOne("member.selectMemberKeyById",memberId);
+	}
+	
 	
 }

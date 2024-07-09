@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="${path }/dept/updatedeptend.do" method="post">
+	<form action="${path }/admin/dept/updatedeptend.do" method="post">
 		부서코드<input type="text" name="deptKey" value="${key}" readonly>
 		부서명<input type="text" name="deptName" value="${deptName}">
 		<input type="submit" value="수정">
