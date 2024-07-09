@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/document")
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j 
 public class MemberDocumentController {
 	private final MemberDocumentService serv;
 	@Value("${file.upload-dir}")
