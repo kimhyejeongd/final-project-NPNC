@@ -29,7 +29,7 @@ public class SecuirtyConfig{
 	SecurityFilterChain authenticationFilter(HttpSecurity http) throws Exception { //SecurityFilterChain 설정
 		CharacterEncodingFilter encodingFilter=new CharacterEncodingFilter("UTF-8",true);
 		encodingFilter.setEncoding("UTF-8");
-		return http 
+		return http .headers(header->header.frameOptions(frame->frame.sameOrigin()))
 					.csrf(csrf -> csrf.disable()) //csfr보호 기능 비활성화, 개발 초기 단계나 특정 요구사항이 있을 때 사용됨(람다를 매개변수로 받음)
 					.authorizeHttpRequests(request->request //()-> 요청에 대한 것을 처리
 							.requestMatchers(req->CorsUtils.isPreFlightRequest(req)).permitAll()
