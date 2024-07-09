@@ -67,6 +67,7 @@
 		                    </div>
 					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')" class="btn btn-success">등록</button>
 		                  </div>
+		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
 			</div>
