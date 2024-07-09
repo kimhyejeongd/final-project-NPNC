@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DepartmentController {
 	
-private final DepartmentService service;
+	private final DepartmentService service;
 	
 	
 	@PostMapping("/insertdept.do")
@@ -29,10 +29,10 @@ private final DepartmentService service;
 		String msg,loc;
 		if(result>0) {
 			msg="등록성공";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}else {
 			msg="등록실패";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -52,10 +52,10 @@ private final DepartmentService service;
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}else {
 			msg="삭제실패";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -78,10 +78,10 @@ private final DepartmentService service;
 		String msg,loc;
 		if(result>0) {
 			msg="수정성공";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}else {
 			msg="수정실패";
-			loc="/dept/selectdeptall.do";
+			loc="/admin/dept/selectdeptall.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

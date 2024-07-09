@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.google.gson.Gson;
+import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
-import com.project.npnc.member.model.dto.Member;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class HomeController {
 			param.put("memberSize", memberNo.size());
 			roomId = service.selectRoomId(param);
 		}
-		Member loginMember = (Member)session.getAttribute("loginMember");
+		AdminMember loginMember = (AdminMember)session.getAttribute("loginMember");
 		System.out.println("HomeController Chat");
 		
 		int loginMemberKey = loginMember.getMemberKey();
@@ -70,15 +70,15 @@ public class HomeController {
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
-		Member member = service.selectMemberById(inputValue);
+		AdminMember member = service.selectMemberById(inputValue);
         session.setAttribute("loginMember", member); 
-		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
+		Map<Integer,List<AdminMember>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
 //		model.addAttribute("roomId",roomId);
 		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
 		
 		model.addAttribute("myRoomMemberList",myRoomMemberList);
 		model.addAttribute("mychatRoomList",mychatRoomList);
-		List<Member>members = service.selectAllMembers();	
+		List<AdminMember>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
 		return "chatting/chatRoom";
@@ -91,7 +91,7 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(@RequestParam("memberKey") String memberKey, HttpSession session) {
-		Member loginMember = service.selectMemberById(memberKey);
+		AdminMember loginMember = service.selectMemberById(memberKey);
         session.setAttribute("loginMember", loginMember);
         
         return "redirect:/"; // 로그인 후 리다이렉트할 페이지
