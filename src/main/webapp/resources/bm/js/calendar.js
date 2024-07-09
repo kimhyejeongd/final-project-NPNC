@@ -1,4 +1,5 @@
 var activeInactiveWeekends = true;
+var clickCount =0;
 var calendar= $('#calendar').fullCalendar({
 	
 	
@@ -65,12 +66,71 @@ var calendar= $('#calendar').fullCalendar({
 									}
 									
 								}
-							  }
+							  },
 	
+	select : function(startDate, endDate, jsEvent, view){
+		
+		//$(".fc-body").unbind('click');
+		$(".fc-body").on('click', 'td', function(e){
+			
+			$("#content").addClass("contentOpened")
+			.css({
+				display: "block",
+				left: e.pageX,
+				top: e.pageY
+				
+			});
+			return false;
+			/*다른 클릭 이벤트 핸들러가 실행되지 않도록 방지하는 역할*/
+		});
+		
+		var today = moment();
+		/*날짜와 시간을 나타내는 moment 객체 생성*/
+		//라이브러리 Moment.js
+		
+		if(view.name == "month"){
+			startDate.set({
+				hours:today.hours(),
+				minute: today.minutes()
+			});
+			startDate = moment(startDate).format('YYYY-MM-DD HH:mm');
+			endDate = moment(endDate).subtract(1, 'days');
+			
+			endDate.set({
+				hours: today.hours() +1,
+				minute: today.minutes()
+			});
+			endDate = moment(endDate).format('YYYY-MM-DD HH:mm');
+		} else{
+			startDate = moment(startDate).format('YYYY-MM-DD HH:mm');
+			endDate = moment(endDate).format('YYYY-MM-DD HH:mm');
+			
+		}
+		//날짜 클릭하면 카테고리 선택 메뉴
+		var $content = $('#content');
+		$content.on("click","a", function (e){
+			e.preventDefault();
+			
+			
+			//카테고리를 골랐을떄
+			if ($(this).data().role !== 'close'){
+				newEvent(startDate, endDate, $(this).html());
+			}
+			$content.removeClass("contentOpened");
+			$content.hide();
+		});
+		$('body').on('click', function() {
+			$content.removeClass("contentOpened");
+			$content.hide();
+		})
+		//날짜선택시 달력
+		$("#cal-start, #cal-end").datetimepicker({
+		    format: 'YYYY-MM-DD HH:mm'
+		});
+		
+		
 	
-	
-	
-	
+	}
 	
 	
 });
