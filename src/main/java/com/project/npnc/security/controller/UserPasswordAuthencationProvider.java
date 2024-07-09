@@ -27,6 +27,7 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 		String password=(String)authentication.getCredentials();
 		System.out.println(userId);
 		System.out.println(password);
+		System.out.println();
 		Member loginMember=mapper.selectMemberById(userId);
 		System.out.println(loginMember);
 		//if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
