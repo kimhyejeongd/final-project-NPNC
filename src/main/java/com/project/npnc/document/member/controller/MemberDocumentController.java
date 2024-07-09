@@ -88,7 +88,7 @@ public class MemberDocumentController {
 		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
 		log.debug(html);
 		
-		//문서 결재자 insert
+		//문서, 결재자 insert
 		int result = serv.insertDoc(doc, request);
 		if(result > 0) {//기안, 결재자 등록 성공
 			log.debug("[2] 결재자 insert 성공");
