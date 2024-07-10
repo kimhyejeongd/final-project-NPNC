@@ -1,9 +1,10 @@
 package com.project.npnc.attendance.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,17 +30,53 @@ public class AttendanceController{
 	private final AttendanceService attendanceService;
 	
 	
-	@Scheduled(cron="0 0 22 * * ?")
+	@Scheduled(cron="50 * 0 * * ?")
 	public void AttendanceCheck() {
+		List<Attendance> todayAttendance=selectAttendanceToday();
+		List<Integer> memberKeys=selectMemberKeyAll();
+		Attendance a=new Attendance();
+		Map<Integer, Boolean> result = new HashMap<>();
+
+		memberKeys.forEach(memberKey -> {
+		    boolean checkKey = todayAttendance.stream().anyMatch(as -> as.getMember().getMemberKey() == memberKey);
+		    
+		    result.put(memberKey, checkKey);
+		});
 		
+		attendanceService.updateAttendanceState(a,result);
+
+//		result.forEach((key, value) -> {
+//		    if (value) {
+//		        a.setMember(AdminMember.builder().memberKey(key).build());
+//		        attendanceService.updateAttendanceState(a);
+//		    	
+//		    } else {
+//		        attendanceService.insertAbsent(key);
+//		    }
+//		});
+		
+		System.out.println(result);
 	}
+	
+	private List<Attendance> selectAttendanceToday(){
+		return attendanceService.selectAttendanceToday();
+	}
+	
+	private List selectMemberKeyAll() {
+		return memberService.selectMemberKeyAll();
+	}
+	
+
+	
+	
+
 	
 	@GetMapping("/startattendance.do")
 	public String startAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-		LocalDate today=LocalDate.now();
-		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
-		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(StartCheck);
+//		LocalDate today=LocalDate.now();
+//		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
 		
 		
 		String msg,loc;
@@ -77,11 +114,12 @@ public class AttendanceController{
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDate today=LocalDate.now();
 		Map EndCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
-//		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(EndCheck);
-		int attendanceKey=attendanceService.selectAttendanceKeyByMemberKeyAndDate(EndCheck);
+		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+
 		
 		String msg,loc;
-		if(attendanceKey>0) {
+		if(attendanceCheck>0) {
+			int attendanceKey=attendanceService.selectAttendanceKeyByMemberKeyAndDate(memberKey);
 			msg="퇴근완료!";
 			loc="/";
 			LocalTime attendanceEnd=LocalTime.now();

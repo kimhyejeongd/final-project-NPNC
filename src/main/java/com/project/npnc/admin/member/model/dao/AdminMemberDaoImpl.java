@@ -53,6 +53,13 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 		
 		return session.selectOne("adminmember.selectMemberKeyById",memberId);
 	}
+
+	@Override
+	public List selectMemberKeyAll(SqlSession session) {
+		
+		return session.selectList("adminmember.selectMemberKeyAll");
+	}
+	
 	
 	
 }

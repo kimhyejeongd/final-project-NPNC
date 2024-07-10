@@ -42,15 +42,39 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	}
 
 	@Override
-	public int selectAttendanceByMemberKeyAndDate(SqlSession session, Map ac) {
+	public int selectAttendanceByMemberKeyAndDate(SqlSession session, int memberKey) {
 		
-		return session.selectOne("attendance.selectAttendanceByMemberKeyAndDate", ac);
+		return session.selectOne("attendance.selectAttendanceByMemberKeyAndDate", memberKey);
 	}
 
 	@Override
-	public int selectAttendanceKeyByMemberKeyAndDate(SqlSession session, Map ac) {
+	public int selectAttendanceKeyByMemberKeyAndDate(SqlSession session, int memberKey) {
 		
-		return session.selectOne("attendance.selectAttendanceKeyByMemberKeyAndDate", ac);
+		return session.selectOne("attendance.selectAttendanceKeyByMemberKeyAndDate", memberKey);
+	}
+
+	@Override
+	public List<Attendance> selectAttendanceToday(SqlSession session) {
+		
+		return session.selectList("attendance.selectAttendanceToday");
+	}
+
+	@Override
+	public int insertAbsent(SqlSession session, int memberKey) {
+	
+		return session.insert("attendance.insertAbsent",memberKey);
+	}
+
+	@Override
+	public int updateAttendanceState(SqlSession session, Attendance a) {
+		
+		return session.update("attendance.updateAttendanceState",a);
+	}
+
+	@Override
+	public Attendance selectAttendanceByMemberKey(SqlSession session, int memberKey) {
+		
+		return session.selectOne("attendance.selectAttendanceByMemberKey",memberKey);
 	}
 
 	

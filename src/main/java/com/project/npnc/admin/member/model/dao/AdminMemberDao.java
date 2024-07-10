@@ -12,6 +12,7 @@ public interface AdminMemberDao {
 	List<AdminMember> selectMemeberAll(SqlSession session, Map<String,Integer> page);
 	int selectMemberCount(SqlSession session);
 	AdminMember selectMemberByNo(SqlSession session,int memberKey);
+	List selectMemberKeyAll(SqlSession session);
 	int selectMemberKeyById(SqlSession session,String memberId);
 	
 	int insertMember(SqlSession session,AdminMember m);
