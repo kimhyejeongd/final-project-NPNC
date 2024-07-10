@@ -190,18 +190,18 @@ Circles.create({
 })
 
 //Notify
-$.notify({
-	icon: 'icon-bell',
-	title: 'Kaiadmin',
-	message: 'Premium Bootstrap 5 Admin Dashboard',
-},{
-	type: 'secondary',
-	placement: {
-		from: "bottom",
-		align: "right"
-	},
-	time: 1000,
-});
+// $.notify({
+//	icon: 'icon-bell',
+//	title: 'Kaiadmin',
+//	message: 'Premium Bootstrap 5 Admin Dashboard',
+//},{
+//	type: 'secondary',
+//	placement: {
+//		from: "bottom",
+//		align: "right"
+//	},
+//	time: 1000,
+//});
 
 // Jsvectormap
 var world_map = new jsVectorMap({

@@ -29,4 +29,5 @@ public class Member {
 	private String memberGender;
 	private String memberState;
 	private Date memberBirthdate;
+	private String jobName;
 }

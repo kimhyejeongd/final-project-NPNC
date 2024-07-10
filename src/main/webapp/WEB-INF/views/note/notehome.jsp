@@ -129,6 +129,7 @@
               <div class="ms-md-auto py-2 py-md-0">
                 <a href="javascript:openNoteWrite();" class="btn btn-label-info btn-round me-2">쪽지 발송</a>
                 <a href="#" class="btn btn-primary btn-round">쪽지 다중 발송</a>
+                <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a>
               </div>
             </div>
           	<div class="col-md-12">
@@ -172,12 +173,31 @@
                 </div>
               </div>
           	<script>
-          		function openNoteWrite(){
-          		    var url = "${path}/notewrite3";
+          		function openOrgan(){
+          		/* 	var url = "${path}/organ";
                     var windowName = "newWindow";
-                    var windowFeatures = "width=800,height=600";
+                    var windowFeatures = "width=400px,height=600, resizable=no";
 
-                    window.open(url, windowName, windowFeatures);
+                     window.open(url, windowName, windowFeatures);
+                      */
+                     var popupWindow= window.open('${path}/organ', 'newWindow', 'resizable');
+					 popupWindow.resizeTo(400, 600);
+						popupWindow.onresize = (_=>{
+						    popupWindow.resizeTo(400,600);
+						});	
+	          			
+          		}
+          	
+          		function openNoteWrite(){
+          		/*     var url = "${path}/notewrite3";
+                    var windowName = "newWindow";
+                    var windowFeatures = "width=800,height=600, resizable=no";
+ */
+ 				 	var popupWindow= window.open('${path}/notewrite3', 'newWindow', 'resizable');
+						 popupWindow.resizeTo(400, 600);
+							popupWindow.onresize = (_=>{
+							    popupWindow.resizeTo(400,600);
+							});	
           		}
           		
           		function fn_paging(pageNo){

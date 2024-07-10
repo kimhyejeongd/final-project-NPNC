@@ -58,6 +58,7 @@
 			    </div>
 			    <div class="form-group">
 			      <label for="smallInput"><span class="h5">결재자</span></label>
+
 			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
 						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
 						  <div class="border" id="approval1">
