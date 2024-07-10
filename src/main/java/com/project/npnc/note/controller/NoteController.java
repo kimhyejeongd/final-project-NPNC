@@ -27,6 +27,12 @@ public class NoteController {
 	private final MemberService memberService;
 	private final NotePageFactory pageBar;
 	
+	
+	@RequestMapping("/notewrite3")
+	public String noteWrite() {
+		return "note/notewrite";
+	}
+	
 	@RequestMapping("/notein")
 	public String notein() {
 		

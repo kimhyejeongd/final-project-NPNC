@@ -127,7 +127,7 @@
                 <h6 class="op-7 mb-2">총 93건의 쪽지가 있습니다.</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">쪽지 발송</a>
+                <a href="javascript:openNoteWrite();" class="btn btn-label-info btn-round me-2">쪽지 발송</a>
                 <a href="#" class="btn btn-primary btn-round">쪽지 다중 발송</a>
               </div>
             </div>
@@ -172,6 +172,14 @@
                 </div>
               </div>
           	<script>
+          		function openNoteWrite(){
+          		    var url = "${path}/notewrite3";
+                    var windowName = "newWindow";
+                    var windowFeatures = "width=800,height=600";
+
+                    window.open(url, windowName, windowFeatures);
+          		}
+          		
           		function fn_paging(pageNo){
 					$.ajax({
 						url : '${path}/notepaging',
