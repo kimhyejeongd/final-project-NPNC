@@ -12,7 +12,6 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -20,10 +19,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         //클라이언트에서 보낸 메세지를 받을 prefix
-        registry.setApplicationDestinationPrefixes("/send","/pub");   
+        registry.setApplicationDestinationPrefixes("/send");   
     
         //해당 주소를 구독하고 있는 클라이언트들에게 메세지 전달
-        registry.enableSimpleBroker("/room","/sub");   
+        registry.enableSimpleBroker("/room");   
     }
 
     @Override
