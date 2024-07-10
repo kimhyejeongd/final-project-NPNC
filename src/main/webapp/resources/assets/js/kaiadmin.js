@@ -292,15 +292,14 @@ $(document).ready(function(){
 		}
 	});
 
-	// addClass if nav-item click and has subnav
-
-	$(".nav-item a").on('click', (function(){
-		if ( $(this).parent().find('.collapse').hasClass("show") ) {
+	// addClass if nav-item click and has subnav submenu
+	$(".nav-item a").on('click', function(){
+		if ( $(this).parent().hasClass("submenu") ) {
 			$(this).parent().removeClass('submenu');
 		} else {
 			$(this).parent().addClass('submenu');
 		}
-	}));
+	  });
 
 
 	//Chat Open
