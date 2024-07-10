@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.google.gson.Gson;
-import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
+import com.project.npnc.member.model.dto.Member;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +45,13 @@ public class HomeController {
 			param.put("memberSize", memberNo.size());
 			roomId = service.selectRoomId(param);
 		}
-		AdminMember loginMember = (AdminMember)session.getAttribute("loginMember");
+		Member loginMember = (Member)session.getAttribute("loginMember");
 		System.out.println("HomeController Chat");
 		
 		int loginMemberKey = loginMember.getMemberKey();
 		
 		int countRoomMember = service.countRoomMember(roomId);
+		List<Member>roomMembers = service.selectMyRoomMembers(roomId);
 		Map<String, Object> readInfo = new HashMap<>();
 		readInfo.put("loginMemberKey", loginMemberKey);
 		readInfo.put("roomId", roomId);
@@ -59,6 +60,7 @@ public class HomeController {
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
+		model.addAttribute("roomMembers", gson.toJson(roomMembers));
 
 		return "chatting/chat";
 	}
@@ -70,15 +72,17 @@ public class HomeController {
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
-		AdminMember member = service.selectMemberById(inputValue);
+//        임시 로그인
+		Member member = service.selectMemberById(inputValue);
         session.setAttribute("loginMember", member); 
-		Map<Integer,List<AdminMember>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
+        
+		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
 //		model.addAttribute("roomId",roomId);
 		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
 		
 		model.addAttribute("myRoomMemberList",myRoomMemberList);
 		model.addAttribute("mychatRoomList",mychatRoomList);
-		List<AdminMember>members = service.selectAllMembers();	
+		List<Member>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
 		return "chatting/chatRoom";
@@ -91,7 +95,7 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(@RequestParam("memberKey") String memberKey, HttpSession session) {
-		AdminMember loginMember = service.selectMemberById(memberKey);
+		Member loginMember = service.selectMemberById(memberKey);
         session.setAttribute("loginMember", loginMember);
         
         return "redirect:/"; // 로그인 후 리다이렉트할 페이지

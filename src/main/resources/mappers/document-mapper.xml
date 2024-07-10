@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="document">
+	<resultMap id="documentMap" type="document">
+		<id column="er_doc_key" property="erDocKey"/>
+	    <result column="er_doc_writer" property="erDocWriter"/>
+	    <result column="er_doc_title" property="erDocTitle"/>
+	    <result column="er_doc_create_date" property="erDocCreateDate"/>
+	    <result column="er_doc_approval_date" property="erDocApprovalDate"/>
+	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
+	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
+	    <result column="er_doc_update_date" property="erDocUpdateDate"/>
+	    <result column="er_doc_storage" property="erDocStorage"/>
+	    <result column="er_doc_filename" property="erDocFilename"/>
+		<collection property="approvers" resultMap="approverMap" ofType="approver"/>
+	</resultMap>
+	<resultMap id="approverMap" type="approver">
+		<id column="ER_APPROVER_KEY" property="approvalMemberKey"/>
+		<result column="MEMBER_KEY" property="memberKey"/>
+		<result column="ER_APPROVER_TEAM" property="memberTeam"/>
+		<result column="ER_APPROVER_JOB" property="memberJob"/>
+		<result column="ER_APPROVER_NAME" property="memberName"/>
+		<result column="ER_APPROVAL_CATEGORY" property="category"/>
+		<result column="ER_APPROVAL_STATE" property="state"/>
+		<result column="ER_APPROVAL_OPINION" property="opinion"/>
+		<result column="ER_DOC_KEY" property="erDocKey"/>
+		<result column="ER_APPROVAL_DATE" property="date"/>
+		<result column="ER_APPROVAL_ORDERBY" property="orderby"/>
+	</resultMap>
 	<select id="selectformFolders" resultType="map">
 		 select * from er_form_folder order by er_form_folder_orderby
 	</select>
@@ -12,10 +38,25 @@
 		 where ER_FORM_YN = 'Y' and er_form_folder_key = #{no} 
 		 order by er_form_orderby
 	</select>
+	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
+		 select * from er_document
+		 	LEFT JOIN ER_APROVER ea using(ER_DOC_KEY)
+		 where er_doc_writer = ${no} and er_doc_approval_date is null
+		 order by er_doc_emergency_yn desc, ER_approval_orderby
+	</select>
 	<select id="selectFormsBySearch" resultType="map" parameterType="string">
 		 select * from er_form 
-		 	LEFT JOIN ER_FORM_FOLDER USING (ER_FORM_FOLDER_key)
 		 where ER_FORM_YN = 'Y' and er_form_name like #{target} 
-		 order by er_form_orderby
+		 order by er_form_orderby desc, er_doc_create_date desc
 	</select>
+	<insert id="insertDoc" parameterType="document">
+		INSERT INTO ER_document values(TO_CHAR(SYSDATE, 'YYMMDD') || '-' || '${erDocKey}' || '-' || to_char(SEQ_ER_FORM.nextval), 
+			${erDocWriter}, '${erDocTitle}', default, null, '${erDocEmergencyYn}', default, null, '${erDocStorage}', '${erDocFilename}')
+		<selectKey keyProperty="erDocKey" resultType="String" order="AFTER">
+			select TO_CHAR(SYSDATE, 'YYMMDD') || '-' || '${erDocKey}' || '-' || to_char(SEQ_ER_FORM.nextval) from dual
+		</selectKey>
+	</insert>
+	<insert id="insertApproval" parameterType="approver">
+		INSERT INTO er_aprover values(SEQ_ER_APPROVER_KEY.nextval, ${memberKey}, '${memberName}', '${memberTeam}', '${memberJob}', '${category}', '대기', null, '${erDocKey}', null, ${orderby})
+	</insert>
 </mapper>

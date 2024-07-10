@@ -48,9 +48,5 @@ public class CalendarController {
 	public List<Calendar> selectCalendar(int memberKey){
 		List<Calendar> list = service.selectAllByKey(memberKey);
 		return list;
-		
-		
-		
-		
 	}
 }

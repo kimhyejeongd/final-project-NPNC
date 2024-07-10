@@ -32,7 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-/bin/
+src/main/resources/**/*.xml
 src/main/resources/*.properties
 **/.DS_Store
 .dbeaver

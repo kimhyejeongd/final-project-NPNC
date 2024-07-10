@@ -15,37 +15,37 @@ public class MemberDaoImpl2 implements MemberDao {
 	@Override
 	public List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("member.selectMemeberAll",null,rb);
+		return session.selectList("memberSr.selectMemeberAll",null,rb);
 	}
 
 	@Override
 	public int selectMemberCount(SqlSession session) {
 	
-		return session.selectOne("member.selectMemberCount");
+		return session.selectOne("memberSr.selectMemberCount");
 	}
 
 	@Override
 	public Member selectMemberByNo(SqlSession session, int memberKey) {
 		
-		return session.selectOne("member.selectMemberByNo",memberKey);
+		return session.selectOne("memberSr.selectMemberByNo",memberKey);
 	}
 
 	@Override
 	public int insertMember(SqlSession session, Member m) {
 		
-		return session.insert("member.insertMember",m);
+		return session.insert("memberSr.insertMember",m);
 	}
 
 	@Override
 	public int updateMember(SqlSession session, Member m) {
 		
-		return session.update("member.updateMember",m);
+		return session.update("memberSr.updateMember",m);
 	}
 
 	@Override
 	public int deleteMember(SqlSession session, int memberKey) {
 		
-		return session.delete("member.deleteMember",memberKey);
+		return session.delete("memberSr.deleteMember",memberKey);
 	}
 	
 }
