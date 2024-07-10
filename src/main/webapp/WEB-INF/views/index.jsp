@@ -18,6 +18,8 @@
       href="${path}/resources/assets/img/kaiadmin/favicon.ico"
       type="image/x-icon"
     />
+    
+    
 
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
@@ -47,7 +49,12 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   </head>
+ 
+
+  
   <body>
+ 
+
     <div class="wrapper">
       <!-- Sidebar -->
       <div class="sidebar" data-background-color="dark">
@@ -76,6 +83,8 @@
           </div>
           <!-- End Logo Header -->
         </div>
+
+        
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
@@ -341,6 +350,7 @@
                 <h3 class="fw-bold mb-3">Dashboard</h3>
                 <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
               </div>
+                               
               <div class="ms-md-auto py-2 py-md-0">
                 <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
                 <a href="#" class="btn btn-primary btn-round">Add Customer</a>
@@ -953,7 +963,6 @@
             </div>
           </div>
         </div>
-
         <!-- footer -->
           <%@ include file="/WEB-INF/views/common/footer.jsp" %>
       </div>
@@ -1218,5 +1227,8 @@
         fillColor: "rgba(255, 165, 52, .14)",
       });
     </script>
+    
+    
+
   </body>
 </html>

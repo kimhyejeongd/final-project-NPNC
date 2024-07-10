@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="chat">
-	
+	<insert id="insertChattingFile" parameterType="chattingFile">
+		INSERT INTO CHATTING_FILE VALUES
+		(#{chatFileKey},
+		#{memberKey},
+		#{chatMsgFileOri},
+		#{chatMsgFilePost},
+		#{chatFileTime},
+		#{chatRoomKey},
+		#{chatMsgKey})
+	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
 		DELETE FROM CHATTING_IS_READ cir 
 		WHERE cir.chat_msg_key  IN
@@ -36,7 +45,7 @@
 		DELETE FROM CHATTING_IS_READ WHERE CHAT_MSG_KEY = #{chatList.chatMsgKey} AND MEMBER_KEY = #{loginMemberKey}
 	</delete>
 	<select id="insertChattingRoom" parameterType="int">
-		INSERT INTO CHATTING_ROOM VALUES(#{roomId},'1')
+		INSERT INTO CHATTING_ROOM VALUES(#{roomId},'1',null)
 	</select>
 	<select id="getSequenceValue" resultType="int">
         SELECT SEQ_CHAT_ROOM_KEY.nextval FROM dual
@@ -97,6 +106,9 @@
 	<select id="selectChatSeq" resultType="int">
 		select SEQ_CHAT_MESSAGE_KEY.nextval from dual
 	</select>
+	<select id="selectFileSeq" resultType="int">
+		select SEQ_CHAT_FILE_KEY.nextval.nextval from dual
+	</select>
 	<select id="selectReadCount" resultType="int" parameterType="ChattingMessage">
 			SELECT sum(is_read) FROM CHAT_READ_STATUS WHERE CHAT_ID=#{seq}
 	</select>
@@ -138,7 +150,8 @@
 	    <result property="chatRecentMsgKey" column="CHAT_RECENT_MSG_KEY"/>
 	    <result property="chatMsgTime" column="CHAT_MSG_TIME"/>
 	</resultMap>
-	    <resultMap id="memberResultMap" type="member">
+	
+    <resultMap id="memberResultMap" type="member">
         <id property="memberKey" column="MEMBER_KEY" />
         <result property="departmentKey" column="DEPARTMENT_KEY" />
         <result property="jobKey" column="JOB_KEY" />
@@ -147,14 +160,22 @@
         <result property="memberPhone" column="MEMBER_PHONE" />
         <result property="memberEmail" column="MEMBER_EMAIL" />
         <result property="memberMessage" column="MEMBER_MESSAGE" />
-        <result property="enrollDate" column="MEMBER_ENROLL_DATE" />
+        <result property="enrollDate" column="ENROLL_DATE" />
         <result property="memberLeaveDate" column="MEMBER_LEAVE_DATE" />
         <result property="memberTell" column="MEMBER_TELL" />
         <result property="memberAddress" column="MEMBER_ADDRESS" />
         <result property="accessKey" column="ACCESS_KEY" />
     </resultMap>
-
-
+    
+    <resultMap id="ChattingFileResultMap" type="chattingFile">
+        <id property="chatFileKey" column="CHAT_FILE_KEY" />
+        <result property="memberKey" column="MEMBER_KEY" />
+        <result property="chatMsgFileOri" column="CHAT_MSG_FILE_ORI" />
+        <result property="chatMsgFilePost" column="CHAT_MSG_FILE_POST" />
+        <result property="chatFileTime" column="CHAT_FILE_TIME" />
+        <result property="chatRoomKey" column="CHAT_ROOM_KEY" />
+        <result property="chatMsgKey" column="CHAT_MSG_KEY" />
+    </resultMap>
 
 
 	

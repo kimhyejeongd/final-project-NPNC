@@ -24,7 +24,7 @@
         <result property="memberPhone" column="MEMBER_PHONE" />
         <result property="memberEmail" column="MEMBER_EMAIL" />
         <result property="memberMessage" column="MEMBER_MESSAGE" />
-        <result property="enrollDate" column="MEMBER_ENROLL_DATE" />
+        <result property="enrollDate" column="ENROLL_DATE" />
         <result property="memberLeaveDate" column="MEMBER_LEAVE_DATE" />
         <result property="memberTell" column="MEMBER_TELL" />
         <result property="memberAddress" column="MEMBER_ADDRESS" />

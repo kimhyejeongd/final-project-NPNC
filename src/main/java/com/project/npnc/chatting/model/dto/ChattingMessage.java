@@ -19,14 +19,14 @@ public class ChattingMessage {
     private int chatRoomKey;
     private List<Integer> receiverKey;
     private String chatMsgDetail;
-    private Date   chatMsgTime;
+    private Timestamp   chatMsgTime;
     private String chatMsgNotice;
     private int chatReadCount;
     private ChattingFile file; 
     
 
     public static ChattingMessage createChattingMessage
-    (int chatMsgKey, int memberKey, int chatRoomKey, String chatMsgDetail, Date chatMsgTime, String chatMsgNotice,int chatReadCount) {
+    (int chatMsgKey, int memberKey, int chatRoomKey, String chatMsgDetail, Timestamp chatMsgTime, String chatMsgNotice,int chatReadCount) {
         return ChattingMessage.builder()
                 .chatMsgKey(chatMsgKey)
                 .memberKey(memberKey)
