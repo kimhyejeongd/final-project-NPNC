@@ -8,7 +8,9 @@
 		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
       <typeAlias type="com.project.npnc.admin.department.model.dto.Department" alias="department"/>
-      <typeAlias type="com.project.npnc.admin.member.model.dto.AdminMember" alias="adminmember"/>   
+      <typeAlias type="com.project.npnc.admin.member.model.dto.AdminMember" alias="adminmember"/> 
+      <typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
       <typeAlias type="com.project.npnc.document.model.dto.Document" alias="document"/>   
+      <typeAlias type="com.project.npnc.document.model.dto.Approver" alias="approver"/>   
      </typeAliases>
 </configuration>

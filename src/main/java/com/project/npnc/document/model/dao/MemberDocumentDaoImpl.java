@@ -22,6 +22,10 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public List<DocumentForm> selectForms(SqlSession session, int no) {
 		return session.selectList("document.selectForms", no);
 	}
+	@Override
+	public List<Document> selectInprocessDocs(SqlSession session, int no) {
+		return session.selectList("document.selectInprocessDocs", no);
+	}
 
 	@Override
 	public List<DocumentForm> selectFormsBySearch(SqlSession session, String target) {
@@ -40,7 +44,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
 	public int insertApproval(SqlSession session, approversList request) {
-		return session.insert("document.insertApproval", request.getApprovers());
+		int result =0;
+		for(int i=0; i<request.getApprovers().size();i++) {
+			result = session.insert("document.insertApproval", request.getApprovers().get(i)); 
+		}
+		return result;
 	}
 
 }

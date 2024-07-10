@@ -17,4 +17,6 @@ public interface MemberDocumentDao {
 	
 	int insertDoc(SqlSession session, Document d);
 	int insertApproval(SqlSession session, approversList request);
+	
+	List<Document> selectInprocessDocs(SqlSession session, int no);
 }
