@@ -85,7 +85,6 @@
 						  	<input name="approvers[1].category" value="결재" style="">
 						  </div>
 			      </div>
->>>>>>> branch 'dev' of https://github.com/JinHyung-dev/NPNC.git
 			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
 			    </div>
 			    <div class="form-group">
