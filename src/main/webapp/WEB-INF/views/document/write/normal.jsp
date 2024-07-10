@@ -58,8 +58,38 @@
 			    </div>
 			    <div class="form-group">
 			      <label for="smallInput"><span class="h5">결재자</span></label>
+<<<<<<< HEAD
 			      <div class="border" style="width:100%; height: 150px;"><span class="center">드래그앤 드롭</span></div>
 			      <!-- <input type="text" class="form-control form-control-sm" id="smallInput"> -->
+=======
+			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
+						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
+						  <div class="border" id="approval1">
+						  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
+						  	<input name="approvers[0].memberKey" value="2" style="display:none">
+						  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
+						  	<input name="approvers[0].memberJob" value="사원" style="">
+						  	<input name="approvers[0].memberName" value="김사원" style="">
+						  	<input name="approvers[0].category" value="기안" style="">
+						  </div>
+						  <div class="border" id="approval1">
+						  	<input name="approvers[0].orderby" value="2" style="border-radius: 15px; width: 20px;">
+						  	<input name="approvers[0].memberKey" value="2" style="display:none">
+						  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
+						  	<input name="approvers[0].memberJob" value="팀장" style="">
+						  	<input name="approvers[0].memberName" value="김팀장" style="">
+						  	<input name="approvers[0].category" value="검토" style="">
+						  </div>
+						  <div class="border" id="approval2">
+						  	<input name="approvers[1].orderby" value="3" style="border-radius: 15px; width: 20px;">
+						  	<input name="approvers[1].memberKey" value="1" style="display:none">
+						  	<input name="approvers[1].memberTeam" value="경영지원팀" style="">
+						  	<input name="approvers[1].memberJob" value="대표이사" style="">
+						  	<input name="approvers[1].memberName" value="김사장" style="">
+						  	<input name="approvers[1].category" value="결재" style="">
+						  </div>
+			      </div>
+>>>>>>> branch 'dev' of https://github.com/JinHyung-dev/NPNC.git
 			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
 			    </div>
 			    <div class="form-group">
