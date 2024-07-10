@@ -58,10 +58,7 @@
 			    </div>
 			    <div class="form-group">
 			      <label for="smallInput"><span class="h5">결재자</span></label>
-<<<<<<< HEAD
-			      <div class="border" style="width:100%; height: 150px;"><span class="center">드래그앤 드롭</span></div>
-			      <!-- <input type="text" class="form-control form-control-sm" id="smallInput"> -->
-=======
+
 			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
 						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
 						  <div class="border" id="approval1">
@@ -89,7 +86,6 @@
 						  	<input name="approvers[1].category" value="결재" style="">
 						  </div>
 			      </div>
->>>>>>> branch 'dev' of https://github.com/JinHyung-dev/NPNC.git
 			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
 			    </div>
 			    <div class="form-group">
