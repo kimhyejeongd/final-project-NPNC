@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!-- Fonts and icons -->
+        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
       WebFont.load({
@@ -27,43 +28,38 @@
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-      <!-- Sidebar -->
-      <div class="sidebar" data-background-color="white">
-        <div class="sidebar-logo">
-          <!-- Logo Header -->
-          <div class="logo-header" data-background-color="purple">
-            <a href="index.html" class="logo">
-              <img
-                src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
-                alt="navbar brand"
-                class="navbar-brand"
-                height="20"
-              />
-            </a>
-            <div class="nav-toggle">
-              <button class="btn btn-toggle toggle-sidebar">
-                <i class="gg-menu-right"></i>
-              </button>
-              <button class="btn btn-toggle sidenav-toggler">
-                <i class="gg-menu-left"></i>
-              </button>
-            </div>
-            <button class="topbar-toggler more">
-              <i class="gg-more-vertical-alt"></i>
-            </button>
-          </div>
-          <!-- End Logo Header -->
-        </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+  	<div class="sidebar" data-background-color="white">
+  	<div class="sidebar-logo">
+       <!-- Logo Header -->
+       <div class="logo-header" data-background-color="dark">
+         <a href="index.html" class="logo">
+           <img
+             src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
+             alt="navbar brand"
+             class="navbar-brand"
+             height="20"
+           />
+         </a>
+         <div class="nav-toggle">
+           <button class="btn btn-toggle toggle-sidebar">
+             <i class="gg-menu-right"></i>
+           </button>
+           <button class="btn btn-toggle sidenav-toggler">
+             <i class="gg-menu-left"></i>
+           </button>
+         </div>
+       </div>
+       <!-- End Logo Header -->
+     </div>
+  	<div class="sidebar-wrapper scrollbar scrollbar-inner">
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
            		<li class="mb-4 text-center">
                   <a href="${path }/document/form" class="btn btn-primary btn-round w-75">문서 작성하기</a>
                </li>
-              <li class="nav-item active">
+              <li class="nav-item">
                 <a
                   data-bs-toggle="collapse"
-                  href="#dashboard"
                   class="collapsed"
                   aria-expanded="false"
                   href="${path }/document/home"
@@ -72,21 +68,22 @@
                   <p>전자결재 Home</p>
                 </a>
               </li>
+              <!-- 토글리스트 -->
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
               </li>
               <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-layer-group"></i>
+                <a data-bs-toggle="collapse" href="#docING">
+                  <i class="fas fa-pen-square"></i>
                   <p>결재 상신함</p>
                   <span class="caret"></span>
                 </a>
-                <div class="collapse" id="base">
+                <div class="collapse" id="docING">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="">
+                      <a href="${path }/document/inprocess">
                         <span class="sub-item">진행중인 문서</span>
                       </a>
                     </li>
@@ -154,11 +151,15 @@
           </div>
         </div>
       </div>
+  
+  
       <!-- End Sidebar -->
+      <!-- End Custom template -->
     <!--   Core JS Files   -->
     <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-    <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
+    <%-- <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script> --%>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <!-- jQuery Scrollbar -->
     <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>

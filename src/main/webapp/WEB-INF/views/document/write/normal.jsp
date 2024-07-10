@@ -70,12 +70,20 @@
 						  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
 						  	<input name="approvers[0].memberKey" value="2" style="display:none">
 						  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
+						  	<input name="approvers[0].memberJob" value="사원" style="">
+						  	<input name="approvers[0].memberName" value="김사원" style="">
+						  	<input name="approvers[0].category" value="기안" style="">
+						  </div>
+						  <div class="border" id="approval1">
+						  	<input name="approvers[0].orderby" value="2" style="border-radius: 15px; width: 20px;">
+						  	<input name="approvers[0].memberKey" value="2" style="display:none">
+						  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
 						  	<input name="approvers[0].memberJob" value="팀장" style="">
 						  	<input name="approvers[0].memberName" value="김팀장" style="">
 						  	<input name="approvers[0].category" value="검토" style="">
 						  </div>
 						  <div class="border" id="approval2">
-						  	<input name="approvers[1].orderby" value="2" style="border-radius: 15px; width: 20px;">
+						  	<input name="approvers[1].orderby" value="3" style="border-radius: 15px; width: 20px;">
 						  	<input name="approvers[1].memberKey" value="1" style="display:none">
 						  	<input name="approvers[1].memberTeam" value="경영지원팀" style="">
 						  	<input name="approvers[1].memberJob" value="대표이사" style="">
