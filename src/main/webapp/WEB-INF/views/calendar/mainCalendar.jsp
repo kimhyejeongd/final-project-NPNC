@@ -169,8 +169,9 @@
     <script src="${path }/resources/bm/js/fullcalendar.min.js"></script>
     <script src="${path }/resources/bm/js/bootstrap-datetimepicker.min.js"></script>
     <script src="${path }/resources/bm/js/ko.js"></script>
-    <script src="${path }/resources/bm/js/addEvent.js"></script>
     <script src="${path }/resources/bm/js/calendar.js"></script>
+    <script src="${path }/resources/bm/js/addEvent.js"></script>
+    <script src="${path }/resources/bm/js/editEvent.js"></script>
     
     <script>
     

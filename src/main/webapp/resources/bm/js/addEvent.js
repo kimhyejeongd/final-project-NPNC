@@ -53,10 +53,11 @@ var newEvent = function(start, end, eventType){
 			alert('끝나는 날짜가 앞설 수 없습니다.');
 			return false;
 		}
+		var endDay;
 		if(calAllday.is(':checked')){
-			console.log("checkpls");
 			eventData.start = moment(eventData.start).format('YYYY-MM-DD');
 			eventData.end = moment(eventData.end).add(1, 'days').format('YYYY-MM-DD');
+		
 			eventData.allDay = true;
 		}
 		$("#calendar").fullCalendar('renderEvent', eventData, true);
@@ -71,7 +72,12 @@ var newEvent = function(start, end, eventType){
 			contentType: "application/json; charset=utf-8",
 			dataType:"json",
 			success: function(response){
-				console.log("success");			
+				if(response.status === "success"){
+					alert(response.message);
+				}
+				else{
+					alert(response.message);
+				}
 			}
 			
 		});
