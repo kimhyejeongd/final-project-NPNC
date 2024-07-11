@@ -80,7 +80,19 @@
 		INSERT INTO CHATTING_IS_READ values(SEQ_CHAT_IS_READ_KEY.nextval,#{seq},#{member.memberKey})
 	</insert>
 	<select id="selectRoomChatList" parameterType="_int" resultMap="chattingMessageResultMap">
-		SELECT * FROM CHATTING_MESSAGE WHERE CHAT_ROOM_KEY = #{roomNo} order by CHAT_MSG_TIME
+		SELECT 
+			cm.CHAT_MSG_KEY,
+			cm.MEMBER_KEY,
+			cm.CHAT_ROOM_KEY,
+			cm.CHAT_MSG_DETAIL,
+			cm.CHAT_MSG_TIME,
+			cm.CHAT_MSG_NOTICE,
+			cm.CHAT_READ_COUNT,
+			cf.CHAT_MSG_FILE_POST
+		FROM chatting_message cm 
+		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
+		WHERE chat_room_key = ${roomNo}
+		ORDER BY chat_msg_time desc
 	</select>
 	<select id="selectMyRoomMembers" parameterType="ChattingMessage" resultMap="chattingGroupResultMap">
 		SELECT DISTINCT MEMBER_KEY FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY=#{chatRoomKey} and MEMBER_KEY != #{memberKey}

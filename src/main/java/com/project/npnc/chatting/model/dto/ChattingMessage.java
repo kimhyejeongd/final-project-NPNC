@@ -23,6 +23,9 @@ public class ChattingMessage {
     private String chatMsgNotice;
     private int chatReadCount;
     private ChattingFile file; 
+    private String chatMsgFileOri;
+    private String chatMsgFilePost;
+    private Date chatFileTime;
     
 
     public static ChattingMessage createChattingMessage

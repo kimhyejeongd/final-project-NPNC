@@ -261,6 +261,7 @@ var stompClient = null;
 var roomId = ${roomId};
 var chatList = ${chatList};
 var countRoomMember = ${countRoomMember};
+var fileMetaData = null;
 
 
 $('#fileButton').on('click', function() {
@@ -282,6 +283,9 @@ $('#fileInput').on('change', function(event) {
             processData: false,
             contentType: false,
             success: function(response) {
+            	fileMetaData = response;
+            	console.log(response);
+            	sendChat();
             	
                     alert('파일 업로드 성공: ' + response.chatMsgFileOri);
                     console.log('파일 저장 경로: ' + response.chatMsgFilePost);
@@ -415,7 +419,8 @@ $('.exit-button').click(function() {
                 'memberKey': '${loginMember.memberKey}', 
                 'receiverKey': ${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey),
                 'chatMsgDetail':  message.replace(/\n/g, '<br>'),
-                'chatMsgTime': new Date().toISOString()
+                'chatMsgTime': new Date().toISOString(),
+                'file':fileMetaData
             }));
         $('#message').val('');
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동

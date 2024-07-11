@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.message.Message;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
@@ -46,15 +47,17 @@ public class ChatService {
 
 		
 		int chatSeq = dao.selectChatSeq(session);
+		Integer fileSeq = null;
+
 		
+
+		//내 방에 있는 멤버의 넘버들
 		Map<String, Object> chatInfo = new HashMap<>();
 		chatInfo.put("seq", chatSeq);
 		chatInfo.put("chat", chat);
 		chatInfo.put("memberNo", chat.getMemberKey());
 		chatInfo.put("chatRoomKey", chat.getChatRoomKey());
 		
-		//내 방에 있는 멤버의 넘버들
-
 		List<ChattingGroup> myRoomMembers = dao.selectMyRoomMembers(session,chat);
 		int readCount = 0;
 		if(myRoomMembers!=null) readCount = myRoomMembers.size();
@@ -62,14 +65,14 @@ public class ChatService {
 	    chatInfo.put("readCount", readCount);
 		dao.insertChat(session,chatInfo);
 		
-//		public ChattingFile insertChattingFile(ChattingFile chattingFile) {
-//		int msgSeq = dao.selectChatSeq(session);
-//		int fileSeq = dao.selectChatSeq(session);
-//		chattingFile.setChatFileKey(fileSeq);
-//		chattingFile.setChatMsgKey(msgSeq);
-//		dao.insertChattingFile(session,chattingFile);
-//		return chattingFile;
-//	}
+		if(chat.getFile()!=null) {
+			ChattingFile uploadFile = chat.getFile();
+			fileSeq = dao.selectChatSeq(session);
+			uploadFile.setChatFileKey(fileSeq);
+			uploadFile.setChatMsgKey(chatSeq);
+			dao.insertChattingFile(session,uploadFile);
+		}
+		
 			
 			
 	    // 접속 중인 멤버 키를 가져옴
