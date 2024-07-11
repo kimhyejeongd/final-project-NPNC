@@ -61,6 +61,11 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
+	@PostMapping("/view/{docId}")
+	public void viewDoc(String docId, Model m) {
+		log.debug("----" + docId + "문서 상세보기----");
+		m.addAttribute("doc", serv.selectDocBySerial(docId));
+	}
 	@PostMapping("/formlist.do")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {

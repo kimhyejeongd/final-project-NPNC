@@ -75,4 +75,9 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.delete("document.deleteDocFile", erDocSerialKey);
 	}
 
+	@Override
+	public Document selectDocBySerial(SqlSession session, String docId) {
+		return session.selectOne("document.selectDocBySerial", docId);
+	}
+
 }

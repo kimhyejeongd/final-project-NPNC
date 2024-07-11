@@ -92,5 +92,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		}
 		return result;
 	}
+	@Override
+	public Document selectDocBySerial(String docId) {
+		return dao.selectDocBySerial(session, docId);
+	}
 
 }
