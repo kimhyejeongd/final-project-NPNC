@@ -7,7 +7,7 @@
 <html lang="ko">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>진행 중 문서</title>
+    <title>회수 문서</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -16,6 +16,11 @@
       rel="icon"
       type="image/x-icon"
     />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
     <style>
     	#tablerow:hover{
     		cursor: pointer; 
@@ -50,7 +55,7 @@
                 <div class="card card-round">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">진행 중인 문서</div>
+                      <div class="card-title">회수 문서</div>
                       <div class="card-tools">
                       </div>
                     </div>
@@ -62,56 +67,31 @@
                         <thead class="thead-light">
                           <tr class="text-center">
                           	<!-- <th><input type="checkbox"></th> -->
-                            <th scope="col" class="">등록 번호</th>
+                            <th scope="col" class="">#</th>
                             <th scope="col" class="">문서 제목</th>
                             <th scope="col" class="">상신 일자</th>
-                            <th scope="col" class="">결재 현황</th>
+                            <th scope="col" class="">회수 일자</th>
                             <th scope="col" class=""></th>
                           </tr>
                         </thead>
                         <tbody>
 	                         <c:if test="${doclist eq null}">
 		                         <tr class="text-center">
-		                         	<td colspan="5">진행 중인 문서가 없습니다</td>
+		                         	<td colspan="5">회수된 문서가 없습니다</td>
 	                         	</tr>
 	                         </c:if>
 	                         <c:if test="${doclist ne null}">
 	                         	<c:forEach items="${doclist }" var="l">
 		                         <tr class="text-center" id="tablerow">
-		                            <td class="text-muted">${l.erDocKey }</td>
+		                            <td class="text-muted" data-doc-id="${l.erDocKey }">${vs.index+1 }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
 		                            </td>
-		                            <td class="approverNow">
-		                            	<c:forEach items="${l.approvers }" var="ap">
-		                            		<c:if test="${ap.state eq '승인' }">
-		                              			<div class="badge badge-success p-1">
-		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
-		                              			</div>
-		                              		</c:if>
-		                            		<c:if test="${ap.state eq '대기' }">
-		                              			<div class="badge badge-count">
-		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
-		                              			</div>
-		                              		</c:if>
-		                            		<c:if test="${ap.state eq '읽음' }">
-		                              			<div class="badge badge-warning">
-		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
-		                              			</div>
-		                              		</c:if>
-		                            		<c:if test="${ap.state eq '보류' }">
-		                              			<div class="badge badge-danger">
-		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
-		                              			</div>
-		                              		</c:if>
-		                              </c:forEach>
+		                            <td class="">
+		                            	<fmt:formatDate value="${l.erDocStateUpdateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
 		                            </td>
-		                         	<td colspan="5"><input type="button" value="회수" class="btn btn-outline-secondary"></td>
+		                         	<td colspan="5"><input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocKey}, '${path }'');"></td>
 		                          </tr>
 		                          </c:forEach>
 	                          </c:if>
@@ -122,9 +102,52 @@
                 </div>
               </div>
             </div>
-            </div>
-          </div>
+           </div>
           </div>
         </div>
+      </div>
+<script>
+	const modal = (no, path)=>{
+		// SweetAlert2 모달 띄우기
+		console.log(no);
+		Swal.fire({
+			title: '재기안',
+			html: '<h4>해당 문서 내용으로 재기안하시겠습니까?</h4>',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '재기안',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log('재기안하기');
+				$.ajax({
+					url: `${path}/document/retrieve`,
+					data: no,
+					success: data=>{
+						//문서 정보 전달, 문서 작성으로 이동
+						
+					}
+				});
+			}
+		});
+	};
+	//상세보기
+	function selectDoc(docid, path){
+		$.ajax(`${path}/document/rewrite`, {
+			method: "post",
+			headers: {
+				'Content-Type' : 'application/json'
+			},
+			body: JSON.stringify({documentId: docid})
+		}).response => {
+			if(response.ok){
+				location.assign(`${path}/document/view/`)
+			}
+		})
+	}
+</script>
   </body>
 </html>

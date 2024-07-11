@@ -43,7 +43,17 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("folderlist", result);
 	}
-	@GetMapping("/inprocess")
+	
+	@GetMapping("/list/retrieve")
+	public void docRetrieve(Model m) {
+		log.debug("----회수 문서 조회----");
+		int memberNo=3;
+		List<Document> result = serv.selectRetrieveDocs(memberNo);
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	
+	@GetMapping("/list/inprocess")
 	public void inprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
 		int memberNo=3;
@@ -51,7 +61,12 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@PostMapping("/formlist.do")
+	@PostMapping("/view/docDetail")
+	public void viewDoc(String docId, Model m) {
+		log.debug("----" + docId + "문서 상세보기----");
+		m.addAttribute("doc", serv.selectDocById(docId));
+	}
+	@PostMapping("/formlist")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -60,7 +75,7 @@ public class MemberDocumentController {
 //		m.addAttribute("formlist", result);
 		return result;
 	}
-	@PostMapping("/formsearch.do")
+	@PostMapping("/formsearch")
 	@ResponseBody
 	public List<DocumentForm> formList(String target, Model m) {
 		log.debug("----전자문서 양식명 "+ target+" 조회----");
@@ -77,17 +92,17 @@ public class MemberDocumentController {
 			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
-		return "document/formlist.do";
+		return "document/formlist";
 	}
-	@GetMapping("/doc1")
-	public void doc1Write() {
-	}
-	@GetMapping("/doc2")
-	public void doc2Write() {
-	}
-	@GetMapping("/doc3")
-	public void doc3Write() {
-	}
+//	@GetMapping("/doc1")
+//	public void doc1Write() {
+//	}
+//	@GetMapping("/doc2")
+//	public void doc2Write() {
+//	}
+//	@GetMapping("/doc3")
+//	public void doc3Write() {
+//	}
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
@@ -95,7 +110,7 @@ public class MemberDocumentController {
 	public String insertDoc(String msg, Document doc, String html, @ModelAttribute approversList request, Model m) {
 		int no = 3; //로그인 사원번호
 		doc.setErDocWriter(no);
-		doc.setErDocKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
 		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
 		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
@@ -104,8 +119,14 @@ public class MemberDocumentController {
 		int result=0;
 		
 		//문서, 결재자 insert
-		try { result = serv.insertDoc(doc, request);
-			} catch (Exception e) {e.printStackTrace();}
+		try { 
+			result = serv.insertDoc(doc, request);
+		} catch (Exception e) {
+//			m.addAttribute("msg", "[2] 결재자 저장 실패");
+//			m.addAttribute("loc", "/document/write");
+//			return "common/msg";
+			e.printStackTrace();
+		}
 		
 		//기안, 결재자 등록 성공시
 		if(result > 0) {
@@ -117,16 +138,23 @@ public class MemberDocumentController {
 	            log.debug("[3] html저장 성공");
 			}catch(IOException e) {
 				log.debug("[3] html저장 실패");
-				new Exception("[3] html저장 실패");
+				e.printStackTrace();
 			}
-		} else {//기안, 결재자 등록 실패시
-			log.debug("[2] 결재자 insert 실패");
-//			m.addAttribute("msg", "[2] 결재자 저장 실패");
-//			m.addAttribute("loc", "/document/write");
-//			return "common/msg";
-			new Exception("[2] 결재자 저장 실패");
-		}
+		} 
 		return "redirect:home"; //모두 성공시 홈으로
+	}
+	
+	@PostMapping("/retrieve")
+	@ResponseBody
+	public int retrieveDoc(String no) {
+		log.debug("------"+no + "번 문서 회수 요청------");
+		int result=0;
+		try {
+			result = serv.retrieveDoc(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	//html파일로 문서 저장 메소드

@@ -4,8 +4,8 @@
 	<typeAliases>
 		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="member"/>
 		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
-		<typeAlias type="com.project.npnc.note.dto.NoteDto" alias="note"></typeAlias>
-		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
+		<typeAlias type="com.project.npnc.note.dto.NoteDto" alias="note"/>
+		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"/>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
       <typeAlias type="com.project.npnc.admin.department.model.dto.Department" alias="department"/>
       <typeAlias type="com.project.npnc.admin.member.model.dto.AdminMember" alias="adminmember"/> 

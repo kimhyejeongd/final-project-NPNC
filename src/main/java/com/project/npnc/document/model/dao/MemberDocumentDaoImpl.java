@@ -26,6 +26,10 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public List<Document> selectInprocessDocs(SqlSession session, int no) {
 		return session.selectList("document.selectInprocessDocs", no);
 	}
+	@Override
+	public List<Document> selectRetrieveDocs(SqlSession session, int no) {
+		return session.selectList("document.selectRetrieveDocs", no);
+	}
 
 	@Override
 	public List<DocumentForm> selectFormsBySearch(SqlSession session, String target) {
@@ -49,6 +53,31 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 			result = session.insert("document.insertApproval", request.getApprovers().get(i)); 
 		}
 		return result;
+	}
+
+	@Override
+	public int retrieveDoc(SqlSession session, String erDocSerialKey) {
+		return session.update("document.retrieveDoc", erDocSerialKey);
+	}
+
+	@Override
+	public int retrieveDocFile(SqlSession session, String erDocSerialKey) {
+		return session.delete("document.retrieveDocFile", erDocSerialKey);
+	}
+
+	@Override
+	public int selectDocFile(SqlSession session, String erDocSerialKey) {
+		return session.selectOne("document.selectDocFile", erDocSerialKey);
+	}
+
+	@Override
+	public int deleteDocFile(SqlSession session, String erDocSerialKey) {
+		return session.delete("document.deleteDocFile", erDocSerialKey);
+	}
+
+	@Override
+	public Document selectDocById(SqlSession session, String docId) {
+		return session.selectOne("document.selectDocBySerial", docId);
 	}
 
 }
