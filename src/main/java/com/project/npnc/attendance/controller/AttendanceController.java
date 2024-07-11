@@ -165,6 +165,7 @@ public class AttendanceController{
 		m.addAttribute("attendances",attendances);
 
 		return "attendance/attendancelist";
+		
 	}
 	
 	
