@@ -1,20 +1,12 @@
 package com.project.npnc.chatting.model.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.chatting.controller.WebSocketEventListener;
 import com.project.npnc.chatting.model.dao.ChatDao;
@@ -43,11 +35,16 @@ public class ChatService {
 			dao.deleteReadBadge(session,deleteInfo);
 			System.out.println("--------"+i+"-----------");
 		}
+		
+
 
 	}
 	
 	//채팅 입력 시 db에 저장하기
 	public Map<String, Object> insertChat(ChattingMessage chat) {
+
+
+		
 		int chatSeq = dao.selectChatSeq(session);
 		
 		Map<String, Object> chatInfo = new HashMap<>();
@@ -56,8 +53,6 @@ public class ChatService {
 		chatInfo.put("memberNo", chat.getMemberKey());
 		chatInfo.put("chatRoomKey", chat.getChatRoomKey());
 		
-
-
 		//내 방에 있는 멤버의 넘버들
 
 		List<ChattingGroup> myRoomMembers = dao.selectMyRoomMembers(session,chat);
@@ -65,58 +60,35 @@ public class ChatService {
 		if(myRoomMembers!=null) readCount = myRoomMembers.size();
 		dao.updateRecentChat(session, chatInfo);
 	    chatInfo.put("readCount", readCount);
-			dao.insertChat(session,chatInfo);
+		dao.insertChat(session,chatInfo);
+		
+//		public ChattingFile insertChattingFile(ChattingFile chattingFile) {
+//		int msgSeq = dao.selectChatSeq(session);
+//		int fileSeq = dao.selectChatSeq(session);
+//		chattingFile.setChatFileKey(fileSeq);
+//		chattingFile.setChatMsgKey(msgSeq);
+//		dao.insertChattingFile(session,chattingFile);
+//		return chattingFile;
+//	}
 			
 			
 	    // 접속 중인 멤버 키를 가져옴
-		    Set<String> connectedMemberKeys = webSocketEventListener.getConnectedMemberKeys(String.valueOf(chat.getChatRoomKey()), "chat");
-	    
-	   System.out.println(connectedMemberKeys.toString()+"============connectedMemberKeys");
+	    Set<String> connectedMemberKeys = webSocketEventListener.getConnectedMemberKeys(String.valueOf(chat.getChatRoomKey()), "chat");
+
+	    System.out.println(connectedMemberKeys.toString()+"============connectedMemberKeys");
 			
-	    for (ChattingGroup m : myRoomMembers) {
-	            Member member = dao.selectMemberByNo(session, m.getMemberKey());				
-	            if (!connectedMemberKeys.contains(String.valueOf(member.getMemberKey()))) {
-	                chatInfo.put("member", member);
-	                dao.insertChattingIsRead(session, chatInfo);
-	            }
-	    }
-	    	chatInfo.put("readCount", readCount);
-	    	   // 파일 업로드 처리
-	        MultipartFile file = (MultipartFile) chat.getFile();
-	        if (file != null && !file.isEmpty()) {
-	            String originalFileName = file.getOriginalFilename();
-	            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-	            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
-
-	            String uploadDir = servletContext.getRealPath("/WEB-INF/upload/");
-	            Path uploadPath = Paths.get(uploadDir);
-
-	            try {
-	                if (!Files.exists(uploadPath)) {
-	                    Files.createDirectories(uploadPath);
-	                }
-
-	                Path filePath = uploadPath.resolve(uniqueFileName);
-	                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-	                ChattingFile chattingFile = ChattingFile.builder()
-	                        .memberKey(chat.getMemberKey())
-	                        .chatMsgFileOri(originalFileName)
-	                        .chatMsgFilePost(uniqueFileName)
-	                        .chatFileTime(new Date(System.currentTimeMillis()))
-	                        .chatKey(chatSeq)
-	                        .chatMsgKey(chatSeq)
-	                        .build();
-
-	               // dao.insertUploadedFile(session, chattingFile);
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-		return chatInfo;
+		    for (ChattingGroup m : myRoomMembers) {
+		            Member member = dao.selectMemberByNo(session, m.getMemberKey());				
+		            if (!connectedMemberKeys.contains(String.valueOf(member.getMemberKey()))) {
+		                chatInfo.put("member", member);
+		                dao.insertChattingIsRead(session, chatInfo);
+		            }
+		    }
+		    	chatInfo.put("readCount", readCount);
+			return chatInfo;
 		}
 	
-	//채팅방 입장할 때 채팅정보 리스트 불러오기 
+		//채팅방 입장할 때 채팅정보 리스트 불러오기 
 		public List<ChattingMessage> selectRoomChatList(Map<String, Object>readInfo){
 			int roomId = (int)readInfo.get("roomId");
 			List<ChattingMessage> chatList = dao.selectRoomChatList(session, roomId);
@@ -156,18 +128,13 @@ public class ChatService {
 			}
 			return roomMemberInfo;
 		}
-		
 		public List<ChattingRoom> selectMyChatRoomList(int memberNo){
-			
 			return dao.selectMyChatRoomList(session,memberNo);
 		}
 		
 		public List<Member> selectMyRoomMembers(int roomNo){
 			return dao.selectMyRoomMemberList(session, roomNo);
 		}
-		
-
-		
 		public Member selectMemberById(String memberId) {
 			return dao.selectMemberById(session,memberId);
 		}

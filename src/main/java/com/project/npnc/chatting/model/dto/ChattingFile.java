@@ -16,18 +16,18 @@ public class ChattingFile {
     private String chatMsgFileOri;
     private String chatMsgFilePost;
     private Date chatFileTime;
-    private int chatKey;
+    private int chatRoomKey;
     private int chatMsgKey;
     
 
-    public static ChattingFile createChattingFile(int chatFileKey, int memberKey, String chatMsgFileOri, String chatMsgFilePost, Date chatFileTime, int chatKey, int chatMsgKey) {
+    public static ChattingFile createChattingFile(int chatFileKey, int memberKey, String chatMsgFileOri, String chatMsgFilePost, Date chatFileTime, int chatRoomKey, int chatMsgKey) {
         return ChattingFile.builder()
                 .chatFileKey(chatFileKey)
                 .memberKey(memberKey)
                 .chatMsgFileOri(chatMsgFileOri)
                 .chatMsgFilePost(chatMsgFilePost)
                 .chatFileTime(chatFileTime)
-                .chatKey(chatKey)
+                .chatRoomKey(chatRoomKey)
                 .chatMsgKey(chatMsgKey)
                 .build();
     }

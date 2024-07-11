@@ -16,17 +16,22 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-        #fileButton {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5em;
-            margin-right: 10px;
-        }
-
-        #fileInput {
-            display: none;
-        }
+    #charCount {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #777;
+        text-align: right;
+    }
+    #fileButton {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5em;
+        margin-right: 10px;
+    }
+    #fileInput {
+        display: none;
+    }
         #message {
             flex: 1;
             padding: 10px;
@@ -93,18 +98,20 @@
         font-size: 1.5em;
     }
         #conversation {
-            height: 400px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            overflow-y: scroll;
-            background-color: #fff;
+              flex: 1;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        overflow-y: scroll;
+        background-color: #fff;
         }
     #chatting {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
+ 
+    
     .chat-input {
         display: flex;
         border-top: 1px solid #ddd;
@@ -230,10 +237,13 @@
     </div>
     <div class="chat-input">
         <form id="chatForm">
-            <button type="button" id="fileButton">&#128206;</button>
-            <input type="file" id="fileInput">
-            <input type="text" id="message" placeholder="메시지를 입력하세요">
-            <button id="send">보내기</button>
+            <div id="charCount">0/1000</div> <!-- 글자 수 표시 요소 추가 -->
+            <div>
+	            <button type="button" id="fileButton">&#128206;</button>
+	            <input type="file" id="fileInput">
+	            <textarea type="text" id="message" placeholder="메시지를 입력하세요"></textarea>
+	            <button id="send">보내기</button>
+            </div>
         </form>
     </div>
 </div>
@@ -262,6 +272,8 @@ $('#fileInput').on('change', function(event) {
     if (file) {
         var formData = new FormData();
         formData.append('file', file);
+        formData.append('chatId', roomId);
+        formData.append('memberId', '${loginMember.memberKey}');
 
         $.ajax({
             url: '${path}/upload',
@@ -270,12 +282,9 @@ $('#fileInput').on('change', function(event) {
             processData: false,
             contentType: false,
             success: function(response) {
-                if (response.status === 'success') {
-                    alert('파일 업로드 성공: ' + response.fileName);
-                    console.log('파일 저장 경로: ' + response.filePath);
-                } else {
-                    alert('파일 업로드 실패: ' + response.message);
-                }
+            	
+                    alert('파일 업로드 성공: ' + response.chatMsgFileOri);
+                    console.log('파일 저장 경로: ' + response.chatMsgFilePost);
                 // 파일 입력 요소 초기화
                 $('#fileInput').val('');
 
@@ -287,6 +296,10 @@ $('#fileInput').on('change', function(event) {
         });
     }
 });
+
+
+
+
 
 
 $(document).ready(function() {
@@ -390,6 +403,10 @@ $('.exit-button').click(function() {
         if (message.trim() === "") {
             return; // 입력값이 없으면 전송하지 않음
         }
+        if (message.length > 1000) {
+            alert('메시지는 1000자를 초과할 수 없습니다.');
+            return ; // 전송을 막음
+        }
 
         console.log(${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey));
         stompClient.send("/send/" + roomId, {},
@@ -397,7 +414,7 @@ $('.exit-button').click(function() {
                 'chatRoomKey': roomId,
                 'memberKey': '${loginMember.memberKey}', 
                 'receiverKey': ${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey),
-                'chatMsgDetail': message,
+                'chatMsgDetail':  message.replace(/\n/g, '<br>'),
                 'chatMsgTime': new Date().toISOString()
             }));
         $('#message').val('');
@@ -421,16 +438,21 @@ $('.exit-button').click(function() {
         });
     }
 
-    function formatDateTime(timestamp) {
-        var date = new Date(timestamp);
+    function formatDateTime(sqlDate) {
+        var date = new Date(sqlDate);
+        if (isNaN(date.getTime())) { // 유효하지 않은 날짜 처리
+            return sqlDate;
+        }
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var period = hours >= 12 ? '오후' : '오전';
         hours = hours % 12;
         hours = hours ? hours : 12; // 0시를 12시로 변경
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        return period + ' ' + hours + ': ' + minutes;
+        return period + ' ' + hours + ':' + minutes;
     }
+
+
 
     function loadChat(chatList) {
         console.log("loadChat");
@@ -474,6 +496,8 @@ $('.exit-button').click(function() {
         if (sessionCount + unreadCount > countRoomMember) {
             unreadCount -= 1;
         }
+        var formattedTime = formatDateTime(message.chatMsgTime);
+
 
         var messageElement = $(
             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
@@ -520,9 +544,18 @@ $('.exit-button').click(function() {
         });
 
         $('#message').on('keydown', function(event) {
-            if (event.key === 'Enter' && !isComposing) {
-                sendChat();
-                event.preventDefault(); // 입력창에서 Enter 키 눌렀을 때 폼이 제출되지 않도록 함
+        	if (event.key === 'Enter' && !isComposing) {
+                if (event.shiftKey) {
+                    var start = this.selectionStart;
+                    var end = this.selectionEnd;
+                    var value = this.value;
+                    this.value = value.substring(0, start) + "\n" + value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                    event.preventDefault(); // 기본 Enter 동작 방지
+                } else {
+                    sendChat();
+                    event.preventDefault(); // 입력창에서 Enter 키 눌렀을 때 폼이 제출되지 않도록 함
+                }
             }
         });
 
@@ -537,11 +570,17 @@ $('.exit-button').click(function() {
                 event.preventDefault(); // 입력창에서 Enter 키 눌렀을 때 폼이 제출되지 않도록 함
             }
         });
+        
+        // 메시지 입력란에 입력할 때마다 글자 수 업데이트
+        $('#message').on('input', function() {
+            var messageLength = $('#message').val().length
+            $('#charCount').text(messageLength + '/1000');        });
+
     });
 
     window.onload = function () {
         connect();
-    }
+	}
 
     window.onbeforeunload = function () {
         disconnect();
