@@ -24,5 +24,5 @@ public interface MemberDocumentDao {
 	
 	List<Document> selectRetrieveDocs(SqlSession session, int no);
 	List<Document> selectInprocessDocs(SqlSession session, int no);
-	Document selectDocBySerial(SqlSession session, String docId);
+	Document selectDocById(SqlSession session, String docId);
 }

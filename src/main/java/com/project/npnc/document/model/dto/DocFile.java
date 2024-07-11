@@ -15,6 +15,7 @@ public class DocFile {
 	private int fileKey;
 	private String fileOriName;
 	private String fileRename;
+	private int erDocKey;
 	private String erDocSerialKey;
 	private String fileSize;
 	private String fileForm;

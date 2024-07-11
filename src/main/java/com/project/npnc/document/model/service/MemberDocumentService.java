@@ -19,5 +19,5 @@ public interface MemberDocumentService {
 	List<Document> selectRetrieveDocs(int no);
 	int retrieveDoc(String docSerial) throws Exception;
 	
-	Document selectDocBySerial(String docId);
+	Document selectDocById(String docId);
 }

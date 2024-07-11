@@ -61,12 +61,12 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@PostMapping("/view/{docId}")
+	@PostMapping("/view/docDetail")
 	public void viewDoc(String docId, Model m) {
 		log.debug("----" + docId + "문서 상세보기----");
-		m.addAttribute("doc", serv.selectDocBySerial(docId));
+		m.addAttribute("doc", serv.selectDocById(docId));
 	}
-	@PostMapping("/formlist.do")
+	@PostMapping("/formlist")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -75,7 +75,7 @@ public class MemberDocumentController {
 //		m.addAttribute("formlist", result);
 		return result;
 	}
-	@PostMapping("/formsearch.do")
+	@PostMapping("/formsearch")
 	@ResponseBody
 	public List<DocumentForm> formList(String target, Model m) {
 		log.debug("----전자문서 양식명 "+ target+" 조회----");
@@ -92,17 +92,17 @@ public class MemberDocumentController {
 			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
-		return "document/formlist.do";
+		return "document/formlist";
 	}
-	@GetMapping("/doc1")
-	public void doc1Write() {
-	}
-	@GetMapping("/doc2")
-	public void doc2Write() {
-	}
-	@GetMapping("/doc3")
-	public void doc3Write() {
-	}
+//	@GetMapping("/doc1")
+//	public void doc1Write() {
+//	}
+//	@GetMapping("/doc2")
+//	public void doc2Write() {
+//	}
+//	@GetMapping("/doc3")
+//	public void doc3Write() {
+//	}
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}

@@ -83,7 +83,7 @@
 	                         <c:if test="${doclist ne null}">
 	                         	<c:forEach items="${doclist }" var="l">
 		                         <tr class="text-center" id="tablerow">
-		                            <td class="text-muted">${vs.index+1 }<span style="display:none" id="rowid">${l.erDocKey }</span></td>
+		                            <td class="text-muted" data-doc-id="${l.erDocKey }">${vs.index+1 }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>

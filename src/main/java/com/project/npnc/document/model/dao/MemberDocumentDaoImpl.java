@@ -76,7 +76,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public Document selectDocBySerial(SqlSession session, String docId) {
+	public Document selectDocById(SqlSession session, String docId) {
 		return session.selectOne("document.selectDocBySerial", docId);
 	}
 
