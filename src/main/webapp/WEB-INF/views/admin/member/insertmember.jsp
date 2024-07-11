@@ -253,7 +253,7 @@
 	                           </c:if>
                           </select>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                           <label for="memberState"
                             >현황</label
                           >
@@ -261,13 +261,12 @@
                             class="form-select"
                             id="memberState"
                             name="memberState"
-							required
                           >
                             <option value="재직">재직</option>
                             <option value="휴직">휴직</option>
                             <option value="퇴사">퇴사</option>
                           </select>
-                        </div>
+                        </div>  -->
  
                        <div class="form-group">
                           <label class="form-label">권한</label>

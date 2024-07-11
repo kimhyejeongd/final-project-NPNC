@@ -48,9 +48,23 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   </head>
   <body>
+
     <div class="wrapper">
       <!-- Sidebar -->
       <div class="sidebar" data-background-color="dark">
+      	  	<div>
+				<button onclick="location.assign('${path}/attendance/startattendance.do')">
+					출근
+				</button>
+				<button onclick="location.assign('${path}/attendance/endattendance.do')">
+					퇴근
+				</button>
+				<button onclick="location.assign('${path}/attendance/selectAttendanceAll.do')">
+					근태관리
+				</button>
+				
+					
+				</div>
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
