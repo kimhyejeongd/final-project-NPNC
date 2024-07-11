@@ -27,7 +27,6 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -37,6 +36,9 @@
             >
               <div>
                 <h3 class="fw-bold mb-3">결재 Home</h3>
+              </div>
+              <div class="ms-md-auto py-2 py-md-0">
+                <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
               </div>
             </div>
             <div class="row">

@@ -2,7 +2,6 @@
 SELECT table_name 
 FROM user_tables;
 
---전자결재 양식, 양식 폴더
 select * from er_form 
 LEFT JOIN ER_FORM_FOLDER USING (ER_FORM_FOLDER_key)
 	 where ER_FORM_YN = 'Y' and er_form_name like '%신청%'
@@ -62,7 +61,6 @@ ALTER TABLE ER_FORM_FOLDER ADD CONSTRAINT PK_ER_FORM_FOLDER PRIMARY KEY (
 
 
 --ALTER TABLE ER_FORM ADD er_form_folder_key NUMBER ;
-ALTER TABLE ER_FORM ADD ER_DOC_FILENAME VARCHAR2(1000);
 
 --문서 시퀀스(자바에서 문자열로 추가할 예정)
 CREATE SEQUENCE SEQ_ER_FORM

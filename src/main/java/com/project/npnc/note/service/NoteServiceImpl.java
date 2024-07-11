@@ -1,12 +1,14 @@
 package com.project.npnc.note.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.note.dao.NoteDao;
+import com.project.npnc.note.dto.Note;
 import com.project.npnc.note.dto.NoteDto;
 
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,18 @@ public class NoteServiceImpl implements NoteService{
 		
 		
 		return noteMsgKey;
+	}
+
+	@Override
+	public List<Note> selectNoteAll(Map<String, Integer> page) {
+	
+		return dao.selectNoteAll(session, page);
+	}
+
+	@Override
+	public int noteSelectTotalData() {
+		
+		return dao.noteSelectTotalData(session);
 	}
 
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="attendance">
+	<resultMap type="attendance" id="attendanceMap">
+		<id column="ATTENDANCE_KEY" property="attendanceKey"/>
+		<result column="ATTENDANCE_DATE" property="attendanceDate"/>
+		<result column="ATTENDANCE_START" property="attendanceStart"/>
+		<result column="ATTENDANCE_END" property="attendanceEnd"/>
+		<result column="ATTENDANCE_STATE" property="attendanceState"/>
+		<result column="OVERTIME_KEY" property="overtimeKey"/>
+		<association property="member" resultMap="adminmember.memberMap"/>
+	</resultMap>
+	<insert id="startAttendance" parameterType="attendance">
+		INSERT INTO ATTENDANCE VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE, TO_DATE(SYSDATE || #{attendanceStart}, 'YYYY-MM-DD HH24:MI:SS'),
+			NULL,#{attendanceState},NULL)
+	</insert>
+	
+	<select id="selectAttendanceAll" resultMap="attendanceMap" parameterType="_int">
+		SELECT * FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey}
+	</select>
+	
+	<select id="selectAttendanceCount" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey}
+	</select>
+	
+	<select id="selectAttendanceByMemberKeyAndDate" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
+	</select>
+	
+	<select id="selectAttendanceKeyByMemberKeyAndDate" parameterType="_int" resultType="_int">
+		SELECT ATTENDANCE_KEY FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
+	</select>
+
+	<select id="selectAttendanceByMemberKey" parameterType="_int" resultMap="attendanceMap">
+		SELECT * FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
+	</select>
+
+	<update id="endAttendance" parameterType="attendance">
+		UPDATE ATTENDANCE SET ATTENDANCE_END=TO_DATE(SYSDATE || #{attendanceEnd}, 'YYYY-MM-DD HH24:MI:SS'),ATTENDANCE_STATE=#{attendanceState} WHERE ATTENDANCE_KEY=#{attendanceKey}
+	</update>
+	
+	<update id="updateAttendanceState" parameterType="attendance">
+		UPDATE ATTENDANCE SET ATTENDANCE_STATE=#{attendanceState} WHERE MEMBER_KEY=#{member.memberKey} AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
+	</update>
+	
+	<select id="selectAttendanceToday" resultMap="attendanceMap">
+		SELECT * FROM ATTENDANCE WHERE TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
+	</select>
+	
+	<insert id="insertAbsent" parameterType="_int">
+		INSERT INTO ATTENDANCE VALUES(SEQ_ATTENDANCE.NEXTVAL,#{memberKey},SYSDATE,NULL,NULL,'결근',NULL)
+	</insert>
+
+</mapper>
