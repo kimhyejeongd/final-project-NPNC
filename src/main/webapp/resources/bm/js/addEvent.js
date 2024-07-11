@@ -44,6 +44,7 @@ var newEvent = function(start, end, eventType){
 			username: '보민',
 			backgroundColor : calColor.val(),
 			textColor: '#ffffff',
+			calendarKey: '',
 			allDay: false
 		};
 		
@@ -74,6 +75,7 @@ var newEvent = function(start, end, eventType){
 			success: function(response){
 				if(response.status === "success"){
 					alert(response.message);
+					eventData.calendarKey=response.calendarKey;
 				}
 				else{
 					alert(response.message);

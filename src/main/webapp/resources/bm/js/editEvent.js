@@ -5,7 +5,7 @@ var editEvent = function (event, element, view) {
 
     $('#eventDelete').data('id', event.calendarKey); //클릭한 이벤트 ID
 
-	$("#content").hide();
+	
     $('.popover.fade.top').remove();
     $(element).popover("hide");
 
@@ -55,7 +55,7 @@ var editEvent = function (event, element, view) {
         var endDate;
         var displayDate;
 
-        if (calAllDay.is(':checked')) {
+        if (calAllday.is(':checked')) {
             statusAllDay = true;
             startDate = moment(calStart.val()).format('YYYY-MM-DD');
             endDate = moment(calEnd.val()).format('YYYY-MM-DD');
@@ -68,49 +68,74 @@ var editEvent = function (event, element, view) {
         }
 
         eventModal.modal('hide');
-
-        event.allDay = statusAllDay;
-        event.title = calTitle.val();
-        event.start = startDate;
-        event.end = displayDate;
-        event.type = calType.val();
-        event.backgroundColor = calColor.val();
-        event.description = calDesc.val();
+		var eventData={
+			_id : "rr",
+			title: calTitle.val(),
+			start: startDate,
+			end: displayDate,
+			description : calDesc.val(),
+			type: calType.val(),
+			username: '보민',
+			backgroundColor : calColor.val(),
+			textColor: '#ffffff',
+			calendarKey: event.calendarKey,
+			allDay: statusAllDay
+			
+		};
+	        event.allDay = statusAllDay;
+	        event.title = calTitle.val();
+	        event.start = startDate;
+	        event.end = displayDate;
+	        event.type = calType.val();
+	        event.backgroundColor = calColor.val();
+	        event.description = calDesc.val();
 
         $("#calendar").fullCalendar('updateEvent', event);
 
         //일정 업데이트
         $.ajax({
-            type: "get",
-            url: "",
-            data: {
-                //...
-            },
+            type: "POST",
+            url: "/calendar/updatecalendar.do",
+            data: JSON.stringify(eventData),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                alert('수정되었습니다.')
+               if(response.status === "success"){
+				alert(response.message);
+			   }
+			   else{
+				alert(response.message);
+			   }
             }
         });
 
     });
+	// 삭제버튼
+	$('#eventDelete').on('click', function () {
+	    
+	    $('#eventDelete').unbind();
+	    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+	    eventModal.modal('hide');
+	
+		var calKey = event.calendarKey;
+		console.log(calKey);
+	    //삭제시
+	    $.ajax({
+	        type: "POST",
+	        url: "/calendar/deletecalendar.do",
+	        data: JSON.stringify(calKey),
+	        dataType: 'json',
+	        contentType: 'application/json; charset=utf-8',
+	        success: function (response) {
+	   	  	    if(response.status === "success"){
+				alert(response.message);
+			    }
+			    else{
+				alert(response.message);
+			    }
+	        }
+	    });
+	
+	});
 };
-
-// 삭제버튼
-$('#deleteEvent').on('click', function () {
-    
-    $('#deleteEvent').unbind();
-    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
-    eventModal.modal('hide');
-
-    //삭제시
-    $.ajax({
-        type: "get",
-        url: "",
-        data: {
-            //...
-        },
-        success: function (response) {
-            alert('삭제되었습니다.');
-        }
-    });
-
-});
+	    $("#calendar").fullCalendar('refetchEvents');

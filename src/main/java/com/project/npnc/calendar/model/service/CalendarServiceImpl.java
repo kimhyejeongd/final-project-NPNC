@@ -24,5 +24,17 @@ public class CalendarServiceImpl implements CalendarService {
 	public List<Calendar> selectAllByKey(int memberKey) {
 		return dao.selectAllByKey(session,memberKey);
 	}
+	@Override
+	public int updateCalendar(Calendar calendar) {
+		return dao.updateCalendar(session,calendar);
+	}
+	@Override
+	public int selectLastInsertKey() {
+		return dao.selectLastInsertKey(session);
+	}
+	@Override
+	public int deleteCalendar(int calKey) {
+		return dao.deleteCalendar(session, calKey);
+	}
 
 }

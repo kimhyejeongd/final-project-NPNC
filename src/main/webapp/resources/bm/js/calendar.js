@@ -26,7 +26,6 @@ function selectCalList() {
                 
                 events.push(event);
             }
-            console.log('Events:', events);
             $('#calendar').fullCalendar('removeEvents');  // 기존 이벤트 제거
             $('#calendar').fullCalendar('addEventSource', events);  // 새로운 이벤트 추가
         },
@@ -139,6 +138,7 @@ $(document).ready(function() {
                 $content.hide();
             });
             $('body').on('click', function() {
+			
                 $content.removeClass("contentOpened");
                 $content.hide();
             });
@@ -148,7 +148,7 @@ $(document).ready(function() {
             });
         },
         eventClick: function (event, jsEvent, view) {
-   			 editEvent(event);
+   			editEvent(event);
   		}
     });
 
