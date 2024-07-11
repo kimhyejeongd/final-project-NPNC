@@ -15,6 +15,20 @@
     rel="icon"
     type="image/x-icon"
   />
+  <style>
+  	#approvalDiv{
+  		padding: .25rem .5rem !important;
+	    font-size: .875rem !important;
+	    line-height: 1.5;
+        border-color: #ebedf2;
+	    height: inherit !important;
+	    border-width: 2px;
+	    min-height: calc(1.5em + .5rem + calc(var(--bs-border-width)* 2));
+	    border-radius: var(--bs-border-radius-sm);
+	    border: var(--bs-border-width) solid var(--bs-border-color);
+	    font-weight: 400;
+  	}
+  </style>
  </head>
 <body>
 
@@ -22,12 +36,12 @@
       <!-- Sidebar -->
       <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
-	</div>
 	  <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
+          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
 		
@@ -43,12 +57,13 @@
                 <div class="card card-round p-3">
                   <div class="card-body">
                 <form method="post" action="${path}/document/writeend">
-               	<div class="form-group">
-			      <label for="smallInput"><span class="h5">문서명</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput">
+               	<div class="form-group d-flex">
+			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
+			      <input type="text" class="form-control form-control-sm" style="" id="smallInput">
+		
 			    </div>
 			    <div class="form-group">
-			      <label class=""><span class="h5">긴급 여부</span></label>
+			      <label class=""><span class="h5 me-1">긴급 여부</span></label>
 			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
 			          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
 			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
@@ -56,12 +71,11 @@
 			            <span class="h5">일반</span>
 		          </label>
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">결재자</span></label>
-
-			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
-						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
-						  <div class="border" id="approval1">
+			    <div class="form-group d-flex align-items-center">
+			      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
+			      <div class="border" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+						<span class="" style="color: gray; font-size: 15px">결재자를 선택하세요</span> 
+						 <!--  <div class="border" id="approval1">
 						  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
 						  	<input name="approvers[0].memberKey" value="2" style="display:none">
 						  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
@@ -84,25 +98,29 @@
 						  	<input name="approvers[1].memberJob" value="대표이사" style="">
 						  	<input name="approvers[1].memberName" value="김사장" style="">
 						  	<input name="approvers[1].category" value="결재" style="">
-						  </div>
+						  </div> -->
 			      </div>
-			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
+			      <!-- <button class="btn btn-sm btn-black btn-border mt-2" type="button">선택</button> -->
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">참조인</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput">
-			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
+			    <div class="form-group d-flex align-items-center gap-3">
+			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
+			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="approvalDiv">
+			      </div>
+			      <button class="btn btn-sm btn-info btn-border btn-block" type="button" style="width: 70px; height: 30px">선택</button>
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">참조문서</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput">
-			      <button class="btn btn-sm btn-black btn-border" type="button">선택</button>
+			    <div class="form-group d-flex align-items-center gap-3">
+			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
+			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%; min-width: 800px;" id="">
+			      		
+			      </div>
+			      <button class="btn btn-sm btn-info btn-border btn-block" style="width: 70px; height: 30px" type="button">선택</button>
 			    </div>
-			    <div class="form-group">
-		          <label for="exampleFormControlFile1"><span class="h5">첨부파일</span></label><br>
-		          <div class="border" style="width:100%; height: 150px;"><span class="center">드래그앤 드롭</span></div>
-		          <input type="file" class="form-control-file" id="exampleFormControlFile1">
-		          <div class="" id="upFileList"></div>
+			    <div class="form-group d-flex align-items-center">
+		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label>
+		          <!-- <div class="border" style="width:100%; height: auto;">
+		          	<span class="center">드래그앤 드롭</span>
+	          	  </div> -->
+		          	<input type="file" class="form-control" id="exampleFormControlFile1">
 		        </div>
 			    <div class="form-group">
 		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
@@ -159,6 +177,7 @@
     </div>
 
   </div></div></div></div>
+</div>
 <script>
 $(document).ready();
 //TODO 모달 띄우기
