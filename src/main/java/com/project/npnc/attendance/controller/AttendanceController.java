@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -33,7 +34,7 @@ public class AttendanceController{
 	private final PageFactory pageFactory;
 	
 	
-	@Scheduled(cron="5 * 0 * * ?")
+	@Scheduled(cron="0 0 23 * * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
@@ -167,6 +168,20 @@ public class AttendanceController{
 		return "attendance/attendancelist";
 		
 	}
+	
+	@PostMapping("/updateAttendance")
+	public String updateAttendance(Attendance attendance,Model m) {
+		m.addAttribute("attendance",attendance);
+		return "attendance/attendanceupdate";
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

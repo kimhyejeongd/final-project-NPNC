@@ -40,6 +40,9 @@
 				                            <td>${a.attendanceEnd.substring(9, 17) }</td>
 				                            <td>${a.overtimeKey }</td>
 				                            <td>${a.attendanceState}</td>
+				                            <td>
+				                            	<button onclick="updateAttendance('${a}');" class="btn btn-success">근태수정요청</button>
+				                            </td>
 				                          </tr>
 			                        </c:forEach>
 		                         </c:if>
@@ -52,13 +55,31 @@
 		                         
 		                        </tbody>
 		                      </table>
-		                    </div>
-					  			<button onclick="" class="btn btn-success">근태수정요청</button>
-		                  </div>
 		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
 			</div>
+
+	<script>
+				
+				const updateAttendance=(a)=>{
+				            let form = document.createElement("form");
+				            form.setAttribute("method", "post");
+				            form.setAttribute("action", "${path}/attendance/updateAttendance");
+
+				            let $key = document.createElement("input");
+				            $key.setAttribute("type", "hidden");
+				            $key.setAttribute("name", "attendance");
+				            $key.setAttribute("value", a);
+
+				            form.appendChild($key);
+
+				            document.body.appendChild(form);
+				            form.submit();
+						}
+
+	</script>
+
 
 </body>
 </html>

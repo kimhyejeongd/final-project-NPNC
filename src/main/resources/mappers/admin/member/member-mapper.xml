@@ -25,39 +25,53 @@
 	</resultMap>
 
 	<select id="selectMemberAll" resultMap="memberMap">
-		SELECT * FROM MEMBER LEFT JOIN DEPARTMENT USING(DEPARTMENT_KEY) LEFT JOIN JOB USING(JOB_KEY) ORDER BY MEMBER_ENROLL_DATE DESC
+		SELECT * 
+			FROM MEMBER 
+			LEFT JOIN DEPARTMENT USING(DEPARTMENT_KEY) 
+			LEFT JOIN JOB USING(JOB_KEY) 
+			ORDER BY MEMBER_ENROLL_DATE DESC
 	</select>
 
 	<select id="selectMemberCount" resultType="_int">
-		SELECT COUNT(*) FROM MEMBER
+		SELECT COUNT(*) 
+			FROM MEMBER
 	</select>
 	
 	<select id="selectMemberByNo" resultMap="memberMap" parameterType="_int">
-		SELECT * FROM MEMBER WHERE MEMBER_KEY=#{memberKey}
+		SELECT * 
+			FROM MEMBER 
+			WHERE MEMBER_KEY=#{memberKey}
 	</select>
 	
 	<select id="selectMemberKeyById" parameterType="string" resultType="_int">
-		SELECT MEMBER_KEY FROM MEMBER WHERE MEMBER_ID='${memberId}'
+		SELECT MEMBER_KEY 
+			FROM MEMBER 
+			WHERE MEMBER_ID='${memberId}'
 	</select>
 	
 	<insert id="insertMember" parameterType="adminmember">
-		INSERT INTO MEMBER VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
-		'NPNC'||SEQ_MEMBER.CURRVAL,'NPNC'||TO_CHAR(#{memberBirthdate}, 'MMDD'),#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
-		NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate})
+		INSERT INTO MEMBER 
+			VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
+			'NPNC'||SEQ_MEMBER.CURRVAL,'NPNC'||TO_CHAR(#{memberBirthdate}, 'MMDD'),#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
+			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate})
 	</insert>
 	
 	<update id="updateMember" parameterType="adminmember">
-		UPDATE MEMBER SET DEPARTMENT_KEY=#{department.deptKey},JOB_KEY=#{job.jobKey},MEMBER_PHONE=#{memberPhone},MEMBER_EMAIL=#{memberEmail},
-						MEMBER_TELL=#{memberTell},MEMBER_ADDRESS=#{memberAddress},ACCESS_KEY=#{accessKey},MEMBER_NAME=#{memberName},
-						MEMBER_STATE=#{memberState},MEMBER_BIRTHDATE=#{memberBirthdate},MEMBER_LEAVE_DATE=#{memberLeaverDate} WHERE MEMBER_ID=#{memberId}		
+		UPDATE MEMBER 
+			SET DEPARTMENT_KEY=#{department.deptKey},JOB_KEY=#{job.jobKey},MEMBER_PHONE=#{memberPhone},MEMBER_EMAIL=#{memberEmail},
+			MEMBER_TELL=#{memberTell},MEMBER_ADDRESS=#{memberAddress},ACCESS_KEY=#{accessKey},MEMBER_NAME=#{memberName},
+			MEMBER_STATE=#{memberState},MEMBER_BIRTHDATE=#{memberBirthdate},MEMBER_LEAVE_DATE=#{memberLeaveDate} WHERE MEMBER_ID=#{memberId}		
 	</update>
 	
 	<delete id="deleteMember" parameterType="adminmember">
-		DELETE FROM MEMBER WHERE MEMBER_KEY=#{memberKey}
+		DELETE 
+			FROM MEMBER 
+			WHERE MEMBER_KEY=#{memberKey}
 	</delete>
 	
 	<select id="selectMemberKeyAll" resultType="_int">
-		SELECT MEMBER_KEY FROM MEMBER
+		SELECT MEMBER_KEY 
+			FROM MEMBER
 	</select>
 	
 </mapper>

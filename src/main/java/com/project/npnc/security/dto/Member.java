@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 
 public class Member implements UserDetails {
 	private int MEMBER_KEY;
-	private int DEPARTMENT_KEY;
-	private int JOB_KEY;
+	private String DEPARTMENT_KEY;
+	private String JOB_KEY;
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
 	private String MEMBER_ID;
 	@NotBlank(message = "비밀번호는 필수 입력 값입니다.")
