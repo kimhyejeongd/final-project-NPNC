@@ -19,7 +19,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.approversList;
-import com.project.npnc.document.model.service.MemberDocumentService;
+import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j 
 public class MemberDocumentController {
-	private final MemberDocumentService serv;
+	private final MemberDocumentServiceImpl serv;
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	

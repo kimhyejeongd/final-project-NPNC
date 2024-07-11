@@ -6,7 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.npnc.document.model.dao.MemberDocumentDao;
+import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberDocumentServiceImpl implements MemberDocumentService {
 	private final SqlSession session;
-	private final MemberDocumentDao dao;
+	private final MemberDocumentDaoImpl dao;
 	@Override
 	public List<DocumentFormFolder> selectformFolders() {
 		return dao.selectformFolders(session);
