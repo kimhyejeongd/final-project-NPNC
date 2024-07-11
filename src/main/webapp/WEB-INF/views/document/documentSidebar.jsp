@@ -28,7 +28,7 @@
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-  	<div class="sidebar" data-background-color="white">
+  	<div class="sidebar" data-background-color="dark">
   	<div class="sidebar-logo">
        <!-- Logo Header -->
        <div class="logo-header" data-background-color="dark">
@@ -59,13 +59,9 @@
                </li>
               <li class="nav-item">
                 <a
-                  data-bs-toggle="collapse"
-                  class="collapsed"
-                  aria-expanded="false"
                   href="${path }/document/home"
                 >
-                  <i class="fas fa-home"></i>
-                  <p>전자결재 Home</p>
+                  <i class="fas fa-home"></i><p>전자결재 Home</p>
                 </a>
               </li>
               <!-- 토글리스트 -->
@@ -83,7 +79,7 @@
                 <div class="collapse" id="docING">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="${path }/document/inprocess">
+                      <a href="${path }/document/list/inprocess">
                         <span class="sub-item">진행중인 문서</span>
                       </a>
                     </li>
@@ -93,8 +89,13 @@
                       </a>
                     </li>
                     <li>
+                      <a href="${path }/document/list/retrieve">
+                        <span class="sub-item">회수 문서</span>
+                      </a>
+                    </li>
+                    <li>
                       <a href="">
-                        <span class="sub-item">반려/회수 문서</span>
+                        <span class="sub-item">반려 문서</span>
                       </a>
                     </li>
                     <li>

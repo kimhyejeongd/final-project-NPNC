@@ -16,6 +16,10 @@
       rel="icon"
       type="image/x-icon"
     />
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
     <style>
     	#tablerow:hover{
     		cursor: pointer; 
@@ -62,6 +66,7 @@
                         <thead class="thead-light">
                           <tr class="text-center">
                           	<!-- <th><input type="checkbox"></th> -->
+                            <th scope="col" class="">#</th>
                             <th scope="col" class="">등록 번호</th>
                             <th scope="col" class="">문서 제목</th>
                             <th scope="col" class="">상신 일자</th>
@@ -76,9 +81,10 @@
 	                         	</tr>
 	                         </c:if>
 	                         <c:if test="${doclist ne null}">
-	                         	<c:forEach items="${doclist }" var="l">
+	                         	<c:forEach items="${doclist }" var="l" varStatus="vs">
 		                         <tr class="text-center" id="tablerow">
-		                            <td class="text-muted">${l.erDocKey }</td>
+		                         	<td>${vs.index+1 }</td>
+		                            <td class="text-muted">${l.erDocSerialKey }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
@@ -111,7 +117,7 @@
 		                              		</c:if>
 		                              </c:forEach>
 		                            </td>
-		                         	<td colspan="5"><input type="button" value="회수" class="btn btn-outline-secondary"></td>
+		                         	<td colspan=""><input type="button" value="회수" class="btn btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocSerialKey}');"></td>
 		                          </tr>
 		                          </c:forEach>
 	                          </c:if>
@@ -122,9 +128,58 @@
                 </div>
               </div>
             </div>
-            </div>
-          </div>
+           </div>
           </div>
         </div>
+      </div>
+<script>
+	const modal = (no)=>{
+		// SweetAlert2 모달 띄우기
+		console.log(no);
+		Swal.fire({
+			title: '회수 확인',
+			html: '<h4>정말 회수하시겠습니까? <br>진행 중인 결재가 취소됩니다</h4>',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '회수',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then(result => {
+			if (result.isConfirmed) {
+				// 결재 버튼이 클릭되었을 때 처리할 로직
+				console.log('회수하기');
+				$.ajax({
+					url: `${path}/document/retrieve`,
+					data: {no : no},
+					dataType: "text",
+					method: "post",
+					success: data=>{
+						if(data==1){
+							Swal.fire({
+								title: '회수 완료',
+								html: '<h4>정상적으로 회수되었습니다.<br>회수 문서함으로 이동하시겠습니까?</h4>',
+								showCancelButton: true,
+								confirmButtonClass: 'btn btn-success',
+								cancelButtonClass: 'btn btn-danger ms-2',
+								confirmButtonText: '회수',
+								cancelButtonText: '취소',
+								buttonsStyling: false,
+								reverseButtons: false
+							}).then((result) => {
+								if (result.isConfirmed) {
+									location.assign(`${path}/document/retrieve;`)
+								}else{
+									location.reload();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	};
+</script>
   </body>
 </html>
