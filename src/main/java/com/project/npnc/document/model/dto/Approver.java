@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Approver {
-	//private String approvalMemberKey;
+	private String erApproverKey;
 	private int memberKey;
 	private String memberTeam;
 	private String memberJob;
@@ -20,7 +20,7 @@ public class Approver {
 	private String category;
 	private String state;
 	private String opinion;
-	private String erDocKey;
+	private String erDocSerialKey;
 	private Date date;
 	private int orderby;
 }

@@ -5,14 +5,14 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.project.npnc.common.NotePageFactory;
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.member.model.service.MemberService;
+import com.project.npnc.note.dto.Note;
 import com.project.npnc.note.dto.NoteDto;
 import com.project.npnc.note.service.NoteService;
 
@@ -25,7 +25,13 @@ public class NoteController {
 	
 	private final NoteService noteService;
 	private final MemberService memberService;
+	private final NotePageFactory pageBar;
 	
+	
+	@RequestMapping("/notewrite3")
+	public String noteWrite() {
+		return "note/notewrite";
+	}
 	
 	@RequestMapping("/notein")
 	public String notein() {
@@ -33,8 +39,15 @@ public class NoteController {
 		return "note/notein";
 	}
 	@RequestMapping("/notehome")
-	public String notehome() {
+	public String notehome(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
+		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		int totalData=noteService.noteSelectTotalData();
 		
+		
+		m.addAttribute("notelist",notelist);
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepaging"));
+		System.out.println(notelist);
 		return "note/notehome";
 	}
 	
@@ -54,8 +67,10 @@ public class NoteController {
 		
 	
 		List<Member> list=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+	
 		System.out.println(list);
 		m.addAttribute("list",list);
+	
 		
 		return "note/note";
 	}

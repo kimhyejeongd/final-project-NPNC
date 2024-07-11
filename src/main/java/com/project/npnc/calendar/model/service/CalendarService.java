@@ -1,5 +1,10 @@
 package com.project.npnc.calendar.model.service;
 
-public interface CalendarService {
+import java.util.List;
 
+import com.project.npnc.calendar.model.dto.Calendar;
+
+public interface CalendarService {
+	int insertCalendar(Calendar calendar);
+	List<Calendar> selectAllByKey(int memberKey);
 }
