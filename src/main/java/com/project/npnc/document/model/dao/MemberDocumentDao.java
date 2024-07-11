@@ -15,6 +15,8 @@ public interface MemberDocumentDao {
 	List<DocumentForm> selectFormsBySearch(SqlSession session, String target);
 	DocumentForm selectFormByNo(SqlSession session, int no);
 	
-	int insertDoc(SqlSession session, Document d);
-	int insertDocFile(SqlSession session, approversList request);
+ 	int insertDoc(SqlSession session, Document d);
+	int insertApproval(SqlSession session, approversList request);
+	
+	List<Document> selectInprocessDocs(SqlSession session, int no);
 }

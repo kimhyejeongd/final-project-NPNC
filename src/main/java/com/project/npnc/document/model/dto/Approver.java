@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Approver {
-	//private String approvalMemberKey;
+	private String approvalMemberKey;
 	private int memberKey;
 	private String memberTeam;
 	private String memberJob;
