@@ -15,6 +15,7 @@
 }
 
 body {
+
   background-image: url('${path}/resources/jh/images/sea-7409361_1920.jpg');
   background-size: cover;
   background-repeat: no-repeat;
