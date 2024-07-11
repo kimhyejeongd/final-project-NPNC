@@ -15,6 +15,14 @@
 			NULL,#{attendanceState},NULL)
 	</insert>
 	
+	<select id="selectAttendanceAll" resultMap="attendanceMap" parameterType="_int">
+		SELECT * FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey}
+	</select>
+	
+	<select id="selectAttendanceCount" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey}
+	</select>
+	
 	<select id="selectAttendanceByMemberKeyAndDate" parameterType="_int" resultType="_int">
 		SELECT COUNT(*) FROM ATTENDANCE WHERE MEMBER_KEY=#{memberKey} AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
 	</select>

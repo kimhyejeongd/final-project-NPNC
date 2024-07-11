@@ -13,11 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.service.AttendanceService;
+import com.project.npnc.common.PageFactory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,9 +30,10 @@ public class AttendanceController{
 
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
+	private final PageFactory pageFactory;
 	
 	
-	@Scheduled(cron="50 * 0 * * ?")
+	@Scheduled(cron="5 * 0 * * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
@@ -65,9 +68,6 @@ public class AttendanceController{
 	private List selectMemberKeyAll() {
 		return memberService.selectMemberKeyAll();
 	}
-	
-
-	
 	
 
 	
@@ -109,7 +109,7 @@ public class AttendanceController{
 		
 	}
 	
-	@GetMapping("endattendance.do")
+	@GetMapping("/endattendance.do")
 	public String endAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDate today=LocalDate.now();
@@ -147,6 +147,30 @@ public class AttendanceController{
 		m.addAttribute("loc",loc);
 		return "common/msg";
 	}
+	
+	
+	//사원 근태관리 화면
+	
+	@GetMapping("/selectAttendanceAll.do")
+	public String selectAttendanceAll(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			Authentication authentication,
+			Model m){
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		int totaldata=attendanceService.selectAttendanceCount(memberKey);
+		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+		m.addAttribute("attendances",attendances);
+
+		return "attendance/attendancelist";
+	}
+	
+	
+	
+	
+	
 	
 	
 }

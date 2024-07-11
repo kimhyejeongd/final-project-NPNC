@@ -3,6 +3,7 @@ package com.project.npnc.attendance.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -21,18 +22,6 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	public int endAttendance(SqlSession session, Attendance a) {
 		
 		return session.update("attendance.endAttendance",a);
-	}
-
-	@Override
-	public int checkAttendance(SqlSession session, Attendance a) {
-	
-		return session.update("attendance.checkAttendance",a);
-	}
-
-	@Override
-	public List<Attendance> selectAttendanceAll(SqlSession session) {
-		
-		return session.selectList("attendance.selectAttendanceAll");
 	}
 
 	@Override
@@ -77,6 +66,19 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAttendanceByMemberKey",memberKey);
 	}
 
+	@Override
+	public List<Attendance> selectAttendanceAll(SqlSession session, Map<String,Integer> page,int memberKey) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectAttendanceAll",memberKey,rb);
+	}
+
+	@Override
+	public int selectAttendanceCount(SqlSession session,int memberKey) {
+		
+		return session.selectOne("attendance.selectAttendanceCount",memberKey);
+	}
+
+	
 	
 	
 

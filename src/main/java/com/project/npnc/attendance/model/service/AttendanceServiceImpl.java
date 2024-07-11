@@ -2,6 +2,7 @@ package com.project.npnc.attendance.model.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private final AttendanceDao attendanceDao;
 	private final SqlSession session;
 	
+	
+	
+	//메인화면 출근퇴근
+	
 	@Override
 	public int startAttendance(Attendance a) {
 		
@@ -34,17 +39,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.endAttendance(session, a);
 	}
 
-	@Override
-	public int checkAttendance(Attendance a) {
-
-		return attendanceDao.checkAttendance(session, a);
-	}
-
-	@Override
-	public List<Attendance> selectAttendanceAll() {
-		
-		return attendanceDao.selectAttendanceAll(session);
-	}
 
 	@Override
 	public Attendance selectAttendanceById(int memberKey) {
@@ -86,7 +80,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 			    	int startHour;
 			    	int endHour;
 			    	Attendance at=selectAttendanceByMemberKey(key);
-			    	System.out.println(key);
 			    	a.setMember(AdminMember.builder().memberKey(key).build());
 			    	if(at.getAttendanceEnd()==null) {
 			    		a.setAttendanceState("결근");
@@ -94,15 +87,22 @@ public class AttendanceServiceImpl implements AttendanceService {
 				    	try {		    			    	
 				    	Date startTime=sdf.parse(at.getAttendanceStart());
 				    	Date endTime=sdf.parse(at.getAttendanceEnd());
-				    	startHour=startTime.getHours();
-				    	endHour=endTime.getHours();
-				    	if(startHour<9 && endHour>6) {
+				    	
+				    	Calendar startCal= Calendar.getInstance();
+				    	startCal.setTime(startTime);
+				    	startHour=startCal.get(Calendar.HOUR_OF_DAY);
+				    	
+				    	Calendar endCal= Calendar.getInstance();
+				    	endCal.setTime(endTime);
+				    	endHour=endCal.get(Calendar.HOUR_OF_DAY);
+				    			
+				    	if(startHour<9 && endHour>18) {
 				    		a.setAttendanceState("출근");
-				    	}else if(startHour<9 && endHour<6) {
+				    	}else if(startHour<9 && endHour<18) {
 				    		a.setAttendanceState("조퇴");
-				    	}else if(startHour>9 && endHour>6) {
+				    	}else if(startHour>9 && endHour>18) {
 				    		a.setAttendanceState("지각");
-				    	}else if(startHour>9 && endHour<6) {
+				    	}else if(startHour>9 && endHour<18) {
 				    		a.setAttendanceState("조퇴");
 				    	}
 
@@ -125,6 +125,30 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private Attendance selectAttendanceByMemberKey(int memberKey) {
 		return attendanceDao.selectAttendanceByMemberKey(session,memberKey);
 	}
+
+	
+	// 사원 근태관리 화면
+	
+	
+	@Override
+	public List<Attendance> selectAttendanceAll(Map page,int memberKey) {
+		
+		return attendanceDao.selectAttendanceAll(session, page,memberKey);
+	}
+
+	@Override
+	public int selectAttendanceCount(int memberKey) {
+
+		return attendanceDao.selectAttendanceCount(session,memberKey);
+	}
+	
+
+	
+	
+	
+	
+	
+	
 	
 	
 	
