@@ -13,7 +13,7 @@ public interface NoteDao {
 	public int noteOneWrite(SqlSession session, NoteDto note);
 	public int noteReciver(SqlSession session, Map<String, Object> param);
 	public int noteMsgKey(SqlSession session);
-	public List<Note> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
+	public List<NoteDto> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
 	public int noteSelectTotalData(SqlSession session);
-	
+	public NoteDto selectNoteOne(SqlSession session);
 }

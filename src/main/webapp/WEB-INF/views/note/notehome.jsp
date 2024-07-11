@@ -38,7 +38,79 @@
         },
       });
     </script>
-
+     <!-- Sweet Alert -->
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <!-- 모달 스타일  -->
+	<style>
+			h2{
+    			text-align: center;
+			}
+			.modal_btn {
+			    display: block;
+			    margin: 40px auto;
+			    padding: 10px 20px;
+			    background-color: royalblue;
+			    border: none;
+			    border-radius: 5px;
+			    color: #fff;
+			    cursor: pointer;
+			    transition: box-shadow 0.2s;
+			}
+			.modal_btn:hover {
+			    box-shadow: 3px 4px 11px 0px #00000040;
+			}
+			
+			/*모달 팝업 영역 스타일링*/
+			.modal {
+			/*팝업 배경*/
+				display: none; /*평소에는 보이지 않도록*/
+			    position: absolute;
+			    top:0;
+			    left: 0;
+			    width: 100%;
+			    height: 100vh;
+			    overflow: hidden;
+			    background: rgba(0,0,0,0.5);
+			}
+			.modal .modal_popup {
+			/*팝업*/
+			    position: absolute;
+			    top: 50%;
+			    left: 50%;
+			    transform: translate(-50%, -50%);
+			    padding: 20px;
+			    background: #ffffff;
+			    border-radius: 20px;
+			}
+			.modal .modal_popup .close_btn {
+			  /*   display: block; */
+			    padding: 10px 20px;
+			    background-color: rgb(116, 0, 0);
+			    border: none;
+			    border-radius: 5px;
+			    color: #fff;
+			    cursor: pointer;
+			    transition: box-shadow 0.2s;
+			}
+			.modal.on {
+			    display: block;
+			}
+	
+	</style>
+	<style>
+	.button-margin{
+		margin-right:20px;
+	}
+	.badge-margin{
+		margin-right:17px;
+	}
+	.namebox{
+/* 		display: flex;
+		flex-direction: row; */
+		/* flex-wrap: wrap; */
+		 
+	}
+	</style>
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -127,9 +199,10 @@
                 <h6 class="op-7 mb-2">총 93건의 쪽지가 있습니다.</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <a href="javascript:openNoteWrite();" class="btn btn-label-info btn-round me-2">쪽지 발송</a>
-                <a href="#" class="btn btn-primary btn-round">쪽지 다중 발송</a>
-                <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a>
+               <button type="button" class="modal_btn btn btn-label-info btn-round me-2">쪽지 발송</button>
+                
+                <a href="#" class="btn btn-primary btn-round">전체 쪽지 발송</a>
+                <!-- <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a> -->
               </div>
             </div>
           	<div class="col-md-12">
@@ -172,7 +245,220 @@
                   </div>
                 </div>
               </div>
+              <div class="modal">
+				    <div class="modal_popup">
+				         <div>
+				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
+				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
+				           	  	<p>${d.memberKey}<p>
+				           	  </c:forEach>  --%>
+				           		    <div class="form-group">
+				           		    <div class="btn-group">
+									  <button class="btn btn-secondary dropdown-toggle button-margin" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+									    받는이
+									  </button>
+									  <div class="namebox" style="width:410px; ">
+										<!--  <span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>
+										<span class="badge badge-info  badge-margin">이성록 사원</span>  -->
+										</div>								
+									  <ul class="dropdown-menu" style="width: 300px !important; height: 400px !important; overflow-y: auto;"">
+												<div class="accordion" id="accordionPanelsStayOpenExample">
+														<c:forEach var="d" items="${organlist}" varStatus="status">
+														
+															<div class="accordion-item">
+															    <h2 class="accordion-header">
+															      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
+															     
+															      
+															        ${d.departmentName} 
+															      </button>
+															    </h2>
+												    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse">
+															      <div class="accordion-body" style='padding: 0!important;'>
+															         <div class="list-group" >
+														 				<c:forEach var="memberlist" items="${d.memberlist}">
+																		  <a href="javascript:memberselect(${memberlist.memberKey},'${memberlist.memberName}','${memberlist.jobName}')" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
+																		  
+														  				</c:forEach>
+																	</div>
+															      </div>
+															    </div>
+															</div>
+														
+														
+														</c:forEach>	
+													</div> 
+											
+									  </ul>
+									</div>
+				           		    </div>
+				           		    <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">제목</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id=""
+			                              rows="1" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>		
+								   <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">내용</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id="postMsgDetail"
+			                              rows="8" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>		           	   
+								 <div class="form-group">
+								<button class="btn btn-primary" style="margin-right: 10px; onclick="notego();">전송</button>
+								<button class="btn btn-primary btn-border close_btn" onclick="notego();">닫기</button>
+								</div>
+				          </div>
+				    </div>
+			  </div>
+			
+			<script>
+		  
+		    </script>
           	<script>
+          	
+          	const modal = document.querySelector('.modal');
+          	const modalOpen = document.querySelector('.modal_btn');
+          	const modalClose = document.querySelector('.close_btn');
+
+          	//열기 버튼을 눌렀을 때 모달팝업이 열림
+          	modalOpen.addEventListener('click',function(){
+          	  	//'on' class 추가
+          	    modal.classList.add('on');
+          	});
+          	//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+          	modalClose.addEventListener('click',function(){
+          	    //'on' class 제거
+          	    modal.classList.remove('on');
+          	});
+          	/* 쪽지 발송 발송 멤버 추가 로직 */
+            function memberselect(memberKey,memberName,jobName){
+      			var namebox=document.getElementsByClassName("namebox");
+      			var children = namebox[0].children;
+      			let count=0;
+				if( children.length>0){
+					for(let i=0; i<children.length;i++){
+						if(children[i].id==memberKey){
+							children[i].remove();
+				            //namebox[0].removeChild(children[i]);
+							count++;
+						}
+					}
+					if(count==0&&children.length<10){
+					  var newElement=document.createElement("span");
+		                newElement.classList.add("badge");
+		                newElement.classList.add("badge-info");
+		                newElement.classList.add("badge-margin");
+		                newElement.classList.add("badge-margin");
+		                newElement.id=memberKey;
+		                newElement.textContent=memberName+' '+jobName;
+		                namebox[0].appendChild(newElement);
+					}else if(children.length>=10){
+						console.log(children.length);
+					    //== Class definition
+					      var SweetAlert2Demo = (function () {
+					        //== Demos
+					        var initDemos = function () {
+					          
+					            swal("최대 발송 인원을 초과하였습니다!", "쪽지 발송 인원은 10명 이하여야 합니다.", {
+					              icon: "error",
+					              buttons: {
+					                confirm: {
+					                  className: "btn btn-danger",
+					                },
+					              },
+					            });
+					          
+					        };
+					
+					        return {
+					          //== Init
+					          init: function () {
+					            initDemos();
+					          },
+					        };
+					      })();
+					
+					      //== Class Initialization
+					      jQuery(document).ready(function () {
+					        SweetAlert2Demo.init();
+					      });
+						
+					}
+					
+				}else {
+					  var newElement=document.createElement("span");
+		                newElement.classList.add("badge");
+		                newElement.classList.add("badge-info");
+		                newElement.classList.add("badge-margin");
+		                newElement.classList.add("badge-margin");
+		                newElement.id=memberKey;
+		                newElement.textContent=memberName+' '+jobName;
+		                
+		                namebox[0].appendChild(newElement);
+		                console.log(children.length+"오보다 작으면에 빠졌나?");
+				}
+              
+            	
+
+      		}
+
+
+            function notego(){
+
+ 	           
+	            var selectedRadio = document.getElementsByName('reMemberKey1');
+	            var reMemberKey1=null;
+	            	  for(let i=0; i<selectedRadio.length;i++){
+	                        if(selectedRadio[i].checked){
+	                              var reMemberKey1=selectedRadio[i].value;  
+	                         }
+	                  }
+				
+	            // 나머지 인풋 값들을 가져옴
+	            var memberKey = document.getElementById('memberKey').value;
+	            var postMsgDetail = document.getElementById('postMsgDetail').value;
+
+		    	$.ajax({
+		    		url : '${path}/notewrite',
+		    		type : 'POST',
+		    		data : {
+		    			"reMemberKey" : reMemberKey1,
+		    			"memberKey" : memberKey,
+		    			"postMsgDetail" : postMsgDetail
+		    			
+		    		},
+		    		success : function(){
+		    			alert('성공');
+		    				
+		    			/* send(reMemberKey1, memberKey); */
+		    		}
+		    	});
+		    	 modal.classList.remove('on');
+		    }
+          	
+          	
+          	
+          	
           		function openOrgan(){
           		/* 	var url = "${path}/organ";
                     var windowName = "newWindow";
@@ -193,11 +479,13 @@
                     var windowName = "newWindow";
                     var windowFeatures = "width=800,height=600, resizable=no";
  */
- 				 	var popupWindow= window.open('${path}/notewrite3', 'newWindow', 'resizable');
+ 				 	var popupWindow= window.open('${path}/notewrite3', 'newWindow', 'resizable, left=300, top=300');
 						 popupWindow.resizeTo(400, 600);
 							popupWindow.onresize = (_=>{
 							    popupWindow.resizeTo(400,600);
 							});	
+			
+							
           		}
           		
           		function fn_paging(pageNo){
@@ -461,8 +749,7 @@
     <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
 
-    <!-- Sweet Alert -->
-    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+   
 
     <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>

@@ -25,7 +25,7 @@
 			      <div class="accordion-body" style='padding: 0!important;'>
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
-						  <a href="#" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &ensp; ${memberlist.jobName}</a>
+						  <a href="#" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
 						  
 		  				</c:forEach>
 					</div>

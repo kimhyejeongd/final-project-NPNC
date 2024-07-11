@@ -7,7 +7,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.project.npnc.note.dto.Note;
 import com.project.npnc.note.dto.NoteDto;
 
 @Repository
@@ -26,9 +25,15 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
-	public List<Note> selectNoteAll(SqlSession session, Map<String, Integer> page) {
+	public List<NoteDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		return session.selectList("note.noteSelectAll",null,rb);
+	}
+
+	@Override
+	public NoteDto selectNoteOne(SqlSession session) {
+	
+		return session.selectOne("note.noteSelectOne");
 	}
 
 	@Override

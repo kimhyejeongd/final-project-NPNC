@@ -17,8 +17,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService{
 
+	
 	private final NoteDao dao;
 	private final SqlSession session;
+	
+	@Override
+	public NoteDto selectNoteOne() {
+		
+		return dao.selectNoteOne(session);
+	}
+
 	
 	@Override
 	public int noteOneWrite(int reMemberKey , NoteDto note) {
@@ -58,7 +66,7 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public List<Note> selectNoteAll(Map<String, Integer> page) {
+	public List<NoteDto> selectNoteAll(Map<String, Integer> page) {
 	
 		return dao.selectNoteAll(session, page);
 	}

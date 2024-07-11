@@ -15,6 +15,8 @@ import com.project.npnc.member.model.service.MemberService;
 import com.project.npnc.note.dto.Note;
 import com.project.npnc.note.dto.NoteDto;
 import com.project.npnc.note.service.NoteService;
+import com.project.npnc.organization.dto.OrganizationDto;
+import com.project.npnc.organization.service.OrganizationService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,19 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class NoteController {
-	
+	private final OrganizationService service;
+
 	private final NoteService noteService;
 	private final MemberService memberService;
 	private final NotePageFactory pageBar;
 	
+	@RequestMapping("/noteprint")
+	public String notePrint( Model m) {
+		NoteDto noteOne= noteService.selectNoteOne();
+		System.out.println(noteOne);
+		m.addAttribute("noteOne",noteOne);
+		return "note/noteprint";
+	}
 	
 	@RequestMapping("/notewrite3")
 	public String noteWrite() {
@@ -41,9 +51,17 @@ public class NoteController {
 	@RequestMapping("/notehome")
 	public String notehome(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
-		List<Note> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		List<NoteDto> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		int totalData=noteService.noteSelectTotalData();
+		List<Member> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		
+		List<OrganizationDto> organlist=service.selectOrganAll();
+		System.out.println(organlist);
+		m.addAttribute("organlist",organlist);
+		
+		
+		m.addAttribute("AllMemberList",AllMemberList);
+	
 		
 		m.addAttribute("notelist",notelist);
 		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepaging"));
@@ -79,10 +97,11 @@ public class NoteController {
 	@RequestMapping("/notewrite")
 	@ResponseBody
 	public String noteOneWrite(int reMemberKey , int memberKey, String postMsgDetail) {
-		
+		System.out.println(postMsgDetail);
+		String replacePostMsgDetail=postMsgDetail.replace("\r\n","<br>");
 		NoteDto insertNote=NoteDto.builder()
 				.memberKey(memberKey)
-				.postMsgDetail(postMsgDetail)
+				.postMsgDetail(replacePostMsgDetail)
 				.build();
 		int result=noteService.noteOneWrite(reMemberKey, insertNote);
 		
