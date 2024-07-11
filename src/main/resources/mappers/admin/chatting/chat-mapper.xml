@@ -9,7 +9,9 @@
 		#{chatMsgFilePost},
 		#{chatFileTime},
 		#{chatRoomKey},
-		#{chatMsgKey})
+		#{chatMsgKey},
+		#{fileContentType}
+		)
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
 		DELETE FROM CHATTING_IS_READ cir 
@@ -88,11 +90,12 @@
 			cm.CHAT_MSG_TIME,
 			cm.CHAT_MSG_NOTICE,
 			cm.CHAT_READ_COUNT,
-			cf.CHAT_MSG_FILE_POST
+			cf.CHAT_MSG_FILE_POST,
+			cf.FILE_CONTENT_TYPE 
 		FROM chatting_message cm 
 		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
 		WHERE chat_room_key = ${roomNo}
-		ORDER BY chat_msg_time desc
+		ORDER BY chat_msg_time asc
 	</select>
 	<select id="selectMyRoomMembers" parameterType="ChattingMessage" resultMap="chattingGroupResultMap">
 		SELECT DISTINCT MEMBER_KEY FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY=#{chatRoomKey} and MEMBER_KEY != #{memberKey}
@@ -119,7 +122,7 @@
 		select SEQ_CHAT_MESSAGE_KEY.nextval from dual
 	</select>
 	<select id="selectFileSeq" resultType="int">
-		select SEQ_CHAT_FILE_KEY.nextval.nextval from dual
+		select SEQ_CHAT_FILE_KEY.nextval from dual
 	</select>
 	<select id="selectReadCount" resultType="int" parameterType="ChattingMessage">
 			SELECT sum(is_read) FROM CHAT_READ_STATUS WHERE CHAT_ID=#{seq}
@@ -147,6 +150,10 @@
         <result property="chatMsgTime" column="CHAT_MSG_TIME"/>
         <result property="chatMsgNotice" column="CHAT_MSG_NOTICE"/>
         <result property="chatReadCount" column="CHAT_READ_COUNT"/>
+        <association property="file" javaType="com.project.npnc.chatting.model.dto.ChattingFile">
+            <id property="chatMsgFilePost" column="CHAT_MSG_FILE_POST" />
+            <result property="fileContentType" column="FILE_CONTENT_TYPE" />
+        </association>
     </resultMap>
 	
 	<resultMap type="chattingGroup" id="chattingGroupResultMap">

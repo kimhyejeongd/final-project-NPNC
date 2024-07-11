@@ -57,6 +57,8 @@ public class HomeController {
 		readInfo.put("loginMemberKey", loginMemberKey);
 		readInfo.put("roomId", roomId);
 		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+		
+		System.out.println(chats.toString()+"=================chats================");
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);

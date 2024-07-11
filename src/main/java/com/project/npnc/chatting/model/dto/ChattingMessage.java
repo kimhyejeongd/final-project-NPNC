@@ -26,6 +26,7 @@ public class ChattingMessage {
     private String chatMsgFileOri;
     private String chatMsgFilePost;
     private Date chatFileTime;
+    private String fileContentType;
     
 
     public static ChattingMessage createChattingMessage

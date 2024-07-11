@@ -13,3 +13,19 @@ ALTER TABLE CHATTING_FILE MODIFY(CHAT_MSG_FILE_POST varchar(200));
 SELECT * FROM MEMBER WHERE MEMBER_ID='1';
 
 ALTER TABLE CHATTING_MESSAGE MODIFY CHAT_MSG_DETAIL VARCHAR2(1000 CHAR);
+
+
+	SELECT 
+			cm.CHAT_MSG_KEY,
+			cm.MEMBER_KEY,
+			cm.CHAT_ROOM_KEY,
+			cm.CHAT_MSG_DETAIL,
+			cm.CHAT_MSG_TIME,
+			cm.CHAT_MSG_NOTICE,
+			cm.CHAT_READ_COUNT,
+			cf.CHAT_MSG_FILE_POST,
+			cf.FILE_CONTENT_TYPE 
+		FROM chatting_message cm 
+		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
+		WHERE chat_room_key = 29
+		ORDER BY chat_msg_time desc

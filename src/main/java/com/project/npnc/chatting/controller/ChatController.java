@@ -128,20 +128,23 @@ public class ChatController {
             // 고유한 파일 이름 생성 (UUID 사용)
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
-            String uploadDir = servletContext.getRealPath("/resources/upload/"); // 원하는 경로로 변경
+            // 절대 경로 설정
+            String uploadDir = Paths.get("src/main/resources/upload/").toAbsolutePath().toString();
 
             // 파일 저장 경로 설정
             Path filePath = Paths.get(uploadDir, fileName);
             // 파일 저장
             Files.copy(file.getInputStream(), filePath);
-
+            
+            String webPath = "/upload/" + fileName;
             // 파일 메타 데이터 생성
             ChattingFile chattingFile = ChattingFile.builder()
                     .memberKey(memberId)
                     .chatMsgFileOri(file.getOriginalFilename())
-                    .chatMsgFilePost(filePath.toString())
+                    .chatMsgFilePost(webPath)
                     .chatFileTime(new Date(System.currentTimeMillis()))
                     .chatRoomKey(chatId)
+                    .fileContentType(file.getContentType())
                     .build();
             return chattingFile;
         } catch (IOException e) {

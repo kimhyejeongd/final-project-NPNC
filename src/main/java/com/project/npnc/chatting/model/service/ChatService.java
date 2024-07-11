@@ -47,9 +47,8 @@ public class ChatService {
 
 		
 		int chatSeq = dao.selectChatSeq(session);
-		Integer fileSeq = null;
 
-		
+		int fileSeq;
 
 		//내 방에 있는 멤버의 넘버들
 		Map<String, Object> chatInfo = new HashMap<>();
@@ -67,7 +66,7 @@ public class ChatService {
 		
 		if(chat.getFile()!=null) {
 			ChattingFile uploadFile = chat.getFile();
-			fileSeq = dao.selectChatSeq(session);
+			fileSeq = dao.selectFileSeq(session);
 			uploadFile.setChatFileKey(fileSeq);
 			uploadFile.setChatMsgKey(chatSeq);
 			dao.insertChattingFile(session,uploadFile);

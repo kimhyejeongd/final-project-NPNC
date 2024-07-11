@@ -472,10 +472,26 @@ $('.exit-button').click(function() {
                     if (sessionCount + unreadCount > countRoomMember) {
                         unreadCount -= 1;
                     }
+                    var fileElement = '';
+
+                    if (chatList[chat].file) {
+                        var contentType = chatList[chat].file.fileContentType;
+                        var filePath = chatList[chat].file.chatMsgFilePost;
+
+                        if (contentType && contentType.startsWith('image/')) {
+                            fileElement = '<img src="' + filePath + '" alt="Image" style="max-width: 100%; height: auto;">';
+                        } else if (contentType && contentType.startsWith('video/')) {
+                            fileElement = '<video controls style="max-width: 100%; height: auto;"><source src="' + filePath + '" type="' + contentType + '">Your browser does not support the video tag.</video>';
+                        } else {
+                            fileElement = '<a href="' + filePath + '" download>' + chatList[chat].file.chatMsgFileOri + '</a>';
+                        }
+                    }
+                    
                     var messageElement = $(
                         '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
                         + '<div class="sender">' + chatList[chat].memberKey + '</div>'
                         + chatList[chat].chatMsgDetail 
+                        + fileElement
                         + '<div class="sendDate">' + formattedTime + '</div>'
                         + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
                         + '</div></div>'
