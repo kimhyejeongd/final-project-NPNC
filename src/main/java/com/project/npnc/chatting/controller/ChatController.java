@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -42,7 +43,9 @@ public class ChatController {
 	private final ChatService service;
     private Set<Integer> users = new HashSet<>();
 
-
+	@Value("${file.upload-dir}")
+    private String uploadDir;
+	
 	
 	@MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
@@ -129,14 +132,14 @@ public class ChatController {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
             // 절대 경로 설정
-            String uploadDir = Paths.get("src/main/resources/upload/").toAbsolutePath().toString();
+            String uploadDir = Paths.get("src/main/webapp/resources/upload/chatting").toAbsolutePath().toString();
 
             // 파일 저장 경로 설정
             Path filePath = Paths.get(uploadDir, fileName);
             // 파일 저장
             Files.copy(file.getInputStream(), filePath);
             
-            String webPath = "/upload/" + fileName;
+            String webPath = "/resources/upload/chatting/" + fileName;
             // 파일 메타 데이터 생성
             ChattingFile chattingFile = ChattingFile.builder()
                     .memberKey(memberId)

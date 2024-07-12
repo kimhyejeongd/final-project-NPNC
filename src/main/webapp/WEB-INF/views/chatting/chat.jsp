@@ -227,6 +227,8 @@
 <div class="container" id="chat-container">
 
     <div class="header">채팅방</div>
+    
+    height: 100px;">
     <!-- 메뉴 버튼 -->
     <button id="menuButton" class="menu-button">&#9776;</button>
 
