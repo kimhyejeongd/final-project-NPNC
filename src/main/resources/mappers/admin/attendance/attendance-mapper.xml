@@ -11,7 +11,7 @@
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
 	<insert id="startAttendance" parameterType="attendance">
-		INSERT INTO ATTENDANCE as atd
+		INSERT INTO ATTENDANCE
 			VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE,
 			TO_DATE(SYSDATE || #{attendanceStart}, 'YYYY-MM-DD HH24:MI:SS'),
 			NULL,#{attendanceState},NULL)
@@ -19,14 +19,16 @@
 	
 	<select id="selectAttendanceAll" resultMap="attendanceMap" parameterType="_int">
 		SELECT 
-			ATTENDANCE_KEY AS attendanceKey,
-		    ATTENDANCE_DATE AS attendanceDate,
-		    ATTENDANCE_START AS attendanceStart,
-		    ATTENDANCE_END AS attendanceEnd,
-		    ATTENDANCE_STATE AS attendanceState,
-		    OVERTIME_KEY AS overtimeKey
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY
 				FROM ATTENDANCE
 				WHERE MEMBER_KEY=#{memberKey}
+				ORDER BY ATTENDANCE_DATE DESC
+				
 	</select>
 	
 	<select id="selectAttendanceCount" resultType="_int" parameterType="_int">
@@ -50,7 +52,13 @@
 	</select>
 
 	<select id="selectAttendanceByMemberKey" parameterType="_int" resultMap="attendanceMap">
-		SELECT * 
+		SELECT 
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY 
 			FROM ATTENDANCE 
 			WHERE MEMBER_KEY=#{memberKey} 
 			AND TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
@@ -71,7 +79,13 @@
 	</update>
 	
 	<select id="selectAttendanceToday" resultMap="attendanceMap">
-		SELECT * 
+		SELECT 
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY
 			FROM ATTENDANCE 
 			WHERE TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
 	</select>

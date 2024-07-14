@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -72,19 +73,18 @@ public class AttendanceController{
 	
 
 	
-	@GetMapping("/startattendance.do")
-	public String startAttendance(Attendance a,Model m,Authentication authentication) {
+	@PostMapping("/startattendance")
+	public ResponseEntity<Map<String,String>> startAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 //		LocalDate today=LocalDate.now();
 //		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
-		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
-		
-		
-		String msg,loc;
-		if(attendanceCheck>0) {
-			msg="오늘 이미 출근 등록이 완료되었습니다";
-			loc="/";
-		}else {
+//		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+		Map<String,String> response =new HashMap<>();
+//		String msg;
+//		if(attendanceCheck>0) {
+//			msg="오늘 이미 출근 등록이 완료되었습니다";+
+//			
+//		}else {
 			LocalTime attendanceStart=LocalTime.now();
 			int attendanceHour=attendanceStart.getHour();
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -98,31 +98,27 @@ public class AttendanceController{
 				a.setAttendanceState("지각");
 			}
 			
-			int result=attendanceService.startAttendance(a);
-			m.addAttribute("attenance",a);
-			msg="출근완료!";
-			loc="/";
-		}
-		
-		m.addAttribute("msg",msg);
-		m.addAttribute("loc",loc);
-		return "common/msg";
+//			int result=attendanceService.startAttendance(a);
+//			response.put("attendanceStart",attendanceStartTime);
+//			msg="출근완료!";
+//		}
+		attendanceService.startAttendance(a); //insert
+		response.put("attendanceStart",attendanceStartTime);
+		response.put("msg","출근완료!");
+		return ResponseEntity.ok(response);
 		
 	}
 	
-	@GetMapping("/endattendance.do")
-	public String endAttendance(Attendance a,Model m,Authentication authentication) {
+	@PostMapping("/endattendance")
+	public ResponseEntity<Map<String,String>> endAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		LocalDate today=LocalDate.now();
-		Map EndCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+//		Map EndCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
 		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
 
-		
-		String msg,loc;
+		Map<String,String> response =new HashMap<>();
 		if(attendanceCheck>0) {
 			int attendanceKey=attendanceService.selectAttendanceKeyByMemberKeyAndDate(memberKey);
-			msg="퇴근완료!";
-			loc="/";
 			LocalTime attendanceEnd=LocalTime.now();
 			int attendanceHour=attendanceEnd.getHour();
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -137,16 +133,11 @@ public class AttendanceController{
 				a.setAttendanceState("출근");
 			}
 			
-			int result=attendanceService.endAttendance(a);
-			m.addAttribute("attenance",a);
-		}else {
-			msg="출근부터 해주세요!";
-			loc="/";
+			attendanceService.endAttendance(a);
+			response.put("attendanceEnd",attendanceEndTime);
+			response.put("msg","퇴근완료");
 		}
-		
-		m.addAttribute("msg",msg);
-		m.addAttribute("loc",loc);
-		return "common/msg";
+		return ResponseEntity.ok(response);
 	}
 	
 	
@@ -160,11 +151,13 @@ public class AttendanceController{
 			Model m){
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("attendances",attendances);
-
+		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
 		return "attendance/attendancelist";
 		
 	}

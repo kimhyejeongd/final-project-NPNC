@@ -122,8 +122,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	}
 	
-	private Attendance selectAttendanceByMemberKey(int memberKey) {
-		return attendanceDao.selectAttendanceByMemberKey(session,memberKey);
+	@Override
+	public Attendance selectAttendanceByMemberKey(int memberKey) {
+		Attendance a=attendanceDao.selectAttendanceByMemberKey(session,memberKey);
+		Attendance na=Attendance.builder().build();
+		if(a==null) {
+			a=na;
+		}
+		return a;
 	}
 
 	
@@ -132,7 +138,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	
 	@Override
 	public List<Attendance> selectAttendanceAll(Map page,int memberKey) {
-		
+
 		return attendanceDao.selectAttendanceAll(session, page,memberKey);
 	}
 
