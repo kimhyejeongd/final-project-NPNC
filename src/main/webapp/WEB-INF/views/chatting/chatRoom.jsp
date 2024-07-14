@@ -297,7 +297,7 @@
 							src="profile1.jpg" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
-								<div class="friend-status">부서이름</div>
+								<div class="friend-status">${m.departmentName }</div>
 							</div></li>
 					</c:if>
 				</c:forEach>
@@ -593,6 +593,9 @@
                     console.log(response + "===loadRecentChat======");
                     console.log(unreadCount)
                     var recentMessage = response.chats.length > 0 ? response.chats[response.chats.length-1].chatMsgDetail : '최근 메시지 없음';
+                    if (recentMessage === '') {
+                        recentMessage = '[파일]';
+                    }
                     recentMessageElement.html(recentMessage);
                     
                     var unreadCount = response.unreadCount;

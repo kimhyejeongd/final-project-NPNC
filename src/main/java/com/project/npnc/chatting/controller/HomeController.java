@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -64,6 +65,7 @@ public class HomeController {
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
+		
 
 		return "chatting/chat";
 	}
@@ -88,6 +90,8 @@ public class HomeController {
 		List<Member>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
+		
+
 		return "chatting/chatRoom";
 	}
 	

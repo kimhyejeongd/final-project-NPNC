@@ -253,7 +253,10 @@
 	            <button type="button" id="fileButton">&#128206;</button>
 	            <input type="file" id="fileInput">
 	            <div style="diaplay:flex; flex-direction: column">
-	                <div id="fileInfo" style="display: none; margin-left: 10px;"></div> <!-- 파일 정보 표시 요소 추가 -->	  
+	                <div id="fileInfo" style="display: none; margin-left: 10px;">
+	                	    <span id="fileName"></span>
+    						<span class="remove-file" onclick="removeFile()">X</span>
+	                </div> <!-- 파일 정보 표시 요소 추가 -->	  
 	                <div style=display:flex;>
 			            <textarea type="text" id="message" maxlength="1000" placeholder="메시지를 입력하세요" ></textarea>
 			            <button id="send">보내기</button>
@@ -279,6 +282,9 @@ var chatList = ${chatList};
 var countRoomMember = ${countRoomMember};
 var fileMetaData = null;
 
+$('#fileButton').click(function() {
+    $('#fileInput').click(); // fileInput 클릭을 트리거
+});
 
 $('#fileInput').on('change', function(event) {
     var file = event.target.files[0];
@@ -301,10 +307,9 @@ function uploadFile(file) {
         contentType: false,
         success: function(response) {
             fileMetaData = response;
-            $('#fileInfo').html(`
-                <span>${fileMetaData.chatMsgFileOri}</span>
-                <span class="remove-file" onclick="removeFile()">X</span>
-            `).show();
+        	console.log(fileMetaData.chatMsgFileOri);
+            $('#fileName').text(fileMetaData.chatMsgFileOri); // 첫 번째 span에 파일 이름 설정
+            $('#fileInfo').show(); // fileInfo 요소를 표시
             $('#fileInput').val('');
         },
         error: function(error) {
@@ -345,7 +350,8 @@ function removeFile() {
                 fileMetaData = null;
 
                 // 파일 정보 숨기기
-                $('#fileInfo').hide().html('');
+                $('#fileInfo').hide();
+                $('#fileName').text(''); // 파일 이름 초기화
             },
             error: function(error) {
                 console.error('파일 삭제 중 오류 발생:', error);
