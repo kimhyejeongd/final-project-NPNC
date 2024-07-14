@@ -21,6 +21,8 @@
         font-size: 0.9em;
         color: #777;
         text-align: right;
+            margin-bottom: 4px;
+        
     }
     #fileButton {
         background: none;
@@ -38,6 +40,8 @@
             border: 1px solid #ccc;
             border-radius: 10px 0 0 10px;
             outline: none;
+            resize:none;
+            
         }
 
 #roomMemberList {
@@ -127,7 +131,6 @@
         width: 40%
     }
     .chat-input button {
-        padding: 10px 20px;
         border: none;
         background-color: #4CAF50;
         color: white;
@@ -220,6 +223,13 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        /* 드래그 중 효과 스타일 추가 */
+#message.dragover {
+    border-color: #4CAF50;
+    background-color: #f0fff0;
+}
+        
+
     
 </style>
 </head>
@@ -228,7 +238,6 @@
 
     <div class="header">채팅방</div>
     
-    height: 100px;">
     <!-- 메뉴 버튼 -->
     <button id="menuButton" class="menu-button">&#9776;</button>
 
@@ -240,11 +249,16 @@
     <div class="chat-input">
         <form id="chatForm">
             <div id="charCount">0/1000</div> <!-- 글자 수 표시 요소 추가 -->
-            <div>
+            <div style="display: flex">
 	            <button type="button" id="fileButton">&#128206;</button>
 	            <input type="file" id="fileInput">
-	            <textarea type="text" id="message" placeholder="메시지를 입력하세요"></textarea>
-	            <button id="send">보내기</button>
+	            <div style="diaplay:flex; flex-direction: column">
+	                <div id="fileInfo" style="display: none; margin-left: 10px;"></div> <!-- 파일 정보 표시 요소 추가 -->	  
+	                <div style=display:flex;>
+			            <textarea type="text" id="message" maxlength="1000" placeholder="메시지를 입력하세요" ></textarea>
+			            <button id="send">보내기</button>
+	                </div>          
+	            </div>
             </div>
         </form>
     </div>
@@ -266,42 +280,83 @@ var countRoomMember = ${countRoomMember};
 var fileMetaData = null;
 
 
-$('#fileButton').on('click', function() {
-    $('#fileInput').click();
-});
-
 $('#fileInput').on('change', function(event) {
     var file = event.target.files[0];
     if (file) {
-        var formData = new FormData();
-        formData.append('file', file);
-        formData.append('chatId', roomId);
-        formData.append('memberId', '${loginMember.memberKey}');
+        uploadFile(file);
+    }
+});
 
+function uploadFile(file) {
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('chatId', roomId);
+    formData.append('memberId', '${loginMember.memberKey}');
+    
+    $.ajax({
+        url: '${path}/upload',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            fileMetaData = response;
+            $('#fileInfo').html(`
+                <span>${fileMetaData.chatMsgFileOri}</span>
+                <span class="remove-file" onclick="removeFile()">X</span>
+            `).show();
+            $('#fileInput').val('');
+        },
+        error: function(error) {
+            console.error('파일 업로드 중 오류 발생:', error);
+            alert('파일 업로드 중 오류 발생');
+        }
+    });
+}
+
+var messageTextarea = document.getElementById('message');
+
+messageTextarea.addEventListener('dragover', function(event) {
+    event.preventDefault();
+    messageTextarea.classList.add('dragover');
+});
+
+messageTextarea.addEventListener('dragleave', function(event) {
+    messageTextarea.classList.remove('dragover');
+});
+
+messageTextarea.addEventListener('drop', function(event) {
+    event.preventDefault();
+    messageTextarea.classList.remove('dragover');
+    var file = event.dataTransfer.files[0];
+    if (file) {
+        uploadFile(file);
+    }
+});
+
+function removeFile() {
+    if (fileMetaData) {
         $.ajax({
-            url: '${path}/upload',
+            url: '${path}/deleteFile', // 파일 삭제를 처리하는 서버 엔드포인트
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: { filePath: fileMetaData.chatMsgFilePost },
             success: function(response) {
-            	fileMetaData = response;
-            	console.log(response);
-            	sendChat();
-            	
-                    alert('파일 업로드 성공: ' + response.chatMsgFileOri);
-                    console.log('파일 저장 경로: ' + response.chatMsgFilePost);
-                // 파일 입력 요소 초기화
-                $('#fileInput').val('');
+                console.log('파일 삭제 성공:', response);
+                fileMetaData = null;
 
+                // 파일 정보 숨기기
+                $('#fileInfo').hide().html('');
             },
             error: function(error) {
-                console.error('파일 업로드 중 오류 발생:', error);
-                alert('파일 업로드 중 오류 발생');
+                console.error('파일 삭제 중 오류 발생:', error);
+                alert('파일 삭제 중 오류 발생');
             }
         });
     }
-});
+}
+
+
+
 
 
 
@@ -337,6 +392,7 @@ $('.exit-button').click(function() {
                 }
                 // 성공적으로 제출된 후 창 닫기
                 window.close();
+                
             },
             error: function(error) {
                 console.log('Error:', error);
@@ -383,6 +439,7 @@ $('.exit-button').click(function() {
             
             // 구독
             stompClient.subscribe('${path}/room/' + roomId, function (chatMessage) {
+            	console.log(chatMessage + "1111111111111111***************-------------");
                 showChat(chatMessage);
             });
 
@@ -406,7 +463,7 @@ $('.exit-button').click(function() {
 
     function sendChat() {
         var message = $("#message").val();
-        if (message.trim() === "") {
+        if (message.trim() === "" && fileMetaData === null) {
             return; // 입력값이 없으면 전송하지 않음
         }
         if (message.length > 1000) {
@@ -426,6 +483,9 @@ $('.exit-button').click(function() {
             }));
         $('#message').val('');
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
+        $('#charCount').text('0/1000'); 
+        $('#fileInfo').hide().html(''); // 파일 정보 숨기기
+        fileMetaData = null; // 파일 메타데이터 초기화
         
 
     }
@@ -464,6 +524,7 @@ $('.exit-button').click(function() {
     function loadChat(chatList) {
         console.log("loadChat");
         if (chatList != null) {
+            var chatPromises = []; // chatPromises 배열을 초기화
             for (var chat in chatList) {
                 (function(chat) {
                     var messageClass = chatList[chat].memberKey.toString() === '${loginMember.memberKey}' ? 'sent' : 'received';
@@ -481,32 +542,41 @@ $('.exit-button').click(function() {
                         var filePath = chatList[chat].file.chatMsgFilePost;
 
                         if (contentType && contentType.startsWith('image/')) {
-                            fileElement = '<img src="' + filePath + '" alt="Image" style="max-width: 100%; height: auto;">';
+                            fileElement = '<img src="' + filePath + '" alt="Image" class="chat-image" style="max-width: 100%; height: auto;">';
                         } else if (contentType && contentType.startsWith('video/')) {
-                            fileElement = '<video controls style="max-width: 100%; height: auto;"><source src="' + filePath + '" type="' + contentType + '">Your browser does not support the video tag.</video>';
+                            fileElement = '<video controls style="max-width: 100%; height: auto;"><source src="' + filePath + '" class="chat-video" type="' + contentType + '">Your browser does not support the video tag.</video>';
                         } else {
                             fileElement = '<a href="' + filePath + '" download>' + chatList[chat].file.chatMsgFileOri + '</a>';
                         }
                     }
-                    
-                    var messageElement = $(
-                        '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                        + '<div class="sender">' + chatList[chat].memberKey + '</div>'
-                        + chatList[chat].chatMsgDetail 
-                        + fileElement
-                        + '<div class="sendDate">' + formattedTime + '</div>'
-                        + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
-                        + '</div></div>'
-                    );
 
-                    $("#chatting").append(messageElement);
-                    $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
+                    var messageDetail = chatList[chat].chatMsgDetail !== undefined ? chatList[chat].chatMsgDetail : '';
+
+                    if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
+                        var messageElement = $(
+                            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
+                            + '<div class="sender">' + chatList[chat].memberKey + '</div>'
+                            + fileElement
+                            + messageDetail
+                            + '<div class="sendDate">' + formattedTime + '</div>'
+                            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
+                            + '</div></div>'
+                        );
+
+                        chatPromises.push($("#chatting").append(messageElement).promise());
+                    }
                 })(chat);
-                
             }
-            updateUnreadCounts();
+            // 모든 메시지가 DOM에 추가된 후에 스크롤을 맨 아래로 이동
+            $.when.apply($, chatPromises).done(function() {
+                $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
+                updateUnreadCounts();
+                addMediaClickEvent();
+            });
         }
     }
+
+
 
     function showChat(chatMessage) {
         var message = JSON.parse(chatMessage.body);
@@ -520,11 +590,27 @@ $('.exit-button').click(function() {
             unreadCount -= 1;
         }
         var formattedTime = formatDateTime(message.chatMsgTime);
+        var fileElement = '';
+
+        if (message.file) {
+            var contentType = message.file.fileContentType;
+            var filePath = message.file.chatMsgFilePost;
+
+            if (contentType && contentType.startsWith('image/')) {
+                fileElement = '<img src="' + filePath + '" alt="Image" class="chat-image" style="max-width: 100%; height: auto;">';
+            } else if (contentType && contentType.startsWith('video/')) {
+                fileElement = '<video controls style="max-width: 100%; height: auto;"><source src="' + filePath + '" class="chat-video" type="' + contentType + '">Your browser does not support the video tag.</video>';
+            } else {
+                fileElement = '<a href="' + filePath + '" download>' + message.file.chatMsgFileOri + '</a>';
+            }
+        }
+        
 
 
         var messageElement = $(
             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
             + '<div class="sender">' + message.memberKey + '</div>'
+            + fileElement
             + message.chatMsgDetail 
             + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'
             + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
@@ -535,6 +621,8 @@ $('.exit-button').click(function() {
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
         
         updateUnreadCounts();
+        addMediaClickEvent();
+
     }
 
     
@@ -600,6 +688,18 @@ $('.exit-button').click(function() {
             $('#charCount').text(messageLength + '/1000');        });
 
     });
+    function addMediaClickEvent() {
+        $('.chat-image').off('click').on('click', function() {
+            var src = $(this).attr('src');
+            window.open(src, '_blank', 'width=800,height=600');
+        });
+
+        $('.chat-video').off('click').on('click', function() {
+            var src = $(this).find('source').attr('src');
+            window.open(src, '_blank', 'width=800,height=600');
+        });
+    }
+    
 
     window.onload = function () {
         connect();

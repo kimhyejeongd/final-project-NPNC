@@ -112,5 +112,11 @@ public class ChatDao {
 	public int selectFileSeq(SqlSessionTemplate session) {
 		return session.selectOne("chat.selectFileSeq");
 	}
+	public int selectGroupStatus(SqlSessionTemplate session, Map<String, Integer> exitInfo) {
+		return session.selectOne("chat.selectGroupStatus",exitInfo);
+	}
+	public void deleteRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
+		session.delete("chat.deleteRoom",exitInfo);
+	}
 
 }

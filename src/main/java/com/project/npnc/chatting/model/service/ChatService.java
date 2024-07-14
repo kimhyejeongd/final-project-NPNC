@@ -109,13 +109,11 @@ public class ChatService {
 		};
 		public int selectRoomId(Map<String,Object> param) {
 			Integer roomId = dao.selectRoomId(session,param);
-			System.out.println(param.get("memberNos")+"dadasddsadsasad");
 			List<Integer> memberNos=(List<Integer>) param.get("memberNos");
 			if(roomId==null){
 				dao.insertRoomId(session,memberNos);
 				roomId = dao.selectRoomId(session,param);
-				System.out.println(roomId+"charserviceRommIDdkasnkdlasndlaskdnaslkdlkjnsadlnk");
-				}
+			}
 			
 			return roomId;
 		}
@@ -155,6 +153,11 @@ public class ChatService {
 		public void exitChatRoom(Map<String, Integer> exitInfo) {
 			
 			dao.exitChatRoom(session,exitInfo);
+			int roomStatus = dao.selectGroupStatus(session,exitInfo);
+			System.out.println(roomStatus);
+			if(roomStatus ==0) {
+				dao.deleteRoom(session,exitInfo);
+			}
 		}
 		
 		   

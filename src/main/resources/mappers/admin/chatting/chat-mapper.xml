@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="chat">
+	<delete id="deleteRoom">
+		DELETE FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId}
+	</delete>
+	<update id="exitChatRoom" parameterType = "map">
+		UPDATE CHATTING_GROUP SET CHAT_GROUP_STATUS = 'N' WHERE MEMBER_KEY = ${memberId}
+	</update>
+	<select id="selectGroupStatus" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
+	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
 		INSERT INTO CHATTING_FILE VALUES
 		(#{chatFileKey},
@@ -37,7 +46,7 @@
 			LEFT JOIN CHATTING_GROUP cg 
 			ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
 			LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
-			WHERE cg.MEMBER_key = #{memberId}
+			WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
 				ORDER BY chat_msg_time desc
 	</select>
 	<update id="updateRecentChat" parameterType="map">
@@ -53,26 +62,32 @@
         SELECT SEQ_CHAT_ROOM_KEY.nextval FROM dual
     </select>
 	<select id="selectRoomId" resultType="java.lang.Integer" parameterType="map">
-	    SELECT CHAT_ROOM_KEY
-		FROM CHATTING_GROUP
-		WHERE CHAT_ROOM_KEY IN (
-		    SELECT CHAT_ROOM_KEY
-		    FROM CHATTING_GROUP
-		    WHERE MEMBER_KEY IN 
-	        <foreach item="item" collection="memberNos" open="(" separator="," close=")">
-	            #{item}
-	        </foreach>
-		    GROUP BY CHAT_ROOM_KEY
-		    HAVING COUNT(DISTINCT MEMBER_KEY) = #{memberSize}
-		)
-		GROUP BY CHAT_ROOM_KEY
-		HAVING COUNT(*) = #{memberSize}
+    SELECT CHAT_ROOM_KEY
+    FROM (
+        SELECT CHAT_ROOM_KEY, MIN(CHAT_GROUP_DATE) AS CREATED_AT
+        FROM CHATTING_GROUP
+        WHERE CHAT_ROOM_KEY IN (
+            SELECT CHAT_ROOM_KEY
+            FROM CHATTING_GROUP
+            WHERE MEMBER_KEY IN 
+            <foreach item="item" collection="memberNos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            GROUP BY CHAT_ROOM_KEY
+            HAVING COUNT(DISTINCT MEMBER_KEY) = #{memberSize}
+        )
+        GROUP BY CHAT_ROOM_KEY
+        HAVING COUNT(*) = #{memberSize}
+        ORDER BY CREATED_AT ASC
+    )
+    WHERE ROWNUM = 1
+
 		
 	</select>
 	
     <insert id="insertSingleRoomId" parameterType="map">
-        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY)
-        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo})
+        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y')
     </insert>
 	
 	<insert id="insertChat" parameterType="map">
@@ -94,7 +109,7 @@
 			cf.FILE_CONTENT_TYPE 
 		FROM chatting_message cm 
 		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
-		WHERE chat_room_key = ${roomNo}
+		WHERE CM.chat_room_key = ${roomNo}
 		ORDER BY chat_msg_time asc
 	</select>
 	<select id="selectMyRoomMembers" parameterType="ChattingMessage" resultMap="chattingGroupResultMap">
@@ -108,7 +123,7 @@
 		SELECT *
 			FROM CHATTING_GROUP cg
 			LEFT JOIN MEMBER m ON cg.MEMBER_KEY = m.MEMBER_KEY
-			WHERE cg.CHAT_ROOM_KEY = #{i}
+			WHERE cg.CHAT_ROOM_KEY = #{i} and cg.CHAT_GROUP_STATUS='Y'
 	</select>
 	<select id="selectMyRoomId" parameterType="int" resultType="int">
 		SELECT cr.CHAT_ROOM_KEY FROM CHATTING_GROUP crg 

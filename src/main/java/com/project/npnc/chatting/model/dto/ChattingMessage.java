@@ -30,7 +30,7 @@ public class ChattingMessage {
     
 
     public static ChattingMessage createChattingMessage
-    (int chatMsgKey, int memberKey, int chatRoomKey, String chatMsgDetail, Timestamp chatMsgTime, String chatMsgNotice,int chatReadCount) {
+    (int chatMsgKey, int memberKey, int chatRoomKey, String chatMsgDetail, Timestamp chatMsgTime, String chatMsgNotice,int chatReadCount, ChattingFile file,String fileContentType) {
         return ChattingMessage.builder()
                 .chatMsgKey(chatMsgKey)
                 .memberKey(memberKey)
@@ -39,6 +39,8 @@ public class ChattingMessage {
                 .chatMsgTime(chatMsgTime)
                 .chatMsgNotice(chatMsgNotice)
                 .chatReadCount(chatReadCount)
+                .file(file)
+                .fileContentType(fileContentType)
                 .build();
     }
 }

@@ -4,6 +4,7 @@ package com.project.npnc.chatting.controller;
 
 import static com.project.npnc.chatting.model.dto.ChattingMessage.createChattingMessage;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +18,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -28,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.service.ChatService;
@@ -63,7 +65,7 @@ public class ChatController {
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
       
-            ChattingMessage chat = createChattingMessage((int)chatInfo.get("seq"),message.getMemberKey(),roomId,  message.getChatMsgDetail(), message.getChatMsgTime(),"N",(int)chatInfo.get("readCount"));
+            ChattingMessage chat = createChattingMessage((int)chatInfo.get("seq"),message.getMemberKey(),roomId,  message.getChatMsgDetail(), message.getChatMsgTime(),"N",(int)chatInfo.get("readCount"),message.getFile(),message.getFileContentType());
         
         // 파일 메타 데이터 저장
        //ChattingFile chattingFile= service.insertChattingFile(chattingFile);
@@ -114,13 +116,12 @@ public class ChatController {
 	@PostMapping("/exitChatRoom")
 	@ResponseBody
 	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberId) {
-		System.out.println(roomId);
-		System.out.println(memberId);
-		System.out.println("===================================");
+
 		Map<String, Integer> exitInfo = new HashMap<>();
 		exitInfo.put("roomId", roomId);
 		exitInfo.put("memberId", memberId);
 		service.exitChatRoom(exitInfo);
+		
 	}
 	
     // 파일 업로드 핸들러 추가
@@ -154,6 +155,28 @@ public class ChatController {
             // 예외 처리 로직을 추가할 수 있습니다.
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    @PostMapping("/deleteFile")
+    public ResponseEntity<?> deleteFile(@RequestParam String filePath) {
+        try {
+            // 웹 경로를 실제 파일 시스템 경로로 변환
+            String absolutePath = servletContext.getRealPath(filePath);
+            File file = new File(absolutePath);
+            
+            if (file.exists()) {
+                if (file.delete()) {
+                    return ResponseEntity.ok().build();
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 실패");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일이 존재하지 않습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 중 오류 발생");
         }
     }
 }
