@@ -35,7 +35,7 @@ public class MemberController {
         
         if (!file.isEmpty()) {
             try {
-                String fileName = member.getMEMBER_ID() + "_" + file.getOriginalFilename();
+                String fileName = member.getMemberId() + "_" + file.getOriginalFilename();
                 String uploadDir = "uploads/profile_images/";
                 File uploadFile = new File(uploadDir + fileName);
                 
@@ -45,7 +45,7 @@ public class MemberController {
                 }
                 
                 file.transferTo(uploadFile);
-                member.setMEMBER_PROFILE_IMAGE(uploadDir+fileName);
+               // member.setMEMBER_PROFILE_IMAGE(uploadDir+fileName);
                 memberService.updateMember(member); // 멤버 정보 업데이트
                 
             } catch (IOException e) {

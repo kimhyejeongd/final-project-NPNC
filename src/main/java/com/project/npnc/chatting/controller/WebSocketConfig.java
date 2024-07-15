@@ -12,7 +12,6 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {

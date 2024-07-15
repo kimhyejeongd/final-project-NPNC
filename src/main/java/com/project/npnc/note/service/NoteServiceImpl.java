@@ -1,13 +1,16 @@
 package com.project.npnc.note.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
+import com.project.npnc.member.model.dao.MemberDao;
+import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.note.dao.NoteDao;
-import com.project.npnc.note.dto.NoteDto;
+import com.project.npnc.note.dto.NoteReceptionDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,14 +18,47 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService{
 
+	
 	private final NoteDao dao;
 	private final SqlSession session;
+	private final MemberDao memberDao;
+	
+//	전체 쪽지 발송
+	@Override
+	public int noteAllWrite(NoteReceptionDto note) {
+		int noteMsgKey=dao.noteMsgKey(session);
+		note.setPostMsgRecKey(noteMsgKey);
+		int result=dao.noteOneWrite(session, note);
+		int result1=dao.sendNoteOneWrite(session, note);
+		
+		Map<String,Object> param=new HashMap();
+		param.put("noteMsgKey", noteMsgKey);
+
+		List<Member> members=memberDao.selectMemberAllNoPaging(session);
+		
+		for (int i=0; i<members.size(); i++) {
+			
+			param.put("reMemberKey",members.get(i).getMemberKey());
+			int result2=dao.noteReciver(session, param);
+			
+		}
+		
+		return 0;
+	}
 	
 	@Override
-	public int noteOneWrite(int reMemberKey , NoteDto note) {
+	public NoteReceptionDto selectNoteOne() {
+		
+		return dao.selectNoteOne(session);
+	}
+
+	
+	@Override
+	public int noteOneWrite(int reMemberKey , NoteReceptionDto note) {
 		int noteMsgKey=dao.noteMsgKey(session);
-		note.setPostMsgKey(noteMsgKey);
+		note.setPostMsgRecKey(noteMsgKey);
 		int result=dao.noteOneWrite(session, note);
+		int result1=dao.sendNoteOneWrite(session, note);
 		
 		Map<String,Object> param=new HashMap();
 		
@@ -36,12 +72,13 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public int noteWrites(int[] reMemberKey, NoteDto note) {
+	public int noteWrites(int[] reMemberKey, NoteReceptionDto note) {
 	
 		int noteMsgKey=dao.noteMsgKey(session);
-		note.setPostMsgKey(noteMsgKey);
+		note.setPostMsgRecKey(noteMsgKey);
 		int result=dao.noteOneWrite(session, note);
-	
+		int result1=dao.sendNoteOneWrite(session, note);
+
 		for (int i=0; i<reMemberKey.length; i++) {
 			Map<String,Object> param=new HashMap();
 			
@@ -54,6 +91,21 @@ public class NoteServiceImpl implements NoteService{
 		
 		return noteMsgKey;
 	}
+
+	@Override
+	public List<NoteReceptionDto> selectNoteAll(Map<String, Integer> page) {
+	
+		return dao.selectNoteAll(session, page);
+	}
+
+	@Override
+	public int noteSelectTotalData(int memberKey) {
+		
+		return dao.noteSelectTotalData(session, memberKey);
+	}
+
+
+	
 
 
 

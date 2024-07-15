@@ -1,20 +1,27 @@
 package com.project.npnc.attendance.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.service.AttendanceService;
+import com.project.npnc.common.PageFactory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,51 +32,159 @@ public class AttendanceController{
 
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
+	private final PageFactory pageFactory;
 	
 	
-	@Scheduled(cron="0 0 22 * * ?")
+	@Scheduled(cron="0 0 23 * * ?")
 	public void AttendanceCheck() {
+		List<Attendance> todayAttendance=selectAttendanceToday();
+		List<Integer> memberKeys=selectMemberKeyAll();
+		Attendance a=new Attendance();
+		Map<Integer, Boolean> result = new HashMap<>();
+
+		memberKeys.forEach(memberKey -> {
+		    boolean checkKey = todayAttendance.stream().anyMatch(as -> as.getMember().getMemberKey() == memberKey);
+		    
+		    result.put(memberKey, checkKey);
+		});
+		
+		attendanceService.updateAttendanceState(a,result);
+
+//		result.forEach((key, value) -> {
+//		    if (value) {
+//		        a.setMember(AdminMember.builder().memberKey(key).build());
+//		        attendanceService.updateAttendanceState(a);
+//		    	
+//		    } else {
+//		        attendanceService.insertAbsent(key);
+//		    }
+//		});
+		
+		System.out.println(result);
+	}
+	
+	private List<Attendance> selectAttendanceToday(){
+		return attendanceService.selectAttendanceToday();
+	}
+	
+	private List selectMemberKeyAll() {
+		return memberService.selectMemberKeyAll();
+	}
+	
+
+	
+	@PostMapping("/startattendance")
+	public ResponseEntity<Map<String,String>> startAttendance(Attendance a,Model m,Authentication authentication) {
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+//		LocalDate today=LocalDate.now();
+//		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+//		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+		Map<String,String> response =new HashMap<>();
+//		String msg;
+//		if(attendanceCheck>0) {
+//			msg="오늘 이미 출근 등록이 완료되었습니다";+
+//			
+//		}else {
+			LocalTime attendanceStart=LocalTime.now();
+			int attendanceHour=attendanceStart.getHour();
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		    String attendanceStartTime = attendanceStart.format(timeFormatter);
+		    
+			a.setMember(AdminMember.builder().memberKey(memberKey).build());
+			a.setAttendanceStart(attendanceStartTime);
+			if(attendanceHour < 9) {
+				a.setAttendanceState("출근");
+			}else {
+				a.setAttendanceState("지각");
+			}
+			
+//			int result=attendanceService.startAttendance(a);
+//			response.put("attendanceStart",attendanceStartTime);
+//			msg="출근완료!";
+//		}
+		attendanceService.startAttendance(a); //insert
+		response.put("attendanceStart",attendanceStartTime);
+		response.put("msg","출근완료!");
+		return ResponseEntity.ok(response);
 		
 	}
 	
-	@PostMapping("/startattendance.do")
-	public String startAttendance(Attendance a,Model m,Authentication authentication) {
+	@PostMapping("/endattendance")
+	public ResponseEntity<Map<String,String>> endAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-		LocalDateTime attendanceStart=LocalDateTime.now();
-		int attendanceHour=attendanceStart.getHour();
-		a.setMember(AdminMember.builder().memberKey(memberKey).build());
-		a.setAttendanceStart(attendanceStart);
-		if(attendanceHour < 9) {
-			a.setAttendanceState("출근");
-		}else {
-			a.setAttendanceState("지각");
-		}
-		int result=attendanceService.startAttendance(a);
-		m.addAttribute("attenance",a);
-		return "redirect:/";
-		
-	}
-	
-	@PostMapping("endattendance.do")
-	public String endAttendance(Attendance a,Model m,Authentication authentication) {
-		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-		LocalDateTime attendanceEnd=LocalDateTime.now();
-		int attendanceHour=attendanceEnd.getHour();
 		LocalDate today=LocalDate.now();
-		a.setMember(AdminMember.builder().memberKey(memberKey).build());
-		a.setAttendanceEnd(attendanceEnd);
-		a.setAttendanceDate(today);
-		if(attendanceHour < 18) {
-			a.setAttendanceState("조퇴");
-		}else {
-			a.setAttendanceState("출근");
+//		Map EndCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+
+		Map<String,String> response =new HashMap<>();
+		if(attendanceCheck>0) {
+			int attendanceKey=attendanceService.selectAttendanceKeyByMemberKeyAndDate(memberKey);
+			LocalTime attendanceEnd=LocalTime.now();
+			int attendanceHour=attendanceEnd.getHour();
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		    String attendanceEndTime = attendanceEnd.format(timeFormatter);
+			a.setMember(AdminMember.builder().memberKey(memberKey).build());
+			a.setAttendanceEnd(attendanceEndTime);
+			a.setAttendanceKey(attendanceKey);
+
+			if(attendanceHour < 18) {
+				a.setAttendanceState("조퇴");
+			}else {
+				a.setAttendanceState("출근");
+			}
+			
+			attendanceService.endAttendance(a);
+			response.put("attendanceEnd",attendanceEndTime);
+			response.put("msg","퇴근완료");
 		}
-		
-		int result=attendanceService.endAttendance(a);
-		m.addAttribute("attenance",a);
-		
-		return "redirect:/";
+		return ResponseEntity.ok(response);
 	}
+	
+	
+	//사원 근태관리 화면
+	
+	@GetMapping("/selectAttendanceAll.do")
+	public String selectAttendanceAll(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			Authentication authentication,
+			Model m){
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
+		int totaldata=attendanceService.selectAttendanceCount(memberKey);
+		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+		m.addAttribute("attendances",attendances);
+		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
+		return "attendance/attendancelist";
+		
+	}
+	
+	@PostMapping("/updateAttendance")
+	public String updateAttendance(int attendanceKey,Model m,Authentication authentication) {
+		LocalDate today=LocalDate.now();
+		Attendance a=attendanceService.selectAttendanceByAttendanceKey(attendanceKey);
+		a.setMember(AdminMember.builder().memberId(authentication.getName()).build());
+		System.out.println(a);
+		m.addAttribute("today",today);
+		m.addAttribute("attendance",a);
+		return "attendance/updateattendance";
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

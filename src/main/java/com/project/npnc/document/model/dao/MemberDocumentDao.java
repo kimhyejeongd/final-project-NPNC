@@ -15,6 +15,14 @@ public interface MemberDocumentDao {
 	List<DocumentForm> selectFormsBySearch(SqlSession session, String target);
 	DocumentForm selectFormByNo(SqlSession session, int no);
 	
-	int insertDoc(SqlSession session, Document d);
-	int insertDocFile(SqlSession session, approversList request);
+ 	int insertDoc(SqlSession session, Document d);
+	int insertApproval(SqlSession session, approversList request);
+	int retrieveDoc(SqlSession session, String erDocSerialKey);
+	int selectDocFile(SqlSession session, String erDocSerialKey);
+	int deleteDocFile(SqlSession session, String erDocSerialKey);
+	int retrieveDocFile(SqlSession session, String erDocSerialKey);
+	
+	List<Document> selectRetrieveDocs(SqlSession session, int no);
+	List<Document> selectInprocessDocs(SqlSession session, int no);
+	Document selectDocById(SqlSession session, String docId);
 }

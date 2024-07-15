@@ -16,5 +16,5 @@ public interface MemberDao {
 	int insertMember(SqlSession session,Member m);
 	int updateMember(SqlSession session,Member m);
 	int deleteMember(SqlSession session,int memberKey);
-	
+	public List<Member> selectMemberAllNoPaging(SqlSession session);
 }

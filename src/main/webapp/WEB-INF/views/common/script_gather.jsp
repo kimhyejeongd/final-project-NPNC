@@ -61,7 +61,7 @@
     <!-- Datatables -->
     <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
 
-    <!-- Bootstrap Notify -->
+    <!-- Bootstrap Notify 1 -->
     <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
     <!-- jQuery Vector Maps -->
