@@ -109,8 +109,14 @@ public class ChatDao {
 	public void insertChattingFile(SqlSessionTemplate session, ChattingFile chattingFile) {
 		session.insert("chat.insertChattingFile",chattingFile);
 	}
-	public void selectFileSeq(SqlSessionTemplate session) {
-		session.insert("chat.selectFileSeq");
+	public int selectFileSeq(SqlSessionTemplate session) {
+		return session.selectOne("chat.selectFileSeq");
+	}
+	public int selectGroupStatus(SqlSessionTemplate session, Map<String, Integer> exitInfo) {
+		return session.selectOne("chat.selectGroupStatus",exitInfo);
+	}
+	public void deleteRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
+		session.delete("chat.deleteRoom",exitInfo);
 	}
 
 }

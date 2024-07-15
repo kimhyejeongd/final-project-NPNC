@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="chat">
+	<delete id="deleteRoom">
+		DELETE FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId}
+	</delete>
+	<update id="exitChatRoom" parameterType = "map">
+		UPDATE CHATTING_GROUP SET CHAT_GROUP_STATUS = 'N' WHERE MEMBER_KEY = ${memberId}
+	</update>
+	<select id="selectGroupStatus" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
+	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
 		INSERT INTO CHATTING_FILE VALUES
 		(#{chatFileKey},
@@ -9,7 +18,9 @@
 		#{chatMsgFilePost},
 		#{chatFileTime},
 		#{chatRoomKey},
-		#{chatMsgKey})
+		#{chatMsgKey},
+		#{fileContentType}
+		)
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
 		DELETE FROM CHATTING_IS_READ cir 
@@ -35,7 +46,7 @@
 			LEFT JOIN CHATTING_GROUP cg 
 			ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
 			LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
-			WHERE cg.MEMBER_key = #{memberId}
+			WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
 				ORDER BY chat_msg_time desc
 	</select>
 	<update id="updateRecentChat" parameterType="map">
@@ -51,26 +62,32 @@
         SELECT SEQ_CHAT_ROOM_KEY.nextval FROM dual
     </select>
 	<select id="selectRoomId" resultType="java.lang.Integer" parameterType="map">
-	    SELECT CHAT_ROOM_KEY
-		FROM CHATTING_GROUP
-		WHERE CHAT_ROOM_KEY IN (
-		    SELECT CHAT_ROOM_KEY
-		    FROM CHATTING_GROUP
-		    WHERE MEMBER_KEY IN 
-	        <foreach item="item" collection="memberNos" open="(" separator="," close=")">
-	            #{item}
-	        </foreach>
-		    GROUP BY CHAT_ROOM_KEY
-		    HAVING COUNT(DISTINCT MEMBER_KEY) = #{memberSize}
-		)
-		GROUP BY CHAT_ROOM_KEY
-		HAVING COUNT(*) = #{memberSize}
+    SELECT CHAT_ROOM_KEY
+    FROM (
+        SELECT CHAT_ROOM_KEY, MIN(CHAT_GROUP_DATE) AS CREATED_AT
+        FROM CHATTING_GROUP
+        WHERE CHAT_ROOM_KEY IN (
+            SELECT CHAT_ROOM_KEY
+            FROM CHATTING_GROUP
+            WHERE MEMBER_KEY IN 
+            <foreach item="item" collection="memberNos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            GROUP BY CHAT_ROOM_KEY
+            HAVING COUNT(DISTINCT MEMBER_KEY) = #{memberSize}
+        )
+        GROUP BY CHAT_ROOM_KEY
+        HAVING COUNT(*) = #{memberSize}
+        ORDER BY CREATED_AT ASC
+    )
+    WHERE ROWNUM = 1
+
 		
 	</select>
 	
     <insert id="insertSingleRoomId" parameterType="map">
-        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY)
-        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo})
+        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y')
     </insert>
 	
 	<insert id="insertChat" parameterType="map">
@@ -80,7 +97,20 @@
 		INSERT INTO CHATTING_IS_READ values(SEQ_CHAT_IS_READ_KEY.nextval,#{seq},#{member.memberKey})
 	</insert>
 	<select id="selectRoomChatList" parameterType="_int" resultMap="chattingMessageResultMap">
-		SELECT * FROM CHATTING_MESSAGE WHERE CHAT_ROOM_KEY = #{roomNo} order by CHAT_MSG_TIME
+		SELECT 
+			cm.CHAT_MSG_KEY,
+			cm.MEMBER_KEY,
+			cm.CHAT_ROOM_KEY,
+			cm.CHAT_MSG_DETAIL,
+			cm.CHAT_MSG_TIME,
+			cm.CHAT_MSG_NOTICE,
+			cm.CHAT_READ_COUNT,
+			cf.CHAT_MSG_FILE_POST,
+			cf.FILE_CONTENT_TYPE 
+		FROM chatting_message cm 
+		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
+		WHERE CM.chat_room_key = ${roomNo}
+		ORDER BY chat_msg_time asc
 	</select>
 	<select id="selectMyRoomMembers" parameterType="ChattingMessage" resultMap="chattingGroupResultMap">
 		SELECT DISTINCT MEMBER_KEY FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY=#{chatRoomKey} and MEMBER_KEY != #{memberKey}
@@ -93,7 +123,7 @@
 		SELECT *
 			FROM CHATTING_GROUP cg
 			LEFT JOIN MEMBER m ON cg.MEMBER_KEY = m.MEMBER_KEY
-			WHERE cg.CHAT_ROOM_KEY = #{i}
+			WHERE cg.CHAT_ROOM_KEY = #{i} and cg.CHAT_GROUP_STATUS='Y'
 	</select>
 	<select id="selectMyRoomId" parameterType="int" resultType="int">
 		SELECT cr.CHAT_ROOM_KEY FROM CHATTING_GROUP crg 
@@ -107,7 +137,7 @@
 		select SEQ_CHAT_MESSAGE_KEY.nextval from dual
 	</select>
 	<select id="selectFileSeq" resultType="int">
-		select SEQ_CHAT_FILE_KEY.nextval.nextval from dual
+		select SEQ_CHAT_FILE_KEY.nextval from dual
 	</select>
 	<select id="selectReadCount" resultType="int" parameterType="ChattingMessage">
 			SELECT sum(is_read) FROM CHAT_READ_STATUS WHERE CHAT_ID=#{seq}
@@ -135,6 +165,10 @@
         <result property="chatMsgTime" column="CHAT_MSG_TIME"/>
         <result property="chatMsgNotice" column="CHAT_MSG_NOTICE"/>
         <result property="chatReadCount" column="CHAT_READ_COUNT"/>
+        <association property="file" javaType="com.project.npnc.chatting.model.dto.ChattingFile">
+            <id property="chatMsgFilePost" column="CHAT_MSG_FILE_POST" />
+            <result property="fileContentType" column="FILE_CONTENT_TYPE" />
+        </association>
     </resultMap>
 	
 	<resultMap type="chattingGroup" id="chattingGroupResultMap">

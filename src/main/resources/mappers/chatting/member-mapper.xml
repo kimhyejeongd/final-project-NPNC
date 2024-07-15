@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="chattingMember">
 	<select id="selectAllMembers" resultMap="memberResultMap">
-		select * from member order by MEMBER_ID
+		select * from MEMBER m LEFT JOIN DEPARTMENT d ON d.DEPARTMENT_KEY = m.DEPARTMENT_KEY order by m.MEMBER_ID
 	</select>
 
     
@@ -29,6 +29,7 @@
         <result property="memberTell" column="MEMBER_TELL" />
         <result property="memberAddress" column="MEMBER_ADDRESS" />
         <result property="accessKey" column="ACCESS_KEY" />
+        <result property="departmentName" column="DEPARTMENT_NAME" />
     </resultMap>
 	
 

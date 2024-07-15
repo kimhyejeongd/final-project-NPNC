@@ -18,9 +18,10 @@ public class ChattingFile {
     private Date chatFileTime;
     private int chatRoomKey;
     private int chatMsgKey;
+    private String fileContentType;
     
 
-    public static ChattingFile createChattingFile(int chatFileKey, int memberKey, String chatMsgFileOri, String chatMsgFilePost, Date chatFileTime, int chatRoomKey, int chatMsgKey) {
+    public static ChattingFile createChattingFile(int chatFileKey, int memberKey, String chatMsgFileOri, String chatMsgFilePost, Date chatFileTime, int chatRoomKey, int chatMsgKey,String fileContentType) {
         return ChattingFile.builder()
                 .chatFileKey(chatFileKey)
                 .memberKey(memberKey)
@@ -29,6 +30,7 @@ public class ChattingFile {
                 .chatFileTime(chatFileTime)
                 .chatRoomKey(chatRoomKey)
                 .chatMsgKey(chatMsgKey)
+                .fileContentType(fileContentType)
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -57,11 +58,14 @@ public class HomeController {
 		readInfo.put("loginMemberKey", loginMemberKey);
 		readInfo.put("roomId", roomId);
 		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+		
+		System.out.println(chats.toString()+"=================chats================");
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
+		
 
 		return "chatting/chat";
 	}
@@ -81,11 +85,15 @@ public class HomeController {
 //		model.addAttribute("roomId",roomId);
 		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
 		
+		Gson gson = new Gson();
 		model.addAttribute("myRoomMemberList",myRoomMemberList);
+		model.addAttribute("mychatRoomListJ",gson.toJson(mychatRoomList));
 		model.addAttribute("mychatRoomList",mychatRoomList);
 		List<Member>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
+		
+
 		return "chatting/chatRoom";
 	}
 	
