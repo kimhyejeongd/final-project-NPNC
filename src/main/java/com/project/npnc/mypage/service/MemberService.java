@@ -1,10 +1,8 @@
 package com.project.npnc.mypage.service;
 
 import org.springframework.stereotype.Service;
-
 import com.project.npnc.mypage.repository.MemberRepository;
 import com.project.npnc.security.dto.Member;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
