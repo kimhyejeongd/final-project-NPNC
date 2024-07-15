@@ -5,15 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.project.npnc.note.dto.Note;
-import com.project.npnc.note.dto.NoteDto;
+import com.project.npnc.note.dto.NoteReceptionDto;
+import com.project.npnc.note.dto.NoteSendDto;
 
 public interface NoteDao {
 	
-	public int noteOneWrite(SqlSession session, NoteDto note);
+	public int noteOneWrite(SqlSession session, NoteReceptionDto note);
 	public int noteReciver(SqlSession session, Map<String, Object> param);
 	public int noteMsgKey(SqlSession session);
-	public List<Note> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
-	public int noteSelectTotalData(SqlSession session);
-	
+	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
+	public int noteSelectTotalData(SqlSession session, int memberKey);
+	public NoteReceptionDto selectNoteOne(SqlSession session);
+	public int sendNoteOneWrite(SqlSession session, NoteReceptionDto sendNote);
 }

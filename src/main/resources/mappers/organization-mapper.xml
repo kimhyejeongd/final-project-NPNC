@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="organization">
+	<resultMap id="memberMap" type="memberSr">
+		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="DEPARTMENT_KEY" property="departmentKey"></result>
+		<result column="JOB_KEY" property="jobKey"></result>
+		<result column="MEMBER_ID" property="memberId"></result>
+		<result column="MEMBER_PW" property="memberPw"></result>
+		<result column="MEMBER_PHONE" property="memberPhone"></result>
+		<result column="MEMBER_EMAIL" property="memberEmail"></result>
+		<result column="MEMBER_MESSAGE" property="memberMessage"></result>
+		<result column="MEMBER_ENROLL_DATE" property="enrollDate"></result>
+		<result column="MEMBER_LEAVE_DATE" property="memberLeaveDate"></result>
+		<result column="MEMBER_TELL" property="memberTell"></result>
+		<result column="MEMBER_ADDRESS" property="memberAddress"></result>
+		<result column="ACCESS_KEY" property="accessKey"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="MEMBER_GENDER" property="memberGender"></result>
+		<result column="MEMBER_STATE" property="memberState"></result>
+		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"></result>
+		<result column="JOB_NAME" property="jobName"></result>				
+	</resultMap>
+	<resultMap id="OrganMap" type="OrganizationDto">
+ 		<id column="DEPARTMENT_KEY" property="departmentKey"></id>
+ 		<result column="DEPARTMENT_NAME" property="departmentName"></result>
+ 		<!-- 1:다 -->
+ 		<collection property="memberlist" resultMap="memberMap"></collection>
+ 	</resultMap>
+	
+	
+	<select id="organizationChart" resultMap="OrganMap">
+		SELECT * FROM MEMBER JOIN DEPARTMENT USING (DEPARTMENT_KEY) LEFT JOIN JOB USING(JOB_KEY) ORDER BY JOB_KEY
+		
+	</select>
+</mapper>

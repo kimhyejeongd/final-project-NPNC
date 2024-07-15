@@ -9,7 +9,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
+<style>
+	.list-group-item{
+			display: flex;
+			flex-direction: row;
+		justify-content: space-between;
+	}
+</style>
 	<div class="accordion" id="accordionPanelsStayOpenExample">
 		<c:forEach var="d" items="${list}" varStatus="status">
 		
@@ -25,8 +31,18 @@
 			      <div class="accordion-body" style='padding: 0!important;'>
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
-						  <a href="#" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &ensp; ${memberlist.jobName}</a>
-						  
+		 				
+						  <a href="#" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
+						  <div>
+						  <button type="button" class="btn btn-icon btn-round btn-success" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
+	                        <i class="fas fa-envelope"></i>
+	                      </button>
+	                      <div class="btn btn-icon btn-round btn-primary" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
+                              <i class="fa fa-comment"></i>
+                            </div>
+						  </div>
+						   </a>
+						
 		  				</c:forEach>
 					</div>
 			      </div>
