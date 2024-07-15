@@ -217,7 +217,21 @@ $(document).ready(function() {
 $("#approverBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
 });
-
+function sendDataToParent(data) {
+    // 부모 창에서 전달받은 데이터
+    console.dir("Received data in parent:", data);
+    $("#approvalDiv").html('');
+    data.each(function(index){
+	    let $div = $("<div>").addClass('border').attr('id', approval+index);
+	    $("<input>").attr({'name': `approvers[${index}].orderby`, 'value': `${data[index].orderby}`}).css({'border-radius': '15px', 'width': '20px'}).appendTo($div);
+	    $("<input>").attr({'name': `approvers[${index}].memberKey`, 'value': `${data[index].no}`}).css({'display': 'none'}).appendTo($div);;
+	    $("<input>").attr({'name': `approvers[${index}].memberTeam`, 'value': `${data[index].team}`}).appendTo($div);;
+	    $("<input>").attr({'name': `approvers[${index}].memberJob`, 'value': `${data[index].job}`}).appendTo($div);;
+	    $("<input>").attr({'name': `approvers[${index}].memberName`, 'value': `${data[index].name}`}).appendTo($div);;
+	    $("<input>").attr({'name': `approvers[${index}].category`, 'value': `${data[index].category}`}).appendTo($div);;
+    });
+    $div.appendTo($("#approvalDiv"));
+}
 </script>
 </body>
 </html>
