@@ -21,7 +21,7 @@ public interface AttendanceDao {
 	List<Attendance> selectAttendanceAll(SqlSession session,Map<String,Integer> page,int memberKey);
 	int selectAttendanceCount(SqlSession session,int memberKey);
 	
-	
+	Attendance selectAttendanceByAttendanceKey(SqlSession session,int attendanceKey);
 	int updateAttendanceState(SqlSession session,Attendance a);
 	int insertAbsent(SqlSession session,int memberKey);
 	int startAttendance(SqlSession session, Attendance a);

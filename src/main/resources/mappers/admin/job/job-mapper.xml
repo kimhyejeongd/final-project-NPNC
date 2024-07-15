@@ -6,15 +6,21 @@
 		<result column="JOB_NAME" property="jobName"/>
 	</resultMap>
   <select id="selectJobAll" resultMap="jobMap">
-  		SELECT * FROM JOB
+  		SELECT * 
+  			FROM JOB
   </select>
   <insert id="insertJob" parameterType="job">
-  		INSERT INTO JOB VALUES('J'||SEQ_JOB.NEXTVAL,#{jobName})
+  		INSERT INTO JOB 
+  			VALUES('J'||SEQ_JOB.NEXTVAL,#{jobName})
   </insert>
   <update id="updateJob" parameterType="job">
-  		UPDATE JOB SET JOB_NAME=#{jobName} WHERE JOB_KEY=#{jobKey}
+  		UPDATE JOB 
+  			SET JOB_NAME=#{jobName} 
+  			WHERE JOB_KEY=#{jobKey}
   </update>
   <delete id="deleteJob" parameterType="string">
-  		DELETE FROM JOB WHERE JOB_KEY=#{jobKey}
+  		DELETE 
+  			FROM JOB 
+  			WHERE JOB_KEY=#{jobKey}
   </delete>
 </mapper>

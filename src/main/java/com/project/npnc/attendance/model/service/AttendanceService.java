@@ -16,7 +16,10 @@ public interface AttendanceService {
 	
 	List<Attendance> selectAttendanceAll(Map page,int memberKey);
 	int selectAttendanceCount(int memberKey);
-		
+	Attendance selectAttendanceByMemberKey(int memberKey);	
+	
+	
+	Attendance selectAttendanceByAttendanceKey(int attendanceKey);
 	void updateAttendanceState(Attendance a,Map<Integer, Boolean> result);
 	int insertAbsent(int memberKey);
 	int startAttendance(Attendance a);
