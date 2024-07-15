@@ -78,6 +78,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAttendanceCount",memberKey);
 	}
 
+	@Override
+	public Attendance selectAttendanceByAttendanceKey(SqlSession session, int attendanceKey) {
+		
+		return session.selectOne("attendance.selectAttendanceByAttendanceKey",attendanceKey);
+	}
+
 	
 	
 	

@@ -147,6 +147,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		return attendanceDao.selectAttendanceCount(session,memberKey);
 	}
+
+	@Override
+	public Attendance selectAttendanceByAttendanceKey(int attendanceKey) {
+		
+		return attendanceDao.selectAttendanceByAttendanceKey(session, attendanceKey);
+	}
 	
 
 	

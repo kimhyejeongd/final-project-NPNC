@@ -17,6 +17,18 @@
 			NULL,#{attendanceState},NULL)
 	</insert>
 	
+	<select id="selectAttendanceByAttendanceKey" resultMap="attendanceMap" parameterType="_int">
+		SELECT 
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY
+		    	FROM ATTENDANCE
+		    	WHERE ATTENDANCE_KEY=#{attendanceKey}
+	</select>
+	
 	<select id="selectAttendanceAll" resultMap="attendanceMap" parameterType="_int">
 		SELECT 
 			ATTENDANCE_KEY,

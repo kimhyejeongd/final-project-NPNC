@@ -163,9 +163,14 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/updateAttendance")
-	public String updateAttendance(Attendance attendance,Model m) {
-		m.addAttribute("attendance",attendance);
-		return "attendance/attendanceupdate";
+	public String updateAttendance(int attendanceKey,Model m,Authentication authentication) {
+		LocalDate today=LocalDate.now();
+		Attendance a=attendanceService.selectAttendanceByAttendanceKey(attendanceKey);
+		a.setMember(AdminMember.builder().memberId(authentication.getName()).build());
+		System.out.println(a);
+		m.addAttribute("today",today);
+		m.addAttribute("attendance",a);
+		return "attendance/updateattendance";
 		
 	}
 	
