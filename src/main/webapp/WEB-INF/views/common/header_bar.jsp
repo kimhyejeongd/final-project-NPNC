@@ -253,7 +253,60 @@
 		background-color: #45a049;
 	}
 	</style>
-
+	<style>
+	.list-group-item{
+			display: flex;
+			flex-direction: row;
+		justify-content: space-between;
+	}
+</style>
+<!--이성록 모달 팝업 스타일 -->
+	<style>
+			h2{
+    			text-align: center;
+			}
+			
+			
+			/*모달 팝업 영역 스타일링*/
+			.modal1 {
+			/*팝업 배경*/
+				display: none; /*평소에는 보이지 않도록*/
+			    position: fixed;
+			    top:0;
+			    left: 0;
+			    width: 100%;
+			    height: 100vh;
+			    overflow: hidden;
+			    background: rgba(0,0,0,0.5);
+			}
+			.modal1 .modal_popup1 {
+			/*팝업*/
+			    position: relative;
+			    top: 50%;
+			    left: 50%;
+			    width:40%;
+			    transform: translate(-50%, -50%);
+			    padding: 20px;
+			    background: #ffffff;
+			    border-radius: 20px;
+			}
+			.modal1 .modal_popup1 .close_btn1 {
+			  /*   display: block; */
+			    padding: 10px 20px;
+			    background-color: rgb(116, 0, 0);
+			    border: none;
+			    border-radius: 5px;
+			    color: #fff;
+			    cursor: pointer;
+			    transition: box-shadow 0.2s;
+			}
+			.modal1.on1 {
+			    display: block;
+			    position: fixed;
+			    
+			}
+	
+	  </style>
       <div class="main-header">
       		<form action="/chatRoom" method="get">
 			    <label for="userInput">Enter Value:</label>
@@ -340,6 +393,7 @@
 					            	    	url : '${path}/organ',
 					            	    	type: 'GET',
 					            	    	success : function(response){
+					            	    		$('#organcontainer').html("");
 					            	    		$('#organcontainer').html(response);
 					            	    	}
 					            	    	
@@ -501,7 +555,7 @@
                       data-bs-toggle="dropdown"
                       id="organ"
                       href="#"
-                      data-bs-auto-close="false"
+                      data-bs-auto-close="outside"
                       aria-expanded="false"
                     >
                       <i class="fas fa-layer-group"></i>
@@ -577,6 +631,7 @@
               </div>
             </nav>
             <!-- End Navbar -->
+            
             <script>
             var stompClient = null;
 			
@@ -640,4 +695,6 @@
 		    
             
             </script>
+            
           </div>
+          
