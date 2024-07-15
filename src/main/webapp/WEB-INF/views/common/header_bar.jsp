@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <c:set var="path" value="${pageContext.request.contextPath}"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
@@ -254,6 +253,7 @@
 		background-color: #45a049;
 	}
 	</style>
+
       <div class="main-header">
       		<form action="/chatRoom" method="get">
 			    <label for="userInput">Enter Value:</label>
@@ -307,7 +307,7 @@
                 </nav>
 		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
- 				 <script type="text/javascript">
+				 <script type="text/javascript">
 					 $(document).ready(function() {
 					        // Ã«ÂÂÃ«Â¡Â­Ã«ÂÂ¤Ã¬ÂÂ´ Ã«Â©ÂÃ«ÂÂ´ÃªÂ°Â Ã«Â³Â´Ã¬ÂÂ¼ Ã«ÂÂ Ã­ÂÂ¹Ã¬Â Â JSP Ã­ÂÂÃ¬ÂÂ´Ã¬Â§ÂÃ«Â¥Â¼ Ã«Â¡ÂÃ«ÂÂ
 
@@ -320,7 +320,9 @@
 					                    inputValue: '1' // Ã­ÂÂÃ¬ÂÂÃ­ÂÂ Ã­ÂÂÃ«ÂÂ¼Ã«Â¯Â¸Ã­ÂÂ°Ã«Â¥Â¼ Ã¬ÂÂ¬ÃªÂ¸Â°Ã¬ÂÂ Ã¬Â ÂÃ«ÂÂ¬Ã­ÂÂ©Ã«ÂÂÃ«ÂÂ¤.
 					                },
 					                success: function(response) {
-					                       $('.notif-center').eq(0).html(response);
+
+					                    $('.notif-center').eq(0).html(response);
+					                    console.log(response);
 
 					                },
 					                error: function(xhr, status, error) {
@@ -400,7 +402,7 @@
                       </li>
                       <li>
                       <div id="messageContent">
-<%--          					<jsp:include page="${path }WEB-INF/views/chatting/chatRoom.jsp"></jsp:include> --%>				          
+          				<%-- 	<jsp:include page="${path }chatting/chatRoom.jsp"></jsp:include> 			        --%>   
 				        </div>
                          <div class="message-notif-scroll scrollbar-outer">
                           <div class="notif-center">

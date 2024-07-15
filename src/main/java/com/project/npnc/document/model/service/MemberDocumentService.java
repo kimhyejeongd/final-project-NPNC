@@ -16,4 +16,8 @@ public interface MemberDocumentService {
 	
 	int insertDoc(Document d, approversList request) throws Exception;
 	List<Document> selectInprocessDocs(int no);
+	List<Document> selectRetrieveDocs(int no);
+	int retrieveDoc(String docSerial) throws Exception;
+	
+	Document selectDocById(String docId);
 }

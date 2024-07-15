@@ -1,9 +1,14 @@
 package com.project.npnc.document.member.controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +26,7 @@ import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.approversList;
 import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,13 +49,42 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("folderlist", result);
 	}
-	@GetMapping("/inprocess")
+	
+	@GetMapping("/list/retrieve")
+	public void docRetrieve(Model m) {
+		log.debug("----회수 문서 조회----");
+		int memberNo=3;
+		List<Document> result = serv.selectRetrieveDocs(memberNo);
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	
+	@GetMapping("/list/inprocess")
 	public void inprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
 		int memberNo=3;
 		List<Document> result = serv.selectInprocessDocs(memberNo);
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
+	}
+	@PostMapping("/view/docDetail{docId}")
+	public void viewDoc(String docId, Model m, HttpSession session) {
+		Document document = null;
+		if(docId != null) {
+			log.debug("----" + docId + "번 문서 상세보기----");
+			session.setAttribute("docId", docId);
+		}else{
+			log.debug(docId);
+			docId = (String) session.getAttribute("docId");
+//			log.debug("----" + document.getErDocKey() + "번 문서 상세보기----");
+		}
+		document = serv.selectDocById(docId);
+		m.addAttribute("l", document);
+		log.debug("{}", document);
+		//문서파일 html 가져오기
+		String html = readHtmlFile(document);
+		m.addAttribute("html", html);
+		log.debug("{}", html);
 	}
 	@PostMapping("/formlist.do")
 	@ResponseBody
@@ -60,7 +95,7 @@ public class MemberDocumentController {
 //		m.addAttribute("formlist", result);
 		return result;
 	}
-	@PostMapping("/formsearch.do")
+	@PostMapping("/formsearch")
 	@ResponseBody
 	public List<DocumentForm> formList(String target, Model m) {
 		log.debug("----전자문서 양식명 "+ target+" 조회----");
@@ -73,21 +108,21 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		switch(form) {
 		case 1 :
-			//log.debug("----전자문서 작성시작----");
+			log.debug("----전자문서 작성시작----");
 			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
 		return "document/formlist.do";
 	}
-	@GetMapping("/doc1")
-	public void doc1Write() {
-	}
-	@GetMapping("/doc2")
-	public void doc2Write() {
-	}
-	@GetMapping("/doc3")
-	public void doc3Write() {
-	}
+//	@GetMapping("/doc1")
+//	public void doc1Write() {
+//	}
+//	@GetMapping("/doc2")
+//	public void doc2Write() {
+//	}
+//	@GetMapping("/doc3")
+//	public void doc3Write() {
+//	}
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
@@ -95,7 +130,7 @@ public class MemberDocumentController {
 	public String insertDoc(String msg, Document doc, String html, @ModelAttribute approversList request, Model m) {
 		int no = 3; //로그인 사원번호
 		doc.setErDocWriter(no);
-		doc.setErDocKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
 		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
 		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
@@ -104,8 +139,14 @@ public class MemberDocumentController {
 		int result=0;
 		
 		//문서, 결재자 insert
-		try { result = serv.insertDoc(doc, request);
-			} catch (Exception e) {e.printStackTrace();}
+		try { 
+			result = serv.insertDoc(doc, request);
+		} catch (Exception e) {
+//			m.addAttribute("msg", "[2] 결재자 저장 실패");
+//			m.addAttribute("loc", "/document/write");
+//			return "common/msg";
+			e.printStackTrace();
+		}
 		
 		//기안, 결재자 등록 성공시
 		if(result > 0) {
@@ -117,16 +158,23 @@ public class MemberDocumentController {
 	            log.debug("[3] html저장 성공");
 			}catch(IOException e) {
 				log.debug("[3] html저장 실패");
-				new Exception("[3] html저장 실패");
+				e.printStackTrace();
 			}
-		} else {//기안, 결재자 등록 실패시
-			log.debug("[2] 결재자 insert 실패");
-//			m.addAttribute("msg", "[2] 결재자 저장 실패");
-//			m.addAttribute("loc", "/document/write");
-//			return "common/msg";
-			new Exception("[2] 결재자 저장 실패");
-		}
+		} 
 		return "redirect:home"; //모두 성공시 홈으로
+	}
+	
+	@PostMapping("/retrieve")
+	@ResponseBody
+	public int retrieveDoc(String no) {
+		log.debug("------"+no + "번 문서 회수 요청------");
+		int result=0;
+		try {
+			result = serv.retrieveDoc(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	//html파일로 문서 저장 메소드
@@ -142,4 +190,24 @@ public class MemberDocumentController {
             writer.write(content);
             writer.close();
 	}
+	//html 파일 읽기
+	public String readHtmlFile(Document document) {
+        String path = uploadDir + "dochtml/" + document.getErDocFilename();
+        File file = new File(path);
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(
+        		new InputStreamReader(
+        				new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
 }

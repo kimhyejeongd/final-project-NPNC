@@ -4,11 +4,17 @@ package com.project.npnc.chatting.controller;
 
 import static com.project.npnc.chatting.model.dto.ChattingMessage.createChattingMessage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,19 +27,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.service.ChatService;
 
+import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final WebSocketEventListener webSocketEventListener;
-
+    private final ServletContext servletContext;
 	private final ChatService service;
     private Set<Integer> users = new HashSet<>();
 
-	
+
 	
 	@MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
@@ -50,9 +58,9 @@ public class ChatController {
             System.out.println("Insert result: " + chatInfo.get("seq"));
       
             ChattingMessage chat = createChattingMessage((int)chatInfo.get("seq"),message.getMemberKey(),roomId,  message.getChatMsgDetail(), message.getChatMsgTime(),"N",(int)chatInfo.get("readCount"));
-
-        System.out.println("After insertChat call"+ message);
-        System.out.println("After insertChat call"+ message);
+        
+        // 파일 메타 데이터 저장
+       //ChattingFile chattingFile= service.insertChattingFile(chattingFile);
 
         webSocketEventListener.broadcastOpenedSession(Integer.toString(roomId));
         
@@ -109,6 +117,37 @@ public class ChatController {
 		service.exitChatRoom(exitInfo);
 	}
 	
-	
-	
+    // 파일 업로드 핸들러 추가
+    @PostMapping("/upload")
+    @ResponseBody
+    public ChattingFile uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("chatId") int chatId, @RequestParam("memberId") int memberId) {
+        try {
+            // 고유한 파일 이름 생성 (UUID 사용)
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+            String uploadDir = servletContext.getRealPath("/resources/upload/"); // 원하는 경로로 변경
+
+            // 파일 저장 경로 설정
+            Path filePath = Paths.get(uploadDir, fileName);
+            // 파일 저장
+            Files.copy(file.getInputStream(), filePath);
+
+            // 파일 메타 데이터 생성
+            ChattingFile chattingFile = ChattingFile.builder()
+                    .memberKey(memberId)
+                    .chatMsgFileOri(file.getOriginalFilename())
+                    .chatMsgFilePost(filePath.toString())
+                    .chatFileTime(new Date(System.currentTimeMillis()))
+                    .chatRoomKey(chatId)
+                    .build();
+
+
+
+            return chattingFile;
+        } catch (IOException e) {
+            // 예외 처리 로직을 추가할 수 있습니다.
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
