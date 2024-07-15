@@ -107,4 +107,40 @@
 		VALUES(SEQ_ATTENDANCE.NEXTVAL,#{memberKey},SYSDATE,NULL,NULL,'결근',NULL)
 	</insert>
 
+	<!-- attendanceEdit -->
+
+	<resultMap type="attendanceEdit" id="attendanceEditMap">
+		<id column="ATTENDANCE_EDIT_KEY" property="attendanceEditKey"/>
+		<result column="ATTENDANCE_EDIT_MEMBER"  property="attendanceEditMember"/>
+		<result column="ATTENDANCE_EDIT_DATE"  property="attendanceEditDate"/>
+		<result column="ATTENDANCE_EDIT_REQUEST_DATE"  property="attendanceEditRequestDate"/>
+		<result column="ATTENDANCE_EDIT_STARTEND"  property="attendanceEditStartEnd"/>
+		<result column="ATTENDANCE_EDIT_BEFORETIME"  property="attendanceEditBeforeTime"/>
+		<result column="ATTENDANCE_EDIT_BEFORE_STATE"  property="attendanceEditBeforeState"/>
+		<result column="ATTENDANCE_EDIT_AFTERTIME"  property="attendanceEditAfterTime"/>
+		<result column="ATTENDANCE_EDIT_AFTER_STATE"  property="attendanceEditAfterState"/>
+		<result column="ATTENDANCE_EDIT_REQUEST"  property="attendanceEditRequest"/>
+		<result column="ATTENDANCE_EDIT_OPNION"  property="attendanceEditOpinion"/>
+		<association property="attendance" resultMap="attendance.attendancetMap"/>
+	</resultMap>
+
+
+	<insert id="insertAttendanceEdit" parameterType="attendanceEdit">
+		INSERT INTO ATTENDANCE_EDIT 
+			VALUES(SEQ_ATTENDANCE_EDIT.NEXTVAL,#{attendance.attendanceKey},#{attendanceEditMember},
+				#{attendanceEditDate},#{attendanceEditRequestDate},#{attendanceEditStartEnd},#{attendanceEditBeforeTime},
+				#{attendanceEditBeforeState},#{attendanceEditAfterTime},#{attendanceEditAfterState},#{attendanceEditRequest},
+				#{attendanceEditOpinion}) 
+	</insert>
+
+
+
+
+
+
+
+
+
+
+
 </mapper>

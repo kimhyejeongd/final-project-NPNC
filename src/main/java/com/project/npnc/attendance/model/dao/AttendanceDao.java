@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
 
 public interface AttendanceDao {
@@ -26,5 +27,11 @@ public interface AttendanceDao {
 	int insertAbsent(SqlSession session,int memberKey);
 	int startAttendance(SqlSession session, Attendance a);
 	int endAttendance(SqlSession session, Attendance a);
+	
+	//attendanceEdit
+	int insertAttendanceEdit(SqlSession session,AttendanceEdit ae);
+	
+	
+	
 	
 }

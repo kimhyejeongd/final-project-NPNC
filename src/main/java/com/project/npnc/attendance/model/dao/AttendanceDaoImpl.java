@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
@@ -82,6 +83,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	public Attendance selectAttendanceByAttendanceKey(SqlSession session, int attendanceKey) {
 		
 		return session.selectOne("attendance.selectAttendanceByAttendanceKey",attendanceKey);
+	}
+
+	@Override
+	public int insertAttendanceEdit(SqlSession session, AttendanceEdit ae) {
+		
+		return session.selectOne("attendance.inseertAttendanceEdit",ae);
 	}
 
 	

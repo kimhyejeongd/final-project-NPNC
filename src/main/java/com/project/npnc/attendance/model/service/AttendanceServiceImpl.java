@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dao.AttendanceDao;
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
 import lombok.RequiredArgsConstructor;
 
@@ -153,8 +154,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.selectAttendanceByAttendanceKey(session, attendanceKey);
 	}
-	
 
+	@Override
+	public int insertAttendanceEdit(AttendanceEdit ae) {
+		
+		return attendanceDao.insertAttendanceEdit(session, ae);
+	}
+	
+	
 	
 	
 	

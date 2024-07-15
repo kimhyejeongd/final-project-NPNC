@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 
@@ -174,7 +175,10 @@ public class AttendanceController{
 		
 	}
 	
-	
+	@PostMapping("/updateAttendanceEnd")
+	public void updateAttendanceEnd(AttendanceEdit ae) {
+		
+	}
 	
 	
 	

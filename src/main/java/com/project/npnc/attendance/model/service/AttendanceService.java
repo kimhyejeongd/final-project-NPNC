@@ -3,9 +3,8 @@ package com.project.npnc.attendance.model.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
-
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
 public interface AttendanceService {
 	
@@ -25,4 +24,12 @@ public interface AttendanceService {
 	int startAttendance(Attendance a);
 	int endAttendance(Attendance a);
 
+	//attendanceEdit
+	int insertAttendanceEdit(AttendanceEdit ae);
+ 	
+	
+	
+	
+	
+	
 }

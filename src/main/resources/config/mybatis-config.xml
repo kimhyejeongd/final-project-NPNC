@@ -17,5 +17,6 @@
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingMessage" alias="chattingMessage"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingGroup" alias="chattingGroup"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingRoom" alias="chattingRoom"/>	
+		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>	
 	</typeAliases>
 </configuration>
