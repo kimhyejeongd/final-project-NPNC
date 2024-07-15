@@ -15,12 +15,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>친구 목록</title>
 <style>
+#conversation {
+	flex: 1;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	padding: 10px;
+	overflow: hidden; /* 스크롤바 숨김 */
+	background-color: #fff;
+}
+
+#chatting {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	height: 100%; /* 부모 요소 크기에 맞추기 */
+}
 .unread-badge {
 	background-color: red;
 	color: white;
 	border-radius: 50%;
 	display: inline-block;
-	padding: 2px 6px;
+	padding: 0px 6px;
 	font-size: 0.8em;
 	font-weight: bold;
 	position: absolute;
@@ -37,16 +52,6 @@
 	display: flex;
 }
 
-/* body {
-	font-family: 'Arial', sans-serif;
-	background-color: #f0f0f0;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: flex-start; /* ìì : ììë ì¤í¬ë¡¤ ê°ë¥íê² */
-	min-height: 100vh; /* ì¶ê°: íë©´ í¬ê¸° ìµì ëì´ */
-} */
 
 .container {
 	background-color: #fff;
@@ -54,7 +59,6 @@
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	width: 400px;
 	max-width: 100%;
-	margin: 20px 0; /* ì¶ê°: ìí ë§ì§ */
 }
 
 .header {
@@ -68,19 +72,19 @@
 .tabs {
 	display: flex;
 	justify-content: space-around;
-	margin: 20px 0;
 	position: relative;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 .tab {
-	padding: 10px 20px;
+	padding: 5px 20px;
 	cursor: pointer;
 }
 
 .tab.active {
-	background-color: #4CAF50;
+	background-color: #1572e8;
 	color: white;
-	border-radius: 10px;
 }
 
 .menu-button {
@@ -88,7 +92,8 @@
 	border: none;
 	cursor: pointer;
 	font-size: 1.5em;
-	
+	position: relative;
+	left: 230px;	
 }
 
 .dropdown-menu1 {
@@ -215,6 +220,8 @@
 }
 
 .search-bar {
+    height: 26px;
+
 	width: 80%; /* ìë ¥ íëì ëë¹ë¥¼ ì¤ìëë¤ */
 	margin: 10px auto 20px; /* ì, ìë ì¬ë°±ê³¼ ìë ì¸ë¶ ì¬ë°±ì¼ë¡ ì¤ì ì ë ¬ */
 	padding: 8px 10px; /* í¨ë©ì ì¡°ì íì¬ ìë ¥ íëì ëì´ë¥¼ ì¡°ê¸ ì¤ìëë¤ */
@@ -226,6 +233,7 @@
 
 .modal-content {
 	width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
+	
 	padding: 20px;
 	border-radius: 10px;
 	text-align: center;
@@ -249,7 +257,7 @@
 
 .start-chat-btn {
 	padding: 10px 20px;
-	background-color: #4CAF50;
+	background-color: #1472e8;
 	color: white;
 	border: none;
 	border-radius: 5px;
@@ -258,11 +266,15 @@
 }
 
 .start-chat-btn:hover {
-	background-color: #45a049;
+	background-color: #4d8fed;
 }
+
+body{
+ overflow-style: none;
+ }
 </style>
 </head>
-<body>
+<body >
 	<div id="profileModal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>
@@ -275,16 +287,17 @@
 			</div>
 		</div>
 	</div>
+	
+	
 
 	<div class="container">
-		<div class="header">친구 목록</div>
-		<div class="tabs">
-			<div class="tab" data-tab="contacts">연락처</div>
-			<div class="tab active" data-tab="chat">채팅</div>
 			<button class="menu-button">&#9776;</button>
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
+		<div class="tabs">
+			<div class="tab" data-tab="contacts">연락처</div>
+			<div class="tab active" data-tab="chat">채팅</div>
 		</div>
 		<div id="contacts" class="content">
 			<input type="text" id="searchFriend" class="search-bar"
@@ -353,6 +366,7 @@
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
+
     //친구검색기능
     $('#searchFriend').on('input', function() {
         var searchValue = $(this).val().toLowerCase();
@@ -363,6 +377,7 @@
     
     
     $(document).ready(function() {
+    var myChatRoomList = ${mychatRoomListJ}; 
 
         var selectedMembers = [];
 
@@ -382,10 +397,12 @@
 
         // 모달 외부 클릭 시 닫기
         $(window).click(function(event) {
-          	 event.stopPropagation(); 
+         	 event.stopPropagation(); 
 
-            if ($(event.target).is('#newChatModal')) {
+        	if ($(event.target).is('#newChatModal')) {
                 $('#newChatModal').hide();
+            } else if ($('.dropdown-menu1').is(':visible') && !$(event.target).closest('.menu-button, .dropdown-menu1').length) {
+                $('.dropdown-menu1').hide();
             }
         });
 
@@ -600,23 +617,37 @@
                     
                     var unreadCount = response.unreadCount;
                     var unreadBadge = $("#unread-" + chatRoomKey);
-                    unreadBadge.text(unreadCount);
+
+
+                    unreadBadge.text(unreadCount); 
                     
                     if (unreadCount > 0) {
                         unreadBadge.show();
                     } else {
                         unreadBadge.hide();
                     }
+                    updateTotalUnreadCount();
+
                 },
                 error: function(error) {
                     console.log("====에러 ====");
                 }
             });
         }
+        
+        function updateTotalUnreadCount() {
+            var totalUnread = 0;
+            $('.unread-badge').each(function() {
+                var unreadCount = parseInt($(this).text());
+                if (!isNaN(unreadCount)) {
+                    totalUnread += unreadCount;
+                }
+            });
+            $('.notification').eq(0).text(totalUnread);
+        }
     });
 
 
-    $(document).ready(function() {
 
         // 친구 클릭 이벤트
         $('.friend-list').on('click', '.friend-item', function() {
@@ -686,7 +717,8 @@
                 $('#profileModal').hide();
             }
         });
-    });
+        
+        
 
 
 

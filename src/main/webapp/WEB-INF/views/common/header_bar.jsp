@@ -118,6 +118,8 @@
                       aria-expanded="false"
                     >
                       <i class="fa fa-envelope"></i>
+						<span class="notification">4</span>
+                      
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
                       aria-labelledby="messageDropdown">
@@ -131,7 +133,7 @@
                       <div id="messageContent">
           				<%-- 	<jsp:include page="${path }chatting/chatRoom.jsp"></jsp:include> 			        --%>   
 				        </div>
-                         <div class="message-notif-scroll scrollbar-outer">
+                         <div class="message-notif-scroll ">
                           <div class="notif-center">
                             
                           </div>

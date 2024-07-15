@@ -68,7 +68,7 @@
             #send {
             padding: 10px 20px;
             border: none;
-            background-color: #4CAF50;
+            background-color: #1472e8;
             color: white;
             cursor: pointer;
             border-radius: 0 10px 10px 0;
@@ -88,14 +88,13 @@
         max-width: 600px;
         background-color: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         height: 100vh;
     }
     .header {
-        background-color: #4CAF50;
+        background-color: #1472e8;
         color: #fff;
         padding: 10px;
         text-align: center;
@@ -157,7 +156,7 @@
         font-size: 0.9em;
     }
     .bubble.sent {
-        background-color: #dcf8c6;
+        background-color: #4d93f761;
     }
     .bubble.received {
         background-color: #fff;
@@ -169,14 +168,12 @@
         width: 0;
         height: 0;
         border: 10px solid transparent;
-    }
+    }1
     .bubble.sent::after {
-        border-left-color: #dcf8c6;
         right: -10px;
         top: 10px;
     }
     .bubble.received::after {
-        border-right-color: #fff;
         left: -10px;
         top: 10px;
     }
@@ -214,6 +211,18 @@
      .exit-button {
             position: absolute;
             bottom: 20px;
+            width: 90%;
+            left: 5%; /* 중앙 정렬 */
+            padding: 10px 0;
+            text-align: center;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+     .invite-button  {
+            position: absolute;
+            bottom: 68px;
             width: 90%;
             left: 5%; /* 중앙 정렬 */
             padding: 10px 0;
@@ -270,6 +279,7 @@
 <div class="sidebar" style="display:none;">
     <ul id="roomMemberList"></ul>
     <!-- 기타 메뉴 항목들 -->
+    <div class="invite-button">초대하기</div>
     <div class="exit-button">나가기</div>
 </div>
 
@@ -718,9 +728,9 @@ $('.exit-button').click(function() {
 
 
 
-<!--   <div>
+  <div>
     현재 채팅 세션 수: <span id="chatSessionCount"></span>
-</div>   -->
+</div>   
 
 
 
