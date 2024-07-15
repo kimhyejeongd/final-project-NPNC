@@ -728,9 +728,9 @@ $('.exit-button').click(function() {
 
 
 
-  <div>
+<!--   <div>
     현재 채팅 세션 수: <span id="chatSessionCount"></span>
-</div>   
+</div>    -->
 
 
 

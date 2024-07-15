@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.message.Message;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,6 @@ public class ChatService {
 		for(int i :currMemberKey) {
 			deleteInfo.put("currMemberKey", i);
 			dao.deleteReadBadge(session,deleteInfo);
-			System.out.println("--------"+i+"-----------");
 		}
 		
 
@@ -77,7 +75,6 @@ public class ChatService {
 	    // 접속 중인 멤버 키를 가져옴
 	    Set<String> connectedMemberKeys = webSocketEventListener.getConnectedMemberKeys(String.valueOf(chat.getChatRoomKey()), "chat");
 
-	    System.out.println(connectedMemberKeys.toString()+"============connectedMemberKeys");
 			
 		    for (ChattingGroup m : myRoomMembers) {
 		            Member member = dao.selectMemberByNo(session, m.getMemberKey());				
@@ -147,14 +144,12 @@ public class ChatService {
 		}
 		
 		public int selectUnreadCount(Map<String, Object> readInfo) {
-			System.out.println(readInfo.get("memberId")+"=======================");
 			return dao.selectUnreadCount(session,readInfo);
 		}
 		public void exitChatRoom(Map<String, Integer> exitInfo) {
 			
 			dao.exitChatRoom(session,exitInfo);
 			int roomStatus = dao.selectGroupStatus(session,exitInfo);
-			System.out.println(roomStatus);
 			if(roomStatus ==0) {
 				dao.deleteRoom(session,exitInfo);
 			}
