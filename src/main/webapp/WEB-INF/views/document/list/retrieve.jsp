@@ -63,7 +63,7 @@
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <!-- Projects table -->
-                      <table class="table table-hover align-items-center mb-0">
+                      <table class="table table-hover align-items-center mb-0" id="docTable">
                         <thead class="thead-light">
                           <tr class="text-center">
                           	<!-- <th><input type="checkbox"></th> -->
@@ -82,8 +82,8 @@
 	                         </c:if>
 	                         <c:if test="${doclist ne null}">
 	                         	<c:forEach items="${doclist }" var="l">
-		                         <tr class="text-center" id="tablerow">
-		                            <td class="text-muted" data-doc-id="${l.erDocKey }">${vs.index+1 }</td>
+		                         <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
+		                            <td class="text-muted">${vs.index+1 }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
@@ -134,20 +134,24 @@
 			}
 		});
 	};
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('docTable');
+
+    table.addEventListener('click', function(event) {
+        const row = event.target.closest('tr');
+        if (row && row.dataset.docId) {
+            const docId = row.dataset.docId;
+            console.log(docId);
+            selectDoc(docId);
+        }
+    });
 	//상세보기
-	function selectDoc(docid, path){
-		$.ajax(`${path}/document/rewrite`, {
-			method: "post",
-			headers: {
-				'Content-Type' : 'application/json'
-			},
-			body: JSON.stringify({documentId: docid})
-		}).response => {
-			if(response.ok){
-				location.assign(`${path}/document/view/`)
-			}
-		})
+	function selectDoc(docId){
+		const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
+		$("<input>").attr({'value': docId, 'type': 'text', 'name': 'docId'}).appendTo($form);
+		$form.appendTo("body").submit();
 	}
+});
 </script>
   </body>
 </html>

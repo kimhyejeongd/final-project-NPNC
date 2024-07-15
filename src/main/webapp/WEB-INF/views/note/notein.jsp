@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/notesession">
+	<form action="/notehome">
 		<input type="number" name="memberKey" value="멤버아이디">
 		<button type="submit">submit</button>
 	</form>

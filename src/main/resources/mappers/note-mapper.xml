@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="note">
+	
+	<resultMap id="noteRecMap" type="noteRec">
+		<result column="POST_MSG_REC_KEY" property="postMsgRecKey"></result>
+		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="POST_MSG_DETAIL" property="postMsgDetail"></result>
+		<result column="POST_MSG_TIME" property="postMsgTime"></result>
+		<result column="POST_MSG_RESERVATION" property="postMsgReservation"></result>
+		<result column="POST_MSG_TITLE" property="postMsgTitle"></result>
+		
+	</resultMap> 
+	<resultMap id="noteSendMap" type="noteSend">
+
+		<result column="POST_MSG_SEND_KEY" property="postMsgSendKey"></result>
+		<result column="SEND_MEMBER_KEY" property="sendMemberKey"></result>
+		<result column="POST_MSG_SEND_TITLE" property="postMsgSendTitle"></result>
+		<result column="POST_MSG_SEND_DETAIL" property="postMsgSendDetail"></result>
+		<result column="POST_MSG_SEND_TIME" property="postMsgSendTime"></result>
+		<result column="POST_MSG_SEND_RESERVATION" property="postMsgSendReservation"></result>
+		
+		
+	</resultMap> 
+	
+	<insert id="noteOneWrite" parameterType="noteRec">
+	INSERT INTO POST_MESSAGE_RECEPTION VALUES(#{postMsgRecKey} , #{memberKey} ,#{postMsgDetail} ,SYSDATE ,NULL, #{postMsgTitle})
+	</insert>
+	
+	<insert id="noteReciver" parameterType="map">
+	INSERT INTO POST_MESSAGE_RECEIVER VALUES(SEQ_PMR.NEXTVAL,#{reMemberKey} ,#{noteMsgKey}, DEFAULT)	
+	</insert>
+	
+	
+	<select id="noteMsgKey" resultType="_int">
+		      select SEQ_PM.NEXTVAL from dual
+		
+	</select>
+	<select id="noteSelectAll" resultMap="noteRecMap">
+		SELECT * FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER USING (POST_MSG_REC_KEY) 
+		WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N' ORDER BY POST_MSG_REC_KEY DESC
+	</select>
+	<select id="noteSelectTotalData" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER 
+		USING (POST_MSG_REC_KEY)WHERE MEMBER_REC_KEY=#{memberKey}
+
+	</select>
+	<select id="noteSelectOne" resultMap="noteRecMap">
+		SELECT * FROM POST_MESSAGE_RECEPTION WHERE POST_MSG_REC_KEY='181'
+	</select>
+	
+	<select id="sendNoteOneWrite" resultType="_int" parameterType="noteRec">
+		INSERT INTO POST_MESSAGE_SEND 
+		VALUES(#{postMsgRecKey}, #{memberKey}, #{postMsgTitle}, #{postMsgDetail}, SYSDATE, NULL, DEFAULT )
+		
+	</select>
+</mapper>

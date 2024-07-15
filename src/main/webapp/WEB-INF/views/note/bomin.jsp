@@ -5,6 +5,8 @@
 
 <!DOCTYPE html>
 <html>
+	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
 	
   <head>
   	<meta charset="UTF-8">
@@ -339,216 +341,14 @@
         <div class="container">
         <!-- page-inner -->
           <div class="page-inner">
-          
-          <div>
-          <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-           <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
-            </div>
-                      
-           <h2> 쪽지</h2>
-           
-           <div>
-           	    <c:forEach var="d" items="${list}">
-           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-           	  	<p>${d.memberKey}<p>
-           	  </c:forEach> 
-           		<input type="number" name="memberKey" id="memberKey">
-           		<input type="text" name="postMsgDetail" id="postMsgDetail">
-           	   <button class="btn btn-success" onclick="notego();">Submit</button>
-           </div>
-           
-           <!-- 다중 전송 메소드 -->
-           <%-- <form action="${path}/notewrite2"> --%>
-           <div>
-           	  <c:forEach var="d" items="${list}">
-           	    <input type="checkbox"  name="reMemberKey" value="${d.memberKey }">
-           	  	<p>${d.memberKey}<p>
-           	  </c:forEach>
-           		<input type="number" name="memberKey" id="memberKey2">
-           		<input type="text" name="postMsgDetail" id="postMsgDetail2">
-           	   <button class="btn btn-success" onclick="notelistgo();">Submit</button>
-           </div>
-           
-           <!-- 전체발송 메소드 -->
-           <button class="btn btn-success" onclick="allnotego();">Submit</button>
+          <!-- 여기다가 캘린더 내용 넣어  -->
           </div>
-          <!--  -->
-           <form action="${path}/schedule/message" method="post">
-		        <label for="second">초:</label>
-		        <input type="number" id="second" name="second" min="0" max="59" required><br><br>
-		        <label for="minute">분:</label>
-		        <input type="number" id="minute" name="minute" min="0" max="59" required><br><br>
-		        <label for="hour">시:</label>
-		        <input type="number" id="hour" name="hour" min="0" max="23" required><br><br>
-		        <label for="dayOfMonth">일:</label>
-		        <input type="number" id="dayOfMonth" name="dayOfMonth" min="1" max="31" required><br><br>
-		        <label for="month">월:</label>
-		        <input type="number" id="month" name="month" min="1" max="12" required><br><br>
-		        <label for="dayOfWeek">요일:</label>
-		        <input type="number" id="dayOfWeek" name="dayOfWeek" min="0" max="7" required><br><br>
-		        <input type="submit" value="예약 발송">
-    		</form>
+       
         </div>
                     
         
         
-		<script>
-		    var stompClient = null;
-				
-		    function setConnected(connected) {
-		        $("#connect").prop("disabled", connected);
-		        $("#disconnect").prop("disabled", !connected);
-		        if (connected) {
-		            $("#conversation").show();
-		        }
-		        else {
-		            $("#conversation").hide();
-		        }
-		        $("#greetings").html("");
-		    }
-		    
-		    
-            // 선택된 라디오 버튼의 값을 가져옴
-			
-            
-		    function notego(){
-
-	           
-	            var selectedRadio = document.getElementsByName('reMemberKey1');
-	            var reMemberKey1=null;
-	            	  for(let i=0; i<selectedRadio.length;i++){
-	                        if(selectedRadio[i].checked){
-	                              var reMemberKey1=selectedRadio[i].value;  
-	                         }
-	                  }
-				
-	            // 나머지 인풋 값들을 가져옴
-	            var memberKey = document.getElementById('memberKey').value;
-	            var postMsgDetail = document.getElementById('postMsgDetail').value;
-
-		    	$.ajax({
-		    		url : '${path}/notewrite',
-		    		type : 'POST',
-		    		data : {
-		    			"reMemberKey" : reMemberKey1,
-		    			"memberKey" : memberKey,
-		    			"postMsgDetail" : postMsgDetail
-		    			
-		    		},
-		    		success : function(){
-		    			alert('성공');
-		    				
-		    			send(reMemberKey1, memberKey);
-		    		}
-		    	});
-		    	 
-		    }
-            /* 알람 다중 전송 */
-            function notelistgo(){
-            	var selectedCheck = document.getElementsByName('reMemberKey');
- 	            let reMemberKey=[];
- 	           for(let i=0; i<selectedCheck.length;i++){
-                   if(selectedCheck[i].checked){
-                         reMemberKey.push(selectedCheck[i].value);  
-                    }
-             }
- 	          var memberKey = document.getElementById('memberKey2').value;
-	           var postMsgDetail = document.getElementById('postMsgDetail2').value;
-
- 	       	$.ajax({
-	    		url : '${path}/notewrite2',
-	    		type : 'POST',
-	    		data : {
-	    			"reMemberKey" : reMemberKey,
-	    			"memberKey" : memberKey,
-	    			"postMsgDetail" : postMsgDetail
-	    			
-	    		},
-	    		success : function(){
-	    			alert('성공');
-	    			for (let i=0; i<reMemberKey.length;i++)	{
-	    				send(reMemberKey[i], memberKey);
-	    			}
-	    		}
-	    	});
-
-            }
-            /* 전체 note 발송 */
-            
-            function allnotego(){
-   	          var memberKey =${loginMember.memberKey};
-			
-            	sendAll(memberKey);
-            }
-
-		    function connect() {
-		        let socket = new SockJS('http://localhost:8080/ws-stomp');
-		        stompClient = Stomp.over(socket);
-		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
-		            setConnected(true);
-		            console.log('Connected: ' + frame);
-		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
-		                console.log('구독 중', msg);
-		            });
-		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
-		                console.log('구독 중', msg);
-		            });
-		        });
-		    }
-		   
-		   	function send(reMemberKey1, memberKey){
-		   	 console.log('send보내짐');
-		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
-		   			JSON.stringify({
-		   				'reMemberKey' : reMemberKey1,
-		   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
-		   				
-		   			})
-		   				
-		   		);
-		   	} 
-		   	
-		   	function sendAll(memberKey){
-			   	 console.log('send보내짐');
-			   		stompClient.send("/pub/all",{},
-			   			JSON.stringify({
-			   				
-			   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
-			   				
-			   			})
-			   				
-			   		);
-			   	} 
-		   
-		    
-		    function disconnect() {
-		        if (stompClient !== null) {
-		            stompClient.disconnect();
-		        }
-		        setConnected(false);
-		        console.log("Disconnected");
-		    }
-			
-		    window.onload = function () {
-		        connect();
-		    }
-
-		    window.onbeforeunload = function () {
-		        disconnect();
-		    }
-		    
-		
-		</script>
+	
         <!-- footer -->
           <%@ include file="/WEB-INF/views/common/footer.jsp" %>
       </div>
@@ -749,10 +549,8 @@
       <!-- End Custom template -->
     </div>
     <!--   Core JS Files   -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
     <%-- <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script> --%>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
 
     <!-- jQuery Scrollbar -->
@@ -786,33 +584,6 @@
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="${path}/resources/assets/js/setting-demo.js"></script>
     <script src="${path}/resources/assets/js/demo.js"></script>
-    <script>
-      $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
-        type: "line",
-        height: "70",
-        width: "100%",
-        lineWidth: "2",
-        lineColor: "#177dff",
-        fillColor: "rgba(23, 125, 255, 0.14)",
-      });
-
-      $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
-        type: "line",
-        height: "70",
-        width: "100%",
-        lineWidth: "2",
-        lineColor: "#f3545d",
-        fillColor: "rgba(243, 84, 93, .14)",
-      });
-
-      $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
-        type: "line",
-        height: "70",
-        width: "100%",
-        lineWidth: "2",
-        lineColor: "#ffa534",
-        fillColor: "rgba(255, 165, 52, .14)",
-      });
-    </script>
+   
   </body>
 </html>

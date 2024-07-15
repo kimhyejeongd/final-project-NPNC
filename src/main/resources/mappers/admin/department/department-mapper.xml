@@ -6,15 +6,23 @@
 		<result column="DEPARTMENT_NAME" property="deptName"/>
 	</resultMap>
   <select id="selectDeptAll" resultMap="deptMap">
-  		SELECT * FROM DEPARTMENT
+  		SELECT 
+  			DEPARTMENT_KEY,
+  		 	DEPARTMENT_NAME
+  				FROM DEPARTMENT
   </select>
   <insert id="insertDept" parameterType="department">
-  		INSERT INTO DEPARTMENT VALUES('D'||SEQ_DEPARTMENT.NEXTVAL,#{deptName})
+  		INSERT INTO DEPARTMENT 
+  			VALUES('D'||SEQ_DEPARTMENT.NEXTVAL,#{deptName})
   </insert>
   <update id="updateDept" parameterType="department">
-  		UPDATE DEPARTMENT SET DEPARTMENT_NAME=#{deptName} WHERE DEPARTMENT_KEY=#{deptKey}
+  		UPDATE DEPARTMENT 
+  			SET DEPARTMENT_NAME=#{deptName} 
+  			WHERE DEPARTMENT_KEY=#{deptKey}
   </update>
   <delete id="deleteDept" parameterType="string">
-  		DELETE FROM DEPARTMENT WHERE DEPARTMENT_KEY=#{deptKey}
+  		DELETE 
+  			FROM DEPARTMENT 
+  			WHERE DEPARTMENT_KEY=#{deptKey}
   </delete>
 </mapper>

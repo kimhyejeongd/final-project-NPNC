@@ -1,9 +1,14 @@
 package com.project.npnc.document.member.controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +26,7 @@ import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.approversList;
 import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,12 +67,26 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@PostMapping("/view/docDetail")
-	public void viewDoc(String docId, Model m) {
-		log.debug("----" + docId + "문서 상세보기----");
-		m.addAttribute("doc", serv.selectDocById(docId));
+	@PostMapping("/view/docDetail{docId}")
+	public void viewDoc(String docId, Model m, HttpSession session) {
+		Document document = null;
+		if(docId != null) {
+			log.debug("----" + docId + "번 문서 상세보기----");
+			session.setAttribute("docId", docId);
+		}else{
+			log.debug(docId);
+			docId = (String) session.getAttribute("docId");
+//			log.debug("----" + document.getErDocKey() + "번 문서 상세보기----");
+		}
+		document = serv.selectDocById(docId);
+		m.addAttribute("l", document);
+		log.debug("{}", document);
+		//문서파일 html 가져오기
+		String html = readHtmlFile(document);
+		m.addAttribute("html", html);
+		log.debug("{}", html);
 	}
-	@PostMapping("/formlist")
+	@PostMapping("/formlist.do")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -88,11 +108,11 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		switch(form) {
 		case 1 :
-			//log.debug("----전자문서 작성시작----");
+			log.debug("----전자문서 작성시작----");
 			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
-		return "document/formlist";
+		return "document/formlist.do";
 	}
 //	@GetMapping("/doc1")
 //	public void doc1Write() {
@@ -170,4 +190,24 @@ public class MemberDocumentController {
             writer.write(content);
             writer.close();
 	}
+	//html 파일 읽기
+	public String readHtmlFile(Document document) {
+        String path = uploadDir + "dochtml/" + document.getErDocFilename();
+        File file = new File(path);
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(
+        		new InputStreamReader(
+        				new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
 }
