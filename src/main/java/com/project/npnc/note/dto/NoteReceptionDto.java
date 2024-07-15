@@ -11,14 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class NoteDto {
+
+public class NoteReceptionDto {
 	
-	private int postMsgKey;
+	private int postMsgRecKey;
 	private int memberKey;
 	private String postMsgDetail;
 	private Date postMsgTime;
 	private Date postMsgReservation;
-	
+	private String postMsgTitle;
 	
 	
 }

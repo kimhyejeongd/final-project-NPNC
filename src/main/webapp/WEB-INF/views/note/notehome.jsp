@@ -33,7 +33,7 @@
           ],
           urls: ["${path}/resources/assets/css/fonts.min.css"],
         },
-        active: function () {
+        active: function () {  
           sessionStorage.fonts = true;
         },
       });
@@ -120,6 +120,7 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   </head>
   <body>
+  
     <div class="wrapper">
       <!-- Sidebar -->
       <div class="sidebar" data-background-color="dark">
@@ -188,20 +189,21 @@
         <!-- header_bar  -->
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
        
-
+		
         <div class="container">
           <div class="page-inner">
+          <input type="hidden" name="hiddenField" id="memberKey" value="${loginMember.memberKey}">
+          
             <div
               class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
             >
               <div>
                 <h3 class="fw-bold mb-3">받은쪽지함</h3>
-                <h6 class="op-7 mb-2">총 93건의 쪽지가 있습니다.</h6>
+                <h6 class="op-7 mb-2">총 ${totalData}건의 쪽지가 있습니다.</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                <button type="button" class="modal_btn btn btn-label-info btn-round me-2">쪽지 발송</button>
-                
-                <a href="#" class="btn btn-primary btn-round">전체 쪽지 발송</a>
+               <button type="button" class="modal_btn btn btn-primary btn-round">전체 쪽지 발송</button> 
                 <!-- <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a> -->
               </div>
             </div>
@@ -220,18 +222,18 @@
                           <tr>
                             <th>Number</th>
                             <th>보낸이</th>
-                            <th>Detail</th>
+                            <th>title</th>
                             <th>Date</th>
                             
                           </tr>
                         </thead>
                        
                         <tbody id="pagingtbody">
-                      <c:forEach var="d" items="${notelist}">
+                      <c:forEach var="d" items="${notelist}" varStatus="status">
            	    			<tr>
-           	  					<th>${d.postMsgKey}<p>
+           	  					<th>${d.postMsgRecKey}<p>
            	  					<th>${d.memberKey}<p>
-           	  					<th>${d.postMsgDetail}<p>
+           	  					<th>${d.postMsgTitle}<p>
            	  					<th>${d.postMsgTime}<p>
            	  				</tr>
           		 	  </c:forEach>
@@ -307,7 +309,7 @@
 			                            <textarea
 			                              class="form-control"
 			                              aria-label="With textarea"
-			                              id=""
+			                              id="postMsgTitle"
 			                              rows="1" cols="50"
 			                            ></textarea>
 			                          </div>
@@ -324,8 +326,47 @@
 			                          </div>
                     			   </div>		           	   
 								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px; onclick="notego();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" onclick="notego();">닫기</button>
+								<button class="btn btn-primary" style="margin-right: 10px;" onclick="notego();">전송</button>
+								<button class="btn btn-primary btn-border close_btn" >닫기</button>
+								</div>
+				          </div>
+				    </div>
+			  </div>
+			        <div class="modal">
+				    <div class="modal_popup">
+				         <div>
+				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
+				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
+				           	  	<p>${d.memberKey}<p>
+				           	  </c:forEach>  --%>
+				           	  <div class="form-group">
+				           		   <h2>전체 쪽지</h2>
+				           	</div>   
+				           		    <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">제목</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id="postMsgTitleAll"
+			                              rows="1" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>		
+								   <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">내용</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id="postMsgDetailAll"
+			                              rows="8" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>		           	   
+								 <div class="form-group">
+								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
+								<button class="btn btn-primary btn-border close_btn" >닫기</button>
 								</div>
 				          </div>
 				    </div>
@@ -336,20 +377,32 @@
 		    </script>
           	<script>
           	
-          	const modal = document.querySelector('.modal');
-          	const modalOpen = document.querySelector('.modal_btn');
-          	const modalClose = document.querySelector('.close_btn');
-
+          	const modal = document.querySelectorAll('.modal');
+            const modalButtons = document.querySelectorAll('.modal_btn');
+          	const modalCloses = document.querySelectorAll('.close_btn');
+		
           	//열기 버튼을 눌렀을 때 모달팝업이 열림
-          	modalOpen.addEventListener('click',function(){
-          	  	//'on' class 추가
-          	    modal.classList.add('on');
-          	});
-          	//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
-          	modalClose.addEventListener('click',function(){
-          	    //'on' class 제거
-          	    modal.classList.remove('on');
-          	});
+          	   modalButtons.forEach((button, index) => {
+		            button.addEventListener('click', function() {
+		                // 인덱스 출력
+		                console.log('Modal button index:', index);
+		
+		                // 'on' 클래스 추가
+		                modal[index].classList.add('on');
+		            });
+		        });
+          	
+          	modalCloses.forEach((button, index) => {
+	            button.addEventListener('click', function() {
+	                // 인덱스 출력
+	                console.log('Modal button index:', index);
+	
+	                // 'on' 클래스 추가
+	                modal[index].classList.remove('on');
+	            });
+	        });
+          	
+          	
           	/* 쪽지 발송 발송 멤버 추가 로직 */
             function memberselect(memberKey,memberName,jobName){
       			var namebox=document.getElementsByClassName("namebox");
@@ -369,6 +422,8 @@
 		                newElement.classList.add("badge-info");
 		                newElement.classList.add("badge-margin");
 		                newElement.classList.add("badge-margin");
+		               	newElement.setAttribute('name', 'reMemberKey1');
+
 		                newElement.id=memberKey;
 		                newElement.textContent=memberName+' '+jobName;
 		                namebox[0].appendChild(newElement);
@@ -411,6 +466,7 @@
 		                newElement.classList.add("badge-info");
 		                newElement.classList.add("badge-margin");
 		                newElement.classList.add("badge-margin");
+		               	newElement.setAttribute('name', 'reMemberKey1');
 		                newElement.id=memberKey;
 		                newElement.textContent=memberName+' '+jobName;
 		                
@@ -421,29 +477,82 @@
             	
 
       		}
-
+         	function send(reMemberKey1, memberKey){
+   		   	 console.log('send보내짐');
+   		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
+   		   			JSON.stringify({
+   		   				'reMemberKey' : reMemberKey1,
+   		   				'memberKey' : memberKey,
+   		   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
+   		   				
+   		   			})
+   		   				
+   		   		);
+		   		  
+   		   	} 
 
             function notego(){
 
  	           
 	            var selectedRadio = document.getElementsByName('reMemberKey1');
-	            var reMemberKey1=null;
+	            var reMemberKey1=[];
 	            	  for(let i=0; i<selectedRadio.length;i++){
-	                        if(selectedRadio[i].checked){
-	                              var reMemberKey1=selectedRadio[i].value;  
-	                         }
+	                       
+	                              reMemberKey1.push( selectedRadio[i].id);  
+	                         
 	                  }
-				
+				console.log(reMemberKey1);
 	            // 나머지 인풋 값들을 가져옴
 	            var memberKey = document.getElementById('memberKey').value;
+	            console.log(memberKey);
 	            var postMsgDetail = document.getElementById('postMsgDetail').value;
-
+	            console.log(postMsgDetail);
+				var postMsgTitle =document.getElementById('postMsgTitle').value;
+				console.log(postMsgTitle);
 		    	$.ajax({
 		    		url : '${path}/notewrite',
 		    		type : 'POST',
 		    		data : {
 		    			"reMemberKey" : reMemberKey1,
 		    			"memberKey" : memberKey,
+		    			"postMsgTitle" : postMsgTitle,
+		    			"postMsgDetail" : postMsgDetail
+		    			
+		    		},
+		    		success : function(){
+		    			alert('성공');
+		    			for (let i=0; i<reMemberKey1.length;i++)	{
+		    				send(reMemberKey1[i], memberKey);
+		    			}
+		    			
+		    			/* send(reMemberKey1, memberKey); */
+		    		}
+		    	});
+		    	modal[0].classList.remove('on');
+	      		var namebox=document.getElementsByClassName("namebox");
+	      	 	document.getElementById('postMsgDetail').value='';
+	      		document.getElementById('postMsgTitle').value='';
+		    	namebox[0].innerHTML = '';
+		    }
+          	
+            function noteAllgo(){
+
+  	           
+	          
+	            // 나머지 인풋 값들을 가져옴
+	            var memberKey = document.getElementById('memberKey').value;
+	            console.log(memberKey);
+	            var postMsgDetail = document.getElementById('postMsgDetailAll').value;
+	            console.log(postMsgDetail);
+				var postMsgTitle =document.getElementById('postMsgTitleAll').value;
+				console.log(postMsgTitle);
+		    	$.ajax({
+		    		url : '${path}/noteAllwrite',
+		    		type : 'POST',
+		    		data : {
+		    		
+		    			"memberKey" : memberKey,
+		    			"postMsgTitle" : postMsgTitle,
 		    			"postMsgDetail" : postMsgDetail
 		    			
 		    		},
@@ -453,9 +562,12 @@
 		    			/* send(reMemberKey1, memberKey); */
 		    		}
 		    	});
-		    	 modal.classList.remove('on');
+		    	
+		    	document.getElementById('postMsgDetailAll').value='';
+	      		document.getElementById('postMsgTitleAll').value='';
+		    	 modal[1].classList.remove('on');
 		    }
-          	
+            
           	
           	
           	
@@ -489,10 +601,14 @@
           		}
           		
           		function fn_paging(pageNo){
+    	            var memberKey = document.getElementById('memberKey').value;
+
 					$.ajax({
 						url : '${path}/notepaging',
 						type : 'POST',
-						data : {cPage : pageNo},
+						data : {cPage : pageNo,
+								memberKey: memberKey
+								},
 						success : function(response){
 							var tbody=$('#pagingtbody');
 							tbody.empty();
@@ -500,9 +616,9 @@
 
 						  $.each(response.notepagelist, function(index, item) {
 				                    var row = `<tr>
-				                        <td>\${item.postMsgKey}</td>
+				                        <td>\${item.postMsgRecKey}</td>
 				                        <td>\${item.memberKey}</td>
-				                        <td>\${item.postMsgDetail}</td>
+				                        <td>\${item.postMsgTitle}</td>
 				                        <td>\${item.postMsgTime}</td>
 				                    </tr>`;
 				                    tbody.append(row);
