@@ -362,23 +362,6 @@
 				 <script type="text/javascript">
 				 
 					 $(document).ready(function() {
-					        function subscribeToRoom(roomId, recentMessageElement) {
-					            var socket = new SockJS('http://localhost:8080/ws-stomp');
-					            var stompClient = Stomp.over(socket);
-					            stompClient.connect({"type":"header","loginMemberKey":${loginMember.memberKey}}, function(connect) {
-					                console.log('Connected to room ' + roomId + ': ' + connect);
-					                
-					                stompClient.subscribe('/roomSession/' + roomId, function(status) {
-					                    
-
-					                });
-
-
-					          
-					            });
-					            
-					            
-					        }
 					        // Ã«ÂÂÃ«Â¡Â­Ã«ÂÂ¤Ã¬ÂÂ´ Ã«Â©ÂÃ«ÂÂ´ÃªÂ°Â Ã«Â³Â´Ã¬ÂÂ¼ Ã«ÂÂ Ã­ÂÂ¹Ã¬Â Â JSP Ã­ÂÂÃ¬ÂÂ´Ã¬Â§ÂÃ«Â¥Â¼ Ã«Â¡ÂÃ«ÂÂ
 
 					        $('#messageDropdown').on('show.bs.dropdown', function() {
@@ -413,14 +396,8 @@
 					            	    		$('#organcontainer').html("");
 					            	    		$('#organcontainer').html(response);
 					            	    	}
-					            	    	
-					            	    	
-					            	    	 
 					            	     });
-					            	     
 					               });   
-
-
 					            }
 					         );
 

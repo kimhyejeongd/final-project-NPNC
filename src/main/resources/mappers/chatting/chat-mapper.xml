@@ -37,9 +37,9 @@
 		FROM   chatting_is_read cir
 		       LEFT JOIN chatting_message cm
 		              ON cir.chat_msg_key = cm.chat_msg_key
-		WHERE  cir.member_key = # {memberKey}
-		       AND cm.chat_room_key = # {roomId}
-		       AND cm.member_key != # {memberKey} 
+		WHERE  cir.member_key = #{memberKey}
+		       AND cm.chat_room_key = #{roomId}
+		       AND cm.member_key != #{memberKey} 
 	</select>
 	<select id="selectMyChatRoomList" parameterType="int" resultMap="chattingRoomResultMap">
 		SELECT * 

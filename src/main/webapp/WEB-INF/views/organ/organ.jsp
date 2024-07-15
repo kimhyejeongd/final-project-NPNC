@@ -9,13 +9,17 @@
 </head>
 <body>
 <style>
-.status-dot {
-    height: 10px;
-    width: 10px;
-    background-color: green;
-    border-radius: 50%;
-    display: inline-block;
-}
+              .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: red; /* 기본값: 오프라인 */
+        }
+
+        .online {
+            background-color: green;
+        }
 </style>
 
 	<div class="accordion" id="accordionPanelsStayOpenExample">
@@ -33,7 +37,7 @@
 			      <div class="accordion-body" style='padding: 0!important;'>
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
-						  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
+						  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
 						  <div>
 						  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
 	                        <i class="fas fa-envelope"></i>
@@ -59,8 +63,44 @@
 
  <script>
             
-           
-          
+				 var stompClient = null;
+				
+				 function connect() {
+				     var socket = new SockJS('/ws-stomp');
+				     stompClient = Stomp.over(socket);
+				     stompClient.connect({}, function (frame) {
+				         console.log('Connected: ' + frame);
+				         stompClient.subscribe('/topic/status', function (message) {
+				        	 console.log("Raw message: ", message); // 추가 로그
+				        	    var status = JSON.parse(message.body);
+				        	    console.log("Parsed message: ", status); // 추가 로그
+				        	    updateUserStatus(status.username, status.isOnline);
+				         });
+				         stompClient.subscribe('/user/queue/users', function (message) {
+				             var users = JSON.parse(message.body);
+				             console.log("Current users123: ", users);
+				             for (var username in users) {
+				                 if (users.hasOwnProperty(username)) {
+				                     updateUserStatus(username, users[username]);
+				                 }
+				             }
+				         });
+				     });
+				 }
+				
+			       function updateUserStatus(username, isOnline) {
+			            var statusDot = document.getElementById('status-dot-' + username);
+			            console.log(statusDot);
+			            if (!statusDot) {
+			                console.error('status-dot element not found for user: ' + username);
+			                return;
+			            }
+			            
+			            statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
+			        }
+				
+				 connect();
+				          
    			
 
           	//열기 버튼을 눌렀을 때 모달팝업이 열림

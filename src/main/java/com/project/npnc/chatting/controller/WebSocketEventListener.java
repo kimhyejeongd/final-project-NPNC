@@ -1,14 +1,15 @@
 package com.project.npnc.chatting.controller;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -19,7 +20,11 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import jakarta.servlet.http.Cookie;
+import com.google.gson.Gson;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -30,6 +35,44 @@ public class WebSocketEventListener {
 	private final Map<String, WebSocketSession> roomListSessions = new ConcurrentHashMap<>();
 	private final Map<String, String> sessionMemberMap = new ConcurrentHashMap<>();
 	private final Map<String, String> websocketSessions = new HashMap<>();
+    private final ConcurrentMap<String, Boolean> userStatusMap = new ConcurrentHashMap<>();
+
+    @EventListener
+    public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+        Principal user = event.getUser();
+        System.out.println("PrincipalUser"+user.getName());
+        if (user != null) {
+            userStatusMap.put(user.getName(), true);
+            sendUserStatus(user.getName(), true);
+            messagingTemplate.convertAndSendToUser(user.getName(), "/queue/users", new HashMap<>(userStatusMap));
+
+        }
+    }
+
+    @EventListener
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+        Principal user = event.getUser();
+        if (user != null) {
+            userStatusMap.put(user.getName(), false);
+            sendUserStatus(user.getName(), false);
+        }
+    }
+
+    private void sendUserStatus(String username, boolean isOnline) {
+        Gson gson = new Gson();
+        UserStatus user = new UserStatus(username, isOnline);
+        String message = gson.toJson(user);
+        System.out.println("Sending message: " + message); // 로그 추가
+        messagingTemplate.convertAndSend("/topic/status", message);
+    }
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserStatus {
+        private String username;
+        private boolean isOnline;
+    }
 
 	@EventListener
 	private void onSessionConnectedEvent(SessionConnectedEvent event) {
