@@ -308,11 +308,13 @@
 	
 	  </style>
       <div class="main-header">
+
       		<!-- <form action="/chatRoom" method="get">
 			    <label for="userInput">Enter Value:</label>
 			    <input type="text" id="userInput" name="inputValue" required="">
 			    <button type="submit">Submit</button>
 			</form> -->
+
             <div class="main-header-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
@@ -445,6 +447,8 @@
                       aria-expanded="false"
                     >
                       <i class="fa fa-envelope"></i>
+						<span class="notification">4</span>
+                      
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
                       aria-labelledby="messageDropdown">
@@ -458,7 +462,7 @@
                       <div id="messageContent">
           				<%-- 	<jsp:include page="${path }chatting/chatRoom.jsp"></jsp:include> 			        --%>   
 				        </div>
-                         <div class="message-notif-scroll scrollbar-outer">
+                         <div class="message-notif-scroll ">
                           <div class="notif-center">
                             
                           </div>

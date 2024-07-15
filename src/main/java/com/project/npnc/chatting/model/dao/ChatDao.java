@@ -11,7 +11,7 @@ import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.security.dto.Member;
 
 @Repository
 public class ChatDao {
@@ -109,8 +109,14 @@ public class ChatDao {
 	public void insertChattingFile(SqlSessionTemplate session, ChattingFile chattingFile) {
 		session.insert("chat.insertChattingFile",chattingFile);
 	}
-	public void selectFileSeq(SqlSessionTemplate session) {
-		session.insert("chat.selectFileSeq");
+	public int selectFileSeq(SqlSessionTemplate session) {
+		return session.selectOne("chat.selectFileSeq");
+	}
+	public int selectGroupStatus(SqlSessionTemplate session, Map<String, Integer> exitInfo) {
+		return session.selectOne("chat.selectGroupStatus",exitInfo);
+	}
+	public void deleteRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
+		session.delete("chat.deleteRoom",exitInfo);
 	}
 
 }
