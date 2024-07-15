@@ -11,7 +11,7 @@ import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.security.dto.Member;
 
 @Repository
 public class ChatDao {

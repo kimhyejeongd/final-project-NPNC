@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +47,7 @@ public class HomeController {
 			param.put("memberSize", memberNo.size());
 			roomId = service.selectRoomId(param);
 		}
-		Member loginMember =(Member) session.getAttribute("loginMember");
-		System.out.println("HomeController Chat");
+		Member loginMember =getCurrentUser();
 		
 		int loginMemberKey = loginMember.getMemberKey();
 		
@@ -59,7 +58,8 @@ public class HomeController {
 		readInfo.put("roomId", roomId);
 		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
 		
-		System.out.println(chats.toString()+"=================chats================");
+
+		
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
@@ -78,8 +78,10 @@ public class HomeController {
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
 //        임시 로그인
-		Member member = service.selectMemberById(inputValue);
+		Member member = getCurrentUser();
         session.setAttribute("loginMember", member); 
+
+        
         
 		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
 //		model.addAttribute("roomId",roomId);

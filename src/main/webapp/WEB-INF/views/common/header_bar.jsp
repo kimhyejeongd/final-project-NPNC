@@ -308,11 +308,7 @@
 	
 	  </style>
       <div class="main-header">
-      		<form action="/chatRoom" method="get">
-			    <label for="userInput">Enter Value:</label>
-			    <input type="text" id="userInput" name="inputValue" required="">
-			    <button type="submit">Submit</button>
-			</form>
+ 
             <div class="main-header-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
