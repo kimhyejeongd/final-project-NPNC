@@ -8,6 +8,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+<style>
+.status-dot {
+    height: 10px;
+    width: 10px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+}
+</style>
 
 	<div class="accordion" id="accordionPanelsStayOpenExample">
 		<c:forEach var="d" items="${list}" varStatus="status">
@@ -24,8 +33,7 @@
 			      <div class="accordion-body" style='padding: 0!important;'>
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
-		 				
-						  <a href="#" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
+						  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
 						  <div>
 						  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
 	                        <i class="fas fa-envelope"></i>

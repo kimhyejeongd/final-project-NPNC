@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <c:set var="path" value="${pageContext.request.contextPath}"/>
+    
+    <c:set var="loginMember" value="${sessionScope.loginMember}" />
+    
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -308,7 +311,7 @@
 	
 	  </style>
       <div class="main-header">
- 
+ 			
             <div class="main-header-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
@@ -357,7 +360,25 @@
 		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 				 <script type="text/javascript">
+				 
 					 $(document).ready(function() {
+					        function subscribeToRoom(roomId, recentMessageElement) {
+					            var socket = new SockJS('http://localhost:8080/ws-stomp');
+					            var stompClient = Stomp.over(socket);
+					            stompClient.connect({"type":"header","loginMemberKey":${loginMember.memberKey}}, function(connect) {
+					                console.log('Connected to room ' + roomId + ': ' + connect);
+					                
+					                stompClient.subscribe('/roomSession/' + roomId, function(status) {
+					                    
+
+					                });
+
+
+					          
+					            });
+					            
+					            
+					        }
 					        // Ã«ÂÂÃ«Â¡Â­Ã«ÂÂ¤Ã¬ÂÂ´ Ã«Â©ÂÃ«ÂÂ´ÃªÂ°Â Ã«Â³Â´Ã¬ÂÂ¼ Ã«ÂÂ Ã­ÂÂ¹Ã¬Â Â JSP Ã­ÂÂÃ¬ÂÂ´Ã¬Â§ÂÃ«Â¥Â¼ Ã«Â¡ÂÃ«ÂÂ
 
 					        $('#messageDropdown').on('show.bs.dropdown', function() {
