@@ -111,10 +111,11 @@ var editEvent = function (event, element, view) {
 
     });
 	// 삭제버튼
+	$('#eventDelete').unbind();
 	$('#eventDelete').on('click', function () {
-	    
-	    $('#eventDelete').unbind();
-	    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+        $("#calendar").fullCalendar('removeEvents', function(ev) {
+            return ev.calendarKey === event.calendarKey;
+        });
 	    eventModal.modal('hide');
 	
 		var calKey = event.calendarKey;
@@ -138,4 +139,3 @@ var editEvent = function (event, element, view) {
 	
 	});
 };
-	    $("#calendar").fullCalendar('refetchEvents');

@@ -1,25 +1,31 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<c:set var="path" value="${pageContext.request.contextPath }"/>
+
 <!DOCTYPE html>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
-<html lang='ko'>
+<html>
+	
   <head>
-    <meta charset='utf-8' />
- <%--    <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.min.css" />
-    <link rel="stylesheet" href='${path }/resources/bm/css/bootstrap.min.css'/>
-    <link rel="stylesheet" href='${path }/resources/bm/css/bootstrap-datetimepicker.min.css' />
-    <link rel="stylesheet" href='${path }/resources/bm/css/select2.min.css' /> --%>
+  	<meta charset="UTF-8">
+  	
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="${path}/resources/assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
     
-    <!--  sweetalert2 -->
-	<link href="${path }/resources/bm/css/bootstrap-4.min.css" rel="stylesheet" type="text/css"/>
-	<link href="${path }/resources/bm/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
-	<link href="${path }/resources/bm/css/daterangepicker.css" rel="stylesheet" type="text/css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	
-	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<!-- 헤더 css  -->
-	
-	<script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
+    <!-- Fonts and icons -->
+    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
       WebFont.load({
         google: { families: ["Public Sans:300,400,500,600,700"] },
@@ -37,16 +43,19 @@
         },
       });
     </script>
+
+    <!-- CSS Files -->
+    <%-- <link href="${path }/resources/bm/css/bootstrap-4.min.css" rel="stylesheet" type="text/css"/> --%>
+   <%--  <link rel="stylesheet" href="${path }/resources/bm/css/bootstrap-4.min.css"/> --%>
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+	<link href="${path }/resources/bm/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+	<link href="${path }/resources/bm/css/daterangepicker.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-    
-	
-    
-  <!--   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
- 	
-   <style>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
+    <style>
    	#content {
    		position : absolute;
    		display: none;
@@ -91,21 +100,48 @@
 		transform: scale(0.8);
 		transform-origin: 0 0;
 	}
+     .fc .fc-prev-button, .fc .fc-next-button {
+      position: relative;
+    }
+    .fc .fc-prev-button::before, .fc .fc-next-button::before {
+      content: '';
+      display: inline-block;
+      width: 0; 
+      height: 0; 
+      border-style: solid;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .fc .fc-prev-button::before {
+      border-width: 5px 8px 5px 0;
+      border-color: transparent #fff transparent transparent;
+      left: 10px;
+    }
+    .fc .fc-next-button::before {
+      border-width: 5px 0 5px 8px;
+      border-color: transparent transparent transparent #fff;
+      right: 10px;
+    }
+
    </style>
-    
   </head>
   <body>
-  <div id="wrapper">
-  	<div class="main-panel">
-        <div class="main-header">
-          <div class="main-header-logo">
-          	</div>
-          <!--  header Navbar 넣을 곳 -->
+    <div class="wrapper">
+
+		
+      <div class="main-panel">
+        <!-- header_bar  -->
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-        	</div>
-        </div>   
-  <div class="container">
-  	<div class="page-inner">
+       
+
+        <div class="container">
+        <!-- page-inner -->
+        
+          <div class="page-inner">
+          <!-- 여기다가 캘린더 내용 넣어  -->
+         
+  	
   	<div id="content" class="dropdown clearfix">
   		<ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
   			style="display:block;position:static; margin-bottom:5px;">
@@ -206,32 +242,26 @@
   	</div>
   
   	
-    <div class="calendarapp-content">
-    	<div id="calendar" class="w-100"></div>
-    </div>
+    <div id='calendar'></div>
   	</div>
   </div>
-    
-   <%--  <script src="${path }/resources/bm/js/jquery.min.js"></script>
-    <script src="${path }/resources/bm/js/bootstrap.min.js"></script> --%>
-<%--     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+       
+        <!-- footer -->
+      </div>
+
+    <!--   Core JS Files   -->
+    <%-- <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script> --%>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <%-- <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script> --%>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="${path }/resources/bm/js/moment.min.js"></script>
-    <script src="${path }/resources/bm/js/fullcalendar.js"></script>
-    <script src="${path }/resources/bm/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="${path }/resources/bm/js/ko.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.14/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.14/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.14/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.14/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.14/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap@6.1.14/index.global.min.js"></script> --%>
-     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-      <!-- jQuery Scrollbar -->
+    
+
+    <!-- jQuery Scrollbar -->
     <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 
-  <%--   <!-- Chart JS -->
-    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script> --%>
+    <!-- Chart JS -->
+    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
 
     <!-- jQuery Sparkline -->
     <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
@@ -249,26 +279,22 @@
     <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
 
-    <!-- Sweet Alert -->
-    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+<%--     <!-- Sweet Alert -->
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script> --%>
 
     <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
-     
-    <script src="${path }/resources/bm/js/moment.min.js"></script>
+
+
+	<script src="${path }/resources/bm/js/moment.min.js"></script>
     <script src="${path }/resources/bm/js/fullcalendar.global.js"></script>
     <script src="${path }/resources/bm/js/index.global.min.js"></script>
  	<script src="${path }/resources/bm/js/daterangepicker.js"></script>
  	<script src="${path }/resources/bm/js/sweetalert2.min.js"></script>
- 	<script src="${path }/resources/bm/js/fullcalendar-init.js"></script>
+ 	<%-- <script src="${path }/resources/bm/js/fullcalendar-init.js"></script> --%>
     <script src="${path }/resources/bm/js/calendar.js"></script>
     <script src="${path }/resources/bm/js/addEvent.js"></script>
     <script src="${path }/resources/bm/js/editEvent.js"></script>
-    
-    <script>
-    
-    </script>
-    
-    
+   
   </body>
 </html>
