@@ -24,7 +24,7 @@ public class CalendarController {
 	
 	@GetMapping("/calendar.do")
 	public String test() {
-		return "calendar/mainCalendar";
+		return "calendar/bomin";
 	}
 	
 	@PostMapping("/calendar/insertcalendar.do")
@@ -66,8 +66,8 @@ public class CalendarController {
 		return ResponseEntity.ok(response);
 	}
 	@PostMapping("/calendar/deletecalendar.do")
-	public ResponseEntity<Map<String,Object>> deleteCalendar(@RequestBody Integer calKey){
-		int result = service.deleteCalendar(calKey);
+	public ResponseEntity<Map<String,Object>> deleteCalendar(@RequestBody int calendarKey){
+		int result = service.deleteCalendar(calendarKey);
 		Map<String,Object> response = new HashMap<>();
 		
 		if(result>0) {
