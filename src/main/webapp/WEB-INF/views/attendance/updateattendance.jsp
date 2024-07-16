@@ -31,6 +31,8 @@
 		                          </div>
 		           	</div>
 		           	
+		           	<input type="hidden" id="attendanceKey" name="attendanceKey" value="${attendance.attendanceKey }">
+		           	
 		           	<div class="form-group form-inline">
 		                          <label
 		                            for="attendanceEditDate"
@@ -98,8 +100,8 @@
 		                            <input
 		                              type="text"
 		                              class="form-control input-full"
-		                              id="attendanceEditAfterTime"
-		                              name="attendanceEditAfterTime"
+		                              id="attendanceEditBeforeTimeEnd"
+		                              name="attendanceEditBeforeTimeEnd"
 		                              value="${attendance.attendanceEnd }"
 		                              readonly
 		                            />
@@ -153,7 +155,6 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterTime"
 		                              name="attendanceEditAfterTime"
-									  value=""
 		                              placeholder="수정요청시간"
 		                            />
 		                          </div>

@@ -121,19 +121,31 @@
 		<result column="ATTENDANCE_EDIT_AFTER_STATE"  property="attendanceEditAfterState"/>
 		<result column="ATTENDANCE_EDIT_REQUEST"  property="attendanceEditRequest"/>
 		<result column="ATTENDANCE_EDIT_OPNION"  property="attendanceEditOpinion"/>
-		<association property="attendance" resultMap="attendance.attendancetMap"/>
+		<association property="attendance" resultMap="attendance.attendanceMap"/>
 	</resultMap>
 
 
 	<insert id="insertAttendanceEdit" parameterType="attendanceEdit">
-		INSERT INTO ATTENDANCE_EDIT 
-			VALUES(SEQ_ATTENDANCE_EDIT.NEXTVAL,#{attendance.attendanceKey},#{attendanceEditMember},
-				#{attendanceEditDate},#{attendanceEditRequestDate},#{attendanceEditStartEnd},#{attendanceEditBeforeTime},
-				#{attendanceEditBeforeState},#{attendanceEditAfterTime},#{attendanceEditAfterState},#{attendanceEditRequest},
-				#{attendanceEditOpinion}) 
+		INSERT INTO ATTENDANCE_EDIT
+		VALUES (SEQ_ATTENDANCE_EDIT.NEXTVAL,
+            #{attendance.attendanceKey},
+            #{attendanceEditMember},
+            #{attendanceEditDate},
+            #{attendanceEditRequestDate},
+            #{attendanceEditStartEnd},
+            TO_TIMESTAMP('20' || #{attendanceEditBeforeTime}, 'YYYY-MM-DD HH24:MI:SS'),
+            #{attendanceEditBeforeState},
+            TO_TIMESTAMP(to_char(#{attendanceEditRequestDate},'yyyy-mm-dd') ||' '||#{attendanceEditAfterTime}, 'YYYY-MM-DD HH24:MI:SS'),
+            #{attendanceEditAfterState},
+            #{attendanceEditRequest},
+            ' ') 
 	</insert>
 
-
+	<select id="SelectAttendanceEditById" parameterType="string" resultMap="attendanceEditMap">
+		SELECT 
+		FROM   ATTENDANCE_EDIT
+		WHERE  ATTENDANCE_EDIT_MEMBER = #{memberId} 
+	</select>
 
 
 

@@ -20,6 +20,7 @@
 		<result column="MEMBER_GENDER" property="memberGender"/>
 		<result column="MEMBER_STATE" property="memberState"/>
 		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"/>
+		<result column="MEMBER_PROFILE_IMAGE" property="memberProfileImage"/>
 		<association property="department" resultMap="department.deptMap"/>
 		<association property="job" resultMap="job.jobMap"/>
 	</resultMap>
@@ -53,7 +54,7 @@
 		INSERT INTO MEMBER 
 			VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
 			'NPNC'||SEQ_MEMBER.CURRVAL,'NPNC'||TO_CHAR(#{memberBirthdate}, 'MMDD'),#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
-			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate})
+			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate},'basicPicture')
 	</insert>
 	
 	<update id="updateMember" parameterType="adminmember">

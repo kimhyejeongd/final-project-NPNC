@@ -176,11 +176,32 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/updateAttendanceEnd")
-	public void updateAttendanceEnd(AttendanceEdit ae) {
+	public String updateAttendanceEnd(AttendanceEdit ae,int attendanceKey,String attendanceEditBeforeTimeEnd,Model m) {
+		ae.setAttendance(Attendance.builder().attendanceKey(attendanceKey).build());
+		if(ae.getAttendanceEditStartEnd().equals("퇴근")) {
+			ae.setAttendanceEditBeforeTime(attendanceEditBeforeTimeEnd);
+		}
+		System.out.println(ae);
+		int result=attendanceService.insertAttendanceEdit(ae);
 		
+		String msg,loc;
+		if(result>0) {
+			msg="요청성공";
+			loc="/attendance/selectAttendanceAll.do";
+		}else {
+			msg="요청실패";
+			loc="/attendance/selectAttendanceAll.do";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
 	}
 	
-	
+	@GetMapping("/updateAttendanceList")
+	public String updateAttendanceList(Model m) {
+//		List<AttendanceEdit> attendanceEdit= attendanceService
+		return null;
+	}
 	
 	
 	

@@ -30,7 +30,7 @@ public interface AttendanceDao {
 	
 	//attendanceEdit
 	int insertAttendanceEdit(SqlSession session,AttendanceEdit ae);
-	
+	List<AttendanceEdit> SelectAttendanceEditById(SqlSession session,String memberId);
 	
 	
 	

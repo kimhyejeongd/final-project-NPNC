@@ -88,7 +88,13 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	@Override
 	public int insertAttendanceEdit(SqlSession session, AttendanceEdit ae) {
 		
-		return session.selectOne("attendance.inseertAttendanceEdit",ae);
+		return session.insert("attendance.insertAttendanceEdit",ae);
+	}
+
+	@Override
+	public List<AttendanceEdit> SelectAttendanceEditById(SqlSession session,String memberId) {
+		
+		return session.selectList("attendance.SelectAttendanceEditById",memberId);
 	}
 
 	
