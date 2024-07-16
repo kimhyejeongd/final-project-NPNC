@@ -19,4 +19,5 @@ public interface NoteService {
 	public List<NoteSendDto> sendNoteSelectAll(Map<String, Integer> page);
 	public int sendNoteSelectTotalData(int memberKey);
 	public NoteSendDto selectSendOne(Map<String, Integer> param);
+	public List<NoteSendDto> sendNoteSelectAllPaging(Map<String, Integer> page);
 }

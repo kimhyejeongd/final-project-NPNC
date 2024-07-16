@@ -127,6 +127,12 @@ public class NoteServiceImpl implements NoteService{
 		return dao.selectSendOne(session,param);
 	}
 
+	@Override
+	public List<NoteSendDto> sendNoteSelectAllPaging(Map<String, Integer> page) {
+		
+		return dao.sendNoteSelectAllPaging(session, page);
+	}
+
 
 
 }

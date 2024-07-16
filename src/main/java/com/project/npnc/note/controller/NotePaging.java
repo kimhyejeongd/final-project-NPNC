@@ -43,7 +43,7 @@ public class NotePaging {
 		System.out.println(numPerpage);
 		  Map<String, Object> response = new HashMap<>();
 		  int totalData= noteService.sendNoteSelectTotalData(memberKey);
-		  List<NoteSendDto> notepagelist= noteService.sendNoteSelectAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
+		  List<NoteSendDto> notepagelist= noteService.sendNoteSelectAllPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
 		  response.put("notepagelist", notepagelist);
 		  System.out.println(notepagelist);
 		  response.put("pagebar", paging.getPage(cPage, numPerpage, totalData, "/notepagingsend"));

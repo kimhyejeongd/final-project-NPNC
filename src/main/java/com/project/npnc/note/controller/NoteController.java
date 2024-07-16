@@ -57,7 +57,7 @@ public class NoteController {
 	public String sendNoteHome(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		int memberKey=1;
-		List<NoteSendDto> notelist=noteService.sendNoteSelectAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
+		List<NoteSendDto> notelist=noteService.sendNoteSelectAllPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
 		m.addAttribute("notelist",notelist);
 		System.out.println(notelist);
 		int totalData=noteService.sendNoteSelectTotalData(memberKey);

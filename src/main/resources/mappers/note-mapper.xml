@@ -73,6 +73,11 @@
 		VALUES(#{postMsgRecKey}, #{memberKey}, #{postMsgTitle}, #{postMsgDetail}, SYSDATE, NULL, DEFAULT )
 		
 	</select>
+	<select id="sendNoteSelectAllPaging" resultMap="noteSendMap">
+	
+		SELECT * FROM POST_MESSAGE_SEND WHERE SEND_MEMBER_KEY=#{memberKey} ORDER BY POST_MSG_SEND_KEY DESC
+		
+	</select>
 	<select id="sendNoteSelectAll" resultMap="noteSendMap">
 	
 		SELECT * FROM POST_MESSAGE_SEND pms 

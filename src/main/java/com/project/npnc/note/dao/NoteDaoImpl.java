@@ -36,6 +36,15 @@ public class NoteDaoImpl implements NoteDao {
 	
 
 	@Override
+	public List<NoteSendDto> sendNoteSelectAllPaging(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		System.out.println(memberKey+" 여기에 들어 왔냐고");
+		
+		return session.selectList("note.sendNoteSelectAllPaging", memberKey, rb);
+	}
+
+	@Override
 	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		int memberKey=page.get("memberKey");
