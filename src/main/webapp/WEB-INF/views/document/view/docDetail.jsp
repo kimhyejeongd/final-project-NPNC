@@ -32,12 +32,12 @@
       <!-- Sidebar -->
       <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
-	</div>
 	  <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
+          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
 		
@@ -52,8 +52,8 @@
               <div class=""> <!-- 컨테이너박스 -->
                 <div class="card card-round p-3">
                   <div class="card-body">
-               	<div class="form-group">
-			      <label for="smallInput"><span class="h5">문서명</span></label>
+               	<div class="form-group d-flex">
+			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 			      <input type="text" class="form-control form-control-sm" id="smallInput" value="${l.erDocTitle }">
 			    </div>
 			    <div class="form-group">
@@ -65,9 +65,9 @@
 			            <span class="h5">일반</span>
 		          </label>
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">결재자</span></label>
-
+			    <div class="form-group d-flex">
+		      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
+				<div class="col w-100 align-items-center">
 			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
 						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
 						<c:forEach items="${l.approvers }" var="ap" varStatus="vs">
@@ -81,30 +81,29 @@
 						  </div>
 					  </c:forEach>
 			      </div>
+			      </div>
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">참조인</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput">
+			    <div class="form-group d-flex align-items-center gap-3">
+			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
+			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="approvalDiv">
+			      </div>
 			    </div>
-			    <div class="form-group">
-			      <label for="smallInput"><span class="h5">참조문서</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput">
+			    <div class="form-group d-flex align-items-center gap-3">
+			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;">참조문서</span></label>
+			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      </div>
 			    </div>
-			    <div class="form-group">
-		          <label for="exampleFormControlFile1"><span class="h5">첨부파일</span></label><br>
+	          	<c:if test="${l.files.size() > 1 }">
+			    <div class="form-group d-flex align-items-center">
+		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
-		          	<c:if test="${l.files.size() > 1 }">
-		          		첨부파일 있음
-		          	</c:if>
-		          	<c:if test="${l.files.size() <= 1}">
-		          		첨부파일 없음
-		          	</c:if>
 		          </div>
 		        </div>
+	          	</c:if>
 			    <div class="form-group">
 		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 			        <div id="" class="border scrollable-content" style="margin: 0px auto; width: 100%; height: 800px;">
-			        	<div id="content" class="" style="width: fit-content; margin: 0px auto;">
+			        	<div id="content" class="border" style="width: fit-content; height: 800px; margin: 0px auto;">
 				        	<c:out value="${html }" escapeXml="false"/>
 			        	</div>
 			        </div>
@@ -119,6 +118,7 @@
           </div>
          </div>
        </div>
+      </div>
 <script>
 $(document).ready();
 //TODO 재기안

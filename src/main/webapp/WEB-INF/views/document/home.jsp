@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<%
+  String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -42,7 +45,8 @@
                 <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
               </div>
             </div>
-            <div class="row">
+            <c:import url="${path }/WEB-INF/views/document/list/inprocessDoc.jsp"/>
+            <!-- <div class="row">
               <div class="">
                 <div class="card card-round">
                   <div class="card-header">
@@ -76,7 +80,7 @@
                   </div>
                   <div class="card-body p-0">
                     <div class="table-responsive">
-                      <!-- Projects table -->
+                      Projects table
                       <table class="table align-items-center mb-0">
                         <thead class="thead-light">
                           <tr class="text-center">
@@ -105,7 +109,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 		<div class="">
                 <div class="card card-round">
                   <div class="card-header">

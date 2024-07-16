@@ -1,3 +1,12 @@
+SELECT    *
+			FROM      er_document
+			left join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     er_doc_writer = ${no}
+			AND       er_doc_state = '처리중'
+			ORDER BY  er_doc_emergency_yn DESC,
+			          er_approval_orderby;
+
 --전체 생성된 테이블 조회
 SELECT table_name 
 FROM user_tables;
@@ -11,20 +20,9 @@ SELECT * FROM ER_APPROVAL_LINE eal ;
 SELECT * FROM ER_APROVER ea ;
 SELECT * FROM ER_FILE ;
 SELECT * FROM ER_STORAGE es ;
-SELECT * FROM ER_DOCUMENT ed ;
 SELECT * FROM DEPARTMENT d ;
 SELECT * FROM ER_FORM ef ;
-select * from er_document
-	 	LEFT JOIN ER_APROVER using(ER_DOC_SERIAL_KEY)
-		 where er_doc_writer = 3 and ER_DOC_STATE = '처리중'
-		 order by er_doc_emergency_yn desc, ER_approval_orderby;
-		
-select * from er_document
-		 where er_doc_writer = ${no} and er_doc_approval_date is null
-		 order by er_doc_emergency_yn DESC;
-		
-update er_document set er_doc_state = '처리중', ER_DOC_STATE_UPDATE_DATE = null
-		where er_doc_serial_key = '240710-D2F3-4';
+SELECT * FROM ER_FORM_FOLDER eff ;
 
 DROP TABLE ER_DOCUMENT CASCADE CONSTRAINTS;
 

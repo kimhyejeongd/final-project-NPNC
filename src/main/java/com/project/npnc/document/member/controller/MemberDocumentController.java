@@ -9,9 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.approversList;
 import com.project.npnc.document.model.service.MemberDocumentService;
-import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +49,10 @@ public class MemberDocumentController {
 	
 	
 	@GetMapping("/home")
-	public void docHome() {}
+	public void docHome(Model m) {
+		Member user = getCurrentUser();
+		m.addAttribute("doclist", serv.selectInprocessDocs(user.getMemberKey()));
+	}
 	@GetMapping("/form")
 	public void formChoice(Model m){
 		log.debug("----전자문서 양식 조회----");
@@ -56,8 +64,8 @@ public class MemberDocumentController {
 	@GetMapping("/list/retrieve")
 	public void docRetrieve(Model m) {
 		log.debug("----회수 문서 조회----");
-		int memberNo=3;
-		List<Document> result = serv.selectRetrieveDocs(memberNo);
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
@@ -65,8 +73,8 @@ public class MemberDocumentController {
 	@GetMapping("/list/inprocess")
 	public void inprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
-		int memberNo=3;
-		List<Document> result = serv.selectInprocessDocs(memberNo);
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectInprocessDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
@@ -135,13 +143,39 @@ public class MemberDocumentController {
 	public void doc4Write() {
 	}
 	@PostMapping("/writeend") //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
-	public String insertDoc(String msg, Document doc, String html, @ModelAttribute approversList request, Model m) {
-		int no = 3; //로그인 사원번호
-		doc.setErDocWriter(no);
-		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+	public String insertDoc(
+			String msg, Document doc, String html, 
+			@ModelAttribute approversList request, 
+			Model m) {
+		Member user = getCurrentUser();
+		log.debug("{}", request);
+		log.debug("{}", user);
+//		int no = 3; //로그인 사원번호
+		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+		
+		
+		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+									.memberTeam("개발팀")
+									.memberJob("직급")
+									.memberName(user.getMemberName())
+									.category("기안")
+									.opinion(msg)
+									.state("승인")
+									.date(Date.valueOf(LocalDate.now()))
+									.orderby(0)
+						.build();
+		List<Approver> ap = request.getApprovers();
+		ap.add(me);
+		request.setApprovers(ap);
+		doc.setApprovers(request.getApprovers()); //has a 관계 파라미터 매칭
+		
+		
 		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
-		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
+		
+		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 		log.debug("{}", doc);
 		log.debug("{}", request);
 		int result=0;
@@ -150,10 +184,10 @@ public class MemberDocumentController {
 		try { 
 			result = serv.insertDoc(doc, request);
 		} catch (Exception e) {
-//			m.addAttribute("msg", "[2] 결재자 저장 실패");
-//			m.addAttribute("loc", "/document/write");
-//			return "common/msg";
+			m.addAttribute("msg", "[2] 결재자 저장 실패");
+			m.addAttribute("loc", "/document/write");
 			e.printStackTrace();
+			return "common/msg";
 		}
 		
 		//기안, 결재자 등록 성공시
@@ -217,5 +251,9 @@ public class MemberDocumentController {
             e.printStackTrace();
         }
         return content.toString();
+    }
+	private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
     }
 }

@@ -18,11 +18,11 @@ $(document).ready(function() {
 		}
 		//선택항목의 데이터를 결재라인으로 출력
 		$("div#memberlist>a.selected").each(function(){
+			count++;
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
 			let teamName = $(this).data('team');
-			count++;
 			$(this).removeClass('selected');
 			$(this).css('display', 'none');
 			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between').attr({'href':'#','data-id': no, 'data-name' : name, 'data-teamName': teamName,'data-job': job});
@@ -148,33 +148,30 @@ $(document).ready(function() {
 	$("div#memberlist2").on('click', "a", e=>{
 		$(e.currentTarget).toggleClass('selected');
 	})
-	$("div#memberlist2 select").click(function(e) {
+	$("div#memberlist2").on('click', "select", function(e) {
+	    $("div#memberlist2>a.selected").toggleClass('selected');
 	    e.stopPropagation();
 	});
 	$("#okBtn").click(e=>{
 		let $selectedItems = $("div#memberlist2>a");
 		let data = [];
-		//객체 생성자
-		function getApprover(orderby, no, team, job, name, category){
-			let s = {
-				orderby: orderby,
-				no: no,
-				team: team,
-				job: job,
-				name: name,
-				category: category
-			}
-			return s;
-		}
 		//순회하며 객체 배열에 값 추가
 		$selectedItems.each(function(){
+			console.log($(this));
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
-			let teamName = $(this).data('team');
-			let orderby =$(this).text();
+			let teamName = $(this).data('teamname');
+			let orderby =$(this).find("span.badge.rounded-pill.text-bg-secondary").text();
 			let category=$(this).children().last().val();
-			let $app = getApprover(orderby, no, teamName, job, name, category); //생성자
+			let $app = {
+				        orderby: orderby,
+				        no: no,
+				        team: teamName,
+				        job: job,
+				        name: name,
+				        category: category
+					    };
 			data.push($app);
 		});
 		console.dir(data);

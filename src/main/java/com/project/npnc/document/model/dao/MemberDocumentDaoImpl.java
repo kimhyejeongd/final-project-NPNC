@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -50,7 +51,8 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public int insertApproval(SqlSession session, approversList request) {
 		int result =0;
 		for(int i=0; i<request.getApprovers().size();i++) {
-			result = session.insert("document.insertApproval", request.getApprovers().get(i)); 
+			Approver ap = request.getApprovers().get(i);
+			result = session.insert("document.insertApproval", ap); 
 		}
 		return result;
 	}

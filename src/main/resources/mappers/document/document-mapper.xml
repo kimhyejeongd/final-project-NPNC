@@ -22,9 +22,9 @@
 	<resultMap id="approverMap" type="approver">
 		<id column="ER_APPROVER_KEY" property="erApproverKey"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
+		<result column="ER_APPROVER_NAME" property="memberName"/>
 		<result column="ER_APPROVER_TEAM" property="memberTeam"/>
 		<result column="ER_APPROVER_JOB" property="memberJob"/>
-		<result column="ER_APPROVER_NAME" property="memberName"/>
 		<result column="ER_APPROVAL_CATEGORY" property="category"/>
 		<result column="ER_APPROVAL_STATE" property="state"/>
 		<result column="ER_APPROVAL_OPINION" property="opinion"/>
@@ -51,72 +51,172 @@
 	
 	<!-- 양식 -->
 	<select id="selectformFolders" resultType="map">
-		 select * from er_form_folder order by er_form_folder_orderby
+		SELECT er_form_folder_key,
+		       er_form_folder_name,
+		       er_form_folder_creater,
+		       er_form_folder_createdate,
+		       er_form_folder_updater,
+		       er_form_folder_updatedate,
+		       er_form_folder_orderby
+			FROM   er_form_folder
+			ORDER  BY er_form_folder_orderby  
 	</select>
 	<select id="selectFormByNo" resultType="map" parameterType="_int">
-		 select * from er_form
+		SELECT er_form_key,
+		       er_form_name,
+		       er_form_creater,
+		       er_form_create_date,
+		       er_form_folder_key,
+		       er_form_yn,
+		       er_form_updater,
+		       er_form_update_date,
+		       er_form_orderby,
+		       er_doc_filename
+			FROM   er_form 
 	</select>
 	<select id="selectForms" resultType="map" parameterType="_int">
-		 select * from er_form 
-		 where ER_FORM_YN = 'Y' and er_form_folder_key = #{no} 
-		 order by er_form_orderby
+		SELECT er_form_key,
+		       er_form_name,
+		       er_form_creater,
+		       er_form_create_date,
+		       er_form_folder_key,
+		       er_form_yn,
+		       er_form_updater,
+		       er_form_update_date,
+		       er_form_orderby,
+		       er_doc_filename
+			FROM   er_form
+			WHERE  er_form_yn = 'Y'
+			       AND er_form_folder_key = #{no}
+			ORDER  BY er_form_orderby 
 	</select>
 	<select id="selectFormsBySearch" resultType="map" parameterType="string">
-		 select * from er_form 
-		 where ER_FORM_YN = 'Y' and er_form_name like #{target} 
-		 order by er_form_orderby desc, er_doc_create_date desc
+		SELECT er_form_key,
+		       er_form_name,
+		       er_form_creater,
+		       er_form_create_date,
+		       er_form_folder_key,
+		       er_form_yn,
+		       er_form_updater,
+		       er_form_update_date,
+		       er_form_orderby,
+		       er_doc_filename
+			FROM   er_form
+			WHERE  er_form_yn = 'Y'
+			       AND er_form_name LIKE #{target}
+			ORDER  BY er_form_orderby DESC,
+			          er_doc_create_date DESC 
 	</select>
 	
 	<!-- 문서 -->
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
-		 select * from er_document
-		 	LEFT JOIN ER_APROVER ea using(ER_DOC_SERIAL_KEY)
-		 where er_doc_writer = ${no} and ER_DOC_STATE = '처리중'
-		 order by er_doc_emergency_yn desc, ER_approval_orderby
+		 <!-- select ER_DOC_KEY, ER_DOC_SERIAL_KEY, ER_DOC_WRITER, ER_DOC_TITLE, ER_DOC_CREATE_DATE, ER_DOC_EMERGENCY_YN, ER_DOC_DELETE_YN, ER_DOC_STOARGE, ER_DOC_FILENAME. ER_DOC_STATE. ER_DOC_STATE_UPDATE_DATE, ER_DOC_LAST_UPDATER, ER_DOC_LAST_UPDATE_REASON from er_document -->
+		 SELECT    *
+			FROM      er_document
+			left join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     er_doc_writer = ${no}
+			AND       er_doc_state = '처리중'
+			ORDER BY  er_doc_emergency_yn DESC,
+			          er_approval_orderby
 	</select>
 	<!-- 로그인 사원의 회수 문서 조회 -->
 	<select id="selectRetrieveDocs" resultMap="documentMap" parameterType="_int">
-		 select * from er_document
-		 	LEFT JOIN ER_APROVER ea using(ER_DOC_SERIAL_KEY)
-		 where er_doc_writer = ${no} and ER_DOC_STATE = '회수'
-		 order by er_doc_emergency_yn desc, ER_approval_orderby
+		SELECT    *
+			FROM      er_document
+			left join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     er_doc_writer = ${no}
+			AND       er_doc_state = '회수'
+			ORDER BY  er_doc_emergency_yn DESC,
+			          er_approval_orderby
 	</select>
 	<!-- 문서 상세보기 -->
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
-		select * from er_document
-			left join er_file using(ER_DOC_SERIAL_KEY)
-			where er_document.er_doc_key = '${docId}'
+		SELECT *
+			FROM   er_document
+			       left join er_file USING(er_doc_serial_key)
+			WHERE  er_document.er_doc_key = '${docId}' 
 	</select>
 	<!-- 기안 -->
 	<insert id="insertDoc" parameterType="document">
-		INSERT INTO ER_document values(SEQ_ER_DOC_KEY.nextval, TO_CHAR(SYSDATE, 'YYMMDD') || '-' || '${erDocSerialKey}' || '-' || to_char(SEQ_ER_DOC_SERIAL_KEY.nextval), 
-			${erDocWriter}, '${erDocTitle}', default, '${erDocEmergencyYn}', default, '${erDocStorage}', '${erDocFilename}', default, null, null, null)
-			<!-- 첨부파일 조건문은 나중에 -->
+		INSERT INTO er_document VALUES
+            (
+              seq_er_doc_key.NEXTVAL,
+              To_char(SYSDATE, 'YYMMDD')
+                          || '-'
+                          || '${erDocSerialKey}'
+                          || '-'
+                          || To_char(seq_er_doc_serial_key.NEXTVAL),
+              ${erDocWriter},
+              '${erDocTitle}',
+              DEFAULT,
+              '${erDocEmergencyYn}',
+              DEFAULT,
+              '${erDocStorage}',
+              '${erDocFilename}',
+              DEFAULT,
+              NULL,
+              NULL,
+              NULL
+            )
+        <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
-			select TO_CHAR(SYSDATE, 'YYMMDD') || '-' || '${erDocSerialKey}' || '-' || to_char(SEQ_ER_DOC_SERIAL_KEY.nextval) from dual
+			SELECT To_char(SYSDATE, 'YYMMDD')
+			       || '-'
+			       || '${erDocSerialKey}'
+			       || '-'
+			       || To_char(seq_er_doc_serial_key.currval)
+				FROM   dual 
 		</selectKey>
+        <!-- 첨부파일 조건문은 나중에 -->
 	</insert>
 	<!-- 진행중인 문서 회수 -->
 	<update id="retrieveDoc" parameterType="string">
-		update er_document set er_doc_state = '회수', er_doc_state_update_date = sysdate
-		where ER_DOC_SERIAL_KEY = '${erDocSerialKey}'
+		UPDATE er_document
+			SET    er_doc_state = '회수',
+			       er_doc_state_update_date = SYSDATE
+			WHERE  er_doc_serial_key = '${erDocSerialKey}' 
 	</update>
 	
 	
 	<!-- 첨부파일 -->
 	<!-- 존재여부 확인 -->
 	<select id="selectDocFile" parameterType="string" resultType="_int">
-		select count(*) from er_file
-		where ER_DOC_SERIAL_KEY = '${erDocSerialKey}'
+		SELECT Count(*)
+			FROM   er_file
+			WHERE  er_doc_serial_key = '${erDocSerialKey}' 
 	</select>
 	<!-- 첨부파일 데이터 삭제 -->
 	<delete id="deleteDocFile" parameterType="string">
-		delete er_file where ER_DOC_SERIAL_KEY = '${erDocSerialKey}'
+		DELETE er_file
+			WHERE  er_doc_serial_key = '${erDocSerialKey}' 
 	</delete>
 	
 	<!-- 결재자 -->
+	<!-- 문서 기안시 등록 -->
 	<insert id="insertApproval" parameterType="approver">
-		INSERT INTO er_aprover values(SEQ_ER_APPROVER_KEY.nextval, ${memberKey}, '${memberName}', '${memberTeam}', '${memberJob}', '${category}', '대기', null, '${erDocSerialKey}', null, ${orderby})
+		INSERT INTO er_aprover VALUES
+            (
+                        seq_er_approver_key.NEXTVAL,
+                        ${memberKey},
+                        '${memberName}',
+                        '${memberTeam}',
+                        '${memberJob}',
+                        '${category}',
+                        <choose>
+			              <when test="state == null">
+			                '대기'
+			              </when>
+			              <otherwise>
+			                #{state}
+			              </otherwise>
+			            </choose>,
+                        NULL,
+                        '${erDocSerialKey}',
+                        NULL,
+                        ${orderby}
+            )
 	</insert>
 </mapper>
