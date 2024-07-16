@@ -27,7 +27,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -89,23 +89,9 @@
                   </div>
                  <div class="card-list p-4 " id="formlist">
                   <!-- 양식 출력 -->
-                  <%-- 	<c:if test="${not empty formlist }">
-                    <c:forEach var="f" items="${formlist }">
-                      <button class="btn item-list border rounded w-100 mb-2">
-                        <div class="ms-3">
-                        	<i class="icon-drawer"></i>
-                        </div>
-                        <div class="info-user ms-3">
-                          <div class="username text-start">기본 양식</div>
-                        </div>
-                      </button>
-                      </c:forEach> 
-                      </c:if> --%>
-                     <%--  <c:if test="${empty formlist }"> --%>
                       	<div class="info-user">
                           <h5 class="">양식 폴더를 선택하세요</h5>
                         </div>
-                      <%-- </c:if> --%>
                     </div>
                 </div>
               </div>
@@ -113,7 +99,7 @@
           </div>
         </div>
         </div>
-       </div>
+      </div>
   </body>
 <script>
 	const path = "${path}";

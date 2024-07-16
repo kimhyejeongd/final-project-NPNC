@@ -13,7 +13,7 @@
 </head>
 <body>
   <body>
-  <div id="summernote" style=""></div>
+  <div id="summernote" style="display: none;"></div>
 
   <script>
   
@@ -119,6 +119,7 @@
 유통형태 
 </td>
 <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle;" colspan="3">
+	<span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="5" data-dsl="{{radio_라디오_쇼핑몰_로드샵}}" data-wrapper="" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;" data-value=""><input class="editor_opt" type="radio" name="" value="라디오"><label class="editor_label">라디오</label><input class="editor_opt" type="radio" name="" value="쇼핑몰"><label class="editor_label">쇼핑몰</label><input class="editor_opt" type="radio" name="" value="로드샵"><label class="editor_label">로드샵</label><span contenteditable="false" class="comp_active" style="display: none; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"> <span class="Active_dot1" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"></span><span class="Active_dot2" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"></span> <span class="Active_dot3" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"></span><span class="Active_dot4" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"></span> </span> <span contenteditable="false" class="comp_hover" data-content-protect-cover="true" data-origin="5" style="font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; font-size: 11pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;"> <a contenteditable="false" class="ic_prototype ic_prototype_trash" data-content-protect-cover="true" data-component-delete-button="true"></a> </span> </span> 
 </td>
 </tr>
 <tr>
@@ -241,13 +242,25 @@ BEP
 </table>`
 
 
+   		
 $(document).ready(function() {
 var ui = $.summernote.ui;
+/* var undobtn = function (context) {
+	  var button = ui.button({
+	    contents: '<i class="fas fa-angle-double-left">',
+	    tooltip: 'undobtn',
+	    click: function () {
+	    	$.('summernote').summernote('undo');
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object
+	} */
 
 	// Initialize Summernote
 	$('#summernote').summernote({
 	    height: '100%', 
-	    focus: false, 
+	    focus: true, // set focus to editable area after initializing summernote
 	    callbacks: {
 	        onInit: function() {
 	            // Set initial content

@@ -3,6 +3,7 @@ package com.project.npnc.admin.member.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -110,6 +111,7 @@ public class AdminMemberController {
 	public String updateMember(AdminMember mem,String jobKey,String deptKey,Model m) {
 		mem.setJob(Job.builder().jobKey(jobKey).build());
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
+		System.out.println("sdasdasdasda"+mem.getMemberLeaveDate());
 		int result=service.updateMember(mem);
 		String msg,loc;
 		if(result>0) {

@@ -330,7 +330,7 @@
         </div>
       </div>
       <!-- End Sidebar -->
-
+		
       <div class="main-panel">
         <!-- header_bar  -->
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
@@ -339,6 +339,7 @@
         <div class="container">
         <!-- page-inner -->
           <div class="page-inner">
+          
           <div>
           <label for="connect">WebSocket connection:</label>
                     <button id="connect" class="btn btn-default" type="submit">Connect</button>

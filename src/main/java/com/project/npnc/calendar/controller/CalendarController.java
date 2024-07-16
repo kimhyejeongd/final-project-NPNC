@@ -50,7 +50,6 @@ public class CalendarController {
 	public List<Calendar> selectCalendar(int memberKey){
 		List<Calendar> list = service.selectAllByKey(memberKey);
 		return list;
-		
 	}
 	@PostMapping("/calendar/updatecalendar.do")
 	public ResponseEntity<Map<String,Object>> updateCalendar(@RequestBody Calendar calendar){

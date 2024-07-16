@@ -59,5 +59,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return dao.selectMemberKeyById(session, MemberId);
 	}
 
+	@Override
+	public List selectMemberKeyAll() {
+		
+		return dao.selectMemberKeyAll(session);
+	}
+
 	
 }
