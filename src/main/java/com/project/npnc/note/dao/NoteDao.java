@@ -17,4 +17,7 @@ public interface NoteDao {
 	public int noteSelectTotalData(SqlSession session, int memberKey);
 	public NoteReceptionDto selectNoteOne(SqlSession session);
 	public int sendNoteOneWrite(SqlSession session, NoteReceptionDto sendNote);
+	public List<NoteSendDto> sendNoteSelectAll(SqlSession session, Map<String, Integer> page);
+	public int sendNoteSelectTotalData(SqlSession session, int memberKey);
+	public NoteSendDto selectSendOne(SqlSession session, Map<String, Integer> param);
 }

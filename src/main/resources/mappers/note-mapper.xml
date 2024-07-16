@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="note">
-	
+	<resultMap id="memberMap" type="memberSr">
+		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="DEPARTMENT_KEY" property="departmentKey"></result>
+		<result column="JOB_KEY" property="jobKey"></result>
+		<result column="MEMBER_ID" property="memberId"></result>
+		<result column="MEMBER_PW" property="memberPw"></result>
+		<result column="MEMBER_PHONE" property="memberPhone"></result>
+		<result column="MEMBER_EMAIL" property="memberEmail"></result>
+		<result column="MEMBER_MESSAGE" property="memberMessage"></result>
+		<result column="MEMBER_ENROLL_DATE" property="enrollDate"></result>
+		<result column="MEMBER_LEAVE_DATE" property="memberLeaveDate"></result>
+		<result column="MEMBER_TELL" property="memberTell"></result>
+		<result column="MEMBER_ADDRESS" property="memberAddress"></result>
+		<result column="ACCESS_KEY" property="accessKey"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="MEMBER_GENDER" property="memberGender"></result>
+		<result column="MEMBER_STATE" property="memberState"></result>
+		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"></result>
+		<result column="JOB_NAME" property="jobName"></result>				
+	</resultMap>
 	<resultMap id="noteRecMap" type="noteRec">
 		<result column="POST_MSG_REC_KEY" property="postMsgRecKey"></result>
 		<result column="MEMBER_KEY" property="memberKey"></result>
@@ -19,7 +38,7 @@
 		<result column="POST_MSG_SEND_DETAIL" property="postMsgSendDetail"></result>
 		<result column="POST_MSG_SEND_TIME" property="postMsgSendTime"></result>
 		<result column="POST_MSG_SEND_RESERVATION" property="postMsgSendReservation"></result>
-		
+		<collection property="recMember" resultMap="memberMap"></collection>
 		
 	</resultMap> 
 	
@@ -54,4 +73,33 @@
 		VALUES(#{postMsgRecKey}, #{memberKey}, #{postMsgTitle}, #{postMsgDetail}, SYSDATE, NULL, DEFAULT )
 		
 	</select>
+	<select id="sendNoteSelectAll" resultMap="noteSendMap">
+	
+		SELECT * FROM POST_MESSAGE_SEND pms 
+		JOIN POST_MESSAGE_RECEIVER pmr 
+		ON pms.POST_MSG_SEND_KEY=pmr.POST_MSG_REC_KEY 
+		JOIN MEMBER m 
+		ON pmr.MEMBER_REC_KEY=m.MEMBER_KEY 
+		WHERE SEND_MEMBER_KEY =#{memberKey}
+		AND SEND_DELETE_STATUS='N' 
+		ORDER BY POST_MSG_SEND_KEY DESC
+		
+	</select>
+	<select id="sendNoteSelectTotalData" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM POST_MESSAGE_SEND
+		WHERE SEND_DELETE_STATUS='N' 
+		AND SEND_MEMBER_KEY = #{memberKey}
+	</select>
+	<select id="selectSendOne" resultMap="noteSendMap" parameterType="map">
+		SELECT * FROM POST_MESSAGE_SEND pms 
+		JOIN POST_MESSAGE_RECEIVER pmr 
+		ON pms.POST_MSG_SEND_KEY=pmr.POST_MSG_REC_KEY 
+		JOIN MEMBER m 
+		ON pmr.MEMBER_REC_KEY=m.MEMBER_KEY 
+		WHERE SEND_MEMBER_KEY =#{sendMemberKey}
+		AND POST_MSG_SEND_KEY=#{postMsgSendKey}
+		AND SEND_DELETE_STATUS='N'
+		
+	</select>
+	
 </mapper>

@@ -24,5 +24,6 @@
 		<typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteSendDto" alias="noteSend"></typeAlias>
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingFile" alias="chattingFile"/>	
+		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
 	</typeAliases>
 </configuration>

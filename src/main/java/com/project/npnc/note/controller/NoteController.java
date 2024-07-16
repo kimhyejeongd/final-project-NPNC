@@ -1,5 +1,6 @@
 package com.project.npnc.note.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import com.project.npnc.common.NotePageFactory;
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.member.model.service.MemberService;
 import com.project.npnc.note.dto.NoteReceptionDto;
+import com.project.npnc.note.dto.NoteSendDto;
 import com.project.npnc.note.service.NoteService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
@@ -28,6 +30,8 @@ public class NoteController {
 	private final NoteService noteService;
 	private final MemberService memberService;
 	private final NotePageFactory pageBar;
+	
+	
 	
 	@RequestMapping("/noteprint")
 	public String notePrint( Model m) {
@@ -47,6 +51,26 @@ public class NoteController {
 		
 		return "note/notein";
 	}
+	
+//	보낸 쪽지함
+	@RequestMapping("/sendNoteHome")
+	public String sendNoteHome(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
+		int memberKey=1;
+		List<NoteSendDto> notelist=noteService.sendNoteSelectAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
+		m.addAttribute("notelist",notelist);
+		System.out.println(notelist);
+		int totalData=noteService.sendNoteSelectTotalData(memberKey);
+		m.addAttribute("totalData",totalData);
+		
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepagingsend"));
+
+		
+		
+		return"note/noteSending";
+		
+	}
+//	받은 쪽지함
 	@RequestMapping("/notehome")
 	public String notehome(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m, int memberKey, HttpSession session) {
@@ -153,4 +177,18 @@ public class NoteController {
 		return "redirect:/note";
 		
 	}
+	
+
+//	보낸 쪽지함 개별 조회
+	@RequestMapping("/selectSendOne")
+	@ResponseBody
+	public NoteSendDto selectSendOne(int postMsgSendKey,int sendMemberKey) {
+		Map<String,Integer> param=new HashMap<>();
+		param.put("postMsgSendKey", postMsgSendKey);
+		param.put("sendMemberKey", sendMemberKey);
+		NoteSendDto sendDto=noteService.selectSendOne(param);
+		return sendDto;
+		
+	}
+	
 }

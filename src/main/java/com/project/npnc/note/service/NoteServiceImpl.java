@@ -11,12 +11,16 @@ import com.project.npnc.member.model.dao.MemberDao;
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.note.dao.NoteDao;
 import com.project.npnc.note.dto.NoteReceptionDto;
+import com.project.npnc.note.dto.NoteSendDto;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService{
+
+	
+	
 
 	
 	private final NoteDao dao;
@@ -105,7 +109,23 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 
+	@Override
+	public List<NoteSendDto> sendNoteSelectAll(Map<String, Integer> page) {
+		// TODO Auto-generated method stub
+		return dao.sendNoteSelectAll(session, page);
+	}
+
+	@Override
+	public int sendNoteSelectTotalData(int memberKey) {
+		
+		return dao.sendNoteSelectTotalData(session, memberKey);
+	}
 	
+	@Override
+	public NoteSendDto selectSendOne(Map<String, Integer> param) {
+		
+		return dao.selectSendOne(session,param);
+	}
 
 
 

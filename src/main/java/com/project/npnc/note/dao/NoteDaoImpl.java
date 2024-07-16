@@ -25,11 +25,15 @@ public class NoteDaoImpl implements NoteDao {
 		return session.insert("note.sendNoteOneWrite", sendNote);
 	}
 
+	
+
 	@Override
 	public int noteSelectTotalData(SqlSession session, int memberKey) {
 		
 		return session.selectOne("note.noteSelectTotalData",memberKey);
 	}
+
+	
 
 	@Override
 	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
@@ -55,6 +59,25 @@ public class NoteDaoImpl implements NoteDao {
 	public int noteMsgKey(SqlSession session) {
 		
 		return session.selectOne("note.noteMsgKey");
+	}
+	
+	@Override
+	public List<NoteSendDto> sendNoteSelectAll(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		return session.selectList("note.sendNoteSelectAll",memberKey,rb);
+	}
+
+	@Override
+	public int sendNoteSelectTotalData(SqlSession session, int memberKey) {
+		
+		return session.selectOne("note.sendNoteSelectTotalData",memberKey);
+	}
+	
+	@Override
+	public NoteSendDto selectSendOne(SqlSession session, Map<String, Integer> param) {
+		
+		return session.selectOne("note.selectSendOne", param);
 	}
 
 }
