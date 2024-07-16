@@ -48,6 +48,7 @@ public class Member implements UserDetails {
 	private String memberState;
 	private Date memberBirthdate;
 	private String departmentName;
+	private String memberProfileImage;
 
 
 	/* 권한 설정 */
