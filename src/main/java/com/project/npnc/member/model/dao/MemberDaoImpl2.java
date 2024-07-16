@@ -17,7 +17,14 @@ public class MemberDaoImpl2 implements MemberDao {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		return session.selectList("memberSr.selectMemeberAll",null,rb);
 	}
-
+	
+	@Override
+	public List<Member> selectMemberAllNoPaging(SqlSession session){
+		return session.selectList("memberSr.selectMemeberAll");
+	}
+	
+	
+	
 	@Override
 	public int selectMemberCount(SqlSession session) {
 	

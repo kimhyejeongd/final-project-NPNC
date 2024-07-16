@@ -7,17 +7,17 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingGroup;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.security.dto.Member;
 
 @Repository
 public class ChatDao {
 	public void deleteReadBadge(SqlSessionTemplate session,Map<String,Integer> deleteInfo) {
 		session.delete("chat.deleteReadBadge",deleteInfo);
 		return;
-
 	}
 	public  void insertUploadedFile(SqlSessionTemplate session, Map<String, Object> fileInfo) {
 		session.insert("chat.insertUploadedFile",fileInfo);
@@ -105,6 +105,18 @@ public class ChatDao {
 	public void exitChatRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
 		session.delete("chat.exitChatRoom",exitInfo);
 		
+	}
+	public void insertChattingFile(SqlSessionTemplate session, ChattingFile chattingFile) {
+		session.insert("chat.insertChattingFile",chattingFile);
+	}
+	public int selectFileSeq(SqlSessionTemplate session) {
+		return session.selectOne("chat.selectFileSeq");
+	}
+	public int selectGroupStatus(SqlSessionTemplate session, Map<String, Integer> exitInfo) {
+		return session.selectOne("chat.selectGroupStatus",exitInfo);
+	}
+	public void deleteRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
+		session.delete("chat.deleteRoom",exitInfo);
 	}
 
 }

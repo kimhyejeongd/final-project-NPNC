@@ -153,7 +153,7 @@
 		               			</div>
 		               		</div>
 		               		
-							<c:if test="${member.memberState eq '퇴사'}">
+							<%-- <c:if test="${member.memberState eq '퇴사'}"> --%>
 			               		<div class="form-group">
 				            		<div class="form-group form-inline">
 				                          <label
@@ -167,12 +167,13 @@
 				                              class="form-control input-full"
 				                              id="memberLeaveDate"
 				                              name="memberLeaveDate"
-											  value="0001-01-01"
+				                              value="0001-01-01"
+											  readonly
 				                            />
 				                          </div>
 			               			</div>
 			               		</div>
-		               		</c:if>
+		               		<%-- </c:if> --%>
 		               		<div class="form-group">
 			            		<div class="form-group form-inline">
 			                          <label
@@ -278,6 +279,7 @@
 		                            class="form-select"
 		                            id="memberState"
 		                            name="memberState"
+		                            onchange="toggleReadOnly(this)"
 		                          >
 								  		<option value="재직" <c:if test="${member.memberState eq '재직'}">selected</c:if>>재직</option>
 								        <option value="휴직" <c:if test="${member.memberState eq '휴직'}">selected</c:if>>휴직</option>
@@ -331,6 +333,26 @@
 		          </div>
 		 
 				</form>		
+
+		<script>
+		  // 페이지 로드 시 초기 설정 확인
+	    document.addEventListener('DOMContentLoaded', function() {
+	        toggleReadOnly();
+	    });
+
+	    function toggleReadOnly() {
+	        var memberState = document.getElementById('memberState').value;
+	        var memberLeaveDateInput = document.getElementById('memberLeaveDate');
+	        
+	        // 퇴사 상태인 경우 readonly 속성을 제거
+	        if (memberState === '퇴사') {
+	            memberLeaveDateInput.removeAttribute('readonly');
+	        } else {
+	            // 그 외의 경우에는 readonly 속성을 추가
+	            memberLeaveDateInput.setAttribute('readonly', 'readonly');
+	        }
+	    }
+		</script>
 
 
 </body>

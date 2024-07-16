@@ -1,7 +1,7 @@
 package com.project.npnc.attendance.model.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.project.npnc.admin.member.model.dto.AdminMember;
 
@@ -15,14 +15,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Attendance {
-	private int attenanceKey;
+	private int attendanceKey;
 	private AdminMember member;
 	private LocalDate attendanceDate;
-	private LocalDateTime attendanceStart;
-	private LocalDateTime attendanceEnd;
+	private String attendanceStart;
+	private String attendanceEnd;
 	private String attendanceState;
 	private int overtimeKey;
 	
-	
-	
+
 }

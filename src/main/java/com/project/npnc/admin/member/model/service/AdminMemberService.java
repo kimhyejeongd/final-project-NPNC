@@ -11,6 +11,7 @@ public interface AdminMemberService {
 	int selectMemberCount();
 	AdminMember selectMemberByNo(int memberKey);
 	int selectMemberKeyById(String MemberId);
+	List selectMemberKeyAll();
 	
 	int insertMember(AdminMember m);
 	int updateMember(AdminMember m);
