@@ -24,7 +24,9 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.approversList;
-import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
+import com.project.npnc.document.model.service.MemberDocumentService;
+import com.project.npnc.organization.dto.OrganizationDto;
+import com.project.npnc.organization.service.OrganizationService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +37,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j 
 public class MemberDocumentController {
-	private final MemberDocumentServiceImpl serv;
+	private final MemberDocumentService serv;
+	private final OrganizationService orserv;
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	
+	
 	@GetMapping("/home")
 	public void docHome() {}
-	
 	@GetMapping("/form")
 	public void formChoice(Model m){
 		log.debug("----전자문서 양식 조회----");
@@ -113,6 +116,11 @@ public class MemberDocumentController {
 			return "document/write/normal";
 		}
 		return "document/formlist.do";
+	}
+	@GetMapping("/write/approver")
+	public void docApprover(Model m) {
+		//직책 안나옴
+		m.addAttribute("list", orserv.selectOrganAll());
 	}
 //	@GetMapping("/doc1")
 //	public void doc1Write() {

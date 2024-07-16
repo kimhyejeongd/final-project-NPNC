@@ -2,7 +2,6 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<typeAliases>
-
 		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
 		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
@@ -21,6 +20,9 @@
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingMessage" alias="chattingMessage"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingGroup" alias="chattingGroup"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingRoom" alias="chattingRoom"/>	
+		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
+		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
+    <typeAlias type="com.project.npnc.security.dto.Member" alias="mypagemember"/>
 		<typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteSendDto" alias="noteSend"></typeAlias>
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingFile" alias="chattingFile"/>	
