@@ -85,6 +85,7 @@ public class MemberDocumentController {
 	public void waitingDoc(Model m){
 		log.debug("----결재 대기 문서 조회----");
 		Member user = getCurrentUser();
+		log.debug(user.getMemberKey()+"번 사원");
 		List<Document> result = serv.selectWaitingDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);

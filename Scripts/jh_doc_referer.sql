@@ -11,28 +11,50 @@ SELECT
 		    d.ER_DOC_STATE,
 		    d.ER_DOC_STATE_UPDATE_DATE, 
 		    d.ER_DOC_LAST_UPDATER, 
-		    d.ER_DOC_LAST_UPDATE_REASON 
+		    d.ER_DOC_LAST_UPDATE_REASON,
+		    a1.ER_APPROVER_KEY,
+		    a1.MEMBER_KEY,
+		    a1.ER_APPROVER_NAME,
+		    a1.ER_APPROVER_TEAM,
+		    a1.ER_APPROVER_JOB,
+		    a1.ER_APPROVAL_CATEGORY,
+		    a1.ER_APPROVAL_STATE,
+		    a1.ER_APPROVAL_OPINION, 
+		    a1.ER_DOC_SERIAL_KEY,
+		    a1.ER_APPROVAL_DATE,
+		    a1.ER_APPROVAL_ORDERBY,
+		    er.ER_REFERER_KEY,
+		    er.ER_DOC_SERIAL_KEY,
+		    er.ER_REFERER_TEAM_NAME,
+		    er.ER_REFERER_JOB_NAME,
+		    er.ER_REFERER_NAME,
+		    er.MEMBER_KEY
 		FROM 
 		    er_document d
 		LEFT JOIN 
 		    er_aprover a1
 		ON 
 		    d.ER_DOC_SERIAL_KEY = a1.ER_DOC_SERIAL_KEY
+		LEFT JOIN 
+			ER_REFERER er 
+		ON
+			d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY
 		WHERE    
-			d.er_doc_state = '처리중' 
-		AND 
-			a1.MEMBER_KEY =${no}
-		AND EXISTS (
-            SELECT 1
-            FROM er_aprover a2
-            WHERE a2.er_doc_serial_key = d.er_doc_serial_key
-            AND a2.er_approval_orderby > a1.er_approval_orderby
-            AND a2.ER_APPROVAL_STATE != '승인'
-        )
+			d.er_doc_state = '처리중' --처리중 문서
 		ORDER BY  
 			d.er_doc_emergency_yn DESC,
 			d.er_doc_create_date;
 
+SELECT    *
+			FROM      er_document d
+			join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     d.er_doc_writer = ${no}
+			AND       d.er_doc_state = '처리중'
+			ORDER BY  d.er_doc_emergency_yn DESC,
+			          ea.er_approval_orderby;
+		
+		
 SELECT * FROM ER_DOCUMENT ed ;
 SELECT * from ER_APPROVAL_LINE ;
 SELECT * from ER_APROVER ;
