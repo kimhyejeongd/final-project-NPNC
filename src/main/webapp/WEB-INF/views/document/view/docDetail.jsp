@@ -71,13 +71,13 @@
 			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
 						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
 						<c:forEach items="${l.approvers }" var="ap" varStatus="vs">
-						  <div class="border" id="approval1">
-						  	<input name="approvers[${vs.index }].orderby" value="${ap.orderby }" style="border-radius: 15px; width: 20px;">
-						  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none">
-						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeam }" style="">
-						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJob }" style="">
-						  	<input name="approvers[${vs.index }].memberName" value="${ap.memberName }" style="">
-						  	<input name="approvers[${vs.index }].category" value="${ap.category }" style="">
+						  <div class="col m-0 p-2" id="approval1" style="width: 100%; font-size: larger; text-align: lef; border-radius: 15px;">
+						  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${ap.orderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+						  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none" disabled>
+						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeam }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJob }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberName" value="${ap.memberName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].category" value="${ap.category }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  </div>
 					  </c:forEach>
 			      </div>
@@ -93,10 +93,11 @@
 			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
 			      </div>
 			    </div>
-	          	<c:if test="${l.files.size() > 1 }">
+	          	<c:if test="${l.files[0].fileKey != 0}">
 			    <div class="form-group d-flex align-items-center">
 		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
+		          	첨부파일 있음
 		          </div>
 		        </div>
 	          	</c:if>

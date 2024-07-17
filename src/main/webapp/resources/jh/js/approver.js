@@ -10,11 +10,47 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 $(document).ready(function() {
 	let count = 0;
+	// 로컬 스토리지 불러오기
+    let savedData = JSON.parse(localStorage.getItem('selectedApprover')) || [];
+    // 데이터를 화면에 표시하는 로직
+    savedData.forEach(function(item) {
+        let $a = $("<a>")
+        			.addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+    				.attr({
+						'href':'#',
+						'data-id': item.no, 
+						'data-name' : item.name, 
+						'data-teamName': item.team,
+						'data-job': item.job
+						});
+		let $i = $("<i>").addClass('fas fa-user me-2');
+		let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
+								.text(`${item.orderby}`);
+		let $div = $("<div>").append($($span));
+		let $select = $("<select>").addClass('form-select w-25');
+			$select.append($("<option>").text('검토'))
+					.append($("<option>").text('결재'))
+					.append($("<option>").text('전결'))
+					.append($("<option>").text('후결'))
+					.append($("<option>").text('협조'));
+    	$select.val(item.category); // 카테고리에 맞는 옵션 선택
+		$div.append($i).append(`<b>${item.name}</b>&ensp;${item.job}`);
+        $a.append($($div)).append($select).appendTo($("div#memberlist2"));
+        //조직도에서 없앰
+        $("div#memberlist>a").each(function(){
+			if ($(this).data('id') == item.no) {
+                $(this).css('display', 'none');
+            }
+		});
+    });
+	
 	$("#rightBtn").click(e=>{
 		console.log("right");
 		//이미 선택된 결재자 있으면 반영
 		if($("div#memberlist2>a").length > 0){
 			count=$("div#memberlist2>a").length;
+		}else{
+			count=0;
 		}
 		//선택항목의 데이터를 결재라인으로 출력
 		$("div#memberlist>a.selected").each(function(){
@@ -25,12 +61,24 @@ $(document).ready(function() {
 			let teamName = $(this).data('team');
 			$(this).removeClass('selected');
 			$(this).css('display', 'none');
-			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between').attr({'href':'#','data-id': no, 'data-name' : name, 'data-teamName': teamName,'data-job': job});
+			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+							.attr({
+								'href':'#',
+								'data-id': no, 
+								'data-name' : name, 
+								'data-teamName': teamName,
+								'data-job': job
+							});
 			let $i = $("<i>").addClass('fas fa-user me-2');
-			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0').text(`${count}`);
+			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
+									.text(`${count}`);
 			let $div = $("<div>").append($($span));
 			let $select = $("<select>").addClass('form-select w-25');
-			$select.append($("<option>").text('검토')).append($("<option>").text('결재')).append($("<option>").text('전결	')).append($("<option>").text('후결')).append($("<option>").text('협조'));
+			$select.append($("<option>").text('검토'))
+					.append($("<option>").text('결재'))
+					.append($("<option>").text('전결'))
+					.append($("<option>").text('후결'))
+					.append($("<option>").text('협조'));
 			$div.append($i).append(`<b>${name}</b>&ensp;${job}`);
 			$a.append($($div)).append($select).appendTo($("div#memberlist2"));
 		});
@@ -156,13 +204,13 @@ $(document).ready(function() {
 		let $selectedItems = $("div#memberlist2>a");
 		let data = [];
 		//순회하며 객체 배열에 값 추가
-		$selectedItems.each(function(){
+		$selectedItems.each(function(index){
 			console.log($(this));
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
 			let teamName = $(this).data('teamname');
-			let orderby =$(this).find("span.badge.rounded-pill.text-bg-secondary").text();
+			let orderby =$(`#memberlist2 > a:nth-child(${index+1}) > div > span`).text();
 			let category=$(this).children().last().val();
 			let $app = {
 				        orderby: orderby,
@@ -175,6 +223,8 @@ $(document).ready(function() {
 			data.push($app);
 		});
 		console.dir(data);
+		// 로컬 스토리지에 데이터 저장
+    	localStorage.setItem('selectedApprover', JSON.stringify(data));
 		//부모창에 전달
 		window.opener.sendDataToParent(data);
 		window.close();
@@ -192,7 +242,6 @@ $(document).ready(function() {
 			reverseButtons: false
 		}).then((result) => {
 			if (result.isConfirmed) {
-				// 임시저장 버튼이 클릭되었을 때 처리할 로직
 				window.close();
 			}
 		});

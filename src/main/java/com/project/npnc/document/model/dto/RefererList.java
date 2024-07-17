@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class approversList {
-	private List<Approver> approvers;
+public class RefererList {
+	private List<Referer> referers;
 }
