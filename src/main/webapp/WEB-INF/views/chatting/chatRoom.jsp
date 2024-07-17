@@ -340,6 +340,8 @@ body{
 			</ul>
 		</div>
 	</div>
+	
+
 
 	<!-- 모달 -->
 	<div id="newChatModal" class="modal">

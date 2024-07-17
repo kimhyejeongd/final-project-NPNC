@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<sec:authentication var="currentUserId" property="principal.memberId"/>
+
 
 <head>
 <meta charset="UTF-8">
@@ -37,16 +42,18 @@
 			      <div class="accordion-body" style='padding: 0!important;'>
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
-						  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
-						  <div>
-						  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
-	                        <i class="fas fa-envelope"></i>
-	                      </button>
-	                      <div class="btn btn-icon btn-round btn-primary" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
-                              <i class="fa fa-comment"></i>
-                            </div>
-						  </div>
-						   </a>
+		 					<c:if test="${currentUserId != memberlist.memberId }">
+							  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
+							  <div>
+							  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
+		                        <i class="fas fa-envelope"></i>
+		                      </button>
+		                      <div class="btn btn-icon btn-round btn-primary" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
+	                              <i class="fa fa-comment"></i>
+	                            </div>
+							  </div>
+							   </a>
+		 					</c:if>
 						
 		  				</c:forEach>
 					</div>
@@ -56,12 +63,16 @@
 		
 		
 		</c:forEach>	
+		
+
+		
 	</div> 
 	<!-- 모달 팝업 스크립트 -->
            
 
 
  <script>
+
  var stompClient = null;
 
  function connectMainPage() {
@@ -75,33 +86,12 @@
              console.log("Parsed message: ", status); // 추가 로그
              updateUserStatus(status.username, status.isOnline);
          });
-         stompClient.subscribe('/user/queue/users', function (message) {
-             var users = JSON.parse(message.body);
-             console.log("===========status====================");
 
-             console.log("Current users123: ", users);
-             for (var username in users) {
-                 if (users.hasOwnProperty(username)) {
-                     updateUserStatus(username, users[username]);
-                 }
-             }
-         });
-        // 초기 상태 요청
-        stompClient.send("/app/request-initial-status", {}, JSON.stringify({'request': 'initialStatus'}));
      });
  }
 
- function updateUserStatus(username, isOnline) {
-     var statusDot = document.getElementById('status-dot-' + username);
-     
-     console.log(statusDot);
-     if (!statusDot) {
-         console.error('status-dot element not found for user: ' + username);
-         return;
-     }
 
-     statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
- }
+
 
      connectMainPage(); // WebSocket 연결
      
