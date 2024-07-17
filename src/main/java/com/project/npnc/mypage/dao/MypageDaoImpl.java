@@ -18,4 +18,14 @@ public class MypageDaoImpl implements MemberDao {
     public int updateProfileImage(SqlSession session, Map<String, Object> paramMap) {
         return session.update("mypage.updateMember", paramMap);
     }
-} 
+
+    @Override
+    public Member findByEmail(SqlSession session, String email) {
+        return session.selectOne("mypage.findByEmail", email);
+    }
+
+    @Override
+    public int updatePassword(SqlSession session, Map<String, Object> paramMap) {
+        return session.update("mypage.updatePassword", paramMap);
+    }
+}

@@ -7,4 +7,6 @@ import com.project.npnc.security.dto.Member;
 public interface MemberDao {
     Member findById(SqlSession session, String memberId);
     int updateProfileImage(SqlSession session, Map<String, Object> paramMap);
+    Member findByEmail(SqlSession session, String email);
+    int updatePassword(SqlSession session, Map<String, Object> paramMap);
 }

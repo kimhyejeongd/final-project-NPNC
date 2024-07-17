@@ -20,32 +20,39 @@ public class MypageServiceImpl implements MemberService {
 
     @Override
     public Member getMemberById(String memberId) {
-       // try (SqlSession session = sqlSessionFactory.openSession()) {
-            return memberDao.findById(sqlSession, memberId);
-        }
-    
+        return memberDao.findById(sqlSession, memberId);
+    }
 
     @Override
     @Transactional
     public void updateProfileImage(String memberId, MultipartFile file) {
         String profileImagePath = saveFile(file);
-		/*
-		 * try (SqlSession session = sqlSession.openSession()) { Map<String, Object>
-		 * paramMap = new HashMap<>(); paramMap.put("memberId", memberId);
-		 * paramMap.put("profileImagePath", profileImagePath);
-		 * memberDao.updateProfileImage(session, paramMap);
-		 */
-        }
-   // }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("memberId", memberId);
+        paramMap.put("profileImagePath", profileImagePath);
+        memberDao.updateProfileImage(sqlSession, paramMap);
+    }
 
     private String saveFile(MultipartFile file) {
-        // 파일 저장 로직 구현
-        // 예외 처리 추가
         try {
-            // 파일 저장 로직...
+            // 파일 저장 로직 구현
             return "/path/to/saved/file";
         } catch (Exception e) {
             throw new RuntimeException("파일 저장 중 오류 발생", e);
         }
     }
-} 
+
+    @Override
+    public Member getMemberByEmail(String email) {
+        return memberDao.findByEmail(sqlSession, email);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String memberId, String newPassword) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("memberId", memberId);
+        paramMap.put("newPassword", newPassword);
+        memberDao.updatePassword(sqlSession, paramMap);
+    }
+}
