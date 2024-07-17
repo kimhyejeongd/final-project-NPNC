@@ -17,7 +17,6 @@ public interface AttendanceService {
 	int selectAttendanceCount(int memberKey);
 	Attendance selectAttendanceByMemberKey(int memberKey);	
 	
-	
 	Attendance selectAttendanceByAttendanceKey(int attendanceKey);
 	void updateAttendanceState(Attendance a,Map<Integer, Boolean> result);
 	int insertAbsent(int memberKey);
@@ -26,7 +25,17 @@ public interface AttendanceService {
 
 	//attendanceEdit
 	int insertAttendanceEdit(AttendanceEdit ae);
- 	
+ 	List<AttendanceEdit> selectAttendanceEditById(String memberId,Map page);
+ 	int selectAttendanceEditCount(String memberId);
+	AttendanceEdit selectAttendanceEditByKey(int attendanceEditKey);
+	int deleteAttendanceEdit(int attendanceEditKey);
+	
+	//admin attendance
+	List<Attendance> selectAdminAttendanceAll(Map page);
+	int selectAdminAttendanceAllCount();
+	
+	
+	
 	
 	
 	

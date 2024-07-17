@@ -30,8 +30,13 @@ public interface AttendanceDao {
 	
 	//attendanceEdit
 	int insertAttendanceEdit(SqlSession session,AttendanceEdit ae);
-	List<AttendanceEdit> SelectAttendanceEditById(SqlSession session,String memberId);
+	List<AttendanceEdit> selectAttendanceEditById(SqlSession session,String memberId,Map<String,Integer> page);
+	int selectAttendanceEditCount(SqlSession session,String memberId);
+	AttendanceEdit selectAttendanceEditByKey(SqlSession session,int attendanceEditKey);
+	int deleteAttendanceEdit(SqlSession session,int attendanceEditKey);
 	
-	
+	//admin attendacne
+	List<Attendance> selectAdminAttendanceAll(SqlSession session,Map<String,Integer> page);
+	int selectAdminAttendanceAllCount(SqlSession session);
 	
 }

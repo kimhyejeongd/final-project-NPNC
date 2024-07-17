@@ -24,5 +24,6 @@ public class AttendanceEdit {
 	private String attendanceEditAfterState;
 	private String attendanceEditRequest;
 	private String attendanceEditOpinion;
+	private String attendanceEditState;
  
 }
