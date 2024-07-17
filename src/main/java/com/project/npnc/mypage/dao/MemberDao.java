@@ -1,7 +1,10 @@
 package com.project.npnc.mypage.dao;
 
 import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.data.repository.query.Param;
+
 import com.project.npnc.security.dto.Member;
 
 public interface MemberDao {

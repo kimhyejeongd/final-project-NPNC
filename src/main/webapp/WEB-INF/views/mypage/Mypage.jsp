@@ -131,7 +131,12 @@
         </div>
       </div>
       <!-- End Sidebar -->
-      <div class="main-panel">
+      
+      
+      
+      
+      
+<div class="main-panel">
     <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
     <div class="container">
         <div class="page-inner">
@@ -181,6 +186,7 @@
                                             <button class="btn btn-sm btn-primary" id="editPasswordButton">수정</button>
                                             <div id="passwordForm" style="display:none;">
                                                 <p>이메일 인증이 필요합니다.</p>
+                                                <input type="email" id="verificationEmail" placeholder="이메일 입력">
                                                 <button class="btn btn-sm btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
                                                 <div id="emailVerificationForm" style="display: none;">
                                                     <input type="text" id="emailVerificationCode" placeholder="인증 코드 입력">
@@ -219,7 +225,7 @@
         });
 
         $('#sendEmailVerificationButton').click(function() {
-            var email = "${member.memberEmail}";
+            var email = $('#verificationEmail').val();
             $.ajax({
                 url: '/member/sendPasswordResetEmail',
                 type: 'POST',
@@ -255,7 +261,7 @@
         });
 
         $('#saveNewPasswordButton').click(function() {
-            var email = "${member.memberEmail}";
+            var email = $('#verificationEmail').val();
             var newPassword = $('#newPassword').val();
             $.ajax({
                 url: '/member/changePassword',

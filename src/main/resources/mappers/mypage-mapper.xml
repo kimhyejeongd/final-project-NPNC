@@ -14,8 +14,6 @@
 	</update>
 	<resultMap type="mypagemember" id="membermap">
       <id column="MEMBER_KEY" property="memberKey"/>
-<!--    <result column="DEPARTMENT_KEY" property="departmentKey"/>
-      <result column="JOB_KEY" property="jobKey"/> -->
       <result column="MEMBER_ID" property="memberId"/>
       <result column="MEMBER_PW" property="memberPw"/>
       <result column="MEMBER_PHONE" property="memberPhone"/>
@@ -33,4 +31,10 @@
       <result column="DEPARTMENT_KEY" property="departmentKey"/>
       <result column="JOB_KEY" property="jobKey"/>
 	</resultMap>
+
+        <update id="updatePassword">
+        UPDATE members
+        SET MEMBER_PW = #{newPassword}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 </mapper>
