@@ -44,7 +44,7 @@ public class WebSocketEventListener {
         if (user != null) {
             userStatusMap.put(user.getName(), true);
             sendUserStatus(user.getName(), true);
-            messagingTemplate.convertAndSendToUser(user.getName(), "/queue/users", new HashMap<>(userStatusMap));
+            messagingTemplate.convertAndSendToUser(user.getName(), "queue/users", new HashMap<>(userStatusMap));
 
         }
     }

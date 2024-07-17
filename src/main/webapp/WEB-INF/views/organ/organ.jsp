@@ -62,47 +62,50 @@
 
 
  <script>
-            
-				 var stompClient = null;
-				
-				 function connect() {
-				     var socket = new SockJS('/ws-stomp');
-				     stompClient = Stomp.over(socket);
-				     stompClient.connect({}, function (frame) {
-				         console.log('Connected: ' + frame);
-				         stompClient.subscribe('/topic/status', function (message) {
-				        	 console.log("Raw message: ", message); // 추가 로그
-				        	    var status = JSON.parse(message.body);
-				        	    console.log("Parsed message: ", status); // 추가 로그
-				        	    updateUserStatus(status.username, status.isOnline);
-				         });
-				         stompClient.subscribe('/user/queue/users', function (message) {
-				             var users = JSON.parse(message.body);
-				             console.log("Current users123: ", users);
-				             for (var username in users) {
-				                 if (users.hasOwnProperty(username)) {
-				                     updateUserStatus(username, users[username]);
-				                 }
-				             }
-				         });
-				     });
-				 }
-				
-			       function updateUserStatus(username, isOnline) {
-			            var statusDot = document.getElementById('status-dot-' + username);
-			            console.log(statusDot);
-			            if (!statusDot) {
-			                console.error('status-dot element not found for user: ' + username);
-			                return;
-			            }
-			            
-			            statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
-			        }
-				
-				 connect();
-				          
-   			
+ var stompClient = null;
 
+ function connectMainPage() {
+     var socket = new SockJS('/ws-stomp');
+     stompClient = Stomp.over(socket);
+     stompClient.connect({}, function (frame) {
+         console.log('Connected: ' + frame);
+         stompClient.subscribe('/topic/status', function (message) {
+             console.log("Raw message: ", message); // 추가 로그
+             var status = JSON.parse(message.body);
+             console.log("Parsed message: ", status); // 추가 로그
+             updateUserStatus(status.username, status.isOnline);
+         });
+         stompClient.subscribe('/user/queue/users', function (message) {
+             var users = JSON.parse(message.body);
+             console.log("===========status====================");
+
+             console.log("Current users123: ", users);
+             for (var username in users) {
+                 if (users.hasOwnProperty(username)) {
+                     updateUserStatus(username, users[username]);
+                 }
+             }
+         });
+        // 초기 상태 요청
+        stompClient.send("/app/request-initial-status", {}, JSON.stringify({'request': 'initialStatus'}));
+     });
+ }
+
+ function updateUserStatus(username, isOnline) {
+     var statusDot = document.getElementById('status-dot-' + username);
+     
+     console.log(statusDot);
+     if (!statusDot) {
+         console.error('status-dot element not found for user: ' + username);
+         return;
+     }
+
+     statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
+ }
+
+     connectMainPage(); // WebSocket 연결
+     
+     
           	//열기 버튼을 눌렀을 때 모달팝업이 열림
           	  document.querySelectorAll('.modal_btn1').forEach((button, index) => {
           		 const modal1 = document.querySelectorAll('.modal1');

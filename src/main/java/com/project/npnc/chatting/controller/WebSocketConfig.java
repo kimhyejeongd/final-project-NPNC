@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/send","/pub","/user");   
     
         //해당 주소를 구독하고 있는 클라이언트들에게 메세지 전달
-        registry.enableSimpleBroker("/queue","/topic","/room","/sub");   
+        registry.enableSimpleBroker("/queue","/topic","/room","/sub","/users");   
     }
 
     @Override
