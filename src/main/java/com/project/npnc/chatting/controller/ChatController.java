@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
+import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
@@ -196,4 +200,18 @@ public class ChatController {
     	return  ResponseEntity.ok(result);
     }
 
+
+    
+    @PostMapping("/myChatRoomList")
+    public ResponseEntity<?> myChatRoomList(@RequestParam("memberKey")int memberKey){
+    	Member member = getCurrentUser();
+		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
+		return ResponseEntity.ok(mychatRoomList);
+
+    }
+    
+    private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
+    }
 }

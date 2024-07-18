@@ -577,6 +577,7 @@ body{
                     var roomItem = $("#room-" + roomId);
                     roomItem.prependTo("#roomList");
                     
+                    console.log("==================")
                     	
                     if(currentSession != null){
 	                    console.log(currentSession);

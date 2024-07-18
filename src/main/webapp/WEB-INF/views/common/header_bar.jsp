@@ -363,17 +363,11 @@
 		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 				 <script type="text/javascript">
-				 
+				 var myChatRoomList=null;
 					 $(document).ready(function() {
-								$.ajax({
-									url:'${path}/headerUnread',
-									type:'POST',
-									data:{ memberKey:${loginMember.memberKey}},
-									success:function(response){
-						                $('.notification').eq(0).text(response);
-										
-									}
-								})
+	
+						 		headerUnread();
+
 						 
 					        $('#messageDropdown').on('show.bs.dropdown', function() {
 			                event.stopPropagation(); // Ã¬ÂÂ´Ã«Â²Â¤Ã­ÂÂ¸ Ã«Â²ÂÃ«Â¸ÂÃ«Â§Â Ã«Â°Â©Ã¬Â§Â
@@ -411,7 +405,17 @@
 					               });   
 					            }
 					         );
-
+					 var headerUnread = ()=>{						 
+						$.ajax({
+							url:'${path}/headerUnread',
+							type:'POST',
+							data:{ memberKey:${loginMember.memberKey}},
+							success:function(response){
+				                $('.notification').eq(0).text(response);
+								
+							}
+						});
+					 }
 				</script> 
                 <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                   <li
@@ -669,16 +673,13 @@
 		            setConnected(true);
 		            console.log('Connected: ' + frame);
 		            
-		            // 채팅방 목록 초기화 및 구독
-		            $('.room-item').each(function() {
-
-		                var roomId = $(this).find('input[name="roomId"]').val();
-		                var recentMessageElement = $(this).find('.recent-message-' + roomId);
-		                subscribeToRoom(roomId, recentMessageElement);
-		                loadChat(roomId, recentMessageElement);
+		            myChatRoomList.forEach(function(room) {
+		                var roomId = room.chatRoomKey;
+		                stompClient.subscribe('/room/' + roomId, function() {
+					 		headerUnread();
+		                });
 		            });
-		            
-		            
+	
 		            
 		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
 		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
@@ -735,6 +736,18 @@
 		    }
 			
 		    window.onload = function () {
+ 				console.log("---=-=-=-=-=-=");
+
+		 		$.ajax({
+		 			url:'${path}/myChatRoomList',
+		 			data:{memberKey:'${loginMember.memberKey}'},
+		 			type:'POST',
+		 			success:function(response){
+		 				console.log(response+"---=-=-=-=-=-=");
+		 				myChatRoomList = response;
+		 			}
+		 		})
+		 		
 		        connect();
 		    }
 

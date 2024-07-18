@@ -11,15 +11,25 @@
 		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
 	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
-		INSERT INTO chatting_file
-		VALUES      ( # {chatFileKey},
-		              # {memberKey},
-		              # {chatMsgFileOri},
-		              # {chatMsgFilePost},
-		              # {chatFileTime},
-		              # {chatRoomKey},
-		              # {chatMsgKey},
-		              # {fileContentType} ) 
+		    INSERT INTO chatting_file (
+	        CHAT_FILE_KEY,
+			MEMBER_KEY,
+			CHAT_MSG_FILE_ORI,
+			CHAT_MSG_FILE_POST,
+			CHAT_FILE_TIME,
+			CHAT_ROOM_KEY,
+			CHAT_MSG_KEY,
+			FILE_CONTENT_TYPE
+		    ) VALUES (
+		        #{chatFileKey},
+		        #{memberKey},
+		        #{chatMsgFileOri},
+		        #{chatMsgFilePost},
+		        #{chatFileTime},
+		        #{chatRoomKey},
+		        #{chatMsgKey},
+		        #{fileContentType}
+		    )
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
 		DELETE 

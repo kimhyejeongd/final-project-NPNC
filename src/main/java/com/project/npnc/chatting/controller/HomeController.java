@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HomeController {
 	private final ChatService service;
-	
+
 	@PostMapping("/chat")
 	public String chat(
 			Model model,
@@ -84,9 +85,8 @@ public class HomeController {
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
-		Member member =getCurrentUser();
 
-
+		Member member = getCurrentUser();
         
         
 		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
@@ -127,6 +127,5 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();
     }
-
 	
 }
