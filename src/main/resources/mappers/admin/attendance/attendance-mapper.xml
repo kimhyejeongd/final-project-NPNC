@@ -247,8 +247,36 @@
 	<select id="selectAdminAttendanceEditCount" resultType="_int">
 		SELECT 
 		COUNT(ATTENDANCE_EDIT_KEY)
-		FROM ATTENDANCE_EDIT
-		
+		FROM ATTENDANCE_EDIT	
 	</select>
+
+	<update id="updateAttendanceEdit" parameterType="attendanceEdit">
+		UPDATE ATTENDANCE_EDIT 
+		SET ATTENDANCE_EDIT_OPINION=#{attendanceEditOpinion},
+		ATTENDANCE_EDIT_STATE='반려' 
+		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
+	</update>
+
+	<update id="updateAttendanceEditState" parameterType="_int">
+		UPDATE ATTENDANCE_EDIT
+		SET ATTENDANCE_EDIT_STATE='승인'
+		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
+	</update>
+	
+	<update id="updateAttendance" parameterType="attendanceEdit">
+		UPDATE ATTENDANCE
+		SET
+		<choose>
+	       	<when test="attendanceEditStartEnd != null and attendanceEditStartEnd == '출근'">
+	          	ATTENDANCE_START=#{attendanceEditAfterTime}
+	        </when>
+	        <otherwise>
+	            ATTENDANCE_END=#{attendanceEditAfterTime}
+	        </otherwise>
+      	</choose>,
+      	ATTENDANCE_STATE=#{attendanceEditAfterState}
+      	WHERE ATTENDANCE_KEY=#{attendance.attendanceKey}
+      	
+	</update>
 
 </mapper>

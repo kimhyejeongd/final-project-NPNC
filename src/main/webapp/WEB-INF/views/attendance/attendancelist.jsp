@@ -80,7 +80,7 @@
 			</div>
 			
 			<div>
-				<button onclick="location.assign('${path}/attendance/attendanceEditList')">수정요청목록</button>
+				<button onclick="location.assign('${path}/attendance/selectAttendanceEditById')">수정요청목록</button>
 			</div>
 
 	<script>

@@ -59,4 +59,38 @@ public class AdminAttendanceController {
 		return "admin/attendance/adminattendanceEditDetail";
 	}
 	
+	@PostMapping("/updateAttendanceEdit")
+	public String updateAttendanceEdit(int attendanceEditKey,String attendanceEditOpinion,Model m) {
+		AttendanceEdit attendanceEdit=AttendanceEdit.builder().attendanceEditKey(attendanceEditKey).attendanceEditOpinion(attendanceEditOpinion).build();
+		int result=service.updateAttendanceEdit(attendanceEdit);
+		String msg,loc;
+		if(result>0) {
+			msg="반려성공";
+			loc="/admin/attendance/selectAdminAttendanceEditAll";
+		}else {
+			msg="반려실패";
+			loc="/admin/attendance/selectAdminAttendanceEditAll";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+	}
+	
+	
+	@PostMapping("/updateAttendance")
+	public String updateAttendance(AttendanceEdit attendanceEdit,int attendanceKey,Model m) {
+		attendanceEdit.setAttendance(Attendance.builder().attendanceKey(attendanceKey).build());
+		int result=service.updateAttendance(attendanceEdit);
+		String msg,loc;
+		if(result>0) {
+			msg="승인성공";
+			loc="/admin/attendance/selectAdminAttendanceEditAll";
+		}else {
+			msg="승인실패";
+			loc="/admin/attendance/selectAdminAttendanceEditAll";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+	}
 }

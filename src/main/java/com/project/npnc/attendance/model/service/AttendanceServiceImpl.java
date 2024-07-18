@@ -215,6 +215,23 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.selectAdminAttendanceEditCount(session);
 	}
+
+	@Override
+	public int updateAttendanceEdit(AttendanceEdit attendanceEdit) {
+		
+		return attendanceDao.updateAttendanceEdit(session, attendanceEdit);
+	}
+
+	@Override
+	public int updateAttendance(AttendanceEdit attendanceEdit) {
+		int result=attendanceDao.updateAttendance(session,attendanceEdit);
+		if(result>0) {
+			return attendanceDao.updateAttendanceEditState(session,attendanceEdit.getAttendanceEditKey());
+		}else {
+			session.rollback();
+			return 0;
+		}
+	}
 	
 	
 	

@@ -155,7 +155,7 @@ public class AttendanceController{
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll.do"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
