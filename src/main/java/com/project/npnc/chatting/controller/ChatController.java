@@ -181,5 +181,11 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 중 오류 발생");
         }
     }
+    
+    @PostMapping("/inviteToRoom")
+    public int inviteToRoom (@RequestParam int roomId,@RequestParam List<Integer> memberIds) {
+    	int result = service.inviteToRoom(roomId,memberIds);
+    	return result;
+    }
 
 }

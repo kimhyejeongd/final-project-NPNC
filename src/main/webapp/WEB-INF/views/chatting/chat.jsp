@@ -22,6 +22,10 @@
 .friend-item.selected {
     background-color: #e0e0e0;
 }
+.friend-item {
+  list-style-type: none;
+
+}
 
 /* 초대 모달 스타일 */
 #inviteModal .modal-content {
@@ -509,8 +513,10 @@ $(document).ready(function() {
                     memberIds: selectedUsers
                 },
                 success: function(response) {
-                    alert('유저를 성공적으로 초대했습니다.');
-                    $('#inviteModal').hide();
+                	if (response>0){                		
+	                    alert('유저를 성공적으로 초대했습니다.');
+	                    $('#inviteModal').hide();
+                	}
                 },
                 error: function(error) {
                     console.error('유저 초대 중 오류 발생:', error);

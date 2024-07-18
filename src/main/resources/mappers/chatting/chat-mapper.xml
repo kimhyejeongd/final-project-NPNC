@@ -87,8 +87,8 @@
 	</select>
 	
     <insert id="insertSingleRoomId" parameterType="map">
-        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS)
-        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y')
+        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y',SYSDATE)
     </insert>
 	
 	<insert id="insertChat" parameterType="map">
@@ -157,6 +157,12 @@
 	<select id="countRoomMember" parameterType="int" resultType="int">
 		select count(*) from CHATTING_GROUP where chat_room_key = #{roomId}
 	</select>
+	
+	<insert id="insertChatMember" parameterType="map">
+		        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y',SYSDATE)
+		
+	</insert>
 
     <resultMap id="chattingMessageResultMap" type="chattingMessage">
         <id property="chatMsgKey" column="CHAT_MSG_KEY"/>
