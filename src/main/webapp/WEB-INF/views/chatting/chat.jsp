@@ -3,6 +3,8 @@
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+    
 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <sec:authentication var="loginMember" property="principal"/>
@@ -351,9 +353,8 @@
         <input type="text" id="searchInviteUser" class="search-bar" placeholder="유저 검색">
         <ul class="friend-list" id="inviteFriendList">
             <c:forEach var="user" items="${allMembers}">
-                <c:if test="${user.memberId != loginMember.memberId}">
+                <c:if test="${user.memberId != loginMember.memberId && !fn:contains(roomMemberKeys, user.memberKey)}">
                     <li class="friend-item" data-member-no="${user.memberKey}">
-                    
                         <img src="profile1.jpg" alt="프로필 사진">
                         <div class="friend-info">
                             <div class="friend-name">${user.memberName}</div>
@@ -515,7 +516,16 @@ $(document).ready(function() {
                 success: function(response) {
                 	if (response>0){                		
 	                    alert('유저를 성공적으로 초대했습니다.');
-	                    $('#inviteModal').hide();
+
+	                    // 선택된 유저들을 현재 유저 리스트에 추가
+	                    selectedUsers.forEach(function(userNo) {
+	                        var userName = $('#inviteFriendList .friend-item[data-member-no="' + userNo + '"]').find('.friend-name').text();
+	                        $('#roomMemberList').append('<li>' + userName + '</li>');
+	                    });
+
+	                    // 선택된 유저들을 friend list에서 제거
+	                    $('#inviteFriendList .friend-item.selected').remove();
+	               
                 	}
                 },
                 error: function(error) {

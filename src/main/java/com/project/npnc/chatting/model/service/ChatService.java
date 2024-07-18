@@ -165,6 +165,9 @@ public class ChatService {
 				dao.deleteRoom(session,exitInfo);
 			}
 		}
+		public int selectUnreadCurrent(int memberKey) {
+			return dao.selectUnreadCurrent(session,memberKey);
+		}
 		
 		   
 

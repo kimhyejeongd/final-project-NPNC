@@ -121,5 +121,9 @@ public class ChatDao {
 	public int insertChatMember(SqlSessionTemplate session, Map<String,Object> inviteInfo) {
 		return session.insert("chat.insertChatMember",inviteInfo);
 	}
+	public int selectUnreadCurrent(SqlSessionTemplate session, int memberKey) {
+		return session.selectOne("chat.selectUnreadCurrent",memberKey);
+				
+	}
 
 }

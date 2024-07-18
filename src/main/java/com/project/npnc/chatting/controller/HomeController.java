@@ -3,8 +3,8 @@ package com.project.npnc.chatting.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -57,15 +57,20 @@ public class HomeController {
 		readInfo.put("loginMemberKey", loginMemberKey);
 		readInfo.put("roomId", roomId);
 		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+		List<Member> allMembers = service.selectAllMembers();
 		
-
+		  List<Integer> roomMemberKeys = roomMembers.stream()
+                  .map(Member::getMemberKey)
+                  .collect(Collectors.toList());
 		
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
-		model.addAttribute("allMembers",service.selectAllMembers());
+		model.addAttribute("allMembers",allMembers);
+		model.addAttribute("roomMemberKeys",roomMemberKeys);
+		
 		
 		
 
@@ -79,9 +84,8 @@ public class HomeController {
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
-//        임시 로그인
-		Member member = getCurrentUser();
-        session.setAttribute("loginMember", member); 
+		Member member =getCurrentUser();
+
 
         
         

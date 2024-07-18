@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -183,9 +181,19 @@ public class ChatController {
     }
     
     @PostMapping("/inviteToRoom")
-    public int inviteToRoom (@RequestParam int roomId,@RequestParam List<Integer> memberIds) {
+    public ResponseEntity<Integer> inviteToRoom (@RequestParam int roomId,@RequestParam List<Integer> memberIds) {
     	int result = service.inviteToRoom(roomId,memberIds);
-    	return result;
+        if (result > 0) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+    
+    @PostMapping("/headerUnread")
+    public  ResponseEntity<Integer> selectUnreadCurrent (@RequestParam int memberKey) {
+    	int result =  service.selectUnreadCurrent(memberKey);
+    	return  ResponseEntity.ok(result);
     }
 
 }
