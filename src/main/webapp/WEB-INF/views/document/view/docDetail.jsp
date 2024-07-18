@@ -101,7 +101,9 @@
 				      <!-- <div class="col m-0 p-2" style="height: auto; min-height: 30px; width: 100%; text-align: left; fontSize: larger; border-radius: 15px;" id=""> -->
 					      <c:if test="${not empty l.referers}">
 						      <c:forEach items="${l.referers }" var="ap" varStatus="vs">
+						      	<c:if test="${ap.erRefererKey ne 0}">
 						      	<div class="row m-0 p-2 border text-align-center justify-content-center " style="width: 140px; font-size: larger; border-radius: 10px; background-color: var(--bs-border-color);">${ap.erReferermemberTeam } ${ap.erReferermemberJob } ${ap.erReferermemberName }</div>
+						      	</c:if>
 						      </c:forEach>
 					      </c:if>
 				      </div>

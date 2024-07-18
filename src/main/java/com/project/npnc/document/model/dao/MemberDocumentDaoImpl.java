@@ -50,7 +50,12 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
 	public int insertDoc(SqlSession session, Document d) {
-		return session.insert("document.insertDoc", d);
+		int result = session.insert("document.insertDoc", d);
+		return result;
+	}
+	@Override
+	public int updateDocFilename(SqlSession session, String erDocFilename) {
+		return session.insert("document.updateDocFilename", erDocFilename);
 	}
 
 	@Override
@@ -58,6 +63,15 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<request.getApprovers().size();i++) {
 			Approver ap = request.getApprovers().get(i);
+			result = session.insert("document.insertApproval", ap); 
+		}
+		return result;
+	}
+	@Override
+	public int insertApproval(SqlSession session, List<Approver> list) {
+		int result =0;
+		for(int i=0; i<list.size();i++) {
+			Approver ap = list.get(i);
 			result = session.insert("document.insertApproval", ap); 
 		}
 		return result;
@@ -93,6 +107,15 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<request.getReferers().size();i++) {
 			Referer r = request.getReferers().get(i);
+			result = session.insert("document.insertReferer", r); 
+		}
+		return result;
+	}
+	@Override
+	public int insertReferer(SqlSession session, List<Referer> list) {
+		int result =0;
+		for(int i=0; i<list.size();i++) {
+			Referer r = list.get(i);
 			result = session.insert("document.insertReferer", r); 
 		}
 		return result;

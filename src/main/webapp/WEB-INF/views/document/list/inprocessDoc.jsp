@@ -41,9 +41,9 @@
 		                            <td class="text-muted">${l.erDocSerialKey }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                            <td class="">
-		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
+		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 		                            </td>
-		                            <td class="approverNow">
+		                            <td class="approverNow p-3">
 		                            	<c:forEach items="${l.approvers }" var="ap">
 		                            		<c:if test="${ap.state eq '승인' }">
 		                              			<div class="badge badge-success" style="min-width: 60px;">

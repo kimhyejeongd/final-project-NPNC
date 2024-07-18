@@ -53,7 +53,7 @@
         margin: 0 auto;
         border: 1px solid #ccc;
         overflow-y: scroll; /* 세로 스크롤만 */
-        overflow-x: auto;  /* 가로 스크롤도 필요할 경우 */
+        overflow-x: scroll;  /* 가로 스크롤도 필요할 경우 */
      }
      .note-toolbar {
 	    background-color: #f5f5f5 !important;
@@ -259,14 +259,17 @@ $(document).ready(function() {
 				// 로컬 스토리지에서 데이터를 삭제
 				localStorage.removeItem('selectedReferer'); 
 				localStorage.removeItem('selectedApprover'); 
-				// iframe 데이터 확인
-				//let framedata = (document.querySelector("#htmlDiv_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
-				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").innerHTML;
+				
+				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				console.log(dochtml);
-				let opinion = $('#input-field').val();
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-				$("#docForm").submit();
+				if(dochtml != null){
+					let opinion = $('#input-field').val();
+					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
+					$("#docForm").submit();
+				} else{
+					alert('문서 저장 오류');
+				}
 			}
 		});
 	});
@@ -397,7 +400,6 @@ function sendRefererToParent(data) {
             id: "referer" + index,
             css: {
                 width: '100%',
-                fontSize: 'larger',
                 textAlign: 'left',
                 borderRadius: '15px'
             },

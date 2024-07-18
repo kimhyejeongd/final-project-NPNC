@@ -15,6 +15,7 @@ public interface MemberDocumentService {
 	List<DocumentForm> selectFormsBySearch(String target);
 	DocumentForm selectFormByNo(int no);
 	
+	int insertDoc(Document d) throws Exception;
 	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
 	List<Document> selectInprocessDocs(int no);
 	List<Document> selectWaitingDocs(int no);

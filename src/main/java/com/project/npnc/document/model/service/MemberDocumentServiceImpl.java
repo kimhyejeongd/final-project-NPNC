@@ -94,6 +94,51 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	@Transactional	
+	public int insertDoc(Document d) throws Exception {
+		int result = dao.insertDoc(session, d); //문서 등록
+		if(result>0) {
+			log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
+			d.getApprovers().forEach(e->{
+				e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
+			});
+			d.setErDocFilename(d.getErDocSerialKey()+".html"); //문서파일명 설정
+			//문서파일 등록
+			String erDocSerialKey = d.getErDocSerialKey();
+			result = session.update("document.updateDocFilename", erDocSerialKey);
+			if(result>0) {
+				log.debug("[1]문서.html 등록 성공");
+				result=dao.insertApproval(session, d.getApprovers()); //결재자 등록
+				if(result>0) {
+					log.debug("[2] 결재자 insert 성공");
+					if(d.getReferers().size()>0) {
+						d.getReferers().forEach(e->{
+							e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
+						});
+						result = dao.insertReferer(session, d.getReferers());
+						if(result>0) {
+							log.debug("[3] 참조인 insert 성공");
+						}else if(result<=0) {
+							throw new Exception("[3] 참조인 insert 실패");
+						}
+					}else {
+						log.debug("[3] 참조인 없음");
+					} 
+				}else {
+					log.debug("[2] 결재자 insert 실패");
+					throw new Exception("[2] 결재자 insert 실패");
+				}
+			}else {
+				throw new Exception("[1]문서.html 등록 실패");
+			}
+			
+		}else {
+			log.debug("[1]문서 insert 실패");
+			throw new Exception("[1]문서 insert 실패");
+		}
+		return result;
+	}
+	@Override
+	@Transactional	
 	public int retrieveDoc(String docKey) throws Exception {
 		int result = dao.retrieveDoc(session, docKey); //전자문서 테이블 상태변경
 		if(result>0) {

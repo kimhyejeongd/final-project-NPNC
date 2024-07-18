@@ -241,13 +241,12 @@
 			d.ER_DOC_LAST_UPDATER, 
 			d.ER_DOC_LAST_UPDATE_REASON,
 			d.ER_DOC_WRITER
-		FROM      er_document
-		left join er_aprover ea
-		USING    (er_doc_serial_key)
-		WHERE     er_doc_writer = ${no}
-		AND       er_doc_state = '회수'
-		ORDER BY  er_doc_emergency_yn DESC,
-		          er_approval_orderby
+		FROM      er_document d
+		left join er_aprover ea on d.er_doc_serial_key = ea.er_doc_serial_key
+		WHERE     d.er_doc_writer = ${no}
+		AND       d.er_doc_state = '회수'
+		ORDER BY  d.er_doc_emergency_yn DESC,
+		          ea.er_approval_orderby
 	</select>
 	<!-- 문서 상세보기 -->
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
@@ -321,7 +320,7 @@
               #{erDocEmergencyYn},
               DEFAULT,
               #{erDocStorage},
-              #{erDocFilename},
+              null,
               DEFAULT,
               NULL,
               NULL,
@@ -336,8 +335,14 @@
 			       || To_char(seq_er_doc_serial_key.currval)
 				FROM   dual 
 		</selectKey>
-        <!-- 첨부파일 조건문은 나중에 -->
 	</insert>
+	<update id="updateDocFilename" parameterType="string">
+		UPDATE er_document
+	    SET 
+	        er_doc_filename = #{erDocSerialKey} || '.html'
+	    WHERE
+	        er_doc_serial_key = #{erDocSerialKey}
+	</update>
 	<!-- 진행중인 문서 회수 -->
 	<update id="retrieveDoc" parameterType="string">
 		UPDATE er_document

@@ -157,6 +157,27 @@ ORDER BY
 			AND       er_doc_state = '처리중'
 			ORDER BY  er_doc_emergency_yn DESC,
 			          er_approval_orderby;
+			         
+SELECT    
+			d.ER_DOC_KEY, 
+			d.ER_DOC_SERIAL_KEY, 
+			d.ER_DOC_TITLE, 
+			d.ER_DOC_CREATE_DATE, 
+			d.ER_DOC_EMERGENCY_YN, 
+			d.ER_DOC_DELETE_YN, 
+			d.ER_DOC_STOARGE, 
+			d.ER_DOC_FILENAME,
+			d.ER_DOC_STATE,
+			d.ER_DOC_STATE_UPDATE_DATE, 
+			d.ER_DOC_LAST_UPDATER, 
+			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_WRITER
+		FROM      er_document d
+		left join er_aprover ea on d.er_doc_serial_key = ea.er_doc_serial_key
+		WHERE     d.er_doc_writer = ${no}
+		AND       d.er_doc_state = '회수'
+		ORDER BY  d.er_doc_emergency_yn DESC,
+		          ea.er_approval_orderby;
 		
 SELECT * FROM ER_DOCUMENT ed ;
 SELECT * from ER_APPROVAL_LINE ;

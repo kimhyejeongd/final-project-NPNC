@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,11 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
-import com.project.npnc.document.model.dto.ApproversList;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.RefererList;
 import com.project.npnc.document.model.service.MemberDocumentService;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
@@ -146,7 +144,7 @@ public class MemberDocumentController {
 		switch(form) {
 		case 1 :
 			log.debug("----전자문서 작성시작----");
-			String html = readHtmlFile("/docformhtml", "F"+form+".html");
+			String html = readHtmlFile("docformhtml", "F"+form+".html");
 			m.addAttribute("html", html);
 			return "document/write/normal";
 		}
@@ -169,13 +167,12 @@ public class MemberDocumentController {
 	}
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	public String insertDoc(
-			String msg, Document doc, String html, 
-			@ModelAttribute ApproversList request, 
-			@ModelAttribute RefererList referers, 
-			Model m,
-			@RequestParam(value="file", required = false) MultipartFile file) {
+			String msg, Model m, Document doc, String html, 
+//			@ModelAttribute ApproversList request, 
+//			@ModelAttribute RefererList referers, 
+			@RequestParam(value="file")MultipartFile[] file) {
 		Member user = getCurrentUser();
-		log.debug("{}", request);
+		log.debug("{}", html);
 		log.debug("{}", user);
 		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
@@ -184,8 +181,8 @@ public class MemberDocumentController {
 		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
 		//결재자에 기안자도 추가
 		Approver me = Approver.builder().memberKey(user.getMemberKey())
-									.memberTeam("개발팀")
-									.memberJob("직급")
+									.memberTeam(user.getDepartmentKey())
+									.memberJob(user.getJobKey())
 									.memberName(user.getMemberName())
 									.category("기안")
 									.opinion(msg)
@@ -193,23 +190,20 @@ public class MemberDocumentController {
 									.date(Date.valueOf(LocalDate.now()))
 									.orderby(0)
 						.build();
-		List<Approver> ap = request.getApprovers();
+		List<Approver> ap = doc.getApprovers();
 		ap.add(me);
-		request.setApprovers(ap);
-		doc.setApprovers(request.getApprovers()); //has a 관계 파라미터 매칭
-		
-		
-		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
+		doc.setApprovers(ap);
 		
 		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 		log.debug("{}", doc);
-		log.debug("{}", request);
-		log.debug("{}", referers);
+//		log.debug("{}", request);
+//		log.debug("{}", referers);
 		int result=0;
 		
 		//문서, 결재자 insert
 		try { 
-			result = serv.insertDoc(doc, request, referers);
+//			result = serv.insertDoc(doc, request, referers);
+			result = serv.insertDoc(doc);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:home";
@@ -218,12 +212,20 @@ public class MemberDocumentController {
 		//기안, 결재자 등록 성공시
 		if(result > 0) {
 			//첨부파일 있으면 파일 등록 진행 TODO
-		    if (!file.isEmpty()) {
-		    	log.debug("{}",file);
+		    if (file.length > 0 || file != null) {
+		    	log.debug(file.toString());
+//		    	for(MultipartFile mu : file) {
+//		    		// 파일을 DocFile 객체로 변환
+//		    		DocFile docFile = new DocFile();
+//		    		docFile.setFileOriName(mu.getOriginalFilename());
+//		    		// DocFile 객체를 Document 객체의 files 리스트에 추가
+//		            doc.getFiles().add(docFile);
+//		    	}
 		    }	
 			//html파일로 문서 저장
 			try {
-				fileUpload("/dochtml",doc.getErDocSerialKey(), html);
+				log.debug(html);
+				fileUpload("dochtml",doc.getErDocSerialKey(), html);
 	            log.debug("[4] html저장 성공");
 			}catch(IOException e) {
 				log.debug("[4] html저장 실패");
@@ -248,7 +250,7 @@ public class MemberDocumentController {
 	
 	//html파일로 문서 저장 메소드
 	private void fileUpload(String dir, String title, String content) throws IOException {
-		String path = uploadDir+ dir + "/" +title +".html";
+		String path = uploadDir+ dir + "/" +title + ".html";
 		log.debug("문서 저장 경로 : " + path);
 			File file = new File(path);
 			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
@@ -257,6 +259,7 @@ public class MemberDocumentController {
                 file.createNewFile();
             }
 			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+			log.debug(content);
             writer.write(content);
             writer.close();
 	}
