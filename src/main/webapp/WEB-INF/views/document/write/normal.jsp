@@ -66,6 +66,10 @@
 	    margin-top: 0px !important;
 	    border: none !important; /* border 속성을 none으로 설정 */
 	}
+	#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block{
+		display: flex;
+		justify-content: center;
+	}
   </style>
  </head>
 <body>
@@ -94,80 +98,83 @@
                 <div class="card card-round p-3">
                   <div class="card-body">
                 <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
-               	<div class="form-group d-flex">
-			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
-			      </div>
-			    </div>
-			    <div class="form-group">
-			      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
-			          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
-			          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
-		          </label>
-			    </div>
-			    <div class="form-group d-flex">
-			      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
-			      	<div class="col w-100 align-items-center p-0">
-					      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
-								 <!-- <div class="border" id="approval1">
-								  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
-								  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-								  	<input name="approvers[0].memberKey" value="2" style="display:none">
-								  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-								  	<input name="approvers[0].memberJob" value="사원" style="">
-								  	<input name="approvers[0].memberName" value="김사원" style="">
-								  	<input name="approvers[0].category" value="기안" style="">
-								  </div>
-								   -->
-					      </div>
-					      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
-					    </div>
-					</div>
-			    <div class="form-group d-flex align-items-top gap-3">
-			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
-				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
+	               	<div class="form-group d-flex">
+				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
+				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
 				      </div>
-				      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
-		        </div>
-			    <div class="form-group d-flex align-items-center gap-3">
-			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
-			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      </div>
-			      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
-			    </div>
-			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label>
-		          <!-- <div class="border" style="width:100%; height: auto;">
-		          	<span class="center">드래그앤 드롭</span>
-	          	  </div> -->
-		          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
-		        </div>
-			    <div class="form-group">
-		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
-			        <div id="hwpctrl" class="border scrollable-content" style="width: 100%; height: 800px; margin: 0px auto">
-			        	<!-- 문서 작성 창 -->
-			        	<%-- <iframe id="hwpctrl_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
-			        	<div id="summernote" style=""></div>
-			        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
+				    </div>
+				    <div class="form-group">
+				      <label class=""><span class="h5 me-1">긴급 여부</span></label>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
+				          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
+			          </label>
+				    </div>
+				    <div class="form-group d-flex">
+				      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
+				      	<div class="col w-100 align-items-center p-0">
+						      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
+									 <!-- <div class="border" id="approval1">
+									  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
+									  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+									  	<input name="approvers[0].memberKey" value="2" style="display:none">
+									  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
+									  	<input name="approvers[0].memberJob" value="사원" style="">
+									  	<input name="approvers[0].memberName" value="김사원" style="">
+									  	<input name="approvers[0].category" value="기안" style="">
+									  </div>
+									   -->
+						      </div>
+						      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
+						    </div>
+						</div>
+				    <div class="form-group d-flex align-items-top gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
+					      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
+					      </div>
+					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
-		        </div>
-                  <div class="p-3 text-center">
-                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
-                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
-                  </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
+				    <div class="form-group d-flex align-items-center gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
+				      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      </div>
+				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
+				    </div>
+				    <div class="form-group d-flex">
+			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
+			          <div class="col w-100 align-items-center p-0">
+				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+					          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
+					      </div>
+				      	  <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="fileBtn">선택</button>
+				     </div>
+				    </div>
+				    <div class="form-group">
+			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
+				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
+				        	<!-- 문서 작성 창 -->
+				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
+				        	<div id="summernote"></div>
+				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
+				        </div>
+			        </div>
+	                  <div class="p-3 text-center">
+	                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
+	                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
+	                  </div>
+			        </div>
+               </form>
+             </div>
+           </div>
+         </div>
          </div>
        </div>
       </div>
+    </div>
 <!-- 모달 -->
 <!-- 기안하기 -->
 <div class="swal-overlay" tabindex="-1" id="submitalert">
@@ -203,6 +210,7 @@ $(document).ready(function() {
 	// Initialize Summernote
 	$('#summernote').summernote({
 	    height: '100%', 
+	    width: '100%',
 	    focus: false, 
 	    callbacks: {
 	        onInit: function() {
@@ -225,7 +233,7 @@ $(document).ready(function() {
 		  ],
 		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
 		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
-		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0']
 		/* buttons:{
 			undobtn: undo,
 			redobtn: redo
@@ -252,8 +260,8 @@ $(document).ready(function() {
 				localStorage.removeItem('selectedReferer'); 
 				localStorage.removeItem('selectedApprover'); 
 				// iframe 데이터 확인
-				//let framedata = (document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
-				let dochtml = $("#hwpctrl > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").innerHTML;
+				//let framedata = (document.querySelector("#htmlDiv_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
+				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").innerHTML;
 				console.log(dochtml);
 				let opinion = $('#input-field').val();
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));

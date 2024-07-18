@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
+import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.RefererList;
-import com.project.npnc.document.model.dto.ApproversList;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +45,14 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	public List<Document> selectWaitingDocs(int no) {
-		return dao.selectWaitingDocs(session, no);
+	    List<Document> result = dao.selectWaitingDocs(session, no);
+//	     Document 리스트에서 본인이 이미 승인한 결과 제거
+	    result.removeIf(doc -> doc.getApprovers().stream()
+	                        .anyMatch(approver -> 
+                    		approver.getMemberKey() == no && approver.getState().equals("승인")));
+	    return result;
 	}
+
 	@Override
 	public List<Document> selectRetrieveDocs(int no) {
 		return dao.selectRetrieveDocs(session, no);

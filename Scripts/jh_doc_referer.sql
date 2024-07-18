@@ -105,19 +105,28 @@ SELECT
 --    d.er_doc_serial_key, a.ER_APPROVAL_ORDERBY;
 		
 SELECT 
-    d.er_doc_serial_key,
-    d.ER_DOC_CREATE_DATE,
-    d.er_doc_title,
-    d.ER_DOC_STOARGE,
-    de.department_name,
-    j.job_name,
-    m.MEMBER_NAME,
-    a.member_key,
-	a.ER_APPROVER_TEAM,
-    a.ER_APPROVER_JOB,
-    a.ER_APPROVER_NAME,
-    a.ER_APPROVAL_CATEGORY,
-    a.ER_APPROVAL_STATE
+    d.ER_DOC_KEY, 
+			d.ER_DOC_SERIAL_KEY, 
+			d.ER_DOC_TITLE, 
+			d.ER_DOC_CREATE_DATE, 
+			d.ER_DOC_EMERGENCY_YN, 
+			d.ER_DOC_DELETE_YN, 
+			d.ER_DOC_STOARGE, 
+			d.ER_DOC_FILENAME,
+			d.ER_DOC_STATE,
+			d.ER_DOC_STATE_UPDATE_DATE, 
+			d.ER_DOC_LAST_UPDATER, 
+			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_WRITER, 
+		    j.job_name,
+		    m.MEMBER_NAME,
+		    a.member_key,
+			a.ER_APPROVER_TEAM,
+		    a.ER_APPROVER_JOB,
+		    a.ER_APPROVER_NAME,
+		    a.ER_APPROVAL_CATEGORY,
+		    a.ER_APPROVAL_STATE,
+		    a.er_approval_orderby
 FROM
     er_document d
 JOIN 
@@ -130,7 +139,6 @@ JOIN
     ER_APROVER a ON d.er_doc_serial_key = a.er_doc_serial_key
 WHERE
     d.er_doc_state = '처리중'
-    --AND a.member_key = ${no}
     AND NOT EXISTS (
         SELECT 1 
         FROM ER_APROVER a3
@@ -154,10 +162,11 @@ SELECT * FROM ER_DOCUMENT ed ;
 SELECT * from ER_APPROVAL_LINE ;
 SELECT * from ER_APROVER ;
 SELECT * FROM MEMBER;
+SELECT * FROM job;
 SELECT * FROM DEPARTMENT d ;
 SELECT * FROM ER_AL_STORAGE;
 SELECT * FROM ER_APROVER ea ;
-SELECT * FROM ER_REFERENCE er ;
+SELECT * FROM ER_REFERER er ;
 SELECT * FROM ER_FILE ;
 SELECT * FROM ER_STORAGE es ;
 SELECT * FROM DEPARTMENT d ;

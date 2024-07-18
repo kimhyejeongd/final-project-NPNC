@@ -173,7 +173,7 @@ public class MemberDocumentController {
 			@ModelAttribute ApproversList request, 
 			@ModelAttribute RefererList referers, 
 			Model m,
-			@RequestParam("file") MultipartFile file) {
+			@RequestParam(value="file", required = false) MultipartFile file) {
 		Member user = getCurrentUser();
 		log.debug("{}", request);
 		log.debug("{}", user);

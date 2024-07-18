@@ -23,7 +23,7 @@
                             <th scope="col" class="">#</th>
                             <th scope="col" class="">등록 번호</th>
                             <th scope="col" class="">문서 제목</th>
-                            <th scope="col" class="">작성자</th>
+                            <th scope="col" class="">상신인</th>
                             <th scope="col" class="">상신 일자</th>
                             <th scope="col" class="">결재 현황</th>
                           </tr>
@@ -41,7 +41,14 @@
 		                            <td class="text-muted">${l.erDocSerialKey }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
 		                           	<td>
-		                           		${l.erDocWriter }
+		                           		<c:forEach items="${l.approvers }" var="ap">
+		                           			<c:if test="${ap.orderby eq 0 }">
+		                           				<div class="badge badge-count" style="min-width: 60px;">
+		                              				<small class="">${ap.memberTeam }</small><br>
+		                              				<small class="">${ap.memberJob} ${ap.memberName}</small>
+		                              			</div>
+		                           			</c:if>
+		                           		</c:forEach>
 		                           	</td>
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
@@ -50,26 +57,26 @@
 		                            	<c:forEach items="${l.approvers }" var="ap">
 		                            		<c:if test="${ap.state eq '승인' }">
 		                              			<div class="badge badge-success" style="min-width: 60px;">
-		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
+		                              				<span class="">${ap.memberTeam }</span><br>
+		                              				<small class="">${ap.memberJob} ${ap.memberName}</small>
 		                              			</div>
 		                              		</c:if>
 		                            		<c:if test="${ap.state eq '대기' }">
 		                              			<div class="badge badge-count" style="min-width: 60px;">
 		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
+		                              				<small class="">${ap.memberJob} ${ap.memberName}</small>
 		                              			</div>
 		                              		</c:if>
 		                            		<c:if test="${ap.state eq '읽음' }">
 		                              			<div class="badge badge-warning" style="min-width: 60px;">
 		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
+		                              				<small class="">${ap.memberJob} ${ap.memberName}</small>
 		                              			</div>
 		                              		</c:if>
 		                            		<c:if test="${ap.state eq '보류' }">
 		                              			<div class="badge badge-danger" style="min-width: 60px;">
 		                              				<small class="">${ap.memberTeam }</small><br>
-		                              				<small class="">${ap.memberName}</small>
+		                              				<small class="">${ap.memberJob} ${ap.memberName}</small>
 		                              			</div>
 		                              		</c:if>
 		                              </c:forEach>
