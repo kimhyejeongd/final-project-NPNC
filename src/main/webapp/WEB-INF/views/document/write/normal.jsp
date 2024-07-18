@@ -2,6 +2,15 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
+<c:set var="me" value="${pageContext.request.userPrincipal}"/>
+<%-- <c:set var="form" value="${formName}"/> --%>
+<%
+    String html = (String) request.getAttribute("html");
+    if (html == null) {
+        html = "";
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -15,14 +24,19 @@
     rel="icon"
     type="image/x-icon"
   />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <!-- SweetAlert2 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+  
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!-- Summernote CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
   <style>
   	#approvalDiv{
-  		padding: .25rem .5rem !important;
 	    font-size: .875rem !important;
 	    line-height: 1.5;
         border-color: #ebedf2;
@@ -33,10 +47,28 @@
 	    border: var(--bs-border-width) solid var(--bs-border-color);
 	    font-weight: 400;
   	}
+  	.scrollable-content {
+        width: 100%;
+        height: 800px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        overflow-y: scroll; /* 세로 스크롤만 */
+        overflow-x: auto;  /* 가로 스크롤도 필요할 경우 */
+     }
+     .note-toolbar {
+	    background-color: #f5f5f5 !important;
+        margin-bottom: -15px;
+	}
+	.note-statusbar{
+		display: none;
+	}
+	.note-editor.note-frame .note-editing-area .note-editable {
+	    margin-top: 0px !important;
+	    border: none !important; /* border 속성을 none으로 설정 */
+	}
   </style>
  </head>
 <body>
-
 	<div class="wrapper">
       <!-- Sidebar -->
       <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
@@ -54,64 +86,50 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
-                <h3 class="fw-bold text-center">결재자 선택</h3>
+                <h3 class="fw-bold text-center">문서 작성</h3>
               </div>
             </div>
             <div class="row">
               <div class=""> <!-- 컨테이너박스 -->
                 <div class="card card-round p-3">
                   <div class="card-body">
-                <form method="post" action="${path}/document/writeend">
+                <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
                	<div class="form-group d-flex">
 			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <input type="text" class="form-control form-control-sm" style="" id="smallInput">
-		
+			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+			      </div>
 			    </div>
 			    <div class="form-group">
 			      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
 			          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-			          <label class="ms-1" for="flexRadioDefault2">
-			            <span class="h5">일반</span>
+			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+			          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
 		          </label>
 			    </div>
 			    <div class="form-group d-flex">
 			      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
-			      	<div class="ms-3 col w-100 align-items-center">
-					      <div class="border row" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-								<span class="m-0" style="color: gray; font-size: 15px">결재자를 선택하세요</span> 
-								 <!--  <div class="border" id="approval1">
+			      	<div class="col w-100 align-items-center p-0">
+					      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
+								 <!-- <div class="border" id="approval1">
 								  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
+								  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
 								  	<input name="approvers[0].memberKey" value="2" style="display:none">
 								  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
 								  	<input name="approvers[0].memberJob" value="사원" style="">
 								  	<input name="approvers[0].memberName" value="김사원" style="">
 								  	<input name="approvers[0].category" value="기안" style="">
 								  </div>
-								  <div class="border" id="approval1">
-								  	<input name="approvers[0].orderby" value="2" style="border-radius: 15px; width: 20px;">
-								  	<input name="approvers[0].memberKey" value="2" style="display:none">
-								  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-								  	<input name="approvers[0].memberJob" value="팀장" style="">
-								  	<input name="approvers[0].memberName" value="김팀장" style="">
-								  	<input name="approvers[0].category" value="검토" style="">
-								  </div>
-								  <div class="border" id="approval2">
-								  	<input name="approvers[1].orderby" value="3" style="border-radius: 15px; width: 20px;">
-								  	<input name="approvers[1].memberKey" value="1" style="display:none">
-								  	<input name="approvers[1].memberTeam" value="경영지원팀" style="">
-								  	<input name="approvers[1].memberJob" value="대표이사" style="">
-								  	<input name="approvers[1].memberName" value="김사장" style="">
-								  	<input name="approvers[1].category" value="결재" style="">
-								  </div> -->
+								   -->
 					      </div>
-					      <button class="btn btn-sm btn-info w-100 row" type="button" id="approverBtn">선택</button>
+					      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
 					    </div>
 					</div>
-			    <div class="form-group d-flex align-items-center gap-3">
+			    <div class="form-group d-flex align-items-top gap-3">
 			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
-				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="approvalDiv">
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
 				      </div>
 				      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 		        </div>
@@ -126,13 +144,15 @@
 		          <!-- <div class="border" style="width:100%; height: auto;">
 		          	<span class="center">드래그앤 드롭</span>
 	          	  </div> -->
-		          	<input type="file" class="form-control" id="exampleFormControlFile1">
+		          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
 		        </div>
 			    <div class="form-group">
 		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
-			        <div id="hwpctrl" class="border" style="width: 100%; height: 800px; margin: 0px auto">
+			        <div id="hwpctrl" class="border scrollable-content" style="width: 100%; height: 800px; margin: 0px auto">
 			        	<!-- 문서 작성 창 -->
-			        	<iframe id="hwpctrl_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe>
+			        	<%-- <iframe id="hwpctrl_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
+			        	<div id="summernote" style=""></div>
+			        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 			        </div>
 		        </div>
                   <div class="p-3 text-center">
@@ -163,9 +183,54 @@
   </div>
 </div>
 </div>
+
 <!-- SweetAlert2 초기화 및 모달 관련 스크립트 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- Summernote JS -->
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 <script>
 $(document).ready(function() {
+	 var ui = $.summernote.ui;
+	//기안 작성
+	<%-- var table = '<%= request.getAttribute("html") != null ? request.getAttribute("html") : "" %>'; --%>
+	var table = `<c:out value="${html}" escapeXml="false"/>`;
+
+	// Initialize Summernote
+	$('#summernote').summernote({
+	    height: '100%', 
+	    focus: false, 
+	    callbacks: {
+	        onInit: function() {
+	            $('#summernote').summernote('code', table);
+	        }
+	    },
+	    toolbar: [
+		    // [groupName, [list of button]]
+		    /* ['mybutton', 'undobtn'],
+		    ['mybutton', 'redobtn'], */
+		    ['fontname', ['fontname']],
+		    ['fontsize', ['fontsize']],
+		    ['lineHeights', ['lineHeights']],
+		    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+		    ['color', ['forecolor','color']],
+		    ['table', ['table']],
+		    ['para', ['ul', 'ol', 'paragraph']],
+		    ['height', ['height']],
+		    ['insert',['picture','link','video']],
+		  ],
+		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+		/* buttons:{
+			undobtn: undo,
+			redobtn: redo
+		} */
+	});
 	// 기안하기 버튼 클릭 시
 	$("#submitbtn").click(function() {
 		// SweetAlert2 모달 띄우기
@@ -183,12 +248,15 @@ $(document).ready(function() {
 			if (result.isConfirmed) {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
+				// 로컬 스토리지에서 데이터를 삭제
+				localStorage.removeItem('selectedReferer'); 
+				localStorage.removeItem('selectedApprover'); 
 				// iframe 데이터 확인
-				let framedata = (document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
-				console.log(framedata);
-				
+				//let framedata = (document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
+				let dochtml = $("#hwpctrl > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").innerHTML;
+				console.log(dochtml);
 				let opinion = $('#input-field').val();
-				$("<input>").val(framedata).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
 				$("#docForm").submit();
 			}
@@ -217,20 +285,180 @@ $(document).ready(function() {
 $("#approverBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
 });
+$("#refererBtn").click(function() {
+	window.open('${pageContext.request.contextPath}/document/write/referer', 'referer', 'width=900, height=700, left=500, top=100');
+});
 function sendDataToParent(data) {
-    // 부모 창에서 전달받은 데이터
-    console.dir("Received data in parent:", data);
-    $("#approvalDiv").html('');
-    data.each(function(index){
-	    let $div = $("<div>").addClass('border').attr('id', approval+index);
-	    $("<input>").attr({'name': `approvers[${index}].orderby`, 'value': `${data[index].orderby}`}).css({'border-radius': '15px', 'width': '20px'}).appendTo($div);
-	    $("<input>").attr({'name': `approvers[${index}].memberKey`, 'value': `${data[index].no}`}).css({'display': 'none'}).appendTo($div);;
-	    $("<input>").attr({'name': `approvers[${index}].memberTeam`, 'value': `${data[index].team}`}).appendTo($div);;
-	    $("<input>").attr({'name': `approvers[${index}].memberJob`, 'value': `${data[index].job}`}).appendTo($div);;
-	    $("<input>").attr({'name': `approvers[${index}].memberName`, 'value': `${data[index].name}`}).appendTo($div);;
-	    $("<input>").attr({'name': `approvers[${index}].category`, 'value': `${data[index].category}`}).appendTo($div);;
+    console.dir(data);
+    $("#approvalDiv").html(''); // approvalDiv 초기화
+    
+    // 선택 결재자
+    data.forEach(function(item, index) {
+        let $div = $("<div>", {
+            id: "approval" + index,
+            css: {
+                width: '100%',
+                fontSize: 'larger',
+                textAlign: 'left',
+                borderRadius: '15px'
+            },
+            class: 'col m-0 p-2'
+        });
+
+        $("<input>", {
+            name: 'approvers[' + index + '].orderby',
+            value: item.orderby,
+            css: {
+                borderRadius: '15px',
+                width: '23px',
+                display: 'inline',
+                backgroundColor: 'white'
+            },
+            class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
+        }).attr('readonly', true).appendTo($div);
+
+        $("<input>", {
+            name: 'approvers[' + index + '].memberKey',
+            value: item.no,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        $("<input>", {
+            name: 'approvers[' + index + '].memberTeam',
+            value: item.team,
+            css: {
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        $("<input>", {
+            name: 'approvers[' + index + '].memberJob',
+            value: item.job,
+            css: {
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        $("<input>", {
+            name: 'approvers[' + index + '].memberName',
+            value: item.name,
+            css: {
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        $("<input>", {
+            name: 'approvers[' + index + '].category',
+            value: item.category,
+            css: {
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        $div.appendTo($("#approvalDiv"));
+        $("#approverBtn").text('재선택');
     });
-    $div.appendTo($("#approvalDiv"));
+}
+function sendRefererToParent(data) {
+    console.dir(data);
+    $("#refererDiv").html('');
+    // 선택 결재자
+    data.forEach(function(item, index) {
+        let $div = $("<div>", {
+            id: "referer" + index,
+            css: {
+                width: '100%',
+                fontSize: 'larger',
+                textAlign: 'left',
+                borderRadius: '15px'
+            },
+            class: 'col m-0 p-2'
+        });
+
+        $("<input>", {
+            name: 'referers[' + index + '].memberKey',
+            value: item.no,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+	
+        let widthCalc = (item.team.length * 1.5) + 1;
+        $("<input>", {
+            name: 'referers[' + index + '].memberTeam',
+            value: item.team,
+            css: {
+                border: 'none',
+                width: widthCalc + "ch",
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        widthCalc = (item.job.length * 1.5) + 1;
+        $("<input>", {
+            name: 'referers[' + index + '].memberJob',
+            value: item.job,
+            css: {
+                border: 'none',
+                width: widthCalc + "ch",
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+
+        widthCalc = (item.name.length * 1.5) + 1;
+        $("<input>", {
+            name: 'referers[' + index + '].memberName',
+            value: item.name,
+            css: {
+                border: 'none',
+                width: widthCalc + "ch",
+                maxWidth: '80px',
+                backgroundColor: 'white'
+            },
+        }).attr('readonly', true).appendTo($div);
+        
+        $("<button>").addClass('badge rounded-pill text-bg-secondary')
+        			.text('X')
+        			.attr({'type': 'button'})
+        			.css('width', '3.2ch')
+        			.addClass('Xbtn')
+        			.appendTo($div);
+
+        $div.appendTo($("#refererDiv"));
+        
+        $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
+        	e.stopPropagation(); // 이벤트 버블링 방지
+        	let $div = $(e.target).closest('div.col');
+        	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
+        	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
+        	console.log(index);
+            savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
+            localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
+        	$(e.target).parent().remove();
+        });
+    });
 }
 </script>
 </body>

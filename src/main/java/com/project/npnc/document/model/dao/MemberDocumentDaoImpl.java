@@ -5,10 +5,13 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.approversList;
+import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.RefererList;
 
 @Repository
 public class MemberDocumentDaoImpl implements MemberDocumentDao{
@@ -25,6 +28,10 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public List<Document> selectInprocessDocs(SqlSession session, int no) {
 		return session.selectList("document.selectInprocessDocs", no);
+	}
+	@Override
+	public List<Document> selectWaitingDocs(SqlSession session, int no) {
+		return session.selectList("document.selectWaitingDocs", no);
 	}
 	@Override
 	public List<Document> selectRetrieveDocs(SqlSession session, int no) {
@@ -47,10 +54,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public int insertApproval(SqlSession session, approversList request) {
+	public int insertApproval(SqlSession session, ApproversList request) {
 		int result =0;
 		for(int i=0; i<request.getApprovers().size();i++) {
-			result = session.insert("document.insertApproval", request.getApprovers().get(i)); 
+			Approver ap = request.getApprovers().get(i);
+			result = session.insert("document.insertApproval", ap); 
 		}
 		return result;
 	}
@@ -78,6 +86,16 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public Document selectDocById(SqlSession session, String docId) {
 		return session.selectOne("document.selectDocBySerial", docId);
+	}
+
+	@Override
+	public int insertReferer(SqlSession session, RefererList request) {
+		int result =0;
+		for(int i=0; i<request.getReferers().size();i++) {
+			Referer r = request.getReferers().get(i);
+			result = session.insert("document.insertReferer", r); 
+		}
+		return result;
 	}
 
 }
