@@ -49,7 +49,7 @@
                 <h3 class="fw-bold mb-3">결재 상신함</h3>
               </div>
             </div>
-            <div class="row">
+            <%-- <div class="row">
               <div class="">
                 <div class="card card-round">
                   <div class="card-header">
@@ -75,9 +75,9 @@
                           </tr>
                         </thead>
                         <tbody>
-	                         <c:if test="${doclist eq null}">
+	                         <c:if test="${empty doclist}">
 		                         <tr class="text-center">
-		                         	<td colspan="5">진행 중인 문서가 없습니다</td>
+		                         	<td colspan="6">진행 중인 문서가 없습니다</td>
 	                         	</tr>
 	                         </c:if>
 	                         <c:if test="${doclist ne null}">
@@ -127,7 +127,8 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> --%>
+            <c:import url="${path }/WEB-INF/views/document/list/inprocessDoc.jsp"/>
            </div>
           </div>
         </div>
@@ -169,7 +170,7 @@
 								reverseButtons: false
 							}).then((result) => {
 								if (result.isConfirmed) {
-									location.assign(`${pageContext.request.contextPath}/document/retrieve;`)
+									location.assign(`${pageContext.request.contextPath}/document/list/retrieve`)
 								}else{
 									location.reload();
 								}
@@ -180,24 +181,37 @@
 			}
 		});
 	};
-	document.addEventListener('DOMContentLoaded', function() {
-	    const table = document.getElementById('docTable');
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('docTable');
 
-	    table.addEventListener('click', function(event) {
-	        const row = event.target.closest('tr');
-	        if (row && row.dataset.docId) {
-	            const docId = row.dataset.docId;
-	            console.log(docId);
-	            selectDoc(docId);
-	        }
-	    });
-		//상세보기
-		function selectDoc(docId){
-			const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
-			$("<input>").attr({'value': docId, 'type': 'text', 'name': 'docId'}).appendTo($form);
-			$form.appendTo("body").submit();
-		}
-	});
+    $("table").on('click', "button", function(e) {
+        e.stopPropagation();
+    });
+    
+    $("table").on('click', function(event) {
+        const target = event.target;
+     // 버튼이 클릭된 경우 이벤트 전파를 막고 함수를 종료
+        if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {
+            event.stopPropagation();
+            return;
+        }
+
+        const row = target.closest('tr');
+        if (row && row.dataset.docId) {
+            const docId = row.dataset.docId;
+            console.log(docId);
+            selectDoc(docId);
+        }
+    });
+    
+    
+	//상세보기
+	function selectDoc(docId){
+		const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
+		$("<input>").attr({'value': docId, 'type': 'text', 'name': 'docId','type': 'hidden'}).appendTo($form);
+		$form.appendTo("body").submit();
+	}
+});
 </script>
   </body>
 </html>

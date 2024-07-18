@@ -27,6 +27,19 @@
 	<select id="selectAllByKey" parameterType="_int" resultMap="calMap">
 		SELECT * FROM CALENDAR WHERE member_Key= #{memberKey}
 	</select>
+	
+	<select id="selectLastInsertKey" resultType="_int">
+		SELECT SEQ_CALENDAR.CURRVAL FROM DUAL
+	</select>
+	
+	
+	<update id="updateByKey" parameterType="calendar">
+		UPDATE CALENDAR SET TITLE = #{title}, START_DATE=#{start}, END_DATE=#{end}, DESCRIPTION=#{description},TYPE=#{type},BACKGROUND_COLOR=#{backgroundColor},TEXT_COLOR=#{textColor},ALLDAY=#{allDay} where CALENDAR_KEY=#{calendarKey}
+	</update>
+	
+	<delete id="deleteByKey" parameterType="_int">
+		DELETE FROM CALENDAR WHERE CALENDAR_KEY=#{calKey}
+	</delete>
 
 
 
