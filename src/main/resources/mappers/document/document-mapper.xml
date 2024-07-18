@@ -18,6 +18,7 @@
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
 		<collection property="approvers" resultMap="approverMap" ofType="approver"/>
 		<collection property="referers" resultMap="refererMap" ofType="referer"/>
+		<collection property="files" resultMap="docFileMap" ofType="docFile"/>
 	</resultMap>
 	<resultMap id="approverMap" type="approver">
 		<id column="ER_APPROVER_KEY" property="erApproverKey"/>
@@ -35,9 +36,9 @@
 	<resultMap id="refererMap" type="referer">
 		<id column="ER_REFERER_KEY" property="erRefererKey"/>
 		<result column="ER_DOC_SERIAL_KEY" property="erDocSerialKey"/>
-		<result column="ER_APPROVER_TEAM" property="erReferermemberTeam"/>
-		<result column="ER_APPROVER_JOB" property="erReferermemberJob"/>
-		<result column="ER_APPROVER_NAME" property="erReferermemberName"/>
+		<result column="ER_REFERER_TEAM_NAME" property="erReferermemberTeam"/>
+		<result column="ER_REFERER_JOB_NAME" property="erReferermemberJob"/>
+		<result column="ER_REFERER_NAME" property="erReferermemberName"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
 	</resultMap>
 	<resultMap type="docFile" id="docFileMap">

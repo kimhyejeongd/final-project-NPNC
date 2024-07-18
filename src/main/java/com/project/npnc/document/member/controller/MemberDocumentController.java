@@ -112,7 +112,7 @@ public class MemberDocumentController {
 //		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		m.addAttribute("html", html);
-		log.debug("{}", html);
+//		log.debug("{}", html);
 	}
 	
 	
