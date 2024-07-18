@@ -2,21 +2,30 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<typeAliases>
-		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="member"/>
 		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
-		<typeAlias type="com.project.npnc.note.dto.NoteDto" alias="note"/>
-		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"/>
+		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
+		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
-      <typeAlias type="com.project.npnc.admin.department.model.dto.Department" alias="department"/>
-      <typeAlias type="com.project.npnc.admin.member.model.dto.AdminMember" alias="adminmember"/> 
-      <typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
-      <typeAlias type="com.project.npnc.document.model.dto.Document" alias="document"/>  
-      <typeAlias type="com.project.npnc.calendar.model.dto.Calendar" alias="calendar"/> 
-      <typeAlias type="com.project.npnc.document.model.dto.Approver" alias="approver"/>   
-      <typeAlias type="com.project.npnc.document.model.dto.DocFile" alias="docFile"/>   
+    <typeAlias type="com.project.npnc.admin.department.model.dto.Department" alias="department"/>
+		<typeAlias type="com.project.npnc.security.dto.Member" alias="member"/>
+		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
+		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
+    <typeAlias type="com.project.npnc.admin.department.model.dto.Department" alias="department"/>
+    <typeAlias type="com.project.npnc.admin.member.model.dto.AdminMember" alias="adminmember"/> 
+    <typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
+    <typeAlias type="com.project.npnc.document.model.dto.Document" alias="document"/>  
+    <typeAlias type="com.project.npnc.calendar.model.dto.Calendar" alias="calendar"/> 
+    <typeAlias type="com.project.npnc.document.model.dto.Approver" alias="approver"/>   
+    <typeAlias type="com.project.npnc.document.model.dto.DocFile" alias="docFile"/>   
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingMessage" alias="chattingMessage"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingGroup" alias="chattingGroup"/>		
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingRoom" alias="chattingRoom"/>	
-		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>	
+		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
+		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
+    <typeAlias type="com.project.npnc.security.dto.Member" alias="mypagemember"/>
+		<typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
+		<typeAlias type="com.project.npnc.note.dto.NoteSendDto" alias="noteSend"></typeAlias>
+		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingFile" alias="chattingFile"/>	
+<typeAlias type="com.project.npnc.document.model.dto.Referer" alias="referer"/>   
 	</typeAliases>
 </configuration>

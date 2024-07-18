@@ -30,4 +30,5 @@ public class Member {
 	private String memberState;
 	private Date memberBirthdate;
 	private String jobName;
+	private String departmentName;
 }

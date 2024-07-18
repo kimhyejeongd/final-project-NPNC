@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.approversList;
+import com.project.npnc.document.model.dto.RefererList;
 
 public interface MemberDocumentDao {
 	List<DocumentFormFolder> selectformFolders(SqlSession session);
@@ -16,7 +17,8 @@ public interface MemberDocumentDao {
 	DocumentForm selectFormByNo(SqlSession session, int no);
 	
  	int insertDoc(SqlSession session, Document d);
-	int insertApproval(SqlSession session, approversList request);
+	int insertApproval(SqlSession session, ApproversList request);
+	int insertReferer(SqlSession session, RefererList request);
 	int retrieveDoc(SqlSession session, String erDocSerialKey);
 	int selectDocFile(SqlSession session, String erDocSerialKey);
 	int deleteDocFile(SqlSession session, String erDocSerialKey);
@@ -24,5 +26,6 @@ public interface MemberDocumentDao {
 	
 	List<Document> selectRetrieveDocs(SqlSession session, int no);
 	List<Document> selectInprocessDocs(SqlSession session, int no);
+	List<Document> selectWaitingDocs(SqlSession session, int no);
 	Document selectDocById(SqlSession session, String docId);
 }

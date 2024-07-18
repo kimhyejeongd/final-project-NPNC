@@ -1,26 +1,42 @@
 package com.project.npnc.document.member.controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.approversList;
-import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
+import com.project.npnc.document.model.dto.RefererList;
+import com.project.npnc.document.model.service.MemberDocumentService;
+import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,13 +45,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j 
 public class MemberDocumentController {
-	private final MemberDocumentServiceImpl serv;
+	private final MemberDocumentService serv;
+	private final OrganizationService orserv;
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	
-	@GetMapping("/home")
-	public void docHome() {}
 	
+	@GetMapping("/home")
+	public void docHome(Model m) {
+		Member user = getCurrentUser();
+		m.addAttribute("doclist", serv.selectInprocessDocs(user.getMemberKey()));
+	}
 	@GetMapping("/form")
 	public void formChoice(Model m){
 		log.debug("----전자문서 양식 조회----");
@@ -47,8 +67,8 @@ public class MemberDocumentController {
 	@GetMapping("/list/retrieve")
 	public void docRetrieve(Model m) {
 		log.debug("----회수 문서 조회----");
-		int memberNo=3;
-		List<Document> result = serv.selectRetrieveDocs(memberNo);
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
@@ -56,17 +76,45 @@ public class MemberDocumentController {
 	@GetMapping("/list/inprocess")
 	public void inprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
-		int memberNo=3;
-		List<Document> result = serv.selectInprocessDocs(memberNo);
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectInprocessDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@PostMapping("/view/docDetail")
-	public void viewDoc(String docId, Model m) {
-		log.debug("----" + docId + "문서 상세보기----");
-		m.addAttribute("doc", serv.selectDocById(docId));
+	@GetMapping("/list/waiting")
+	public void waitingDoc(Model m){
+		log.debug("----결재 대기 문서 조회----");
+		Member user = getCurrentUser();
+		log.debug(user.getMemberKey()+"번 사원");
+		List<Document> result = serv.selectWaitingDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
 	}
-	@PostMapping("/formlist")
+	@GetMapping("/request/docForm{formNo}")
+	public String formDoc(String form) {
+		log.debug(form + "양식 불러오기");
+		return readHtmlFile("/docformhtml", form);
+	}
+	@PostMapping("/view/docDetail{docId}")
+	public void viewDoc(String docId, Model m, HttpSession session) {
+		Document document = null;
+		if(docId != null) {
+			log.debug("----" + docId + "번 문서 상세보기----");
+			session.setAttribute("docId", docId);
+		}else{
+			log.debug(docId);
+			docId = (String) session.getAttribute("docId");
+//			log.debug("----" + document.getErDocKey() + "번 문서 상세보기----");
+		}
+		document = serv.selectDocById(docId);
+		m.addAttribute("l", document);
+		log.debug("{}", document);
+		//문서파일 html 가져오기
+		String html = readHtmlFile("dochtml/", document.getErDocTitle());
+		m.addAttribute("html", html);
+		log.debug("{}", html);
+	}
+	@PostMapping("/formlist.do")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -88,60 +136,91 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		switch(form) {
 		case 1 :
-			//log.debug("----전자문서 작성시작----");
+			log.debug("----전자문서 작성시작----");
+			String html = readHtmlFile("/docformhtml", "F"+form);
+			m.addAttribute("html", html);
+//			m.addAttribute("formName", "F"+form);
+//			log.debug(html);
 			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
-		return "document/formlist";
+		return "document/formlist.do";
 	}
-//	@GetMapping("/doc1")
-//	public void doc1Write() {
-//	}
-//	@GetMapping("/doc2")
-//	public void doc2Write() {
-//	}
-//	@GetMapping("/doc3")
-//	public void doc3Write() {
-//	}
+	@GetMapping("/write/approver")
+	public void docApprover(Model m) {
+		m.addAttribute("list", orserv.selectOrganAll());
+	}
+	@GetMapping("/write/referer")
+	public void docReferer(Model m) {
+		m.addAttribute("list", orserv.selectOrganAll());
+	}
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
-	@PostMapping("/writeend") //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
-	public String insertDoc(String msg, Document doc, String html, @ModelAttribute approversList request, Model m) {
-		int no = 3; //로그인 사원번호
-		doc.setErDocWriter(no);
-		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
+	public String insertDoc(
+			String msg, Document doc, String html, 
+			@ModelAttribute ApproversList request, 
+			@ModelAttribute RefererList referers, 
+			Model m,
+			@RequestParam("file") MultipartFile file) {
+		Member user = getCurrentUser();
+		log.debug("{}", request);
+		log.debug("{}", user);
+		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+		
+		
+		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+									.memberTeam("개발팀")
+									.memberJob("직급")
+									.memberName(user.getMemberName())
+									.category("기안")
+									.opinion(msg)
+									.state("승인")
+									.date(Date.valueOf(LocalDate.now()))
+									.orderby(0)
+						.build();
+		List<Approver> ap = request.getApprovers();
+		ap.add(me);
+		request.setApprovers(ap);
+		doc.setApprovers(request.getApprovers()); //has a 관계 파라미터 매칭
+		
+		
 		doc.setErDocFilename(doc.getErDocTitle()+".html"); //문서파일 저장을 위한 사전세팅
-		log.debug(no+ "번 사원의 문서 기안 -> " + msg);
+		
+		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 		log.debug("{}", doc);
 		log.debug("{}", request);
+		log.debug("{}", referers);
 		int result=0;
 		
 		//문서, 결재자 insert
 		try { 
-			result = serv.insertDoc(doc, request);
+			result = serv.insertDoc(doc, request, referers);
 		} catch (Exception e) {
-//			m.addAttribute("msg", "[2] 결재자 저장 실패");
-//			m.addAttribute("loc", "/document/write");
-//			return "common/msg";
 			e.printStackTrace();
+			return "redirect:home";
 		}
 		
 		//기안, 결재자 등록 성공시
 		if(result > 0) {
 			//첨부파일 있으면 파일 등록 진행 TODO
-			
+		    if (!file.isEmpty()) {
+		    	log.debug("{}",file);
+		    }	
 			//html파일로 문서 저장
 			try {
-				fileUpload(doc.getErDocTitle(), html);
-	            log.debug("[3] html저장 성공");
+				fileUpload("/dochtml",doc.getErDocTitle(), html);
+	            log.debug("[4] html저장 성공");
 			}catch(IOException e) {
-				log.debug("[3] html저장 실패");
+				log.debug("[4] html저장 실패");
 				e.printStackTrace();
 			}
 		} 
-		return "redirect:home"; //모두 성공시 홈으로
+		return "redirect:home"; //모두 성공시 전자결재홈으로
 	}
 	
 	@PostMapping("/retrieve")
@@ -158,8 +237,8 @@ public class MemberDocumentController {
 	}
 	
 	//html파일로 문서 저장 메소드
-	private void fileUpload(String title, String content) throws IOException {
-		String path = uploadDir + "dochtml/"+title +".html";
+	private void fileUpload(String dir, String title, String content) throws IOException {
+		String path = uploadDir+ dir + "/" +title +".html";
 			File file = new File(path);
 			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
             if (!file.exists()) {
@@ -170,4 +249,28 @@ public class MemberDocumentController {
             writer.write(content);
             writer.close();
 	}
+	//html 파일 읽기
+	public String readHtmlFile(String dir, String title) {
+        String path = uploadDir + dir + "/" + title + ".html";
+        File file = new File(path);
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(
+        		new InputStreamReader(
+        				new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
+	private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
+    }
 }

@@ -7,28 +7,42 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.project.npnc.note.dto.Note;
-import com.project.npnc.note.dto.NoteDto;
+import com.project.npnc.note.dto.NoteReceptionDto;
+import com.project.npnc.note.dto.NoteSendDto;
 
 @Repository
 public class NoteDaoImpl implements NoteDao {
 
 	@Override
-	public int noteOneWrite(SqlSession session, NoteDto note) {
-	
+	public int noteOneWrite(SqlSession session, NoteReceptionDto note) {
+	System.out.println(note);
 		return session.insert("note.noteOneWrite", note);
 	}
 
 	@Override
-	public int noteSelectTotalData(SqlSession session) {
+	public int sendNoteOneWrite(SqlSession session, NoteReceptionDto sendNote) {
 		
-		return session.selectOne("note.noteSelectTotalData");
+		return session.insert("note.sendNoteOneWrite", sendNote);
 	}
 
 	@Override
-	public List<Note> selectNoteAll(SqlSession session, Map<String, Integer> page) {
+	public int noteSelectTotalData(SqlSession session, int memberKey) {
+		
+		return session.selectOne("note.noteSelectTotalData",memberKey);
+	}
+
+	@Override
+	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("note.noteSelectAll",null,rb);
+		int memberKey=page.get("memberKey");
+		System.out.println(memberKey+" 여기에 들어 왔냐고");
+		return session.selectList("note.noteSelectAll",memberKey,rb);
+	}
+
+	@Override
+	public NoteReceptionDto selectNoteOne(SqlSession session) {
+	
+		return session.selectOne("note.noteSelectOne");
 	}
 
 	@Override

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberSr">
+	<resultMap id="memberMap" type="memberSr">
+		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="DEPARTMENT_KEY" property="departmentKey"></result>
+		<result column="JOB_KEY" property="jobKey"></result>
+		<result column="MEMBER_ID" property="memberId"></result>
+		<result column="MEMBER_PW" property="memberPw"></result>
+		<result column="MEMBER_PHONE" property="memberPhone"></result>
+		<result column="MEMBER_EMAIL" property="memberEmail"></result>
+		<result column="MEMBER_MESSAGE" property="memberMessage"></result>
+		<result column="MEMBER_ENROLL_DATE" property="enrollDate"></result>
+		<result column="MEMBER_LEAVE_DATE" property="memberLeaveDate"></result>
+		<result column="MEMBER_TELL" property="memberTell"></result>
+		<result column="MEMBER_ADDRESS" property="memberAddress"></result>
+		<result column="ACCESS_KEY" property="accessKey"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="MEMBER_GENDER" property="memberGender"></result>
+		<result column="MEMBER_STATE" property="memberState"></result>
+		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"></result>
+		
+	</resultMap>
+
+	<select id="selectMemeberAll" resultMap="memberMap">
+	SELECT * FROM MEMBER
+	</select>
+	
+	<select id="selectMemberByNo" parameterType="_int" resultMap="memberMap">
+	SELECT * FROM MEMBER WHERE MEMBER_KEY=${memberkey}
+	</select>
+</mapper>
