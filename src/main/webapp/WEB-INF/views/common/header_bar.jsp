@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+    
     <c:set var="path" value="${pageContext.request.contextPath}"/>
+    
+    <c:set var="loginMember" value="${sessionScope.loginMember}" />
+    
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -308,13 +313,6 @@
 	
 	  </style>
       <div class="main-header">
-
-      		<!-- <form action="/chatRoom" method="get">
-			    <label for="userInput">Enter Value:</label>
-			    <input type="text" id="userInput" name="inputValue" required="">
-			    <button type="submit">Submit</button>
-			</form> -->
-
             <div class="main-header-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
@@ -363,6 +361,7 @@
 		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 				 <script type="text/javascript">
+				 
 					 $(document).ready(function() {
 					        // Ã«ÂÂÃ«Â¡Â­Ã«ÂÂ¤Ã¬ÂÂ´ Ã«Â©ÂÃ«ÂÂ´ÃªÂ°Â Ã«Â³Â´Ã¬ÂÂ¼ Ã«ÂÂ Ã­ÂÂ¹Ã¬Â Â JSP Ã­ÂÂÃ¬ÂÂ´Ã¬Â§ÂÃ«Â¥Â¼ Ã«Â¡ÂÃ«ÂÂ
 
@@ -398,14 +397,8 @@
 					            	    		$('#organcontainer').html("");
 					            	    		$('#organcontainer').html(response);
 					            	    	}
-					            	    	
-					            	    	
-					            	    	 
 					            	     });
-					            	     
 					               });   
-
-
 					            }
 					         );
 
@@ -638,6 +631,8 @@
             
             <script>
             var stompClient = null;
+            var userStatusMap = {};
+
 			
 		    function setConnected(connected) {
 		        $("#connect").prop("disabled", connected);
@@ -657,6 +652,18 @@
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
 		            setConnected(true);
 		            console.log('Connected: ' + frame);
+		            
+		            // 채팅방 목록 초기화 및 구독
+		            $('.room-item').each(function() {
+
+		                var roomId = $(this).find('input[name="roomId"]').val();
+		                var recentMessageElement = $(this).find('.recent-message-' + roomId);
+		                subscribeToRoom(roomId, recentMessageElement);
+		                loadChat(roomId, recentMessageElement);
+		            });
+		            
+		            
+		            
 		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
 		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
 		                var bodyObject= JSON.parse(msg.body);
@@ -678,8 +685,30 @@
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
 		            });
+		            
+		            stompClient.subscribe('/user/queue/users', function (message) {
+		                var users = JSON.parse(message.body);
+
+		                for (var username in users) {
+		                    if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+		                        userStatusMap[username] = users[username];
+		                        updateUserStatus(username, users[username]);
+		                    }
+		                }
+		            });
 		        });
 		    }
+            function updateUserStatus(username, isOnline) {
+                var statusDot = document.getElementById('status-dot-' + username);
+                
+                console.log(statusDot);
+                if (!statusDot) {
+                    console.error('status-dot element not found for user: ' + username);
+                    return;
+                }
+
+                statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
+            }
             
             function disconnect() {
 		        if (stompClient !== null) {

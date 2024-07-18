@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +62,7 @@ public class ChatController {
 		}
 		System.out.println("Received message: " + message);
 //		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
-		// 채팅 저장
+// 		채팅 저장
 		
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
@@ -88,8 +90,8 @@ public class ChatController {
     	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
-    //
-	@PostMapping("/loadRecentChat")
+
+    @PostMapping("/loadRecentChat")
 	@ResponseBody
 	public Map<String, Object> loadChat(@RequestParam int chatRoomKey ,@RequestParam int memberId) {
 		Map<String, Object> readInfo = new HashMap<>();
@@ -179,4 +181,5 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 중 오류 발생");
         }
     }
+
 }

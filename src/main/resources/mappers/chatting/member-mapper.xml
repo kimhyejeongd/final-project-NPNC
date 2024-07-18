@@ -30,6 +30,7 @@
         <result property="memberAddress" column="MEMBER_ADDRESS" />
         <result property="accessKey" column="ACCESS_KEY" />
         <result property="departmentName" column="DEPARTMENT_NAME" />
+        <result property="memberName" column="MEMBER_NAME" />
     </resultMap>
 	
 

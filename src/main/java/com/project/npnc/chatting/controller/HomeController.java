@@ -65,6 +65,8 @@ public class HomeController {
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
+		model.addAttribute("allMembers",service.selectAllMembers());
+		
 		
 
 		return "chatting/chat";

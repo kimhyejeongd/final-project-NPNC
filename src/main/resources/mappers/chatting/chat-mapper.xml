@@ -11,43 +11,44 @@
 		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
 	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
-		INSERT INTO CHATTING_FILE VALUES
-		(#{chatFileKey},
-		#{memberKey},
-		#{chatMsgFileOri},
-		#{chatMsgFilePost},
-		#{chatFileTime},
-		#{chatRoomKey},
-		#{chatMsgKey},
-		#{fileContentType}
-		)
+		INSERT INTO chatting_file
+		VALUES      ( # {chatFileKey},
+		              # {memberKey},
+		              # {chatMsgFileOri},
+		              # {chatMsgFilePost},
+		              # {chatFileTime},
+		              # {chatRoomKey},
+		              # {chatMsgKey},
+		              # {fileContentType} ) 
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
-		DELETE FROM CHATTING_IS_READ cir 
-		WHERE cir.chat_msg_key  IN
-		(SELECT CHAT_IS_READ_KEY 
+		DELETE 
 		FROM CHATTING_IS_READ cir 
-		LEFT JOIN CHATTING_MESSAGE cm 
-		ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY 
-		WHERE cm.CHAT_ROOM_KEY = #{currRoomId})
+		WHERE cir.chat_msg_key  IN
+			(SELECT CHAT_IS_READ_KEY 
+			FROM CHATTING_IS_READ cir 
+			LEFT JOIN CHATTING_MESSAGE cm 
+			ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY 
+			WHERE cm.CHAT_ROOM_KEY = #{currRoomId})
 		AND cir.member_key = #{currMemberKey}
 	</delete>
 	<select id="selectUnreadCount" parameterType="map" resultType="int">		
-		SELECT COUNT(*)
-			FROM CHATTING_IS_READ cir
-			LEFT JOIN CHATTING_MESSAGE cm ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY
-			WHERE cir.MEMBER_KEY =  #{memberKey}
-			  AND cm.CHAT_ROOM_KEY =  #{roomId}
-			  AND cm.MEMBER_KEY != #{memberKey}
+		SELECT Count(*)
+		FROM   chatting_is_read cir
+		       LEFT JOIN chatting_message cm
+		              ON cir.chat_msg_key = cm.chat_msg_key
+		WHERE  cir.member_key = #{memberKey}
+		       AND cm.chat_room_key = #{roomId}
+		       AND cm.member_key != #{memberKey} 
 	</select>
 	<select id="selectMyChatRoomList" parameterType="int" resultMap="chattingRoomResultMap">
-			SELECT * 
-			FROM CHATTING_ROOM cr
-			LEFT JOIN CHATTING_GROUP cg 
-			ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
-			LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
-			WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
-				ORDER BY chat_msg_time desc
+		SELECT * 
+		FROM CHATTING_ROOM cr
+		LEFT JOIN CHATTING_GROUP cg 
+		ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
+		LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
+		WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
+			ORDER BY chat_msg_time desc
 	</select>
 	<update id="updateRecentChat" parameterType="map">
 		UPDATE CHATTING_ROOM SET CHAT_RECENT_MSG_KEY = #{seq} WHERE CHAT_ROOM_KEY = #{chat.chatRoomKey}
