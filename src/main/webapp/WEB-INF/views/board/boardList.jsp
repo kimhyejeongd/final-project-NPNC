@@ -30,7 +30,6 @@
             </c:forEach>
         </tbody>
     </table>
-    
     <br>
     <a href="writeBoard.jsp">게시글 작성</a>
 </body>

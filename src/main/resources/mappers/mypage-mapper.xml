@@ -5,7 +5,7 @@
 	SELECT * FROM member WHERE MEMBER_ID = #{memberId}
 	</select>
 	<update id="updateMember" parameterType="mypagemember">
-	UPDATE members
+	UPDATE member
 	SET    member_Name = # {MEMBER_NAME},
 	       member_Email = # {MEMBER_EMAIL},
 	       member_Phone = # {MEMBER_PHONE},
@@ -33,7 +33,7 @@
 	</resultMap>
 
         <update id="updatePassword">
-        UPDATE members
+        UPDATE member
         SET MEMBER_PW = #{newPassword}
         WHERE MEMBER_ID = #{memberId}
     </update>

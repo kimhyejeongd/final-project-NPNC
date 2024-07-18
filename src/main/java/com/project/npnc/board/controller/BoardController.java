@@ -33,7 +33,6 @@ public class BoardController {
     public String getAllBoards(Model model) {
         List<BoardDto> boards = boardService.getAllBoards();
         model.addAttribute("boardList", boards);
-        System.out.println(boards);
         return "board/boardList"; // 뷰 이름 반환 (JSP 파일명)
     }
 
