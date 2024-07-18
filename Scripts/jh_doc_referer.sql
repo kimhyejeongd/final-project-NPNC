@@ -1,3 +1,4 @@
+--처리중인 모든 문서
 SELECT
 		d.ER_DOC_KEY, 
 		    d.ER_DOC_SERIAL_KEY, 
@@ -43,24 +44,118 @@ SELECT
 			d.er_doc_state = '처리중' --처리중 문서
 		ORDER BY  
 			d.er_doc_emergency_yn DESC,
-			d.er_doc_create_date;
+			d.er_doc_create_date,
+			a1.er_approval_orderby;
 
-SELECT    *
-			FROM      er_document d
-			join er_aprover ea
-			USING    (er_doc_serial_key)
-			WHERE     d.er_doc_writer = ${no}
-			AND       d.er_doc_state = '처리중'
-			ORDER BY  d.er_doc_emergency_yn DESC,
-			          ea.er_approval_orderby;
+		--오라클 현재 버전에서 JSON_ARRAYAGG 지원안함 12c 이상만 활용가능
+--SELECT 
+--    d.ER_DOC_KEY, 
+--    d.ER_DOC_SERIAL_KEY, 
+--    d.ER_DOC_TITLE, 
+--    d.ER_DOC_CREATE_DATE, 
+--    d.ER_DOC_EMERGENCY_YN, 
+--    d.ER_DOC_DELETE_YN, 
+--    d.ER_DOC_STOARGE, 
+--    d.ER_DOC_FILENAME,
+--    d.ER_DOC_STATE,
+--    d.ER_DOC_STATE_UPDATE_DATE, 
+--    d.ER_DOC_LAST_UPDATER, 
+--    d.ER_DOC_LAST_UPDATE_REASON,
+--    d.ER_DOC_WRITER, 
+--    de.department_name,
+--    j.job_name,
+--    m.MEMBER_NAME,
+--    a.member_key,
+--     (
+--        SELECT JSON_ARRAYAGG(
+--                   JSON_OBJECT(
+--                       ea.member_key,
+--                       ea.ER_APPROVER_TEAM,
+--                       ea.ER_APPROVER_JOB,
+--                       ea.ER_APPROVER_NAME,
+--                       ea.ER_APPROVAL_CATEGORY,
+--                       ea.ER_APPROVAL_STATE,
+--                       ea.ER_APPROVAL_ORDERBY
+--                   ) 
+--               )
+--        FROM ER_APROVER ea
+--        WHERE ea.er_doc_serial_key = d.er_doc_serial_key
+--    ) AS approvers_info
+--FROM
+--    er_document d
+--JOIN 
+--    member m ON d.er_doc_writer = m.MEMBER_KEY
+--JOIN 
+--    DEPARTMENT de ON m.DEPARTMENT_KEY = de.department_key
+--JOIN 
+--    job j ON m.JOB_KEY = j.JOB_KEY 
+--JOIN 
+--    ER_APROVER a ON d.er_doc_serial_key = a.er_doc_serial_key
+--WHERE
+--    d.er_doc_state = '처리중'
+--    AND a.member_key = ${no}
+--    AND NOT EXISTS (
+--        SELECT 1 
+--        FROM ER_APROVER a2
+--        WHERE a2.er_doc_serial_key = d.er_doc_serial_key
+--        AND a2.er_approval_orderby < a.er_approval_orderby
+--        AND a2.ER_APPROVAL_STATE != '승인'
+--    )
+--ORDER BY
+--    d.er_doc_serial_key, a.ER_APPROVAL_ORDERBY;
 		
+SELECT 
+    d.er_doc_serial_key,
+    d.ER_DOC_CREATE_DATE,
+    d.er_doc_title,
+    d.ER_DOC_STOARGE,
+    de.department_name,
+    j.job_name,
+    m.MEMBER_NAME,
+    a.member_key,
+	a.ER_APPROVER_TEAM,
+    a.ER_APPROVER_JOB,
+    a.ER_APPROVER_NAME,
+    a.ER_APPROVAL_CATEGORY,
+    a.ER_APPROVAL_STATE
+FROM
+    er_document d
+JOIN 
+    member m ON d.er_doc_writer = m.MEMBER_KEY
+JOIN 
+    department de ON m.DEPARTMENT_KEY = de.department_key
+JOIN 
+    job j ON m.JOB_KEY = j.JOB_KEY 
+JOIN 
+    ER_APROVER a ON d.er_doc_serial_key = a.er_doc_serial_key
+WHERE
+    d.er_doc_state = '처리중'
+    --AND a.member_key = ${no}
+    AND NOT EXISTS (
+        SELECT 1 
+        FROM ER_APROVER a3
+        WHERE a3.er_doc_serial_key = d.er_doc_serial_key
+        AND a3.er_approval_orderby < a.er_approval_orderby
+        AND a3.ER_APPROVAL_STATE != '승인'
+    )
+ORDER BY
+    d.er_doc_serial_key;
+   
+		SELECT    *
+			FROM      er_document d
+			left join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     er_doc_writer = ${no}
+			AND       er_doc_state = '처리중'
+			ORDER BY  er_doc_emergency_yn DESC,
+			          er_approval_orderby;
 		
 SELECT * FROM ER_DOCUMENT ed ;
 SELECT * from ER_APPROVAL_LINE ;
 SELECT * from ER_APROVER ;
 SELECT * FROM MEMBER;
+SELECT * FROM DEPARTMENT d ;
 SELECT * FROM ER_AL_STORAGE;
-SELECT * FROM ER_APPROVAL_LINE eal ;
 SELECT * FROM ER_APROVER ea ;
 SELECT * FROM ER_REFERENCE er ;
 SELECT * FROM ER_FILE ;

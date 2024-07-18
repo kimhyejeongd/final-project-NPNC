@@ -55,6 +55,9 @@ public class MemberDocumentController {
 	public void docHome(Model m) {
 		Member user = getCurrentUser();
 		m.addAttribute("doclist", serv.selectInprocessDocs(user.getMemberKey()));
+		log.debug("{}", m.getAttribute("doclist"));
+		m.addAttribute("waitinglist", serv.selectWaitingDocs(user.getMemberKey()));
+		log.debug("{}", m.getAttribute("waitinglist"));
 	}
 	@GetMapping("/form")
 	public void formChoice(Model m){
@@ -88,13 +91,10 @@ public class MemberDocumentController {
 		log.debug(user.getMemberKey()+"번 사원");
 		List<Document> result = serv.selectWaitingDocs(user.getMemberKey());
 		log.debug("{}", result);
-		m.addAttribute("doclist", result);
+		m.addAttribute("waitinglist", result);
 	}
-	@GetMapping("/request/docForm{formNo}")
-	public String formDoc(String form) {
-		log.debug(form + "양식 불러오기");
-		return readHtmlFile("/docformhtml", form);
-	}
+	
+//	전자문서 상세보기
 	@PostMapping("/view/docDetail{docId}")
 	public void viewDoc(String docId, Model m, HttpSession session) {
 		Document document = null;
@@ -104,16 +104,25 @@ public class MemberDocumentController {
 		}else{
 			log.debug(docId);
 			docId = (String) session.getAttribute("docId");
-//			log.debug("----" + document.getErDocKey() + "번 문서 상세보기----");
 		}
 		document = serv.selectDocById(docId);
 		m.addAttribute("l", document);
 		log.debug("{}", document);
 		//문서파일 html 가져오기
-		String html = readHtmlFile("dochtml/", document.getErDocTitle());
+//		String html = readHtmlFile("dochtml", document.getErDocFilename());
+		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		m.addAttribute("html", html);
 		log.debug("{}", html);
 	}
+	
+	
+	@GetMapping("/request/docForm{formNo}")
+	public String formDoc(String form) {
+		log.debug(form + "양식 불러오기");
+		return readHtmlFile("/docformhtml", form+".html");
+	}
+	
+	
 	@PostMapping("/formlist.do")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
@@ -137,15 +146,14 @@ public class MemberDocumentController {
 		switch(form) {
 		case 1 :
 			log.debug("----전자문서 작성시작----");
-			String html = readHtmlFile("/docformhtml", "F"+form);
+			String html = readHtmlFile("/docformhtml", "F"+form+".html");
 			m.addAttribute("html", html);
-//			m.addAttribute("formName", "F"+form);
-//			log.debug(html);
-			//DocumentForm f = serv.selectFormByNo(form);
 			return "document/write/normal";
 		}
 		return "document/formlist.do";
 	}
+	
+//	팝업
 	@GetMapping("/write/approver")
 	public void docApprover(Model m) {
 		m.addAttribute("list", orserv.selectOrganAll());
@@ -154,6 +162,8 @@ public class MemberDocumentController {
 	public void docReferer(Model m) {
 		m.addAttribute("list", orserv.selectOrganAll());
 	}
+//	
+	
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
@@ -213,7 +223,7 @@ public class MemberDocumentController {
 		    }	
 			//html파일로 문서 저장
 			try {
-				fileUpload("/dochtml",doc.getErDocTitle(), html);
+				fileUpload("/dochtml",doc.getErDocSerialKey(), html);
 	            log.debug("[4] html저장 성공");
 			}catch(IOException e) {
 				log.debug("[4] html저장 실패");
@@ -239,6 +249,7 @@ public class MemberDocumentController {
 	//html파일로 문서 저장 메소드
 	private void fileUpload(String dir, String title, String content) throws IOException {
 		String path = uploadDir+ dir + "/" +title +".html";
+		log.debug("문서 저장 경로 : " + path);
 			File file = new File(path);
 			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
             if (!file.exists()) {
@@ -251,7 +262,8 @@ public class MemberDocumentController {
 	}
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {
-        String path = uploadDir + dir + "/" + title + ".html";
+        String path = uploadDir + dir + "/" + title;
+        log.debug("문서 읽기 경로 : " + path);
         File file = new File(path);
         StringBuilder content = new StringBuilder();
 

@@ -6,6 +6,16 @@ SELECT    *
 			AND       er_doc_state = '처리중'
 			ORDER BY  er_doc_emergency_yn DESC,
 			          er_approval_orderby;
+SELECT * 
+		FROM   
+			er_document d
+        LEFT JOIN 
+        	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
+        JOIN 
+       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+       	LEFT JOIN
+       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+		WHERE  d.ER_DOC_KEY = ${docId};
 
 --전체 생성된 테이블 조회
 SELECT table_name 
@@ -14,6 +24,7 @@ FROM user_tables;
 SELECT * FROM ER_DOCUMENT ed ;
 SELECT * from ER_APPROVAL_LINE ;
 SELECT * from ER_APROVER ;
+SELECT * from ER_REFERER er ;
 SELECT * FROM MEMBER;
 SELECT * FROM ER_AL_STORAGE;
 SELECT * FROM ER_APPROVAL_LINE eal ;

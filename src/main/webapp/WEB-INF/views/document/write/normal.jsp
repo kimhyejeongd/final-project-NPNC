@@ -316,7 +316,7 @@ function sendDataToParent(data) {
             },
             class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
         }).attr('readonly', true).appendTo($div);
-
+		
         $("<input>", {
             name: 'approvers[' + index + '].memberKey',
             value: item.no,
@@ -327,46 +327,50 @@ function sendDataToParent(data) {
                 maxWidth: '80px'
             },
         }).attr('readonly', true).appendTo($div);
-
+		
+        let widthCalc = (item.team.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberTeam',
             value: item.team,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
-
+	
+        widthCalc = (item.job.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberJob',
             value: item.job,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
 
+        widthCalc = (item.name.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberName',
             value: item.name,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
 
+        widthCalc = (item.category.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].category',
             value: item.category,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
@@ -379,7 +383,7 @@ function sendDataToParent(data) {
 function sendRefererToParent(data) {
     console.dir(data);
     $("#refererDiv").html('');
-    // 선택 결재자
+    // 참조인
     data.forEach(function(item, index) {
         let $div = $("<div>", {
             id: "referer" + index,
