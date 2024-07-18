@@ -10,9 +10,10 @@
 </head>
 <body>
 
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
-		<form action="${path}/attendance/updateAttendanceEnd" method="post">
-			<div class="form-group">
+	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
+				
+				<form action="${path}/admin/attendance/updateattendanceEdit" method="post">
+				<div class="form-group">
 					<div class="form-group form-inline">
 		                          <label
 		                            for="attendanceEditMember"
@@ -24,14 +25,14 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditMember"
 		                              name="attendanceEditMember"
-									  value="${attendance.member.memberId}"
+									  value="${attendanceEdit.attendanceEditMember}"
 		                              placeholder="작성자"
 		                              readonly
 		                            />
 		                          </div>
 		           	</div>
 		           	
-		           	<input type="hidden" id="attendanceKey" name="attendanceKey" value="${attendance.attendanceKey }">
+		           	<input type="hidden" id="attendanceEditKey" name="attendanceEditKey" value="${attendanceEdit.attendanceEditKey }">
 		           	
 		           	<div class="form-group form-inline">
 		                          <label
@@ -44,7 +45,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditDate"
 		                              name="attendanceEditDate"
-									  value="${today }"
+									  value="${attendanceEdit.attendanceEditDate }"
 		                              placeholder="작성일"
 		                              readonly
 		                            />
@@ -62,87 +63,62 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditRequestDate"
 		                              name="attendanceEditRequestDate"
-									  value="${attendance.attendanceDate }"
+									  value="${attendanceEdit.attendanceEditRequestDate }"
 		                              placeholder="수정요청일"
 		                              readonly
 		                            />
 		                          </div>
 		           	</div>
 		           	
-		                          <div class="col-md-9 p-0">
+		           		<div class="form-group form-inline">
 		                          	<label
 		                            for="attendanceEditBeforeState"
 		                            class="col-md-3 col-form-label"
 		                            >수정전상태</label>
+		                          <div class="col-md-9 p-0">
 		                            <input
 		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditBeforeState"
 		                              name="attendanceEditBeforeState"
-		                              value="${attendance.attendanceState }"
+		                              value="${attendanceEdit.attendanceEditBeforeState }"
 		                              readonly
 		                            />
-
+		                          </div>
+						</div>
+						
+						<div class="form-group form-inline">
 		                           	<label
 		                            for="attendanceEditBeforeTime"
 		                            class="col-md-3 col-form-label"
 		                            >수정전시간</label>
-		                 
+		                 			<div class="col-md-9 p-0">
 		                            <input
 		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditBeforeTime"
 		                              name="attendanceEditBeforeTime"
-		                              value="${attendance.attendanceStart }"
+		                              value="${attendanceEdit.attendanceEditBeforeTime }"
 		                              readonly
 		                            />
-		                            ~
+		                          </div>
+		                </div>
+		              	<div class="form-group form-inline">
+		                          	<label
+		                            for="attendanceEditStartEnd"
+		                            class="col-md-3 col-form-label"
+		                            >출근/퇴근</label>
+		                          <div class="col-md-9 p-0">
 		                            <input
 		                              type="text"
 		                              class="form-control input-full"
-		                              id="attendanceEditBeforeTimeEnd"
-		                              name="attendanceEditBeforeTimeEnd"
-		                              value="${attendance.attendanceEnd }"
+		                              id="attendanceEditStartEnd"
+		                              name="attendanceEditStartEnd"
+		                              value="${attendanceEdit.attendanceEditStartEnd }"
 		                              readonly
 		                            />
 		                          </div>
-		                          
-		              	<div class="form-group">
-		                          <label>출근/퇴근</label><br />
-		                          <div class="d-flex">
-		                            <div class="form-check">
-		                              <input
-		                                class="form-check-input"
-		                                type="radio"
-		                                name="attendanceEditStartEnd"
-		                                id="attendanceEditStartEnd"
-		                                value="출근"
-		                              />
-		                              <label
-		                                class="form-check-label"
-		                                for="attendanceEditStartEnd"
-		                              >
-		                                출근
-		                              </label>
-		                            </div>
-		                            <div class="form-check">
-		                              <input
-		                                class="form-check-input"
-		                                type="radio"
-		                                name="attendanceEditStartEnd"
-		                                id="attendanceEditStartEnd2"
-		                                value="퇴근"
-
-		                              />
-		                              <label
-		                                class="form-check-label"
-		                                for="attendanceEditStartEnd2"
-		                              >
-		                                퇴근
-		                              </label>
-		                            </div>
-		                          </div>
-		           	 </div>              
+						</div>            
 		                          
 		           	<div class="form-group form-inline">
 		                          <label
@@ -151,30 +127,32 @@
 		                            >수정요청시간</label>
 		                          <div class="col-md-9 p-0">
 		                            <input
-		                              type="time"
+		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterTime"
 		                              name="attendanceEditAfterTime"
-		                              placeholder="수정요청시간"
+		                              value="${attendanceEdit.attendanceEditAfterTime }"
+		                              readonly
 		                            />
 		                          </div>
 		           	</div>
 		           
-		           <div class="form-group">
-		                          <label for="attendanceEditAfterState"
-		                            >수정후상태</label
-		                          >
-		                          <select
-		                            class="form-select"
-		                            id="attendanceEditAfterState"
-		                            name="attendanceEditAfterState"
-		                          >
-								  		<option value="출근" >출근</option>
-								        <option value="지각" >지각</option>
-								        <option value="조퇴" >조퇴</option>
-								        <option value="결근" >결근</option>
-		                          </select>
-		         	</div>
+		         <div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditAfterState"
+		                            class="col-md-3 col-form-label"
+		                            >수정후상태</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditAfterState"
+		                              name="attendanceEditAfterState"
+		                              value="${attendanceEdit.attendanceEditAfterState }"
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
 		           
 		           	<div class="form-group form-inline">
 		                          <label
@@ -186,21 +164,64 @@
 		                              class="form-control"
 		                              id="attendanceEditRequest"
 		                              name="attendanceEditRequest"
-		                              placeholder="요청사유"
+		                             readonly
+		                            >${attendanceEdit.attendanceEditRequest }</textarea>
+		                          </div>
+		           	</div>
+		           	
+		           	 	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditOpinion"
+		                            class="col-md-3 col-form-label"
+		                            >수정의견</label>
+		                          <div class="col-md-9 p-0">
+		                            <textarea
+		                              class="form-control"
+		                              id="attendanceEditOpinion"
+		                              name="attendanceEditOpinion"
+
 		                            ></textarea>
 		                          </div>
 		           	</div>
+		           	
+		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
+		           		
 		           	<button
 					  	type="submit"
 					 	class="btn btn-success"
 		 				data-color="dark"
-					>신청</button>
-
+					>승인</button>
+					
+					<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
+					반려</button>
 			</div>
-		
-		
-		
+
 		</form>
+	         
+				
+				<script>
+				const rejectionAttendanceEdit=(key)=>{
+					   if(confirm("정말 삭제 하시겠습니까?")){
+				           let form = document.createElement("form");
+				           form.setAttribute("method", "post");
+				           form.setAttribute("action", "${path}/attendance/deleteAttendanceEdit");
+				
+				           let $key = document.createElement("input");
+				           $key.setAttribute("type", "hidden");
+				           $key.setAttribute("name", "attendanceEditKey");
+				           $key.setAttribute("value", key);
+				 
+				           form.appendChild($key);
+				
+				           document.body.appendChild(form);
+				           form.submit();
+					   }else{
+						   alert("삭제가 취소되었습니다.");
+					   }
+					   
+					}
+
+				</script>
 
 </body>
 </html>

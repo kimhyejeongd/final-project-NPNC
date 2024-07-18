@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
-		                    <h4 class="card-title">전체사원관리</h4>
+		                    <h4 class="card-title">근태관리</h4>
 		                  </div>
 		                  <div class="card-body">
 		                    <div class="table-responsive">
@@ -79,6 +79,9 @@
 				</c:if>
 			</div>
 			
+			<div>
+				<button onclick="location.assign('${path}/attendance/attendanceEditList')">수정요청목록</button>
+			</div>
 
 	<script>
 				
