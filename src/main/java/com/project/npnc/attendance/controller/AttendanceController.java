@@ -36,7 +36,7 @@ public class AttendanceController{
 	private final PageFactory pageFactory;
 	
 	
-	@Scheduled(cron="0 0 23 * * ?")
+	@Scheduled(cron="0 0 23 1 * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
@@ -200,7 +200,7 @@ public class AttendanceController{
 		return "common/msg";
 	}
 	
-	@GetMapping("/attendanceEditList")
+	@GetMapping("/selectAttendanceEditById")
 	public String updateAttendanceList(Model m,
 				@RequestParam(defaultValue = "1") int cPage,
 				@RequestParam(defaultValue = "5") int numPerpage,

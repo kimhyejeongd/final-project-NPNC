@@ -6,10 +6,12 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 
@@ -36,6 +38,25 @@ public class AdminAttendanceController {
 		return "admin/attendance/adminattendancelist";
 	}
 	
+	@GetMapping("/selectAdminAttendanceEditAll")
+	public String selectAdminAttendanceEditAll(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "10") int numPerpage,	
+			Model m) {
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		int totaldata=service.selectAdminAttendanceEditCount();
+		List<AttendanceEdit> attendanceEdit=service.selectAdminAttendanceEditAll(page);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAdminAttendanceEditAll"));
+		m.addAttribute("attendanceEdit",attendanceEdit);
+		return "admin/attendance/adminattendanceeditlist";
+	}
 	
+	@PostMapping("/adminAttendanceEditDetail")
+	public String adminAttendanceEditDetail(int attendanceEditKey,Model m) {
+		AttendanceEdit attendanceEdit=service.selectAttendanceEditByKey(attendanceEditKey);
+		m.addAttribute("attendanceEdit",attendanceEdit);
+		
+		return "admin/attendance/adminattendanceEditDetail";
+	}
 	
 }

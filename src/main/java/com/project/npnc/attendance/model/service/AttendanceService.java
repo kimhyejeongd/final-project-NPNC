@@ -33,6 +33,8 @@ public interface AttendanceService {
 	//admin attendance
 	List<Attendance> selectAdminAttendanceAll(Map page);
 	int selectAdminAttendanceAllCount();
+	List<AttendanceEdit> selectAdminAttendanceEditAll(Map page);
+	int selectAdminAttendanceEditCount();
 	
 	
 	

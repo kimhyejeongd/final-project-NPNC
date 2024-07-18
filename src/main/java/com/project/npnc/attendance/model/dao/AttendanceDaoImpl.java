@@ -137,6 +137,19 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAdminAttendanceAllCount");
 	}
 
+	@Override
+	public List<AttendanceEdit> selectAdminAttendanceEditAll(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectAdminAttendanceEditAll",null,rb);
+	}
+
+	@Override
+	public int selectAdminAttendanceEditCount(SqlSession session) {
+
+		return session.selectOne("attendance.selectAdminAttendanceEditCount");
+	}
+
+	
 	
 	
 	

@@ -38,5 +38,6 @@ public interface AttendanceDao {
 	//admin attendacne
 	List<Attendance> selectAdminAttendanceAll(SqlSession session,Map<String,Integer> page);
 	int selectAdminAttendanceAllCount(SqlSession session);
-	
+	List<AttendanceEdit> selectAdminAttendanceEditAll(SqlSession session,Map<String,Integer> page);
+	int selectAdminAttendanceEditCount(SqlSession session);
 }

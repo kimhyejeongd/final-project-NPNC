@@ -203,6 +203,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.selectAdminAttendanceAllCount(session);
 	}
+
+	@Override
+	public List<AttendanceEdit> selectAdminAttendanceEditAll(Map page) {
+
+		return attendanceDao.selectAdminAttendanceEditAll(session, page);
+	}
+
+	@Override
+	public int selectAdminAttendanceEditCount() {
+		
+		return attendanceDao.selectAdminAttendanceEditCount(session);
+	}
 	
 	
 	
