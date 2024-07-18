@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.npnc.board.model.dao.BoardDao">
+
+    <!-- Board Dto CRUD -->
+    <select id="selectAllBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
+        SELECT * FROM BOARD
+    </select>
+
+    <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
+        SELECT * FROM BOARD WHERE BOARD_KEY = #{boardKey}
+    </select>
+
+    <insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
+        INSERT INTO BOARD (BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE)
+        VALUES (#{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, #{BOARD_ENROLL_DATE}, #{BOARD_UPDATE_DATE}, #{BOARD_DELETE})
+    </insert>
+
+    <update id="updateBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
+        UPDATE BOARD SET
+        BOARD_CATEGORY_KEY = #{BOARD_CATEGORY_KEY},
+        MEMBER_KEY = #{MEMBER_KEY},
+        BOARD_DETAIL = #{BOARD_DETAIL},
+        BOARD_ENROLL_DATE = #{BOARD_ENROLL_DATE},
+        BOARD_UPDATE_DATE = #{BOARD_UPDATE_DATE},
+        BOARD_DELETE = #{BOARD_DELETE}
+        WHERE BOARD_KEY = #{BOARD_KEY}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM BOARD WHERE BOARD_KEY = #{boardKey}
+    </delete>
+
+    <!-- Board Comment Dto CRUD -->
+    <select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+        SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{boardKey}
+    </select>
+
+    <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        INSERT INTO BOARD_COMMENT (BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMNET_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE)
+        VALUES (#{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMNET_DETAIL}, #{BOARD_COMMENT_DATE}, #{BOARD_COMMENT_REF}, #{BOARD_COMMENT_DELETE})
+    </insert>
+
+    <update id="updateComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        UPDATE BOARD_COMMENT SET
+        BOARD_COMMENT_LEVEL = #{BOARD_COMMENT_LEVEL},
+        BOARD_COMMNET_DETAIL = #{BOARD_COMMNET_DETAIL},
+        BOARD_COMMENT_DATE = #{BOARD_COMMENT_DATE},
+        BOARD_COMMENT_REF = #{BOARD_COMMENT_REF},
+        BOARD_COMMENT_DELETE = #{BOARD_COMMENT_DELETE}
+        WHERE BOARD_COMMENT_KEY = #{BOARD_COMMENT_KEY}
+    </update>
+
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM BOARD_COMMENT WHERE BOARD_COMMENT_KEY = #{commentKey}
+    </delete>
+
+    <!-- Board File Dto -->
+    <insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
+        INSERT INTO BOARD_FILE (BOARD_KEY, BOARD_FILE_FILE_ORI, BOARD_FILE_FILE_POST)
+        VALUES (#{BOARD_KEY}, #{BOARD_FILE_FILE_ORI}, #{BOARD_FILE_FILE_POST})
+    </insert>
+
+    <!-- Board Category Dto -->
+    <select id="selectAllCategories" resultType="com.project.npnc.board.model.dto.BoardCategoryDto">
+        SELECT * FROM BOARD_CATEGORY
+    </select>
+    
+</mapper>
