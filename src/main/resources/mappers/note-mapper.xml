@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="note">
-	
+	<resultMap id="memberMap" type="memberSr">
+		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="DEPARTMENT_KEY" property="departmentKey"></result>
+		<result column="JOB_KEY" property="jobKey"></result>
+		<result column="MEMBER_ID" property="memberId"></result>
+		<result column="MEMBER_PW" property="memberPw"></result>
+		<result column="MEMBER_PHONE" property="memberPhone"></result>
+		<result column="MEMBER_EMAIL" property="memberEmail"></result>
+		<result column="MEMBER_MESSAGE" property="memberMessage"></result>
+		<result column="MEMBER_ENROLL_DATE" property="enrollDate"></result>
+		<result column="MEMBER_LEAVE_DATE" property="memberLeaveDate"></result>
+		<result column="MEMBER_TELL" property="memberTell"></result>
+		<result column="MEMBER_ADDRESS" property="memberAddress"></result>
+		<result column="ACCESS_KEY" property="accessKey"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="MEMBER_GENDER" property="memberGender"></result>
+		<result column="MEMBER_STATE" property="memberState"></result>
+		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"></result>
+		<result column="JOB_NAME" property="jobName"></result>				
+	</resultMap>
 	<resultMap id="noteRecMap" type="noteRec">
 		<result column="POST_MSG_REC_KEY" property="postMsgRecKey"></result>
-		<result column="MEMBER_KEY" property="memberKey"></result>
+		<result column="POST_MSG_REC_MEMBER_KEY" property="memberKey"></result>
 		<result column="POST_MSG_DETAIL" property="postMsgDetail"></result>
 		<result column="POST_MSG_TIME" property="postMsgTime"></result>
 		<result column="POST_MSG_RESERVATION" property="postMsgReservation"></result>
 		<result column="POST_MSG_TITLE" property="postMsgTitle"></result>
-		
+		<collection property="recMember" resultMap="memberMap"></collection>
+		<collection property="files" resultMap="noteFileMap"></collection>
 	</resultMap> 
 	<resultMap id="noteSendMap" type="noteSend">
 
@@ -19,12 +39,19 @@
 		<result column="POST_MSG_SEND_DETAIL" property="postMsgSendDetail"></result>
 		<result column="POST_MSG_SEND_TIME" property="postMsgSendTime"></result>
 		<result column="POST_MSG_SEND_RESERVATION" property="postMsgSendReservation"></result>
-		
-		
+		<collection property="recMember" resultMap="memberMap"></collection>
+		<collection property="files" resultMap="noteFileMap"></collection>
 	</resultMap> 
+	<resultMap id="noteFileMap" type="noteFileDto">
+		<result column="POST_MSG_FILE_KEY" property="postMsgFileKey"></result>
+		<result column="POST_MSG_KEY" property="postMsgKey"></result>
+		<result column="POST_MESSAGE_FILE_ORI" property="postMessageFileOri"></result>
+		<result column="POST_MESSAGE_FILE_POST" property="postMessageFilePost"></result>
+		<result column="POST_MSG_SEND_FILE_KEY" property="postMsgSendKey"></result>
+	</resultMap>
 	
 	<insert id="noteOneWrite" parameterType="noteRec">
-	INSERT INTO POST_MESSAGE_RECEPTION VALUES(#{postMsgRecKey} , #{memberKey} ,#{postMsgDetail} ,SYSDATE ,NULL, #{postMsgTitle})
+	INSERT INTO POST_MESSAGE_RECEPTION VALUES(#{postMsgRecKey} , #{memberKey} ,#{postMsgDetail} ,SYSDATE ,NULL, #{postMsgTitle}, DEFAULT)
 	</insert>
 	
 	<insert id="noteReciver" parameterType="map">
@@ -42,11 +69,22 @@
 	</select>
 	<select id="noteSelectTotalData" resultType="_int" parameterType="_int">
 		SELECT COUNT(*) FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER 
-		USING (POST_MSG_REC_KEY)WHERE MEMBER_REC_KEY=#{memberKey}
+		USING (POST_MSG_REC_KEY)WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N'
 
 	</select>
-	<select id="noteSelectOne" resultMap="noteRecMap">
-		SELECT * FROM POST_MESSAGE_RECEPTION WHERE POST_MSG_REC_KEY='181'
+	<select id="noteSelectOne" resultMap="noteRecMap" parameterType="map" >
+		SELECT * FROM POST_MESSAGE_RECEPTION pmre 
+		JOIN POST_MESSAGE_RECEIVER pmr 
+		ON pmre.POST_MSG_REC_KEY=pmr.POST_MSG_REC_KEY 
+		JOIN MEMBER m 
+		ON pmr.MEMBER_REC_KEY=m.MEMBER_KEY 
+		JOIN JOB j  
+		ON m.JOB_KEY =j.JOB_KEY 
+		LEFT JOIN POST_MESSAGE_FILE pmf
+		ON pmre.POST_MSG_REC_KEY=pmf.POST_MSG_KEY
+		WHERE POST_MSG_REC_MEMBER_KEY=#{memberKey}
+		AND pmre.POST_MSG_REC_KEY=#{postMsgRecKey}
+		AND DELETE_STATUS='N'
 	</select>
 	
 	<select id="sendNoteOneWrite" resultType="_int" parameterType="noteRec">
@@ -54,4 +92,59 @@
 		VALUES(#{postMsgRecKey}, #{memberKey}, #{postMsgTitle}, #{postMsgDetail}, SYSDATE, NULL, DEFAULT )
 		
 	</select>
+	<select id="sendNoteSelectAllPaging" resultMap="noteSendMap">
+	
+		SELECT * FROM POST_MESSAGE_SEND WHERE SEND_MEMBER_KEY=#{memberKey} AND SEND_DELETE_STATUS='N' ORDER BY POST_MSG_SEND_KEY DESC
+		
+	</select>
+	<select id="sendNoteSelectAll" resultMap="noteSendMap">
+	
+		SELECT * FROM POST_MESSAGE_SEND pms 
+		JOIN POST_MESSAGE_RECEIVER pmr 
+		ON pms.POST_MSG_SEND_KEY=pmr.POST_MSG_REC_KEY 
+		JOIN MEMBER m 
+		ON pmr.MEMBER_REC_KEY=m.MEMBER_KEY 
+		WHERE SEND_MEMBER_KEY =#{memberKey}
+		AND SEND_DELETE_STATUS='N' 
+		ORDER BY POST_MSG_SEND_KEY DESC
+		
+	</select>
+	<select id="sendNoteSelectTotalData" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM POST_MESSAGE_SEND
+		WHERE SEND_DELETE_STATUS='N' 
+		AND SEND_MEMBER_KEY = #{memberKey} AND SEND_DELETE_STATUS='N'
+	</select>
+	<select id="selectSendOne" resultMap="noteSendMap" parameterType="map">
+		SELECT * FROM POST_MESSAGE_SEND pms 
+		JOIN POST_MESSAGE_RECEIVER pmr 
+		ON pms.POST_MSG_SEND_KEY=pmr.POST_MSG_REC_KEY 
+		JOIN MEMBER m 
+		ON pmr.MEMBER_REC_KEY=m.MEMBER_KEY 
+		JOIN JOB j  
+		ON m.JOB_KEY =j.JOB_KEY 
+		LEFT JOIN POST_MESSAGE_FILE pmf
+		ON pms.POST_MSG_SEND_KEY=pmf.POST_MSG_SEND_FILE_KEY
+		WHERE SEND_MEMBER_KEY =#{sendMemberKey}
+		AND pms.POST_MSG_SEND_KEY=#{postMsgSendKey}
+		AND SEND_DELETE_STATUS='N'
+		
+	</select>
+	<insert id="noteFileInput" parameterType="noteFileDto">
+		INSERT INTO POST_MESSAGE_FILE VALUES (SEQ_noteFile.NEXTVAL, #{postMsgKey},#{postMessageFileOri},#{postMessageFilePost},#{postMsgSendKey} )
+		
+	</insert>
+	
+	<update id="noteSendDelete" parameterType="_int">
+	UPDATE POST_MESSAGE_SEND
+	SET SEND_DELETE_STATUS = 'Y'
+	WHERE POST_MSG_SEND_KEY = #{checkDeleteValue}
+	</update>
+	
+	<update id="noteRecDelete" parameterType="map">
+	UPDATE POST_MESSAGE_RECEIVER
+	SET DELETE_STATUS = 'Y'
+	WHERE POST_MSG_REC_KEY = #{checkDeleteValue}
+	AND MEMBER_REC_KEY =#{memberKey}
+	</update>
+	
 </mapper>
