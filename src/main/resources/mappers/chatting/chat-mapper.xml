@@ -11,15 +11,25 @@
 		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
 	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
-		INSERT INTO chatting_file
-		VALUES      ( # {chatFileKey},
-		              # {memberKey},
-		              # {chatMsgFileOri},
-		              # {chatMsgFilePost},
-		              # {chatFileTime},
-		              # {chatRoomKey},
-		              # {chatMsgKey},
-		              # {fileContentType} ) 
+		    INSERT INTO chatting_file (
+	        CHAT_FILE_KEY,
+			MEMBER_KEY,
+			CHAT_MSG_FILE_ORI,
+			CHAT_MSG_FILE_POST,
+			CHAT_FILE_TIME,
+			CHAT_ROOM_KEY,
+			CHAT_MSG_KEY,
+			FILE_CONTENT_TYPE
+		    ) VALUES (
+		        #{chatFileKey},
+		        #{memberKey},
+		        #{chatMsgFileOri},
+		        #{chatMsgFilePost},
+		        #{chatFileTime},
+		        #{chatRoomKey},
+		        #{chatMsgKey},
+		        #{fileContentType}
+		    )
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
 		DELETE 
@@ -87,8 +97,8 @@
 	</select>
 	
     <insert id="insertSingleRoomId" parameterType="map">
-        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS)
-        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y')
+        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y',SYSDATE)
     </insert>
 	
 	<insert id="insertChat" parameterType="map">
@@ -157,6 +167,16 @@
 	<select id="countRoomMember" parameterType="int" resultType="int">
 		select count(*) from CHATTING_GROUP where chat_room_key = #{roomId}
 	</select>
+	
+	<insert id="insertChatMember" parameterType="map" >
+		        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberId},'Y',SYSDATE)
+		
+	</insert>
+	
+	<select id="selectUnreadCurrent" parameterType="int" resultType="int">
+    	SELECT COUNT(*) FROM CHATTING_IS_READ cir WHERE MEMBER_KEY = #{memberKey}
+    </select>
 
     <resultMap id="chattingMessageResultMap" type="chattingMessage">
         <id property="chatMsgKey" column="CHAT_MSG_KEY"/>
