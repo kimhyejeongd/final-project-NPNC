@@ -7,4 +7,7 @@ import com.project.npnc.calendar.model.dto.Calendar;
 public interface CalendarService {
 	int insertCalendar(Calendar calendar);
 	List<Calendar> selectAllByKey(int memberKey);
+	int updateCalendar(Calendar calendar);
+	int selectLastInsertKey();
+	int deleteCalendar(int calKey);
 }

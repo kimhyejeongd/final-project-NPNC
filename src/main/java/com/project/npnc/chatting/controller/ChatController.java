@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
+import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +64,7 @@ public class ChatController {
 		}
 		System.out.println("Received message: " + message);
 //		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
-		// 채팅 저장
+// 		채팅 저장
 		
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
@@ -88,8 +92,8 @@ public class ChatController {
     	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
-    //
-	@PostMapping("/loadRecentChat")
+
+    @PostMapping("/loadRecentChat")
 	@ResponseBody
 	public Map<String, Object> loadChat(@RequestParam int chatRoomKey ,@RequestParam int memberId) {
 		Map<String, Object> readInfo = new HashMap<>();
@@ -178,5 +182,36 @@ public class ChatController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 중 오류 발생");
         }
+    }
+    
+    @PostMapping("/inviteToRoom")
+    public ResponseEntity<Integer> inviteToRoom (@RequestParam int roomId,@RequestParam List<Integer> memberIds) {
+    	int result = service.inviteToRoom(roomId,memberIds);
+        if (result > 0) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+    
+    @PostMapping("/headerUnread")
+    public  ResponseEntity<Integer> selectUnreadCurrent (@RequestParam int memberKey) {
+    	int result =  service.selectUnreadCurrent(memberKey);
+    	return  ResponseEntity.ok(result);
+    }
+
+
+    
+    @PostMapping("/myChatRoomList")
+    public ResponseEntity<?> myChatRoomList(@RequestParam("memberKey")int memberKey){
+    	Member member = getCurrentUser();
+		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
+		return ResponseEntity.ok(mychatRoomList);
+
+    }
+    
+    private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="attendance">
+
 	<resultMap type="attendance" id="attendanceMap">
 		<id column="ATTENDANCE_KEY" property="attendanceKey"/>
 		<result column="ATTENDANCE_DATE" property="attendanceDate"/>
@@ -106,5 +107,148 @@
 		INSERT INTO ATTENDANCE 
 		VALUES(SEQ_ATTENDANCE.NEXTVAL,#{memberKey},SYSDATE,NULL,NULL,'결근',NULL)
 	</insert>
+
+	<!-- attendanceEdit -->
+
+	<resultMap type="attendanceEdit" id="attendanceEditMap">
+		<id column="ATTENDANCE_EDIT_KEY" property="attendanceEditKey"/>
+		<result column="ATTENDANCE_EDIT_MEMBER"  property="attendanceEditMember"/>
+		<result column="ATTENDANCE_EDIT_DATE"  property="attendanceEditDate"/>
+		<result column="ATTENDANCE_EDIT_REQUEST_DATE"  property="attendanceEditRequestDate"/>
+		<result column="ATTENDANCE_EDIT_STARTEND"  property="attendanceEditStartEnd"/>
+		<result column="ATTENDANCE_EDIT_BEFORETIME"  property="attendanceEditBeforeTime"/>
+		<result column="ATTENDANCE_EDIT_BEFORE_STATE"  property="attendanceEditBeforeState"/>
+		<result column="ATTENDANCE_EDIT_AFTERTIME"  property="attendanceEditAfterTime"/>
+		<result column="ATTENDANCE_EDIT_AFTER_STATE"  property="attendanceEditAfterState"/>
+		<result column="ATTENDANCE_EDIT_REQUEST"  property="attendanceEditRequest"/>
+		<result column="ATTENDANCE_EDIT_OPNION"  property="attendanceEditOpinion"/>
+		<result column="ATTENDANCE_EDIT_STATE"  property="attendanceEditState"/>
+		<association property="attendance" resultMap="attendance.attendanceMap"/>
+	</resultMap>
+
+
+	<insert id="insertAttendanceEdit" parameterType="attendanceEdit">
+		INSERT INTO ATTENDANCE_EDIT
+		VALUES (SEQ_ATTENDANCE_EDIT.NEXTVAL,
+            #{attendance.attendanceKey},
+            #{attendanceEditMember},
+            #{attendanceEditDate},
+            #{attendanceEditRequestDate},
+            #{attendanceEditStartEnd},
+            <choose>
+            <when test="attendanceEditBeforeTime != null and attendanceEditBeforeTime != ''">
+                TO_TIMESTAMP('20' || #{attendanceEditBeforeTime}, 'YYYY-MM-DD HH24:MI:SS')
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        	</choose>,
+            #{attendanceEditBeforeState},
+            TO_TIMESTAMP(to_char(#{attendanceEditRequestDate},'yyyy-mm-dd') ||' '||#{attendanceEditAfterTime}, 'YYYY-MM-DD HH24:MI:SS'),
+            #{attendanceEditAfterState},
+            #{attendanceEditRequest},
+            ' ',
+            '처리중') 
+	</insert>
+
+	<select id="selectAttendanceEditById" parameterType="string" resultMap="attendanceEditMap">
+		SELECT 
+		ATTENDANCE_EDIT_KEY, 
+		ATTENDANCE_KEY, 
+		ATTENDANCE_EDIT_MEMBER, 
+		ATTENDANCE_EDIT_DATE, 
+		ATTENDANCE_EDIT_REQUEST_DATE, 
+		ATTENDANCE_EDIT_STARTEND, 
+		ATTENDANCE_EDIT_BEFORETIME, 
+		ATTENDANCE_EDIT_BEFORE_STATE, 
+		ATTENDANCE_EDIT_AFTERTIME, 
+		ATTENDANCE_EDIT_AFTER_STATE, 
+		ATTENDANCE_EDIT_REQUEST, 
+		ATTENDANCE_EDIT_OPINION,
+		ATTENDANCE_EDIT_STATE
+		FROM   ATTENDANCE_EDIT
+		WHERE  ATTENDANCE_EDIT_MEMBER = #{memberId} 
+	</select>
+
+	<select id="selectAttendanceEditCount" resultType="_int">
+		SELECT
+		COUNT(ATTENDANCE_EDIT_KEY) 
+		FROM ATTENDANCE_EDIT
+		WHERE ATTENDANCE_EDIT_MEMBER = #{memberId} 
+	</select>
+
+	<select id="selectAttendanceEditByKey" resultMap="attendanceEditMap" parameterType="_int">
+		SELECT 
+		ATTENDANCE_EDIT_KEY, 
+		ATTENDANCE_KEY, 
+		ATTENDANCE_EDIT_MEMBER, 
+		ATTENDANCE_EDIT_DATE, 
+		ATTENDANCE_EDIT_REQUEST_DATE, 
+		ATTENDANCE_EDIT_STARTEND, 
+		ATTENDANCE_EDIT_BEFORETIME, 
+		ATTENDANCE_EDIT_BEFORE_STATE, 
+		ATTENDANCE_EDIT_AFTERTIME, 
+		ATTENDANCE_EDIT_AFTER_STATE, 
+		ATTENDANCE_EDIT_REQUEST, 
+		ATTENDANCE_EDIT_OPINION,
+		ATTENDANCE_EDIT_STATE
+		FROM ATTENDANCE_EDIT
+		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
+	</select>
+
+	<delete id="deleteAttendanceEdit" parameterType="_int">
+		DELETE FROM ATTENDANCE_EDIT
+		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey} 
+	</delete>
+
+
+<!-- admin attendance  -->
+
+	<select id="selectAdminAttendanceAll" resultMap="attendanceMap">
+		SELECT 
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY,
+		    MEMBER_ID,
+		    MEMBER_NAME
+		    FROM ATTENDANCE 
+		    JOIN MEMBER USING(MEMBER_KEY)
+		    ORDER BY ATTENDANCE_DATE DESC
+	</select>
+
+	<select id="selectAdminAttendanceAllCount" resultType="_int">
+		SELECT 
+			COUNT(ATTENDANCE_KEY) 
+			FROM ATTENDANCE
+	</select>
+	
+	<select id="selectAdminAttendanceEditAll" resultMap="attendanceEditMap">
+		SELECT 
+		ATTENDANCE_EDIT_KEY, 
+		ATTENDANCE_KEY, 
+		ATTENDANCE_EDIT_MEMBER, 
+		ATTENDANCE_EDIT_DATE, 
+		ATTENDANCE_EDIT_REQUEST_DATE, 
+		ATTENDANCE_EDIT_STARTEND, 
+		ATTENDANCE_EDIT_BEFORETIME, 
+		ATTENDANCE_EDIT_BEFORE_STATE, 
+		ATTENDANCE_EDIT_AFTERTIME, 
+		ATTENDANCE_EDIT_AFTER_STATE, 
+		ATTENDANCE_EDIT_REQUEST, 
+		ATTENDANCE_EDIT_OPINION,
+		ATTENDANCE_EDIT_STATE
+		FROM ATTENDANCE_EDIT
+		ORDER BY ATTENDANCE_EDIT_KEY DESC
+	</select>
+	
+	<select id="selectAdminAttendanceEditCount" resultType="_int">
+		SELECT 
+		COUNT(ATTENDANCE_EDIT_KEY)
+		FROM ATTENDANCE_EDIT
+		
+	</select>
 
 </mapper>

@@ -28,6 +28,6 @@ public class Document {
 	private Date erDocUpdateDate;
 	private String erDocUpdateReason;
 	private List<Approver> approvers;
-	private List<DocFile> files;
-//	private approversList approvers;
+//	private List<DocFile> docFiles;
+	private List<Referer> referers;
 }

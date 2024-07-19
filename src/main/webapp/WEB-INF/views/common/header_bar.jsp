@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+
+    
     <c:set var="path" value="${pageContext.request.contextPath}"/>
+    
+    
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -308,13 +315,6 @@
 	
 	  </style>
       <div class="main-header">
-
-      		<!-- <form action="/chatRoom" method="get">
-			    <label for="userInput">Enter Value:</label>
-			    <input type="text" id="userInput" name="inputValue" required="">
-			    <button type="submit">Submit</button>
-			</form> -->
-
             <div class="main-header-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
@@ -363,9 +363,12 @@
 		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 				 <script type="text/javascript">
+				 var myChatRoomList=null;
 					 $(document).ready(function() {
-					        // Ã«ÂÂÃ«Â¡Â­Ã«ÂÂ¤Ã¬ÂÂ´ Ã«Â©ÂÃ«ÂÂ´ÃªÂ°Â Ã«Â³Â´Ã¬ÂÂ¼ Ã«ÂÂ Ã­ÂÂ¹Ã¬Â Â JSP Ã­ÂÂÃ¬ÂÂ´Ã¬Â§ÂÃ«Â¥Â¼ Ã«Â¡ÂÃ«ÂÂ
+	
+						 		headerUnread();
 
+						 
 					        $('#messageDropdown').on('show.bs.dropdown', function() {
 			                event.stopPropagation(); // Ã¬ÂÂ´Ã«Â²Â¤Ã­ÂÂ¸ Ã«Â²ÂÃ«Â¸ÂÃ«Â§Â Ã«Â°Â©Ã¬Â§Â
 					            $.ajax({
@@ -398,17 +401,21 @@
 					            	    		$('#organcontainer').html("");
 					            	    		$('#organcontainer').html(response);
 					            	    	}
-					            	    	
-					            	    	
-					            	    	 
 					            	     });
-					            	     
 					               });   
-
-
 					            }
 					         );
-
+					 var headerUnread = ()=>{						 
+						$.ajax({
+							url:'${path}/headerUnread',
+							type:'POST',
+							data:{ memberKey:${loginMember.memberKey}},
+							success:function(response){
+				                $('.notification').eq(0).text(response);
+								
+							}
+						});
+					 }
 				</script> 
                 <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                   <li
@@ -638,6 +645,14 @@
             
             <script>
             var stompClient = null;
+            var userStatusMap = {};
+            var totalUnread = 0;
+
+            
+            function updateTotalUnreadCount() {
+                $('.notification').eq(0).text(totalUnread);
+            }
+
 			
 		    function setConnected(connected) {
 		        $("#connect").prop("disabled", connected);
@@ -657,6 +672,15 @@
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
 		            setConnected(true);
 		            console.log('Connected: ' + frame);
+		            
+		            myChatRoomList.forEach(function(room) {
+		                var roomId = room.chatRoomKey;
+		                stompClient.subscribe('/room/' + roomId, function() {
+					 		headerUnread();
+		                });
+		            });
+	
+		            
 		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
 		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
 		                var bodyObject= JSON.parse(msg.body);
@@ -678,8 +702,30 @@
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
 		            });
+		            
+		            stompClient.subscribe('/user/queue/users', function (message) {
+		                var users = JSON.parse(message.body);
+
+		                for (var username in users) {
+		                    if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+		                        userStatusMap[username] = users[username];
+		                        updateUserStatus(username, users[username]);
+		                    }
+		                }
+		            });
 		        });
 		    }
+            function updateUserStatus(username, isOnline) {
+                var statusDot = document.getElementById('status-dot-' + username);
+                
+                console.log(statusDot);
+                if (!statusDot) {
+                    console.error('status-dot element not found for user: ' + username);
+                    return;
+                }
+
+                statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
+            }
             
             function disconnect() {
 		        if (stompClient !== null) {
@@ -690,6 +736,18 @@
 		    }
 			
 		    window.onload = function () {
+ 				console.log("---=-=-=-=-=-=");
+
+		 		$.ajax({
+		 			url:'${path}/myChatRoomList',
+		 			data:{memberKey:'${loginMember.memberKey}'},
+		 			type:'POST',
+		 			success:function(response){
+		 				console.log(response+"---=-=-=-=-=-=");
+		 				myChatRoomList = response;
+		 			}
+		 		})
+		 		
 		        connect();
 		    }
 

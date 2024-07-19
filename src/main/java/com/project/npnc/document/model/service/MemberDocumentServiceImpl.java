@@ -10,7 +10,8 @@ import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.approversList;
+import com.project.npnc.document.model.dto.RefererList;
+import com.project.npnc.document.model.dto.ApproversList;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,12 +43,16 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.selectInprocessDocs(session, no);
 	}
 	@Override
+	public List<Document> selectWaitingDocs(int no) {
+		return dao.selectWaitingDocs(session, no);
+	}
+	@Override
 	public List<Document> selectRetrieveDocs(int no) {
 		return dao.selectRetrieveDocs(session, no);
 	}
 	@Override
 	@Transactional	
-	public int insertDoc(Document d, approversList request) throws Exception {
+	public int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception {
 		int result = dao.insertDoc(session, d); //문서 등록
 		if(result>0) {
 			log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
@@ -57,6 +62,19 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			result=dao.insertApproval(session, request); //결재자 등록
 			if(result>0) {
 				log.debug("[2] 결재자 insert 성공");
+				if(referers != null) {
+					referers.getReferers().forEach(e->{
+						e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
+					});
+					result = dao.insertReferer(session, referers);
+					if(result>0) {
+						log.debug("[3] 참조인 insert 성공");
+					}else if(result<=0) {
+						throw new Exception("[3] 참조인 insert 실패");
+					}
+				}else if(referers == null) {
+					log.debug("[3] 참조인 없음");
+				} 
 			}else {
 				log.debug("[2] 결재자 insert 실패");
 				throw new Exception("[2] 결재자 insert 실패");
@@ -96,5 +114,4 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocById(String docId) {
 		return dao.selectDocById(session, docId);
 	}
-
 }

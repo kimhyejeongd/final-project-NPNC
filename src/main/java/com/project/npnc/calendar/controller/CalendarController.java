@@ -24,7 +24,7 @@ public class CalendarController {
 	
 	@GetMapping("/calendar.do")
 	public String test() {
-		return "calendar/mainCalendar";
+		return "calendar/bomin";
 	}
 	
 	@PostMapping("/calendar/insertcalendar.do")
@@ -33,7 +33,9 @@ public class CalendarController {
 		int result = service.insertCalendar(calendar);
 		Map<String,Object> response = new HashMap<>();
 		if(result>0) {
+			int calendarKey = service.selectLastInsertKey();
 			response.put("status","success");
+			response.put("calendarKey",calendarKey);
 			response.put("message","일정이 새로 등록되었습니다.");
 		}
 		else {
@@ -49,4 +51,35 @@ public class CalendarController {
 		List<Calendar> list = service.selectAllByKey(memberKey);
 		return list;
 	}
+	@PostMapping("/calendar/updatecalendar.do")
+	public ResponseEntity<Map<String,Object>> updateCalendar(@RequestBody Calendar calendar){
+		int result = service.updateCalendar(calendar);
+		Map<String,Object> response = new HashMap<>();
+		if(result>0) {
+			response.put("status", "success");
+			response.put("message", "일정이 수정되었습니다.");
+		
+		}else {
+			response.put("status", "error");
+			response.put("message", "일정수정에 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+	}
+	@PostMapping("/calendar/deletecalendar.do")
+	public ResponseEntity<Map<String,Object>> deleteCalendar(@RequestBody int calendarKey){
+		int result = service.deleteCalendar(calendarKey);
+		Map<String,Object> response = new HashMap<>();
+		
+		if(result>0) {
+			response.put("status", "success");
+			response.put("message", "일정이 삭제되었습니다.");
+		}
+		else {
+			response.put("status", "error");
+			response.put("message", "일정수정에 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+	}
+	
+	
 }

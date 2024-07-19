@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dao.AttendanceDao;
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
 import lombok.RequiredArgsConstructor;
 
@@ -153,8 +154,69 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.selectAttendanceByAttendanceKey(session, attendanceKey);
 	}
-	
 
+	
+	
+	//attendanceEdit
+	
+	
+	@Override
+	public int insertAttendanceEdit(AttendanceEdit ae) {
+		
+		return attendanceDao.insertAttendanceEdit(session, ae);
+	}
+
+	@Override
+	public List<AttendanceEdit> selectAttendanceEditById(String memberId,Map page) {
+
+		return attendanceDao.selectAttendanceEditById(session, memberId,page);
+	}
+
+	@Override
+	public int selectAttendanceEditCount(String memberId) {
+		
+		return attendanceDao.selectAttendanceEditCount(session,memberId);
+	}
+
+	@Override
+	public AttendanceEdit selectAttendanceEditByKey(int attendanceEditKey) {
+		return attendanceDao.selectAttendanceEditByKey(session, attendanceEditKey);
+	}
+
+	@Override
+	public int deleteAttendanceEdit(int attendanceEditKey) {
+		
+		return attendanceDao.deleteAttendanceEdit(session, attendanceEditKey);
+	}
+
+	
+	//admin attendance
+	
+	@Override
+	public List<Attendance> selectAdminAttendanceAll(Map page) {
+		
+		return attendanceDao.selectAdminAttendanceAll(session, page);
+	}
+
+	@Override
+	public int selectAdminAttendanceAllCount() {
+		
+		return attendanceDao.selectAdminAttendanceAllCount(session);
+	}
+
+	@Override
+	public List<AttendanceEdit> selectAdminAttendanceEditAll(Map page) {
+
+		return attendanceDao.selectAdminAttendanceEditAll(session, page);
+	}
+
+	@Override
+	public int selectAdminAttendanceEditCount() {
+		
+		return attendanceDao.selectAdminAttendanceEditCount(session);
+	}
+	
+	
 	
 	
 	

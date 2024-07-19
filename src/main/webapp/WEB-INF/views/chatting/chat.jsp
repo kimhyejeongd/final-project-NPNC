@@ -2,13 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+    
+
+<c:set var="path" value="${pageContext.request.contextPath }"/>
+<sec:authentication var="loginMember" property="principal"/>
     
 <!DOCTYPE html>
 <html>
 <head>
 	<c:set var="path" value="${pageContext.request.contextPath}"/>
 	
-	<c:set var="loginMember" value="${sessionScope.loginMember}"/>
 	<meta charset="UTF-8">
 	<title>Chat Room</title>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -16,6 +21,64 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+.friend-item.selected {
+    background-color: #e0e0e0;
+}
+.friend-item {
+  list-style-type: none;
+
+}
+
+/* 초대 모달 스타일 */
+#inviteModal .modal-content {
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position:
+}
+/* 초대 모달 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면에 고정 */
+    z-index: 1000; /* 다른 요소들보다 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* 필요한 경우 스크롤 */
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+    justify-content: center;
+    align-items: center;
+    display: flex; /* 플렉스 박스 사용 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px; /* 최대 너비 설정 */
+    border-radius: 10px;
+    text-align: center; /* 중앙 정렬 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
     #charCount {
         margin-top: 5px;
         font-size: 0.9em;
@@ -282,6 +345,30 @@
     <div class="invite-button">초대하기</div>
     <div class="exit-button">나가기</div>
 </div>
+<!-- Invite Modal -->
+<div id="inviteModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>유저 초대하기</h2>
+        <input type="text" id="searchInviteUser" class="search-bar" placeholder="유저 검색">
+        <ul class="friend-list" id="inviteFriendList">
+            <c:forEach var="user" items="${allMembers}">
+                <c:if test="${user.memberId != loginMember.memberId && !fn:contains(roomMemberKeys, user.memberKey)}">
+                    <li class="friend-item" data-member-no="${user.memberKey}">
+                        <img src="profile1.jpg" alt="프로필 사진">
+                        <div class="friend-info">
+                            <div class="friend-name">${user.memberName}</div>
+                            <div class="friend-status">${user.departmentName}</div>
+                        </div>
+                    </li>
+                </c:if>
+            </c:forEach>
+        </ul>
+        <button type="button" id="inviteSelectedUsersButton">초대</button>
+    </div>
+</div>
+
+
 
 <script type="text/javascript">
 var sessionCount = 0;
@@ -380,6 +467,77 @@ function removeFile() {
 
 
 $(document).ready(function() {
+    $('#inviteModal').hide();
+
+    // 초대 모달 열기
+    $('.invite-button').click(function() {
+        $('#inviteModal').show();
+    });
+
+    // 초대 모달 닫기
+    $('#inviteModal .close').click(function() {
+        $('#inviteModal').hide();
+    });
+
+    // 모달 외부 클릭 시 닫기
+    $(window).click(function(event) {
+        if ($(event.target).is('#inviteModal')) {
+            $('#inviteModal').hide();
+        }
+    });
+
+    // 유저 검색
+    $('#searchInviteUser').on('input', function() {
+        var searchValue = $(this).val().toLowerCase();
+        $('#inviteFriendList .friend-item').filter(function() {
+            $(this).toggle($(this).find('.friend-name').text().toLowerCase().indexOf(searchValue) > -1);
+        });
+    });
+
+    // 유저 선택
+    $('#inviteFriendList').on('click', '.friend-item', function() {
+        $(this).toggleClass('selected');
+    });
+
+    // 초대 버튼 클릭 이벤트
+    $('#inviteSelectedUsersButton').click(function() {
+        var selectedUsers = $('#inviteFriendList .friend-item.selected').map(function() {
+            return $(this).data('member-no');
+        }).get();
+
+        if (selectedUsers.length > 0) {
+            $.ajax({
+                url: '${path}/inviteToRoom',
+                type: 'POST',
+                data: {
+                    roomId: roomId,
+                    memberIds: selectedUsers
+                },
+                success: function(response) {
+                	if (response>0){                		
+	                    alert('유저를 성공적으로 초대했습니다.');
+
+	                    // 선택된 유저들을 현재 유저 리스트에 추가
+	                    selectedUsers.forEach(function(userNo) {
+	                        var userName = $('#inviteFriendList .friend-item[data-member-no="' + userNo + '"]').find('.friend-name').text();
+	                        $('#roomMemberList').append('<li>' + userName + '</li>');
+	                    });
+
+	                    // 선택된 유저들을 friend list에서 제거
+	                    $('#inviteFriendList .friend-item.selected').remove();
+	               
+                	}
+                },
+                error: function(error) {
+                    console.error('유저 초대 중 오류 발생:', error);
+                    alert('유저 초대 중 오류 발생');
+                }
+            });
+        } else {
+            alert('초대할 유저를 선택하세요.');
+        }
+    });
+
 	 var roomMembers = ${roomMembers}; // JSP EL을 사용하여 서버에서 받은 유저 리스트를 할당
      roomMembers.forEach(function(member) {
          $('#roomMemberList').append('<li>' + member.memberId + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
