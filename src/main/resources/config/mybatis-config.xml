@@ -27,6 +27,7 @@
 		<typeAlias type="com.project.npnc.note.dto.NoteSendDto" alias="noteSend"></typeAlias>
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingFile" alias="chattingFile"/>	
 		
+		
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardCategoryDto" alias="BoardCategoryDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardCommentDto" alias="BoardCommentDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardDto" alias="BoardDto"/>
