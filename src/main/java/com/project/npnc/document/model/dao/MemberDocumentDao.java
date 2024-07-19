@@ -1,11 +1,11 @@
 package com.project.npnc.document.model.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
@@ -34,4 +34,8 @@ public interface MemberDocumentDao {
 	List<Document> selectInprocessDocs(SqlSession session, int no);
 	List<Document> selectWaitingDocs(SqlSession session, int no);
 	Document selectDocById(SqlSession session, String docId);
+	
+	int insertApproverLine(SqlSession session, int no, String name, List<Approver> list);
+	List<ApproverLine> selectApproverLines(SqlSession session, int no);
+	int deleteApproverLines(SqlSession session, int no);
 }

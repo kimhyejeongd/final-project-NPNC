@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
 import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
@@ -165,5 +166,17 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public Document selectDocById(String docId) {
 		return dao.selectDocById(session, docId);
+	}
+	@Override
+	public int insertApproverLine(int no, String name, List<Approver> list) {
+		return dao.insertApproverLine(session, no, name, list);
+	}
+	@Override
+	public List<ApproverLine> selectApproverLines(int no) {
+		return dao.selectApproverLines(session, no);
+	}
+	@Override
+	public int deleteApproverLine(int no) {
+		return dao.deleteApproverLines(session, no);
 	}
 }

@@ -246,4 +246,117 @@ $(document).ready(function() {
 			}
 		});
 	});
+	//$("#refreshBtn").click(e=>{
+	//	window.location.reload();
+	//});
+	$("#bringBtn").click(e=>{
+		let no = $(e.target).data('id');
+		$.ajax({
+			data: no,
+			
+		});
+	});
+	 $(".toggle-btn").mouseenter(function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        let target = $(this).data("target");
+        $(target).show();
+    });
+
+    $(".toggle-btn").mouseleave(function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        let target = $(this).data("target");
+        $(target).on('mouseenter', function() {
+            $(target).show();
+        })
+        $(target).hide();
+    });
+    
+    // 결재라인 저장 버튼 클릭 시
+	$("#saveBtn").click(function(e) {
+		Swal.fire({
+			title: '결재라인 저장',
+			html: '<p>현재 선택된 결제라인 정보를 저장하시겠습니까?</p><p>저장할 결재라인 명을 입력해주세요.</p>결재라인 명 : <input type="text" class="" name="name" id="linename">',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '저장',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+		    if (result.isConfirmed) {
+		        console.log('결제라인 저장');
+		        let lineName = $("input#linename").val();
+		
+		        let approvers = [];
+		        $("div#memberlist2>a").each(function() {
+		            let approver = {
+		                memberKey: $(this).data('id'),
+		                name: $(this).data('name'),
+		                job: $(this).data('job'),
+		                teamName: $(this).data('teamname'),
+		                orderby: $(this).find("div > span").text(),
+		                category: $(this).children().last().val()
+		            };
+		            approvers.push(approver);
+		        });
+		
+		        let data = {
+		            name: lineName,
+		            approvers: approvers
+		        };
+				console.log(data);
+                // 로컬 스토리지에 데이터 저장
+		    	localStorage.setItem('selectedApprover', JSON.stringify(data));
+		        $.ajax({
+		            type: "POST",
+		            url: sessionStorage.getItem("path")+`/document/write/save/approverline`,
+		            contentType: "application/json",
+		            data: JSON.stringify(data),
+		            success: function(response) {
+		                if (response.status === "success") {
+		                    alert(response.message);
+		                } else {
+		                    alert(response.message);
+		                }
+		                window.location.reload();	
+		            }
+		        });
+		    }
+		});
+	});
+    // 삭제 버튼 클릭 시
+	$("#deleteBtn").click(function(e) {
+		Swal.fire({
+			title: '결재라인 삭제',
+			text: '해당 결제라인을 삭제하시겠습니까?',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '삭제',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log('결제라인 삭제');
+				$.ajax({
+					type: "POST",
+					url: sessionStorage.getItem("path")+`/document/write/delete/approverline`,
+					data: JSON.stringify($(e.target).data('id')),
+					dataType:"json",
+					contentType: "application/json; charset=utf-8",
+					success: function(response){
+						if(response.status === "success"){
+							alert(response.message);
+							window.location.reload();
+						}
+						else{
+							alert(response.message);
+						}
+					}
+				});
+			}
+		});
+	});
 });	

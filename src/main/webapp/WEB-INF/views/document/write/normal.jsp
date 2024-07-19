@@ -294,6 +294,7 @@ $(document).ready(function() {
 	});
 });
 $("#approverBtn").click(function() {
+	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
 });
 $("#refererBtn").click(function() {

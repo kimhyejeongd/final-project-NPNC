@@ -56,79 +56,108 @@
 		<result column="ER_FILE_UPDATER" property="fileUpdater"/>
 		<result column="ER_FILE_UPDATE_REASON" property="fileUpdateReason"/>
 	</resultMap>
-	
-	
+	<resultMap type="approverLine" id="approverLineMap">
+		<id column="ER_AP_STORAGE_KEY" property="erApStorageKey"/>
+		<result column="ER_AP_STORAGE_NAME" property="erApStorageName"/>
+		<result column="MEMBER_KEY" property="memberKey"/>
+		<result column="ER_AP_KEY" property="erApKey"/>
+		<result column="ER_AP_TEAM_NAME" property="erApTeamName"/>
+		<result column="ER_AP_JOB_NAME" property="erApJobName"/>
+		<result column="ER_AP_NAME" property="erApName"/>
+		<result column="ER_AP_CATEGORY" property="erApCategory"/>
+		<result column="ER_AP_ORDERBY" property="erApOrderby"/>
+	</resultMap>
 	<!-- 양식 -->
 	<select id="selectformFolders" resultType="map">
-		SELECT er_form_folder_key,
-		       er_form_folder_name,
-		       er_form_folder_creater,
-		       er_form_folder_createdate,
-		       er_form_folder_updater,
-		       er_form_folder_updatedate,
-		       er_form_folder_orderby
-			FROM   er_form_folder
-			ORDER  BY er_form_folder_orderby  
+		SELECT 
+			er_form_folder_key,
+			er_form_folder_name,
+			er_form_folder_creater,
+			er_form_folder_createdate,
+			er_form_folder_updater,
+			er_form_folder_updatedate,
+			er_form_folder_orderby
+		FROM   
+			er_form_folder
+		ORDER BY 
+			er_form_folder_orderby  
 	</select>
 	<select id="selectFormByNo" resultType="map" parameterType="_int">
-		SELECT er_form_key,
-		       er_form_name,
-		       er_form_creater,
-		       er_form_create_date,
-		       er_form_folder_key,
-		       er_form_yn,
-		       er_form_updater,
-		       er_form_update_date,
-		       er_form_orderby,
-		       er_doc_filename
-			FROM   er_form 
+		SELECT 
+			er_form_key,
+			er_form_name,
+			er_form_creater,
+			er_form_create_date,
+			er_form_folder_key,
+			er_form_yn,
+			er_form_updater,
+			er_form_update_date,
+			er_form_orderby,
+			er_doc_filename
+		FROM   
+			er_form 
 	</select>
 	<select id="selectForms" resultType="map" parameterType="_int">
-		SELECT er_form_key,
-		       er_form_name,
-		       er_form_creater,
-		       er_form_create_date,
-		       er_form_folder_key,
-		       er_form_yn,
-		       er_form_updater,
-		       er_form_update_date,
-		       er_form_orderby,
-		       er_doc_filename
-			FROM   er_form
-			WHERE  er_form_yn = 'Y'
-			       AND er_form_folder_key = #{no}
-			ORDER  BY er_form_orderby 
+		SELECT 
+			er_form_key,
+		    er_form_name,
+		    er_form_creater,
+		    er_form_create_date,
+		    er_form_folder_key,
+		    er_form_yn,
+		    er_form_updater,
+		    er_form_update_date,
+		    er_form_orderby,
+		    er_doc_filename
+		FROM   
+			er_form
+		WHERE  
+			er_form_yn = 'Y'
+        AND 
+        	er_form_folder_key = #{no}
+		ORDER BY 
+			er_form_orderby 
 	</select>
 	<select id="selectFormsBySearch" resultType="map" parameterType="string">
-		SELECT er_form_key,
-		       er_form_name,
-		       er_form_creater,
-		       er_form_create_date,
-		       er_form_folder_key,
-		       er_form_yn,
-		       er_form_updater,
-		       er_form_update_date,
-		       er_form_orderby,
-		       er_doc_filename
-			FROM   er_form
-			WHERE  er_form_yn = 'Y'
-			       AND er_form_name LIKE #{target}
-			ORDER  BY er_form_orderby DESC,
-			          er_doc_create_date DESC 
+		SELECT 
+			er_form_key,
+			er_form_name,
+			er_form_creater,
+			er_form_create_date,
+			er_form_folder_key,
+			er_form_yn,
+			er_form_updater,
+			er_form_update_date,
+			er_form_orderby,
+			er_doc_filename
+		FROM   
+			er_form
+		WHERE  
+			er_form_yn = 'Y'
+		AND 
+			er_form_name LIKE #{target}
+		ORDER BY 
+			er_form_orderby DESC,
+	        er_doc_create_date DESC 
 	</select>
 	
 	<!-- 문서 -->
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
 		 <!-- select ER_DOC_KEY, ER_DOC_SERIAL_KEY, ER_DOC_WRITER, ER_DOC_TITLE, ER_DOC_CREATE_DATE, ER_DOC_EMERGENCY_YN, ER_DOC_DELETE_YN, ER_DOC_STOARGE, ER_DOC_FILENAME. ER_DOC_STATE. ER_DOC_STATE_UPDATE_DATE, ER_DOC_LAST_UPDATER, ER_DOC_LAST_UPDATE_REASON from er_document -->
-		 SELECT    *
-			FROM      er_document d
-			left join er_aprover ea
-			USING    (er_doc_serial_key)
-			WHERE     er_doc_writer = ${no}
-			AND       er_doc_state = '처리중'
-			ORDER BY  er_doc_emergency_yn DESC,
-			          er_approval_orderby
+		 SELECT    
+		 	*
+		 FROM      
+		 	er_document d
+		left join 
+			er_aprover ea USING(er_doc_serial_key)
+		WHERE     
+			er_doc_writer = ${no}
+		AND       
+			er_doc_state = '처리중'
+		ORDER BY  
+			er_doc_emergency_yn DESC,
+			er_approval_orderby
 	</select>
 	<!-- 로그인 사원의 결재 대기 문서 조회 -->
 	<select id="selectWaitingDocs" resultMap="documentMap" parameterType="_int">
@@ -241,12 +270,17 @@
 			d.ER_DOC_LAST_UPDATER, 
 			d.ER_DOC_LAST_UPDATE_REASON,
 			d.ER_DOC_WRITER
-		FROM      er_document d
-		left join er_aprover ea on d.er_doc_serial_key = ea.er_doc_serial_key
-		WHERE     d.er_doc_writer = ${no}
-		AND       d.er_doc_state = '회수'
-		ORDER BY  d.er_doc_emergency_yn DESC,
-		          ea.er_approval_orderby
+		FROM      
+			er_document d
+		LEFT JOIN 
+			er_aprover ea ON d.er_doc_serial_key = ea.er_doc_serial_key
+		WHERE     
+			d.er_doc_writer = ${no}
+		AND       
+			d.er_doc_state = '회수'
+		ORDER BY  
+			d.er_doc_emergency_yn DESC,
+			ea.er_approval_orderby
 	</select>
 	<!-- 문서 상세보기 -->
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
@@ -337,7 +371,8 @@
 		</selectKey>
 	</insert>
 	<update id="updateDocFilename" parameterType="string">
-		UPDATE er_document
+		UPDATE 
+			er_document
 	    SET 
 	        er_doc_filename = #{erDocSerialKey} || '.html'
 	    WHERE
@@ -345,51 +380,114 @@
 	</update>
 	<!-- 진행중인 문서 회수 -->
 	<update id="retrieveDoc" parameterType="string">
-		UPDATE er_document
-			SET    er_doc_state = '회수',
-			       er_doc_state_update_date = SYSDATE
-			WHERE  er_doc_serial_key = #{erDocSerialKey} 
+		UPDATE 
+			er_document
+		SET    
+			er_doc_state = '회수',
+	    	er_doc_state_update_date = SYSDATE
+		WHERE  
+			er_doc_serial_key = #{erDocSerialKey} 
 	</update>
 	
 	
 	<!-- 첨부파일 -->
 	<!-- 존재여부 확인 -->
 	<select id="selectDocFile" parameterType="string" resultType="_int">
-		SELECT Count(*)
-			FROM   er_file
-			WHERE  er_doc_serial_key = #{erDocSerialKey}
+		SELECT 
+			Count(*)
+		FROM   
+			er_file
+		WHERE  
+			er_doc_serial_key = #{erDocSerialKey}
 	</select>
 	<!-- 첨부파일 데이터 삭제 -->
 	<delete id="deleteDocFile" parameterType="string">
-		DELETE er_file
-			WHERE  er_doc_serial_key = #{erDocSerialKey}
+		DELETE 
+			er_file
+		WHERE 
+			er_doc_serial_key = #{erDocSerialKey}
 	</delete>
 	
 	<!-- 결재자 -->
 	<!-- 문서 기안시 등록 -->
 	<insert id="insertApproval" parameterType="approver">
-		INSERT INTO er_aprover VALUES
+		INSERT INTO 
+			er_aprover 
+		VALUES
             (
-                        seq_er_approver_key.NEXTVAL,
-                        ${memberKey},
-                        #{memberName},
-                        #{memberTeam},
-                        #{memberJob},
-                        #{category},
-                        <choose>
-			              <when test="state == null">
-			                '대기'
-			              </when>
-			              <otherwise>
-			                #{state}
-			              </otherwise>
-			            </choose>,
-                        NULL,
-                        #{erDocSerialKey},
-                        NULL,
-                        ${orderby}
+              seq_er_approver_key.NEXTVAL,
+              ${memberKey},
+              #{memberName},
+              #{memberTeam},
+              #{memberJob},
+              #{category},
+              <choose>
+			       <when test="state == null">
+			         '대기'
+			       </when>
+			       <otherwise>
+			         #{state}
+			       </otherwise>
+		     </choose>,
+              NULL,
+              #{erDocSerialKey},
+              NULL,
+              ${orderby}
             )
 	</insert>
+	<!-- 결재라인 저장 -->
+	<insert id="insertApproverLine" parameterType="map">
+		INSERT INTO
+			er_ap_storage
+			(
+				ER_AP_STORAGE_KEY,
+				ER_AP_STORAGE_NAME,
+				MEMBER_KEY,
+				ER_AP_KEY,
+				ER_AP_TEAM_NAME,
+				ER_AP_JOB_NAME,
+				ER_AP_NAME,
+				ER_AP_CATEGORY,
+				ER_AP_ORDERBY
+			)
+		VALUES(
+		 <foreach collection="list" item="item" separator=",">
+            (
+			SEQ_ER_AP_STORAGE_KEY.nextval,
+			#{name},
+			#{no},
+            #{item.memberKey},
+            #{item.memberTeam}, 
+            #{item.memberJob}, 
+            #{item.memberName}, 
+            #{item.category}
+			#{item.orderby}
+        </foreach>
+		)
+	</insert>
+	<delete id="deleteApproverLines" parameterType="int">
+		DELETE 
+			ER_AP_STORAGE
+		WHERE  
+			ER_AP_STORAGE_KEY = #{no}
+	</delete>
+	<!-- 결재라인 불러오기 -->
+	<select id="selectApproverLines" parameterType="int" resultMap="approverLineMap">
+		SELECT 
+			ER_AP_STORAGE_KEY,
+			ER_AP_STORAGE_NAME,
+			MEMBER_KEY,
+			ER_AP_KEY,
+			ER_AP_TEAM_NAME,
+			ER_AP_JOB_NAME,
+			ER_AP_NAME,
+			ER_AP_CATEGORY,
+			ER_AP_ORDERBY
+		FROM
+			ER_AP_STORAGE
+		WHERE
+			MEMBER_KEY = #{no}
+	</select>
 	<!-- 참조인 -->
 	<insert id="insertReferer" parameterType="referer">
 		INSERT INTO ER_REFERER VALUES

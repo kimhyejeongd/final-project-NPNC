@@ -15,6 +15,18 @@
     .selected{
     	background-color: #deefff !important;
     }
+    .modal-like {
+        position: absolute;
+        top: 75%; /* 돋보기 버튼 바로 아래에 표시 */
+        left: 110px;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        width: max-content;
+        border-radius: 10px;
+    }
 </style>
  <!-- Fonts and icons -->
 <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
@@ -159,7 +171,7 @@
 			                      	<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center;"><i class="icon-arrow-up"></i></button>
 	           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center;"><i class="icon-arrow-down"></i></button>
 			                      </div>
-        					  <button class="btn btn-sm btn-info">저장</button>
+        					  <button class="btn btn-sm btn-info" id="saveBtn">저장</button>
 		                    </div>
 		                  </div>
 		                 <div class="card-list p-4 " id="selectlist">
@@ -197,25 +209,37 @@
                    <div class="card-head-row card-tools-still-right">
                       <div class="card-title" id="formfoldername">저장된 결재라인</div>
                       <div class="card-tools"></div>
-			            <button class="btn btn-sm btn-info">새로고침</button>
+			            <!-- <button class="btn btn-sm btn-info" id="refreshBtn">새로고침</button> -->
                    </div>
             </div>
 	        <div class="d-flex flex-wrap card-body row row-cols-auto gap-1 w-100 mx-auto">
-			    <c:forEach var="i" begin="1" end="9" step="1">
-			        <div class="d-flex align-items-center justify-content-between col p-2" style="min-width: 400px;">
-			            <div class="d-flex border card-body justify-content-between flex-fill rounded">
-			                <div class="d-flex gap-1 align-items-center">
-			                    <div class="line-color me-2"></div>
-			                    결재라인 ${i}
-			                </div>
-			                <div>
-				                <button class="btn btn-sm btn-outline-secondary ml-2">불러오기</button>
-				                <button class="btn btn-sm btn-outline-secondary ml-2">삭제</button>
-			                </div>
-			            </div>
-			        </div>
-			    </c:forEach>
-			</div>
+		    <c:if test="${aplist ne null || not empty aplist}">
+		        <c:forEach var="ap" items="${aplist }" varStatus="vs">
+		            <div class="d-flex align-items-center justify-content-between col p-2" style="min-width: 400px; position: relative;">
+		                <div class="d-flex border card-body justify-content-between flex-fill rounded">
+		                    <div class="d-flex gap-1 align-items-center">
+		                        <div class="line-color me-2"></div>
+		                        ${ap.erApStorageName } 
+		                        <button class="ms-2 toggle-btn" data-target="#line${vs.index }" style="background-color: white; border: none;">
+		                            <i class=" fa fa-search search-icon "></i>
+		                        </button>
+		                        <div id="line${vs.index }" class="modal-like" style="display:none;">
+		                            <div class="badge rounded-pill text-bg-secondary">${ap.erApOrderby}</div>
+		                            ${ap.erApTeamName } ${ap.erApJobName } ${ap.erApName } ${ap.erApCategory }
+		                        </div>
+		                    </div>
+		                    <div>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="bringBtn" data-id="${ap.erApStorageKey }">불러오기</button>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="deleteBtn" data-id="${ap.erApStorageKey }">삭제</button>
+		                    </div>
+		                </div>
+		            </div>
+		        </c:forEach>
+		    </c:if>
+		    <c:if test="${aplist eq null || empty aplist }">
+		        <span>저장된 결재라인이 없습니다.</span>
+		    </c:if>
+		</div>
 		</div>
     	<div class="d-flex justify-content-end gap-2">
 	        <button class="btn btn-primary" id="okBtn">적용</button>

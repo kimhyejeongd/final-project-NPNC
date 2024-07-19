@@ -11,26 +11,32 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
-import com.project.npnc.document.model.dto.DocFile;
+import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.service.MemberDocumentService;
+import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
@@ -152,10 +158,80 @@ public class MemberDocumentController {
 	}
 	
 //	팝업
+	//결재자 선택
 	@GetMapping("/write/approver")
 	public void docApprover(Model m) {
-		m.addAttribute("list", orserv.selectOrganAll());
+		List<OrganizationDto> list = orserv.selectOrganAll();
+		log.debug("----- 결재자 선택 -----");
+		m.addAttribute("list", list);
+		log.debug("{}", list); 
+		List<ApproverLine> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
+		m.addAttribute("aplist", ap);
+		log.debug("{}", ap); 
 	}
+	//결재라인 불러오기
+	@GetMapping("/write/load/approverline")
+	public ResponseEntity<Map<String,Object>> selectApproverLines(@RequestBody int no, Model m) {
+		Map<String,Object> response = new HashMap<>();
+		
+		try{
+			List<ApproverLine> result = serv.selectApproverLines(no);
+			response.put("status", "ok");
+			response.put("approver", result);
+		}catch(Exception e){
+			response.put("status", "error");
+			response.put("message", "결재라인 불러오기에 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+	}
+	//결재라인 저장
+	@PostMapping("/write/save/approverline")
+	public ResponseEntity<Map<String,Object>> insertApproverLine(
+			@RequestBody Map<String, Object> data) {
+		log.debug("----- 결재라인 저장 -----");
+		String name = (String) data.get("name");
+		 List<Approver> list = (List<Approver>) data.get("approvers");
+		 
+		log.debug(name);
+		log.debug("{}", list);
+		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(),name, list);
+		Map<String,Object> response = new HashMap<>();
+		
+		if(result>0) {
+			response.put("status","success");
+			response.put("message", "결재라인 저장을 성공했습니다.");
+		}
+		else {
+			response.put("status", "error");
+			response.put("message", "결재라인 저장에 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+		
+	}
+	//결재라인 삭제
+	@PostMapping("/write/delete/approverline")
+	public ResponseEntity<Map<String,Object>> deleteApproverLine(
+			@RequestBody int no) {
+//		@RequestBody Map<String, Integer> requestBody) {
+//		int no = requestBody.get("no");
+		log.debug("----- 결제라인 "+ no + " 삭제 요청 -----");
+		int result = serv.deleteApproverLine(no);
+		Map<String,Object> response = new HashMap<>();
+		
+		if(result>0) {
+			log.debug("결제라인 삭제 성공");
+			response.put("status","success");
+			response.put("message", "결재라인 삭제에 성공했습니다.");
+		}
+		else {
+			log.debug("결제라인 삭제 실패");
+			response.put("status", "error");
+			response.put("message", "결재라인 삭제에 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+		
+	}
+	//참조인 선택
 	@GetMapping("/write/referer")
 	public void docReferer(Model m) {
 		m.addAttribute("list", orserv.selectOrganAll());

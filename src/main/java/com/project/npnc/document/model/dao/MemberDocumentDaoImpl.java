@@ -1,11 +1,14 @@
 package com.project.npnc.document.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
@@ -119,6 +122,31 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 			result = session.insert("document.insertReferer", r); 
 		}
 		return result;
+	}
+
+	@Override
+	public int insertApproverLine(SqlSession session, int no, String name, List<Approver> list) {
+//		int result =0;
+//		for (Approver approver : list) {
+			Map<String,Object> map = new HashMap<>();
+			map.put("no", no);
+			map.put("name", name);
+			map.put("approver", list);
+//			map.put("approver", approver);
+//			result = session.insert("document.insertApproverLine", map);
+//		}
+//		return result;
+		return session.insert("document.insertApproverLine", map);
+	}
+
+	@Override
+	public List<ApproverLine> selectApproverLines(SqlSession session, int no) {
+		return session.selectList("document.selectApproverLines", no);
+	}
+
+	@Override
+	public int deleteApproverLines(SqlSession session, int no) {
+		return session.update("document.deleteApproverLines", no);
 	}
 
 }

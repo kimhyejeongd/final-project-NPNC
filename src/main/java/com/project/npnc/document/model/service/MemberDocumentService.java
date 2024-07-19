@@ -2,6 +2,8 @@ package com.project.npnc.document.model.service;
 
 import java.util.List;
 
+import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
@@ -23,4 +25,8 @@ public interface MemberDocumentService {
 	int retrieveDoc(String docSerial) throws Exception;
 	
 	Document selectDocById(String docId);
+	
+	int insertApproverLine(int no, String name, List<Approver> list);
+	List<ApproverLine> selectApproverLines(int no);
+	int deleteApproverLine(int no);
 }
