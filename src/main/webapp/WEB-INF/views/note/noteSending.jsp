@@ -223,6 +223,11 @@
                       >
                         <thead>
                           <tr>
+                          <th> 
+                          	<input type="checkbox" id="deleteCheckAll" value="">
+                         		 전체선택 
+                          
+                          	</th>
                             <th>Number</th>
                             <th>보낸이</th>
                             <th>title</th>
@@ -235,11 +240,11 @@
                       <c:forEach var="d" items="${notelist}" varStatus="status2">
                       
                         
-           	    			<tr class="modalDetailGo" onclick="modalDetailGo(${d.postMsgSendKey},${d.sendMemberKey})">
-           	    				
+           	    			<tr>
+           	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgSendKey}"></th>
            	  					<th>${d.postMsgSendKey}<p>
            	  					<th>${d.sendMemberKey}<p>
-           	  					<th>${d.postMsgSendTitle}<p>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgSendKey},${d.sendMemberKey})">${d.postMsgSendTitle}<p>
            	  					<th>${d.postMsgSendTime}<p>
            	  				</tr>
 	
@@ -248,14 +253,19 @@
                         </tbody>
                         
                       </table>
-                      <div id="pageBarList">${pageBar}</div>
-                      <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
-                    </div>
+                      <div>
+                      	  <div id="deleteButton"> 
+                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+                      	  </div>
+	                      <div id="pageBarList">${pageBar}</div>
+	                      <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
+	                      </div>
+                      </div>
                   </div>
                 </div>
               </div>
            
-			        <div class="modal">
+			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
 				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
@@ -265,7 +275,7 @@
 				           	  
 				           	  <div class="form-group">
 				           	    <div class="namebox" >
-				           		   <h2>전체 쪽지</h2>
+				           		  <!--  <h2>전체 쪽지</h2> -->
 				           		</div>
 				           	</div>   
 				           		    <div class="form-group">
@@ -289,7 +299,10 @@
 			                              rows="8" cols="50"
 			                            ></textarea>
 			                          </div>
-                    			   </div>		           	   
+                    			   </div>	
+                    			   <div class="form-group" id="downloadButtonBox">
+                    			   	
+                    			   </div>	           	   
 								 <div class="form-group">
 								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
 								<button class="btn btn-primary btn-border close_btn" >닫기</button>
@@ -328,8 +341,43 @@
 	            });
 	        });
           	
-         
+          	/* 체크되어있는 체크박스의 값을 구해오는 로직 */
+          	function deleteSendGo(){
+          		 var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+          		 let checkDeleteValue=[];
+           	    for (var checkbox of checkboxes) {
+           	        
+           	        
+           	        if(checkbox.checked){
+           	        	checkDeleteValue.push(checkbox.value);
+           	        }
+           	    }
+
+				$.ajax({
+					url : '${path}/noteSendDelete',
+					type : 'POST',
+					data : {checkDeleteValue : checkDeleteValue
+						
+							},
+					success : function(response){
+						
+					    
+					}
+				});
+           	    
+          	}
+          	
+          	/* 전체 선택 누르면 각 체크박스 돌아가는 로직 */
+          	document.getElementById('deleteCheckAll').addEventListener('change', function() {
+          	    var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+          	    for (var checkbox of checkboxes) {
+          	        checkbox.checked = this.checked;
+          	    }
+          	});
+          	
+         /* 보낸 쪽지함 개별 조회 */
           	function modalDetailGo(postMsgSendKey,sendMemberKey){
+          	    event.stopPropagation(); 
           		console.log(postMsgSendKey,sendMemberKey);
           		$.ajax({
 					url : '${path}/selectSendOne',
@@ -339,15 +387,49 @@
 							},
 					success : function(response){
 						
-						console.log(response);
+		      			var namebox=document.getElementsByClassName("namebox");
+						var downloadButtonBox= document.getElementById("downloadButtonBox");
+						
+						namebox[0].innerHTML="";
+						downloadButtonBox.innerHTML="";
+						
 						var recMember=response.recMember;
-						for(let i=0;i<recMember.length;i++){
-							console.log(recMember[i].memberName);	
+						if(recMember.length>10){
+							namebox[0].innerHTML='<h2>전체 쪽지<h2>';
+						}else{
+							for(let i=0;i<recMember.length;i++){
+								 var newElement=document.createElement("span");
+					                newElement.classList.add("badge");
+					                newElement.classList.add("badge-info");
+					                newElement.classList.add("badge-margin");
+					                newElement.classList.add("badge-margin");
+					                newElement.id=recMember[i].memberKey;
+					                newElement.textContent=recMember[i].memberName+' '+recMember[i].jobName;
+					                namebox[0].appendChild(newElement);
+	
+							}
+						}
+						var files= response.files;
+						if(files.length>0){
+						console.log(files);
+							for(let i=0;i<files.length;i++){
+								 var newElement=document.createElement("button");
+					                newElement.classList.add("btn");
+					                newElement.classList.add("btn-success");
+					                
+					               	newElement.textContent=files[i].postMessageFileOri;
+					                
+					               	newElement.onclick = function() {
+					                     fn_download(files[i].postMessageFileOri,files[i].postMessageFilePost);
+					                };
+					               	
+					               	
+					                downloadButtonBox.appendChild(newElement);
+	
+							}
 						}
 			            
- 						var postMsgTitle =document.getElementById('postMsgTitle');
-				        var postMsgDetail =document.getElementById('postMsgDetail');
-		      			var namebox=document.getElementsByClassName("namebox");
+ 						
 
 				        $('#postMsgTitleAll').val(response.postMsgSendTitle);
 
@@ -360,6 +442,9 @@
           		
           	}
           	
+          	function fn_download(ori,post){
+          		location.assign("${path}/note/filedownload?oriname="+ori+"&rename="+post);
+          	}
           	
           		
           	
@@ -381,11 +466,13 @@
 	           	    			
 
 						  $.each(response.notepagelist, function(index, item) {
-				                    var row = `<tr class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgSendKey},\${item.sendMemberKey})" >
-				                        <td>\${item.postMsgSendKey}</td>
-				                        <td>\${item.sendMemberKey}</td>
-				                        <td>\${item.postMsgSendTitle}</td>
-				                        <td>\${item.postMsgSendTime}</td>
+				                    var row = `<tr>
+		           	    				<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgSendKey}"></th>
+
+				                        <th>\${item.postMsgSendKey}</th>
+				                        <th>\${item.sendMemberKey}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgSendKey},\${item.sendMemberKey})">\${item.postMsgSendTitle}</th>
+				                        <th>\${item.postMsgSendTime}</th>
 				                    </tr>`;
 				                    tbody.append(row);
 				                }); 

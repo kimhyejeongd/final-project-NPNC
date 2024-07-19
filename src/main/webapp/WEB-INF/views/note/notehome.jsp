@@ -110,6 +110,10 @@
 		/* flex-wrap: wrap; */
 		 
 	}
+	.modalDetailGo{}
+	.modalDetailGo:hover {
+            cursor: pointer; /* 커서를 포인터로 변경 */
+        }
 	</style>
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
@@ -220,6 +224,11 @@
                       >
                         <thead>
                           <tr>
+                          	<th> 
+                          		<input type="checkbox" id="deleteCheckAll" value="">
+                          			전체선택 
+                          
+                          	</th>
                             <th>Number</th>
                             <th>보낸이</th>
                             <th>title</th>
@@ -230,10 +239,11 @@
                        
                         <tbody id="pagingtbody">
                       <c:forEach var="d" items="${notelist}" varStatus="status">
-           	    			<tr>
+           	    			<tr >
+           	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
            	  					<th>${d.postMsgRecKey}<p>
            	  					<th>${d.memberKey}<p>
-           	  					<th>${d.postMsgTitle}<p>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
            	  					<th>${d.postMsgTime}<p>
            	  				</tr>
           		 	  </c:forEach>
@@ -241,8 +251,12 @@
                         </tbody>
                         
                       </table>
-                      <div id="pageBarList">${pageBar}</div>
-                      <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
+                      <div>
+	                      <div id="deleteButton"> 
+	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      </div>
+	                      <div id="pageBarList">${pageBar}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -324,15 +338,43 @@
 			                              rows="8" cols="50"
 			                            ></textarea>
 			                          </div>
-                    			   </div>		           	   
+                    			   </div>		  
+                    			   <div class="form-group">
+                    			   <div class="input-group-prepend" style="padding:0px;">
+				                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFile();">
+				                		추가
+				                		</button>
+				                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFile();">
+				                		삭제
+				                		</button>
+				                	</div>
+				                	<div class="form-group">
+				                	<form id="fileInputsContainer">
+				                	<div id="basicFileForm" class="input-group mb-3" style="padding:0px;">
+				                	 
+						                <div class="input-group-prepend" style="padding:0px;">
+						                	<span class="input-group-text1">첨부파일1</span>
+						                </div>
+						                <div class="custom-file">
+						               
+						                    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
+						                    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
+						                </div>
+						                 
+						                
+						            </div>
+						            </form>
+						            </div>
+                    			   </div>         	   
 								 <div class="form-group">
+							
 								<button class="btn btn-primary" style="margin-right: 10px;" onclick="notego();">전송</button>
 								<button class="btn btn-primary btn-border close_btn" >닫기</button>
 								</div>
 				          </div>
 				    </div>
 			  </div>
-			        <div class="modal">
+			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
 				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
@@ -371,9 +413,87 @@
 				          </div>
 				    </div>
 			  </div>
+			   <div class="modal">
+				    <div class="modal_popup">
+				         <div>
+				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
+				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
+				           	  	<p>${d.memberKey}<p>
+				           	  </c:forEach>  --%>
+				           	  
+				           	  <div class="form-group">
+				           	    <div class="namebox" >
+				           		  <!--  <h2>전체 쪽지</h2> -->
+				           		</div>
+				           	</div>   
+				           		    <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">제목</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id="postMsgTitleRecOne"
+			                              rows="1" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>		
+								   <div class="form-group">
+			                          <div class="input-group">
+			                            <span class="input-group-text">내용</span>
+			                            <textarea
+			                              class="form-control"
+			                              aria-label="With textarea"
+			                              id="postMsgDetailRecOne"
+			                              rows="8" cols="50"
+			                            ></textarea>
+			                          </div>
+                    			   </div>	
+                    			   <div class="form-group" id="downloadButtonBox">
+                    			   	
+                    			   </div>	           	   
+								 <div class="form-group">
+								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
+								<button class="btn btn-primary btn-border close_btn" >닫기</button>
+								</div>
+				          </div>
+				    </div>
+			  </div>
 			
-			<script>
-		  
+			<!-- 첨부파일 -->
+			 <script>
+		    	const addDelFunction=(function(){
+		    		let count=2;
+		    		const addFileform=()=>{
+		    			if(count<=5){
+		    				const fileForm=$("#basicFileForm").clone(true);
+		    				fileForm.find("span.input-group-text1").text("첨부파일"+count);
+		    				fileForm.find("label.custom-file-label").text("파일을 선택하세요")
+		    				.attr("for","upFile"+count);
+		    				fileForm.find("input[type=file]").attr("id","upFile"+count).val("");
+		    				/* $("textarea[name=boardContent]").before(fileForm); */
+		    				   fileForm.appendTo("#fileInputsContainer");
+		    				count++;
+		    			}else{
+		    				alert("첨부파일은 5개까지 가능합니다");
+		    			}
+		    		}
+		    		
+		    		const delFileform=()=>{
+		    			if(count!=2){
+		    				$("#fileInputsContainer").children().last().remove();
+		    				count--;
+		    			}
+		    			
+		    		}
+		    		return {addFileform,delFileform};
+		    	})();
+		    	const fn_addFile=addDelFunction.addFileform;
+		    	const fn_delFile=addDelFunction.delFileform;
+		    	
+		    	$("input[name=upFile]").change(e=>{
+		    		const fileName=e.target.files[0].name;
+		    		$(e.target).next(".custom-file-label").text(fileName);
+		    	});
 		    </script>
           	<script>
           	
@@ -402,6 +522,106 @@
 	            });
 	        });
           	
+         	/* 체크되어있는 체크박스의 값을 구해오는 로직 */
+          	function deleteSendGo(){
+          		 var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+          		 let checkDeleteValue=[];
+           	    for (var checkbox of checkboxes) {
+           	        
+           	        
+           	        if(checkbox.checked){
+           	        	checkDeleteValue.push(checkbox.value);
+           	        }
+           	    }
+	            var memberKey = document.getElementById('memberKey').value;
+
+
+				$.ajax({
+					url : '${path}/noteRecDelete',
+					type : 'POST',
+					data : {checkDeleteValue : checkDeleteValue,
+							memberKey : memberKey
+							},
+					success : function(response){
+						
+					    
+					}
+				});
+           	    
+          	}
+         	
+         	/* 전체 선택 누르면 각 체크박스 돌아가는 로직 */
+          	document.getElementById('deleteCheckAll').addEventListener('change', function() {
+          	    var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+          	    for (var checkbox of checkboxes) {
+          	        checkbox.checked = this.checked;
+          	    }
+          	});
+          	
+          	
+          	/* 받은 쪽지 조회 함수 */
+          	function modalDetailGo(postMsgRecKey,memberKey){
+          		console.log(postMsgRecKey,memberKey);
+          		$.ajax({
+					url : '${path}/noteSelectOne',
+					type : 'POST',
+					data : {postMsgRecKey : postMsgRecKey,
+							memberKey: memberKey
+							},
+					success : function(response){
+						
+		      			var namebox=document.getElementsByClassName("namebox");
+						var downloadButtonBox= document.getElementById("downloadButtonBox");
+						
+						namebox[1].innerHTML="";
+						downloadButtonBox.innerHTML="";
+						
+						var recMember=response.recMember;
+						if(recMember.length>10){
+							namebox[1].innerHTML='<h2>전체 쪽지<h2>';
+						}else{
+							for(let i=0;i<recMember.length;i++){
+								 var newElement=document.createElement("span");
+					                newElement.classList.add("badge");
+					                newElement.classList.add("badge-info");
+					                newElement.classList.add("badge-margin");
+					                newElement.classList.add("badge-margin");
+					                newElement.id=recMember[i].memberKey;
+					                newElement.textContent=recMember[i].memberName+' '+recMember[i].jobName;
+					                namebox[1].appendChild(newElement);
+	
+							}
+						}
+						var files= response.files;
+						if(files.length>0){
+						
+							for(let i=0;i<files.length;i++){
+								 var newElement=document.createElement("button");
+					                newElement.classList.add("btn");
+					                newElement.classList.add("btn-success");
+					                
+					               	newElement.textContent=files[i].postMessageFileOri;
+					                
+					               	newElement.onclick = function() {
+					                     fn_download(files[i].postMessageFileOri,files[i].postMessageFilePost);
+					                };
+					               	
+					               	
+					                downloadButtonBox.appendChild(newElement);
+	
+							}
+						}
+			            
+ 					
+				        $('#postMsgTitleRecOne').val(response.postMsgTitle);
+
+				        $('#postMsgDetailRecOne').val(response.postMsgDetail);
+				     
+										    
+						modal[2].classList.add('on');
+					}
+				});
+          	}
           	
           	/* 쪽지 발송 발송 멤버 추가 로직 */
             function memberselect(memberKey,memberName,jobName){
@@ -492,7 +712,17 @@
    		   	} 
 
             function notego(){
+            	
+            	var formData = new FormData();
+            	var upFiles = document.getElementsByName('upFile');
+				
+            	for (var i = 0; i < upFiles.length; i++) {
+            		   var fileList = upFiles[i].files;
+            		    for (var j = 0; j < fileList.length; j++) {
+            		        formData.append('upFile', fileList[j]);
+            		    }
 
+            	}
  	           
 	            var selectedRadio = document.getElementsByName('reMemberKey1');
 	            var reMemberKey1=[];
@@ -509,16 +739,29 @@
 	            console.log(postMsgDetail);
 				var postMsgTitle =document.getElementById('postMsgTitle').value;
 				console.log(postMsgTitle);
+				
+				
+				formData.append('reMemberKey',JSON.stringify(reMemberKey1));
+				
+				formData.append('memberKey', memberKey);
+				formData.append('postMsgDetail', postMsgDetail);
+				formData.append('postMsgTitle', postMsgTitle);
+				
+				formData.forEach((value, key) => {
+				    console.log(key, value);
+				});
+
 		    	$.ajax({
 		    		url : '${path}/notewrite',
 		    		type : 'POST',
-		    		data : {
-		    			"reMemberKey" : reMemberKey1,
-		    			"memberKey" : memberKey,
-		    			"postMsgTitle" : postMsgTitle,
-		    			"postMsgDetail" : postMsgDetail
-		    			
-		    		},
+		    		data :
+			    		/* 	"reMemberKey" : reMemberKey1,
+			    			"memberKey" : memberKey,
+			    			"postMsgTitle" : postMsgTitle,
+			    			"postMsgDetail" : postMsgDetail, */
+		    			formData,
+		    	    processData: false, // 필수 항목
+		    	    contentType: false, // 필수 항목
 		    		success : function(){
 		    			alert('성공');
 		    			for (let i=0; i<reMemberKey1.length;i++)	{
@@ -615,10 +858,11 @@
 						  	 console.log(response.notepagelist);
 
 						  $.each(response.notepagelist, function(index, item) {
-				                    var row = `<tr>
+				                    var row = `<tr >
+				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 				                        <td>\${item.postMsgRecKey}</td>
 				                        <td>\${item.memberKey}</td>
-				                        <td>\${item.postMsgTitle}</td>
+				                        <td class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</td>
 				                        <td>\${item.postMsgTime}</td>
 				                    </tr>`;
 				                    tbody.append(row);

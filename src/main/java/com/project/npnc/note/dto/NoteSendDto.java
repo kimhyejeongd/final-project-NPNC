@@ -26,5 +26,6 @@ public class NoteSendDto {
 	private Date postMsgSendTime;
 	private Date postMsgSendReservation;
 	private List<Member> recMember;
+	private List<NoteFileDto> files;
 	
 }
