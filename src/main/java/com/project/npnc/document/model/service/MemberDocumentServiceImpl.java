@@ -171,17 +171,28 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	@Transactional	
-	public int insertApproverLine(int no, String name, List<Approver> list) throws Exception {
+	public int insertApproverLine(int ownerMemberKey, String name, List<ApproverLine> list) throws Exception {
 		Map<String,Object> map = new HashMap<>();
-		int result = 0;
-		for(Approver e : list) {
-			map.put("no", no);
-			map.put("name", name);
-			map.put("approver", e);
-			result = dao.insertApproverLine(session, map);
-			
-			if(result != 2) {
+		map.put("no", ownerMemberKey);
+		map.put("name", name);
+		//결재라인 저장
+		int result = dao.insertApproverLineStorage(session, map);
+		if(result <= 0) {
+			throw new Exception("결재라인 저장 실패");
+		}else{
+			log.debug("결재라인 저장 성공");
+			//결재라인별 결재자 저장
+			for(ApproverLine e : list) {
+//				log.debug("{}", map);
+				e.setErApLineStorageKey((int) map.get("erApLineStorageKey"));
+				map.put("approver", e);
+				log.debug("{}", map);
+				result += dao.insertApproverLine(session, map);
+			}
+			if(result < list.size()+1) {
 				throw new Exception("결재라인 저장 실패 : " + result + "/" + list.size());
+			}else {
+				log.debug("결재라인 결재자 등록 성공");
 			}
 		}
 		return result;
@@ -199,12 +210,12 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		Map<String,Integer> map = new HashMap<>();
 		//저장된 결재라인 조회
 		List<ApproverLineStorage> result = dao.selectApproverLines(session, memberNo);
-		for(ApproverLineStorage r : result) {
-			map.put("storageKey", r.getErApLineStorageKey());
-			map.put("memberNo", memberNo);
-			//해당 결재라인에 해당하는 결재자들 매칭
-			r.setApprovers(dao.selectApproverLineList(session, map)); 
-		}
+//		for(ApproverLineStorage r : result) {
+//			map.put("storageKey", r.getErApLineStorageKey());
+//			map.put("memberNo", memberNo);
+//			//해당 결재라인에 해당하는 결재자들 매칭
+//			r.setApprovers(dao.selectApproverLineList(session, map)); 
+//		}
 		return result;
 	}
 	@Override

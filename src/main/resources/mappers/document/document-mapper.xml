@@ -64,14 +64,14 @@
 		<result column="ER_AP_TEAM_KEY" property="erApTeamKey"/>
 		<result column="DEPARTMENT_NAME" property="erApTeamName"/>
 		<result column="ER_AP_JOB_KEY" property="erApJobKey"/>
-		<result column="JOB_NAME" property="erApJobKey"/>
+		<result column="JOB_NAME" property="erApJobName"/>
 		<result column="ER_AP_NAME" property="erApName"/>
 		<result column="ER_AP_CATEGORY" property="erApCategory"/>
 		<result column="ER_AP_ORDERBY" property="erApOrderby"/>
 	</resultMap>
 	<resultMap type="approverLineStorage" id="approverLineStorageMap">
 		<id column="ER_AP_LINE_STORAGE_KEY" property="erApLineStorageKey"/>
-		<result column="ER_AP_LINE_STORAGE_NAME" property="erApStorageName"/>
+		<result column="ER_AP_LINE_STORAGE_NAME" property="erApLineStorageName"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
 		<collection property="approvers" resultMap="approverLineMap" ofType="approverLine"/>
 	</resultMap>
@@ -445,12 +445,8 @@
             )
 	</insert>
 	
-	<!-- 결재라인 보관함 신규 저장 -->
+	<!-- 결재라인 신규 저장 -->
 	<insert id="insertApproverLineStorage" parameterType="map">
-		<selectKey keyProperty="erApLineStorageKey" resultType="int" order="BEFORE">
-	        SELECT SEQ_ER_AP_LINE_STORAGE_KEY.NEXTVAL FROM DUAL
-	    </selectKey>
-	    
 		INSERT INTO
 			er_ap_line_storage
 			(
@@ -460,29 +456,42 @@
 			)
 		VALUES
             (
-				#{erApLineStorageKey},
+				SEQ_ER_AP_LINE_STORAGE_KEY.NEXTVAL,
 				#{name},
 				#{no}
 			)
+		<selectKey keyProperty="erApLineStorageKey" resultType="int" order="AFTER">
+	        SELECT SEQ_ER_AP_LINE_STORAGE_KEY.currval FROM DUAL
+	    </selectKey>
 	</insert>
-	<!-- 결재라인 보관함 결재자 저장 -->
-	<insert id="" parameterType="">
+	<!-- 결재라인 결재자 저장 -->
+	<insert id="insertApproverLine" parameterType="map">
 	    <selectKey keyProperty="erApLineKey" resultType="int" order="BEFORE">
 	        SELECT SEQ_ER_AP_LINE_KEY.nextval FROM DUAL
 	    </selectKey>
-	    INSERT INTO
-			er_ap_line_storage
-			(
-				ER_AP_LINE_STORAGE_KEY,
-				ER_AP_LINE_STORAGE_NAME,
-				MEMBER_KEY
-			)
-		VALUES
-            (
-				#{erApLineKey},
-				#{name},
-				#{no}
-			)
+	    	INSERT INTO
+				er_ap_line
+				(
+					ER_AP_LINE_KEY,
+					ER_AP_LINE_STORAGE_KEY,
+					MEMBER_KEY,
+					ER_AP_TEAM_KEY,
+					ER_AP_JOB_KEY,
+					ER_AP_NAME,
+					ER_AP_CATEGORY,
+					ER_AP_ORDERBY
+				)
+			VALUES
+	            (
+					#{erApLineKey},
+					#{approver.erApLineStorageKey},
+					#{approver.memberKey},
+					#{approver.erApTeamKey},
+					#{approver.erApJobKey},
+					#{approver.erApName},
+					#{approver.erApCategory},
+					#{approver.erApOrderby}
+				) 
 	</insert>
 	<!-- 결재라인 삭제 -->
 	<delete id="deleteApproverLines" parameterType="int">
@@ -518,7 +527,8 @@
 		WHERE
 			s.MEMBER_KEY = #{no}
 		ORDER BY
-			s.ER_AP_LINE_STORAGE_KEY DESC
+			s.ER_AP_LINE_STORAGE_KEY DESC,
+			l.ER_AP_ORDERBY
 	</select>
 	<!-- 특정 결재라인 결재자들 불러오기 -->
 	<select id="selectApproverList" parameterType="map" resultMap="approverLineMap">
@@ -544,7 +554,8 @@
 		AND
 			l.ER_AP_LINE_STORAGE_KEY = #{storageKey}
 		ORDER BY 
-		    l.ER_AP_LINE_STORAGE_KEY DESC, l.ER_AP_ORDERBY
+		    l.ER_AP_LINE_STORAGE_KEY DESC, 
+		    l.ER_AP_ORDERBY
 	</select>	
 <!-- 	<select id="selectApproverLines" parameterType="int" resultMap="approverLineMap">
 		SELECT 

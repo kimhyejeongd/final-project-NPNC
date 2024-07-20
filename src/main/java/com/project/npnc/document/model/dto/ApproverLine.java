@@ -13,9 +13,9 @@ public class ApproverLine {
 	private int erApLineKey;
 	private int erApLineStorageKey;
 	private int memberKey;
-	private int erApTeamKey;
+	private String erApTeamKey;
 	private String erApTeamName; //join용
-	private int erApJobKey;
+	private String erApJobKey;
 	private String erApJobName; //join용
 	private String erApName;
 	private String erApCategory;

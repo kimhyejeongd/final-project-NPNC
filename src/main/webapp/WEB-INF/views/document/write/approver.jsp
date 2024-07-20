@@ -146,7 +146,7 @@
 							      <div class="accordion-body" style='padding: 0!important;'>
 							         <div class="list-group" id="memberlist">
 						 				<c:forEach var="memberlist" items="${d.memberlist}">
-										  <a href="#" class="list-group-item list-group-item-action align-items-center" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-team="${d.departmentName}">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
+										  <a href="#" class="list-group-item list-group-item-action align-items-center" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-jobKey="${memberlist.jobKey }" data-team="${d.departmentName}" data-teamKey="${memberlist.departmentKey }">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
 						  				</c:forEach>
 									</div>
 							      </div>
@@ -219,20 +219,20 @@
 		                <div class="d-flex border card-body justify-content-between flex-fill rounded">
 		                    <div class="d-flex gap-1 align-items-center">
 		                        <div class="line-color me-2"></div>
-		                        ${ap.erApStorageName } 
+		                        ${ap.erApLineStorageName } 
 		                        <button class="ms-2 toggle-btn" data-target="#line${vs.index }" style="background-color: white; border: none;">
 		                            <i class=" fa fa-search search-icon "></i>
 		                        </button>
 		                        <div id="line${vs.index }" class="modal-like" style="display:none;">
-		                        	<c:forEach var="p" items="${ap.lines }">
+		                        	<c:forEach var="p" items="${ap.approvers }">
 		                            <div class="badge rounded-pill text-bg-secondary">${p.erApOrderby}</div>
 		                            	${p.erApTeamName } ${p.erApJobName } ${p.erApName } ${p.erApCategory }
 		                            </c:forEach>
 		                        </div>
 		                    </div>
 		                    <div>
-		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="bringBtn" data-id="${ap.erApStorageKey }">불러오기</button>
-		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="deleteBtn" data-id="${ap.erApStorageKey }">삭제</button>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="bringBtn" data-id="${ap.erApLineStorageKey }">불러오기</button>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="deleteBtn" data-id="${ap.erApLineStorageKey }">삭제</button>
 		                    </div>
 		                </div>
 		            </div>

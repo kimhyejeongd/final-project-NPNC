@@ -33,6 +33,7 @@ public interface MemberDocumentDao {
 	List<Document> selectWaitingDocs(SqlSession session, int no);
 	Document selectDocById(SqlSession session, String docId);
 	
+	int insertApproverLineStorage(SqlSession session, Map<String,Object> map);
 	int insertApproverLine(SqlSession session, Map<String,Object> map);
 	List<ApproverLine> selectApproverLineList(SqlSession session, Map<String,Integer> map);
 	List<ApproverLineStorage> selectApproverLines(SqlSession session, int no);

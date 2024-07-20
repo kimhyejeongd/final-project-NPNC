@@ -21,7 +21,9 @@ $(document).ready(function() {
 						'data-id': item.memberKey, 
 						'data-name' : item.memberName, 
 						'data-team': item.memberTeam,
-						'data-job': item.memberJob
+						'data-teamkey': item.teamKey,
+						'data-jobkey': item.jobKey,
+						'data-job': item.memberJob,
 						});
 		let $i = $("<i>").addClass('fas fa-user me-2');
 		let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -58,7 +60,9 @@ $(document).ready(function() {
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
+			let jobKey = $(this).data('jobkey');
 			let teamName = $(this).data('team');
+			let teamKey = $(this).data('teamkey');
 			$(this).removeClass('selected');
 			$(this).css('display', 'none');
 			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
@@ -66,8 +70,10 @@ $(document).ready(function() {
 								'href':'#',
 								'data-id': no, 
 								'data-name' : name, 
+								'data-teamkey': teamKey,
 								'data-team': teamName,
-								'data-job': job
+								'data-jobkey': jobKey,
+								'data-job': job,
 							});
 			let $i = $("<i>").addClass('fas fa-user me-2');
 			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -210,6 +216,8 @@ $(document).ready(function() {
 			let name = $(this).data('name');
 			let job = $(this).data('job');
 			let teamName = $(this).data('team');
+			let jobKey = $(this).data('jobkey');
+			let teamKey = $(this).data('teamkey');
 			let orderby =$(`#memberlist2 > a:nth-child(${index+1}) > div > span`).text();
 			let category=$(this).children().last().val();
 			let $app = {
@@ -218,7 +226,9 @@ $(document).ready(function() {
 				        memberTeam: teamName,
 				        memberJob: job,
 				        memberName: name,
-				        category: category
+				        category: category,
+				        teamKey: teamKey,
+				        jobKey: jobKey
 					    };
 			data.push($app);
 		});
@@ -290,31 +300,36 @@ $(document).ready(function() {
 		
 		        let approvers = [];
 		        $("div#memberlist2>a").each(function() {
-		            let approver = {
+		            let ApproverLine = {
 		                memberKey: $(this).data('id'),
-		                memberName: $(this).data('name'),
-		                memberJob: $(this).data('job'),
-		                memberTeam: $(this).data('team'),
-		                orderby: $(this).find("div > span").text(),
-		                category: $(this).children().last().val()
+		                //memberName: $(this).data('name'),
+		                erApName: $(this).data('name'),
+		                //memberJob: $(this).data('job'),
+		                erApJobKey: $(this).data('jobkey'),
+		                //memberTeam: $(this).data('team'),
+		                erApTeamKey: $(this).data('teamkey'),
+		                //orderby: $(this).find("div > span").text(),
+		                erApOrderby: $(this).find("div > span").text(),
+		                //category: $(this).children().last().val()
+		                erApCategory: $(this).children().last().val()
 		            };
-		            approvers.push(approver);
+		            approvers.push(ApproverLine);
 		        });
 		
-		        let ApproversList = {
-		            name: lineName,
+		        let ApproverLineStorage = {
+		            erApLineStorageName: lineName,
 		            approvers: approvers
 		        };
-				console.log(ApproversList);
+				console.log(ApproverLineStorage);
 		        $.ajax({
 		            type: "POST",
 		            url: sessionStorage.getItem("path")+`/document/write/save/approverline`,
 		            contentType: "application/json",
-		            data: JSON.stringify(ApproversList),
+		            data: JSON.stringify(ApproverLineStorage),
 		            success: function(response) {
 		                if (response.status === "success") {
 			                // 로컬 스토리지에 데이터 저장
-					    	localStorage.setItem('selectedApprover', JSON.stringify(approvers));
+					    	//localStorage.setItem('selectedApprover', JSON.stringify(approvers));
 		                    alert(response.message);
 		                } else {
 		                    alert(response.message);
@@ -324,6 +339,9 @@ $(document).ready(function() {
 		        });
 		    }
 		});
+	});
+	$("#bringBtn").click(function(e) {
+		
 	});
     // 삭제 버튼 클릭 시
 	$("#deleteBtn").click(function(e) {

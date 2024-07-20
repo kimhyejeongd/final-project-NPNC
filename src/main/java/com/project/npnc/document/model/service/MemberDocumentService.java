@@ -25,7 +25,7 @@ public interface MemberDocumentService {
 	
 	Document selectDocById(String docId);
 	
-	int insertApproverLine(int no, String name, List<Approver> list) throws Exception;
+	int insertApproverLine(int no, String name, List<ApproverLine> list) throws Exception;
 	List<ApproverLine> selectApproverLineList(int storageKey, int memberNo);
 	List<ApproverLineStorage> selectApproverLines(int memberNo);
 	int deleteApproverLine(int no);

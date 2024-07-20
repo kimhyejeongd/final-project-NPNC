@@ -106,12 +106,14 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public int insertApproverLine(SqlSession session, Map<String,Object> map) {
+	public int insertApproverLineStorage(SqlSession session, Map<String,Object> map) {
 		//결재라인 테이블 저장
-		int result = session.insert("document.insertApproverLineStorage", map);
+		return session.insert("document.insertApproverLineStorage", map);
+	}
+	@Override
+	public int insertApproverLine(SqlSession session, Map<String,Object> map) {
 		//결재라인 결재자 테이블 저장 
-		result += session.insert("document.insertApproverLine");
-		return result;
+		return session.insert("document.insertApproverLine", map);
 	}
 	@Override
 	public List<ApproverLine> selectApproverLineList(SqlSession session, Map<String,Integer> map) {

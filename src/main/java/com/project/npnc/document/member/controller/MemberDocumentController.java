@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
-import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -183,12 +183,15 @@ public class MemberDocumentController {
 	//결재라인 저장
 	@PostMapping("/write/save/approverline")
 	public ResponseEntity<Map<String,Object>> insertApproverLine(
-			@RequestBody ApproversList data) throws Exception {
+			@RequestBody ApproverLineStorage data) throws Exception {
 //			@RequestBody Map<String, Object> data) {
 		log.debug("----- 결재라인 저장 -----");
-		log.debug(data.getName());
-		log.debug("{}", data.getApprovers());
-		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(),data.getName(), data.getApprovers());
+		//결재라인명
+		log.debug(data.getErApLineStorageName());
+		//결재자들
+		List<ApproverLine> list = data.getApprovers();
+		log.debug("{}", list);
+		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(), data.getErApLineStorageName(), data.getApprovers());
 //		log.debug("{}", data.get("name"));
 //		List<Approver> list = (List<Approver>) data.get("approvers");
 //		log.debug("{}", list);
