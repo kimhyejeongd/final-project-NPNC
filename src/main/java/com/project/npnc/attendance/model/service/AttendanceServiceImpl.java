@@ -232,6 +232,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 			return 0;
 		}
 	}
+
+	@Override
+	public List<Attendance> selectAdminAttendanceBymemberKey(int memberKey, Map page) {
+		
+		return attendanceDao.selectAdminAttendanceBymemberKey(session, memberKey, page);
+	}
+
+	@Override
+	public int selectAdminAttendanceBymemberKeyCount(int memberKey) {
+		
+		return attendanceDao.selectAdminAttendanceBymemberKeyCount(session, memberKey);
+	}
 	
 	
 	

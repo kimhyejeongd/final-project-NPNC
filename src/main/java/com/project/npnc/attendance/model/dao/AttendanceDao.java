@@ -43,4 +43,12 @@ public interface AttendanceDao {
 	int updateAttendanceEdit(SqlSession session,AttendanceEdit attendanceEdit);
 	int updateAttendance(SqlSession session,AttendanceEdit attendanceEdit);
 	int updateAttendanceEditState(SqlSession session,int attendanceEditKey);
+	List<Attendance> selectAdminAttendanceBymemberKey(SqlSession session,int memberKey,Map<String,Integer> page);
+	int selectAdminAttendanceBymemberKeyCount(SqlSession session,int memberKey);
+	
+	
+	
+	
+	
+	
 }

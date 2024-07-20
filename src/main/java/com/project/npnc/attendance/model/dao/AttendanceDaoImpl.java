@@ -167,6 +167,19 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.update("attendance.updateAttendanceEditState",attendanceEditKey);
 	}
 
+	@Override
+	public List<Attendance> selectAdminAttendanceBymemberKey(SqlSession session, int memberKey,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectAdminAttendanceBymemberKey",null,rb);
+	}
+
+	@Override
+	public int selectAdminAttendanceBymemberKeyCount(SqlSession session, int memberKey) {
+		
+		return session.selectOne("attendance.selectAdminAttendanceBymemberKeyCount",memberKey);
+	}
+
 	
 	
 	

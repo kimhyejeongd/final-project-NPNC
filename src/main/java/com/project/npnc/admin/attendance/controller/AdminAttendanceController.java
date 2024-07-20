@@ -14,6 +14,8 @@ import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.organization.dto.OrganizationDto;
+import com.project.npnc.organization.service.OrganizationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +26,7 @@ public class AdminAttendanceController {
 	
 	private final AttendanceService service;
 	private final PageFactory pageFactory;
+	private final OrganizationService organService;
 	
 	@GetMapping("/selectAdminAttendanceAll")
 	public String selectAdminAttendanceAll(
@@ -37,7 +40,7 @@ public class AdminAttendanceController {
 		m.addAttribute("attendance",attendance);
 		return "admin/attendance/adminattendancelist";
 	}
-	
+
 	@GetMapping("/selectAdminAttendanceEditAll")
 	public String selectAdminAttendanceEditAll(
 			@RequestParam(defaultValue = "1") int cPage,
@@ -93,4 +96,30 @@ public class AdminAttendanceController {
 		m.addAttribute("loc",loc);
 		return "common/msg";
 	}
+	
+	@GetMapping("/adminAttendanceByOrgan")
+	public String adminAttendanceByOrgan(Model m) {
+		List<OrganizationDto> list=organService.selectOrganAll();
+		m.addAttribute("list",list);
+		return "admin/attendance/adminattendancebyorgan";
+	}
+	
+	@PostMapping("/selectAdminAttendanceBymemberKey")
+	public String selectAdminAttendanceBymemberKey(
+			int memberKey,
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "10") int numPerpage,
+			Model m) {
+		
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<Attendance> attendance=service.selectAdminAttendanceBymemberKey(memberKey, page);
+		int totaldata=service.selectAdminAttendanceBymemberKeyCount(memberKey);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "adminAttendanceByOrgan"));
+		m.addAttribute("attendance",attendance);
+		return null;
+		
+	}
+	
+	
+	
 }

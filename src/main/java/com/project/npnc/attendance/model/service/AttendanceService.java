@@ -37,7 +37,8 @@ public interface AttendanceService {
 	int selectAdminAttendanceEditCount();
 	int updateAttendanceEdit(AttendanceEdit attendanceEdit);
 	int updateAttendance(AttendanceEdit attendanceEdit);
-	
+	List<Attendance> selectAdminAttendanceBymemberKey(int memberKey,Map page);
+	int selectAdminAttendanceBymemberKeyCount(int memberKey);
 	
 	
 	
