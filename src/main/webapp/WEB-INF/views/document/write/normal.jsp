@@ -53,7 +53,7 @@
         margin: 0 auto;
         border: 1px solid #ccc;
         overflow-y: scroll; /* 세로 스크롤만 */
-        overflow-x: auto;  /* 가로 스크롤도 필요할 경우 */
+        overflow-x: scroll;  /* 가로 스크롤도 필요할 경우 */
      }
      .note-toolbar {
 	    background-color: #f5f5f5 !important;
@@ -65,6 +65,10 @@
 	.note-editor.note-frame .note-editing-area .note-editable {
 	    margin-top: 0px !important;
 	    border: none !important; /* border 속성을 none으로 설정 */
+	}
+	#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block{
+		display: flex;
+		justify-content: center;
 	}
   </style>
  </head>
@@ -94,80 +98,89 @@
                 <div class="card card-round p-3">
                   <div class="card-body">
                 <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
-               	<div class="form-group d-flex">
-			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
-			      </div>
-			    </div>
-			    <div class="form-group">
-			      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
-			          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-			          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
-			          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
-		          </label>
-			    </div>
-			    <div class="form-group d-flex">
-			      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
-			      	<div class="col w-100 align-items-center p-0">
-					      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
-								 <!-- <div class="border" id="approval1">
-								  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
-								  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-								  	<input name="approvers[0].memberKey" value="2" style="display:none">
-								  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-								  	<input name="approvers[0].memberJob" value="사원" style="">
-								  	<input name="approvers[0].memberName" value="김사원" style="">
-								  	<input name="approvers[0].category" value="기안" style="">
-								  </div>
-								   -->
-					      </div>
-					      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
-					    </div>
-					</div>
-			    <div class="form-group d-flex align-items-top gap-3">
-			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
-				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
+	               	<div class="form-group d-flex">
+				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
+				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
 				      </div>
-				      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
-		        </div>
-			    <div class="form-group d-flex align-items-center gap-3">
-			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
-			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      </div>
-			      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
-			    </div>
-			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label>
-		          <!-- <div class="border" style="width:100%; height: auto;">
-		          	<span class="center">드래그앤 드롭</span>
-	          	  </div> -->
-		          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
-		        </div>
-			    <div class="form-group">
-		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
-			        <div id="hwpctrl" class="border scrollable-content" style="width: 100%; height: 800px; margin: 0px auto">
-			        	<!-- 문서 작성 창 -->
-			        	<%-- <iframe id="hwpctrl_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
-			        	<div id="summernote" style=""></div>
-			        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
+				    </div>
+				    <div class="form-group">
+				      <label class=""><span class="h5 me-1">긴급 여부</span></label>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
+				          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
+			          </label>
+				    </div>
+				    <div class="form-group d-flex align-items-center gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv">
+				      </div>
+				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="storageBtn">선택</button>
+				    </div>
+				    <div class="form-group d-flex">
+				      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
+				      	<div class="col w-100 align-items-center p-0">
+						      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
+									 <!-- <div class="border" id="approval1">
+									  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
+									  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+									  	<input name="approvers[0].memberKey" value="2" style="display:none">
+									  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
+									  	<input name="approvers[0].memberJob" value="사원" style="">
+									  	<input name="approvers[0].memberName" value="김사원" style="">
+									  	<input name="approvers[0].category" value="기안" style="">
+									  </div>
+									   -->
+						      </div>
+						      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
+						    </div>
+						</div>
+				    <div class="form-group d-flex align-items-top gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
+					      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
+					      </div>
+					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
-		        </div>
-                  <div class="p-3 text-center">
-                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
-                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
-                  </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
+				    <!-- <div class="form-group d-flex align-items-center gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
+				      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      </div>
+				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
+				    </div> -->
+				    <div class="form-group d-flex">
+			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
+			          <div class="col w-100 align-items-center p-0">
+				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+					          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
+					      </div>
+				      	  <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="fileBtn">선택</button>
+				     </div>
+				    </div>
+				    <div class="form-group">
+			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
+				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
+				        	<!-- 문서 작성 창 -->
+				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
+				        	<div id="summernote"></div>
+				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
+				        </div>
+			        </div>
+	                  <div class="p-3 text-center">
+	                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
+	                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
+	                  </div>
+			        </div>
+               </form>
+             </div>
+           </div>
+         </div>
          </div>
        </div>
       </div>
+    </div>
 <!-- 모달 -->
 <!-- 기안하기 -->
 <div class="swal-overlay" tabindex="-1" id="submitalert">
@@ -203,6 +216,7 @@ $(document).ready(function() {
 	// Initialize Summernote
 	$('#summernote').summernote({
 	    height: '100%', 
+	    width: '100%',
 	    focus: false, 
 	    callbacks: {
 	        onInit: function() {
@@ -225,7 +239,7 @@ $(document).ready(function() {
 		  ],
 		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
 		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
-		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0']
 		/* buttons:{
 			undobtn: undo,
 			redobtn: redo
@@ -251,14 +265,17 @@ $(document).ready(function() {
 				// 로컬 스토리지에서 데이터를 삭제
 				localStorage.removeItem('selectedReferer'); 
 				localStorage.removeItem('selectedApprover'); 
-				// iframe 데이터 확인
-				//let framedata = (document.querySelector("#hwpctrl_frame").contentWindow.document.querySelector("#summernote").nextSibling).children[2].children[2].innerHTML;
-				let dochtml = $("#hwpctrl > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").innerHTML;
+				
+				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				console.log(dochtml);
-				let opinion = $('#input-field').val();
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-				$("#docForm").submit();
+				if(dochtml != null){
+					let opinion = $('#input-field').val();
+					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
+					$("#docForm").submit();
+				} else{
+					alert('문서 저장 오류');
+				}
 			}
 		});
 	});
@@ -283,6 +300,7 @@ $(document).ready(function() {
 	});
 });
 $("#approverBtn").click(function() {
+	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
 });
 $("#refererBtn").click(function() {
@@ -316,10 +334,10 @@ function sendDataToParent(data) {
             },
             class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
         }).attr('readonly', true).appendTo($div);
-
+		
         $("<input>", {
             name: 'approvers[' + index + '].memberKey',
-            value: item.no,
+            value: item.memberKey,
             css: {
                 display: 'none',
                 border: 'none',
@@ -327,46 +345,50 @@ function sendDataToParent(data) {
                 maxWidth: '80px'
             },
         }).attr('readonly', true).appendTo($div);
-
+		
+        let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberTeam',
-            value: item.team,
+            value: item.memberTeam,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
-
+	
+        widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberJob',
-            value: item.job,
+            value: item.memberJob,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
 
+        widthCalc = (item.memberName.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberName',
-            value: item.name,
+            value: item.memberName,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
         }).attr('readonly', true).appendTo($div);
 
+        widthCalc = (item.category.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].category',
             value: item.category,
             css: {
                 border: 'none',
-                width: 'auto',
+                width: widthCalc + "ch",
                 maxWidth: '80px',
                 backgroundColor: 'white'
             },
@@ -379,13 +401,12 @@ function sendDataToParent(data) {
 function sendRefererToParent(data) {
     console.dir(data);
     $("#refererDiv").html('');
-    // 선택 결재자
+    // 참조인
     data.forEach(function(item, index) {
         let $div = $("<div>", {
             id: "referer" + index,
             css: {
                 width: '100%',
-                fontSize: 'larger',
                 textAlign: 'left',
                 borderRadius: '15px'
             },
@@ -394,7 +415,7 @@ function sendRefererToParent(data) {
 
         $("<input>", {
             name: 'referers[' + index + '].memberKey',
-            value: item.no,
+            value: item.memberKey,
             css: {
                 display: 'none',
                 border: 'none',
@@ -403,10 +424,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 	
-        let widthCalc = (item.team.length * 1.5) + 1;
+        let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberTeam',
-            value: item.team,
+            value: item.memberTeam,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -415,10 +436,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 
-        widthCalc = (item.job.length * 1.5) + 1;
+        widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberJob',
-            value: item.job,
+            value: item.memberJob,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -427,10 +448,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 
-        widthCalc = (item.name.length * 1.5) + 1;
+        widthCalc = (item.memberName.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberName',
-            value: item.name,
+            value: item.memberName,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",

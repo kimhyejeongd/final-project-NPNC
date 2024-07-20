@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<%
+  String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -48,6 +51,9 @@
               <div>
                 <h3 class="fw-bold mb-3">결재 대기 문서</h3>
               </div>
+              <div class="ms-md-auto py-2 py-md-0">
+                <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
+              </div>
             </div>
             <c:import url="${path }/WEB-INF/views/document/list/waitingDocs.jsp"/>
            </div>
@@ -58,17 +64,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const table = document.getElementById('docTable');
 
-    $("table").on('click', "button", function(e) {
+/*     $("table").on('click', "button", function(e) {
         e.stopPropagation();
     });
-    
+ */    
     $("table").on('click', function(event) {
         const target = event.target;
      // 버튼이 클릭된 경우 이벤트 전파를 막고 함수를 종료
-        if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {
+/*         if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {
             event.stopPropagation();
             return;
-        }
+        } */
 
         const row = target.closest('tr');
         if (row && row.dataset.docId) {

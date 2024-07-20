@@ -8,10 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ApproversList {
-	private String name;
-	private List<Approver> approvers;
+public class ApproverLineStorage {
+	private int erApLineStorageKey;
+	private String erApLineStorageName;
+	private int memberKey;
+	private List<ApproverLine> approvers;
 }

@@ -1,17 +1,19 @@
 package com.project.npnc.document.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.npnc.document.model.dto.Approver;
-import com.project.npnc.document.model.dto.ApproversList;
+import com.project.npnc.document.model.dto.ApproverLine;
+import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
-import com.project.npnc.document.model.dto.RefererList;
 
 @Repository
 public class MemberDocumentDaoImpl implements MemberDocumentDao{
@@ -50,14 +52,19 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
 	public int insertDoc(SqlSession session, Document d) {
-		return session.insert("document.insertDoc", d);
+		int result = session.insert("document.insertDoc", d);
+		return result;
+	}
+	@Override
+	public int updateDocFilename(SqlSession session, String erDocFilename) {
+		return session.insert("document.updateDocFilename", erDocFilename);
 	}
 
 	@Override
-	public int insertApproval(SqlSession session, ApproversList request) {
+	public int insertApproval(SqlSession session, List<Approver> list) {
 		int result =0;
-		for(int i=0; i<request.getApprovers().size();i++) {
-			Approver ap = request.getApprovers().get(i);
+		for(int i=0; i<list.size();i++) {
+			Approver ap = list.get(i);
 			result = session.insert("document.insertApproval", ap); 
 		}
 		return result;
@@ -89,13 +96,37 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public int insertReferer(SqlSession session, RefererList request) {
+	public int insertReferer(SqlSession session, List<Referer> list) {
 		int result =0;
-		for(int i=0; i<request.getReferers().size();i++) {
-			Referer r = request.getReferers().get(i);
+		for(int i=0; i<list.size();i++) {
+			Referer r = list.get(i);
 			result = session.insert("document.insertReferer", r); 
 		}
 		return result;
+	}
+
+	@Override
+	public int insertApproverLineStorage(SqlSession session, Map<String,Object> map) {
+		//결재라인 테이블 저장
+		return session.insert("document.insertApproverLineStorage", map);
+	}
+	@Override
+	public int insertApproverLine(SqlSession session, Map<String,Object> map) {
+		//결재라인 결재자 테이블 저장 
+		return session.insert("document.insertApproverLine", map);
+	}
+	@Override
+	public List<ApproverLine> selectApproverLineList(SqlSession session, Map<String,Integer> map) {
+		return session.selectList("document.selectApproverList", map);
+	}
+	@Override
+	public List<ApproverLineStorage> selectApproverLines(SqlSession session, int no) {
+		return session.selectList("document.selectApproverLines", no);
+	}
+
+	@Override
+	public int deleteApproverLines(SqlSession session, int no) {
+		return session.update("document.deleteApproverLines", no);
 	}
 
 }

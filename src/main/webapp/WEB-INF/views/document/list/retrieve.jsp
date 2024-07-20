@@ -75,7 +75,7 @@
                           </tr>
                         </thead>
                         <tbody>
-	                         <c:if test="${doclist eq null}">
+	                         <c:if test="${doclist eq null || empty doclist}">
 		                         <tr class="text-center">
 		                         	<td colspan="5">회수된 문서가 없습니다</td>
 	                         	</tr>
