@@ -199,6 +199,7 @@
 			er_doc_state = '처리중'
 		ORDER BY  
 			er_doc_emergency_yn DESC,
+			ER_APPROVAL_DATE desc,
 			er_approval_orderby
 	</select>
 	<!-- 로그인 사원의 결재 대기 문서 조회 -->

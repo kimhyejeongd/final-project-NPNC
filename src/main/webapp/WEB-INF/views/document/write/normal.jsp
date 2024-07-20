@@ -164,7 +164,7 @@
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
 				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
-				        	<div id="summernote"></div>
+				        	<div id="summernote" data-form="${form }"></div>
 				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 				        </div>
 			        </div>
@@ -172,8 +172,8 @@
 	                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
 	                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
 	                  </div>
-			        </div>
                </form>
+		        </div>
              </div>
            </div>
          </div>
@@ -272,9 +272,10 @@ $(document).ready(function() {
 					let opinion = $('#input-field').val();
 					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
+					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
 					$("#docForm").submit();
 				} else{
-					alert('문서 저장 오류');
+					alert('문서 양식 불러오기 오류');
 				}
 			}
 		});
@@ -283,7 +284,7 @@ $(document).ready(function() {
 	$("#formsearchbtn").click(function() {
 		Swal.fire({
 			title: '임시저장',
-			text: '',
+			text: '작성중인 문서 내용이 저장됩니다.',
 			showCancelButton: true,
 			confirmButtonClass: 'btn btn-success',
 			cancelButtonClass: 'btn btn-danger ms-2',

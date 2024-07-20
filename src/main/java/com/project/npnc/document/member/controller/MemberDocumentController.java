@@ -9,11 +9,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +33,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -148,6 +154,7 @@ public class MemberDocumentController {
 		log.debug("----전자문서 작성시작----");
 		String html = readHtmlFile("docformhtml", form+".html");
 		m.addAttribute("html", html);
+		m.addAttribute("form", form);
 		return "document/write/normal";
 	}
 	
@@ -245,71 +252,111 @@ public class MemberDocumentController {
 	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public String insertDoc(
-			String msg, Model m, Document doc, String html, 
+			String msg, Model m, Document doc, String html, int form,
 //			@ModelAttribute ApproversList request, 
 //			@ModelAttribute RefererList referers, 
 			@RequestParam(value="file")MultipartFile[] file) {
-		Member user = getCurrentUser();
-		log.debug("{}", html);
-		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F1"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
-		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
 		
-		
-		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
-		//결재자에 기안자도 추가
-		Approver me = Approver.builder().memberKey(user.getMemberKey())
-									.memberTeamKey(user.getDepartmentKey())
-									.memberJobKey(user.getJobKey())
-									.memberName(user.getMemberName())
-									.category("기안")
-									.opinion(msg)
-									.state("승인")
-									.date(Date.valueOf(LocalDate.now()))
-									.orderby(0)
-						.build();
-		List<Approver> ap = doc.getApprovers();
-		ap.add(me);
-		doc.setApprovers(ap);
-		
-		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
-		log.debug("{}", doc);
-//		log.debug("{}", request);
-//		log.debug("{}", referers);
-		int result=0;
-		
-		//문서, 결재자 insert
-		try { 
-//			result = serv.insertDoc(doc, request, referers);
-			result = serv.insertDoc(doc);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "redirect:home";
-		}
-		
-		//기안, 결재자 등록 성공시
-		if(result > 0) {
-			//첨부파일 있으면 파일 등록 진행 TODO
-		    if (file.length > 0 || file != null) {
-		    	log.debug(file.toString());
-//		    	for(MultipartFile mu : file) {
-//		    		// 파일을 DocFile 객체로 변환
-//		    		DocFile docFile = new DocFile();
-//		    		docFile.setFileOriName(mu.getOriginalFilename());
-//		    		// DocFile 객체를 Document 객체의 files 리스트에 추가
-//		            doc.getFiles().add(docFile);
-//		    	}
-		    }	
-			//html파일로 문서 저장
-			try {
-				log.debug(html);
-				fileUpload("dochtml",doc.getErDocSerialKey(), html);
-	            log.debug("[4] html저장 성공");
-			}catch(IOException e) {
-				log.debug("[4] html저장 실패");
-				e.printStackTrace();
+		try {
+			int count=0;
+			DocFile docFile = null;
+			for(MultipartFile f : file) {
+				count++;
+				log.debug("파일 이름: " + f.getOriginalFilename());
+	            // 고유한 파일 이름 생성 (UUID 사용)
+	            String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
+	
+	            // 절대 경로 설정
+	            String upload = Paths.get(uploadDir+"/docfile").toAbsolutePath().toString();
+	
+	            // 파일 저장 경로 설정
+	            Path filePath = Paths.get(upload, fileName);
+	            // 부모 디렉토리가 존재하지 않으면 생성
+	            File parentDir = filePath.getParent().toFile();
+	            if (!parentDir.exists()) {
+	                parentDir.mkdirs(); // 디렉토리 생성
+	            }	            
+	            // 파일 저장
+	            Files.copy(f.getInputStream(), filePath);
+	            
+	            // 파일 메타 데이터 생성
+	//    		// 파일을 DocFile 객체로 변환
+	    		docFile = docFile.builder()
+	    				.fileOriName(f.getOriginalFilename())
+	    				.fileRename(fileName)
+	    				.erDocKey(doc.getErDocKey())
+	    				.erDocSerialKey(doc.getErDocSerialKey())
+	    				.fileSize(Long.toString(f.getSize()))
+	    				.fileForm(f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".")+1))
+	    				.fileOrderby(count)
+	    				.fileUploader(getCurrentUser().getMemberKey())
+	    				.build();
+	    		log.debug("{}",docFile);
+	    		//Document 객체의 files 리스트에 추가
+	            doc.getFiles().add(docFile); 
+	            //db등록 TODO
+	            
 			}
-		} 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//		Member user = getCurrentUser();
+//		log.debug("{}", html);
+//		log.debug("{}", user);
+//		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+//		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+//		
+//		
+//		doc.setErDocWriter(user.getMemberKey()); //기안자=로그인유저
+//		//결재자에 기안자도 추가
+//		Approver me = Approver.builder().memberKey(user.getMemberKey())
+//									.memberTeamKey(user.getDepartmentKey())
+//									.memberJobKey(user.getJobKey())
+//									.memberName(user.getMemberName())
+//									.category("기안")
+//									.opinion(msg)
+//									.state("승인")
+//									.date(Date.valueOf(LocalDate.now()))
+//									.orderby(0)
+//						.build();
+//		List<Approver> ap = doc.getApprovers();
+//		ap.add(me);
+//		doc.setApprovers(ap);
+//		
+//		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
+//		log.debug("{}", doc);
+////		log.debug("{}", request);
+////		log.debug("{}", referers);
+//		int result=0;
+//		
+//		//문서, 결재자 insert
+//		try { 
+////			result = serv.insertDoc(doc, request, referers);
+//			result = serv.insertDoc(doc);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return "redirect:home";
+//		}
+//		
+//		//기안, 결재자 등록 성공시
+//		if(result > 0) {
+//			//첨부파일 있으면 파일 등록 진행 TODO
+//		    if (file.length > 0 || file != null) {
+//		    	for(MultipartFile f : file) {
+//		    		
+//		            
+//		    	}
+//		    }	
+//			//html파일로 문서 저장
+//			try {
+//				log.debug(html);
+//				fileUpload("dochtml",doc.getErDocSerialKey(), html);
+//	            log.debug("[4] html저장 성공");
+//			}catch(IOException e) {
+//				log.debug("[4] html저장 실패");
+//				e.printStackTrace();
+//			}
+//		} 
 		return "redirect:home"; //모두 성공시 전자결재홈으로
 	}
 	
