@@ -11,43 +11,54 @@
 		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
 	</select>
 	<insert id="insertChattingFile" parameterType="chattingFile">
-		INSERT INTO CHATTING_FILE VALUES
-		(#{chatFileKey},
-		#{memberKey},
-		#{chatMsgFileOri},
-		#{chatMsgFilePost},
-		#{chatFileTime},
-		#{chatRoomKey},
-		#{chatMsgKey},
-		#{fileContentType}
-		)
+		    INSERT INTO chatting_file (
+	        CHAT_FILE_KEY,
+			MEMBER_KEY,
+			CHAT_MSG_FILE_ORI,
+			CHAT_MSG_FILE_POST,
+			CHAT_FILE_TIME,
+			CHAT_ROOM_KEY,
+			CHAT_MSG_KEY,
+			FILE_CONTENT_TYPE
+		    ) VALUES (
+		        #{chatFileKey},
+		        #{memberKey},
+		        #{chatMsgFileOri},
+		        #{chatMsgFilePost},
+		        #{chatFileTime},
+		        #{chatRoomKey},
+		        #{chatMsgKey},
+		        #{fileContentType}
+		    )
 	</insert>
 	<delete id="deleteReadBadge" parameterType="map">
-		DELETE FROM CHATTING_IS_READ cir 
-		WHERE cir.chat_msg_key  IN
-		(SELECT CHAT_IS_READ_KEY 
+		DELETE 
 		FROM CHATTING_IS_READ cir 
-		LEFT JOIN CHATTING_MESSAGE cm 
-		ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY 
-		WHERE cm.CHAT_ROOM_KEY = #{currRoomId})
+		WHERE cir.chat_msg_key  IN
+			(SELECT CHAT_IS_READ_KEY 
+			FROM CHATTING_IS_READ cir 
+			LEFT JOIN CHATTING_MESSAGE cm 
+			ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY 
+			WHERE cm.CHAT_ROOM_KEY = #{currRoomId})
 		AND cir.member_key = #{currMemberKey}
 	</delete>
 	<select id="selectUnreadCount" parameterType="map" resultType="int">		
-		SELECT COUNT(*)
-			FROM CHATTING_IS_READ cir
-			LEFT JOIN CHATTING_MESSAGE cm ON cir.CHAT_MSG_KEY = cm.CHAT_MSG_KEY
-			WHERE cir.MEMBER_KEY =  #{memberKey}
-			  AND cm.CHAT_ROOM_KEY =  #{roomId}
-			  AND cm.MEMBER_KEY != #{memberKey}
+		SELECT Count(*)
+		FROM   chatting_is_read cir
+		       LEFT JOIN chatting_message cm
+		              ON cir.chat_msg_key = cm.chat_msg_key
+		WHERE  cir.member_key = #{memberKey}
+		       AND cm.chat_room_key = #{roomId}
+		       AND cm.member_key != #{memberKey} 
 	</select>
 	<select id="selectMyChatRoomList" parameterType="int" resultMap="chattingRoomResultMap">
-			SELECT * 
-			FROM CHATTING_ROOM cr
-			LEFT JOIN CHATTING_GROUP cg 
-			ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
-			LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
-			WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
-				ORDER BY chat_msg_time desc
+		SELECT * 
+		FROM CHATTING_ROOM cr
+		LEFT JOIN CHATTING_GROUP cg 
+		ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
+		LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
+		WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
+			ORDER BY chat_msg_time desc
 	</select>
 	<update id="updateRecentChat" parameterType="map">
 		UPDATE CHATTING_ROOM SET CHAT_RECENT_MSG_KEY = #{seq} WHERE CHAT_ROOM_KEY = #{chat.chatRoomKey}
@@ -86,8 +97,8 @@
 	</select>
 	
     <insert id="insertSingleRoomId" parameterType="map">
-        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS)
-        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y')
+        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberNo},'Y',SYSDATE)
     </insert>
 	
 	<insert id="insertChat" parameterType="map">
@@ -156,6 +167,16 @@
 	<select id="countRoomMember" parameterType="int" resultType="int">
 		select count(*) from CHATTING_GROUP where chat_room_key = #{roomId}
 	</select>
+	
+	<insert id="insertChatMember" parameterType="map" >
+		        INSERT INTO CHATTING_GROUP (CHAT_GROUP_KEY,CHAT_ROOM_KEY, member_KEY, CHAT_GROUP_STATUS,CHAT_GROUP_DATE)
+        VALUES (SEQ_CHAT_GROUP_KEY.nextval,#{roomId}, #{memberId},'Y',SYSDATE)
+		
+	</insert>
+	
+	<select id="selectUnreadCurrent" parameterType="int" resultType="int">
+    	SELECT COUNT(*) FROM CHATTING_IS_READ cir WHERE MEMBER_KEY = #{memberKey}
+    </select>
 
     <resultMap id="chattingMessageResultMap" type="chattingMessage">
         <id property="chatMsgKey" column="CHAT_MSG_KEY"/>

@@ -3,8 +3,9 @@ package com.project.npnc.chatting.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HomeController {
 	private final ChatService service;
-	
+
 	@PostMapping("/chat")
 	public String chat(
 			Model model,
@@ -57,14 +58,21 @@ public class HomeController {
 		readInfo.put("loginMemberKey", loginMemberKey);
 		readInfo.put("roomId", roomId);
 		List<ChattingMessage> chats = service.selectRoomChatList(readInfo);
+		List<Member> allMembers = service.selectAllMembers();
 		
-
+		  List<Integer> roomMemberKeys = roomMembers.stream()
+                  .map(Member::getMemberKey)
+                  .collect(Collectors.toList());
 		
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
+		model.addAttribute("allMembers",allMembers);
+		model.addAttribute("roomMemberKeys",roomMemberKeys);
+		
+		
 		
 
 		return "chatting/chat";
@@ -77,10 +85,8 @@ public class HomeController {
 	@GetMapping("chatRoom")
 	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
 		
-//        임시 로그인
-		Member member = getCurrentUser();
-        session.setAttribute("loginMember", member); 
 
+		Member member = getCurrentUser();
         
         
 		Map<Integer,List<Member>>myRoomMemberList = service.selectMyRoomMemberList(member.getMemberKey());
@@ -121,6 +127,5 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();
     }
-
 	
 }
