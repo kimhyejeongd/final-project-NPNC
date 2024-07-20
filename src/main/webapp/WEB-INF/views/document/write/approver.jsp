@@ -223,16 +223,16 @@
 		                        <button class="ms-2 toggle-btn" data-target="#line${vs.index }" style="background-color: white; border: none;">
 		                            <i class=" fa fa-search search-icon "></i>
 		                        </button>
-		                        <div id="line${vs.index }" class="modal-like" style="display:none;">
+		                        <div id="line${vs.index }" class="modal-like" style="display:none;" >
 		                        	<c:forEach var="p" items="${ap.approvers }">
-		                            <div class="badge rounded-pill text-bg-secondary">${p.erApOrderby}</div>
+		                            <div class="badge rounded-pill text-bg-secondary" data-id="${p.memberKey }" data-name="${p.erApName }" data-job="${p.erApJobName }" data-jobKey="${p.erApJobKey }" data-team="${p.erApTeamName}" data-teamKey="${p.erApTeamKey }" data-category="${p.erApCategory }">${p.erApOrderby}</div>
 		                            	${p.erApTeamName } ${p.erApJobName } ${p.erApName } ${p.erApCategory }
 		                            </c:forEach>
 		                        </div>
 		                    </div>
 		                    <div>
-		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="bringBtn" data-id="${ap.erApLineStorageKey }">불러오기</button>
-		                        <button class="btn btn-sm btn-outline-secondary ml-2" id="deleteBtn" data-id="${ap.erApLineStorageKey }">삭제</button>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2 bringBtn" data-id="${ap.erApLineStorageKey }">불러오기</button>
+		                        <button class="btn btn-sm btn-outline-secondary ml-2 deleteBtn" data-id="${ap.erApLineStorageKey }">삭제</button>
 		                    </div>
 		                </div>
 		            </div>

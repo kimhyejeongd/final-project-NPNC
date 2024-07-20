@@ -114,9 +114,9 @@
 				    </div>
 				    <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
-				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv">
 				      </div>
-				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
+				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="storageBtn">선택</button>
 				    </div>
 				    <div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">결재자</span></label>

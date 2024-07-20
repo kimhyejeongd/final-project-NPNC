@@ -74,6 +74,7 @@ $(document).ready(function() {
 								'data-team': teamName,
 								'data-jobkey': jobKey,
 								'data-job': job,
+								'data-orderby' : count
 							});
 			let $i = $("<i>").addClass('fas fa-user me-2');
 			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -94,7 +95,7 @@ $(document).ready(function() {
 	    console.log("left");
 	    let selectedElements = $("div#memberlist2>a.selected");
 	
-	    // 선택된 항목들 중에서 가장 높은 순서를 찾습니다.
+	    // 선택된 항목들 중에서 가장 높은 순서
 	    let maxOrder = 0;
 	    selectedElements.each(function() {
 	        let order = parseInt($(this).find("div > span").text());
@@ -340,11 +341,85 @@ $(document).ready(function() {
 		    }
 		});
 	});
-	$("#bringBtn").click(function(e) {
-		
+	//결재라인 불러오기
+	$(".bringBtn").click(function(e) {
+		e.stopPropagation();
+		console.dir($(this));
+		Swal.fire({
+			title: '결재라인 불러오기',
+			text: '해당 결제라인을 불러오시겠습니까? 현재 선택된 내용은 사라집니다.',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '확인',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log('결제라인 불러오기');
+				$("#memberlist2").html('');
+				//데이터 가져오기
+				let modalContent = $(this).closest('.d-flex').find('.modal-like');
+				let ids = [];
+		        modalContent.find('.badge').each(function(item) {
+					let $a = $("<a>")
+	        			.addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+	    				.attr({
+							'href':'#',
+							'data-id': $(this).data('id'),
+							'data-name' : $(this).data('name'), 
+							'data-team': $(this).data('team'),
+							'data-teamkey': $(this).data('teamkey'),
+							'data-jobkey': $(this).data('jobkey'),
+							'data-job': $(this).data('job'),
+							'data-category': $(this).data('category')
+							});
+					let $i = $("<i>").addClass('fas fa-user me-2');
+					let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
+											.text($(this).text());
+					let $div = $("<div>").append($($span));
+					let $select = $("<select>").addClass('form-select w-25');
+						$select.append($("<option>").text('검토'))
+								.append($("<option>").text('결재'))
+								.append($("<option>").text('전결'))
+								.append($("<option>").text('후결'))
+								.append($("<option>").text('협조'));
+			    	$select.val($(this).data('category')); // 카테고리에 맞는 옵션 선택
+					$div.append($i).append(`<b>${$(this).data('name')}</b>&ensp;${$(this).data('job')}`);
+			        $a.append($($div)).append($select).appendTo($("div#memberlist2"));
+			        ids.push($(this).text());
+				});
+		        //조직도에서 없앰
+		        $("div#memberlist>a").each(function(e){
+					console.log(ids);
+					if (ids.includes($(e.target).data('id'))) {
+		                $(e.target).css('display', 'none');
+		            }
+				});
+				}
+				/*$.ajax({
+					type: "get",
+					url: sessionStorage.getItem("path")+`/document/write/delete/approverline`,
+					data: JSON.stringify($(e.target).data('id')),
+					dataType:"json",
+					contentType: "application/json; charset=utf-8",
+					success: function(response){
+						if(response.status === "success"){
+							alert(response.message);
+							window.location.reload();
+						}
+						else{
+							alert(response.message);
+						}
+					}
+				});*/
+		});
 	});
     // 삭제 버튼 클릭 시
-	$("#deleteBtn").click(function(e) {
+	$(".deleteBtn").click(function(e) {
+		e.stopPropagation();
+		console.dir($(this));
 		Swal.fire({
 			title: '결재라인 삭제',
 			text: '해당 결제라인을 삭제하시겠습니까?',
