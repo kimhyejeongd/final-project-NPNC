@@ -83,8 +83,8 @@
 						  <div class="col m-0 p-2" id="approval1" style="width: 100%; font-size: larger; text-align: lef; border-radius: 15px;">
 						  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${ap.orderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
 						  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none">
-						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeam }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
-						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJob }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeamName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJobName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  	<input name="approvers[${vs.index }].memberName" value="${ap.memberName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  	<input name="approvers[${vs.index }].category" value="${ap.category }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  </div>
@@ -101,7 +101,7 @@
 					      <c:if test="${not empty l.referers}">
 						      <c:forEach items="${l.referers }" var="ap" varStatus="vs">
 						      	<c:if test="${ap.erRefererKey ne 0}">
-						      	<div class="row m-0 p-2 border text-align-center justify-content-center " style="width: 140px; font-size: larger; border-radius: 10px; background-color: var(--bs-border-color);">${ap.erReferermemberTeam } ${ap.erReferermemberJob } ${ap.erReferermemberName }</div>
+						      	<div class="row m-0 p-2 border text-align-center justify-content-center " style="width: 140px; font-size: larger; border-radius: 10px; background-color: var(--bs-border-color);">${ap.memberTeamName } ${ap.memberJobName } ${ap.memberName }</div>
 						      	</c:if>
 						      </c:forEach>
 					      </c:if>

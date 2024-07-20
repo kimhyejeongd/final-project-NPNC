@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 public class Referer {
 	private int erRefererKey;
 	private String erDocSerialKey;
-	private String memberTeam;
-	private String memberJob;
+	private String memberTeamKey;
+	private String memberTeamName;
+	private String memberJobKey;
+	private String memberJobName;
 	private String memberName;
 	private int memberKey;
 }
