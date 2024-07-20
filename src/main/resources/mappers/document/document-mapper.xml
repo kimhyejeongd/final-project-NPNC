@@ -346,14 +346,31 @@
 	</select>
 	<!-- 기안 -->
 	<insert id="insertDoc" parameterType="document">
-		INSERT INTO er_document VALUES
+		INSERT INTO 
+			er_document 
+			(
+				ER_DOC_KEY,
+				ER_DOC_SERIAL_KEY,
+				ER_DOC_WRITER,
+				ER_DOC_TITLE,
+				ER_DOC_CREATE_DATE,
+				ER_DOC_EMERGENCY_YN,
+				ER_DOC_DELETE_YN,
+				ER_DOC_STOARGE,
+				ER_DOC_FILENAME, 
+				ER_DOC_STATE, 
+				ER_DOC_STATE_UPDATE_DATE,
+				ER_DOC_LAST_UPDATER,
+				ER_DOC_LAST_UPDATE_REASON
+			)
+		VALUES
             (
               seq_er_doc_key.NEXTVAL,
               To_char(SYSDATE, 'YYMMDD')
-				                          || '-'
-				                          || #{erDocSerialKey}
-				                          || '-'
-				                          || To_char(seq_er_doc_serial_key.NEXTVAL),
+                        || '-'
+                        || #{erDocSerialKey}
+                        || '-'
+                        || To_char(seq_er_doc_serial_key.NEXTVAL),
               ${erDocWriter},
               #{erDocTitle},
               DEFAULT,
@@ -424,8 +441,8 @@
               seq_er_approver_key.NEXTVAL,
               ${memberKey},
               #{memberName},
-              #{memberTeam},
-              #{memberJob},
+              #{memberTeamKey},
+              #{memberJobKey},
               #{category},
               <choose>
 			       <when test="state == null">
@@ -573,14 +590,16 @@
 	
 	<!-- 전자문서 참조인 등록-->
 	<insert id="insertReferer" parameterType="referer">
-		INSERT INTO ER_REFERER VALUES
+		INSERT INTO 
+			ER_REFERER 
+		VALUES
             (
-                        SEQ_ER_REFERER_KEY.NEXTVAL,
-                        #{erDocSerialKey},
-                        #{memberTeam},
-                        #{memberJob},
-                        #{memberName},
-                        ${memberKey}
+	         SEQ_ER_REFERER_KEY.NEXTVAL,
+	         #{erDocSerialKey},
+	         #{memberTeamKey},
+	         #{memberJobKey},
+	         #{memberName},
+	         ${memberKey}
             )
 	</insert>
 </mapper>

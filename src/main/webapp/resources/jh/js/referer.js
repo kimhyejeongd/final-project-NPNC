@@ -16,6 +16,8 @@ $(document).ready(function() {
 						'data-id': item.memberKey, 
 						'data-name' : item.memberName, 
 						'data-team': item.memberTeam,
+						'data-teamkey': item.teamKey,
+						'data-jobkey': item.jobKey,
 						'data-job': item.memberJob
 						});
 		let $i = $("<i>").addClass('fas fa-user me-2');
@@ -41,9 +43,20 @@ $(document).ready(function() {
 			let name = $(this).data('name');
 			let job = $(this).data('job');
 			let teamName = $(this).data('team');
+			let jobKey = $(this).data('jobkey');
+			let teamKey = $(this).data('teamkey');
 			$(this).removeClass('selected');
 			$(this).css('display', 'none');
-			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between').attr({'href':'#','data-id': no, 'data-name' : name, 'data-team': teamName,'data-job': job});
+			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+					.attr({
+						'href':'#',
+						'data-id': no, 
+						'data-name' : name, 
+						'data-team': teamName,
+						'data-job': job,
+						'data-jobKey' : jobKey,
+						'data-teamKey' : teamKey
+						});
 			let $i = $("<i>").addClass('fas fa-user me-2');
 			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0').text(``).css('display', 'none');
 			let $div = $("<div>").append($($span));
@@ -92,11 +105,15 @@ $(document).ready(function() {
 			let name = $(this).data('name');
 			let job = $(this).data('job');
 			let teamName = $(this).data('team');
+			let jobKey = $(this).data('jobkey');
+			let teamKey = $(this).data('teamkey');
 			let $app = {
 				        memberKey: no,
 				        memberTeam: teamName,
 				        memberJob: job,
 				        memberName: name,
+				        teamKey: teamKey,
+				        jobKey: jobKey
 					    };
 			data.push($app);
 		});
