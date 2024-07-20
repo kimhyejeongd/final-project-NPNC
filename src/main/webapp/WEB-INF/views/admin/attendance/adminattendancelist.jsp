@@ -9,7 +9,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
+
+	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
 	<div>
 		<div class="col-md-12">
 		                <div class="card">
@@ -60,7 +62,7 @@
 		                </div>
 		              </div>
 			</div>
-
+	</div>
 		
 </body>
 </html>

@@ -11,7 +11,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
- 	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
+<%--  	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>  --%>
+ 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
 	<div>
 		<div class="col-md-12">
 		                <div class="card">
@@ -83,7 +85,7 @@
 			<div>
 				<button onclick="location.assign('${path}/attendance/selectAttendanceEditById')">수정요청목록</button>
 			</div>
-
+		</div>
 	<script>
 				
  		 $(document).ready(function(){

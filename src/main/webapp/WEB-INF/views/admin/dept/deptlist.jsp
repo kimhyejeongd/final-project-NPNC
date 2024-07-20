@@ -8,33 +8,41 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div>	
-		<form action="${path }/admin/dept/insertdept.do" method="post">
-			부서명<input type="text" name="deptName">
-			<input type="submit" value="등록">
-		</form>
+
+	<%-- <%@ include file="/WEB-INF/views/common/script_gather.jsp" %>  --%>
+ 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	  <div class="wrapper">
+    <div class="main-panel">
+		<div>	
+			<form action="${path }/admin/dept/insertdept.do" method="post">
+				부서명<input type="text" name="deptName">
+				<input type="submit" value="등록">
+			</form>
+		</div>
+		<table>
+			<tr>
+				<th>부서코드</th>
+				<th>부서명</th>
+			</tr>
+			<c:if test="${not empty dept}">
+				<c:forEach var="d" items="${dept}">
+					<tr>
+						<td>${d.deptKey }</td>
+						<td>${d.deptName }</td>
+						<td>
+							<button onclick="updateDept('${d.deptKey }','${d.deptName }');">수정</button>
+						</td>
+						<td>
+							<button onclick="deleteDept('${d.deptKey}');">삭제</button>
+						</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+			
+		</table>
+		</div>
 	</div>
-	<table>
-		<tr>
-			<th>부서코드</th>
-			<th>부서명</th>
-		</tr>
-		<c:if test="${not empty dept}">
-			<c:forEach var="d" items="${dept}">
-				<tr>
-					<td>${d.deptKey }</td>
-					<td>${d.deptName }</td>
-					<td>
-						<button onclick="updateDept('${d.deptKey }','${d.deptName }');">수정</button>
-					</td>
-					<td>
-						<button onclick="deleteDept('${d.deptKey}');">삭제</button>
-					</td>
-				</tr>
-			</c:forEach>
-		</c:if>
-		
-	</table>
+	
 	<script>
 		const updateDept=(key,name)=>{
             let form = document.createElement("form");

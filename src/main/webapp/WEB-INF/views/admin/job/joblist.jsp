@@ -8,6 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+ 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
 	<div>	
 		<form action="${path }/admin/job/insertjob.do" method="post">
 			직급명<input type="text" name="jobName">
@@ -36,6 +38,7 @@
 		</c:if>
 		
 	</table>
+	</div>
 	<script>
 		const updateJob=(key,name)=>{
             let form = document.createElement("form");
