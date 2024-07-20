@@ -1,4 +1,4 @@
---전자결재 결재자
+--전자결재 결재라인
 SELECT * FROM MEMBER;
 SELECT * FROM ER_AP_LINE_STORAGE;
 SELECT * FROM ER_AP_LINE;

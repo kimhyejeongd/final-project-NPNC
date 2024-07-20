@@ -24,8 +24,10 @@
 		<id column="ER_APPROVER_KEY" property="erApproverKey"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
 		<result column="ER_APPROVER_NAME" property="memberName"/>
-		<result column="ER_APPROVER_TEAM" property="memberTeam"/>
-		<result column="ER_APPROVER_JOB" property="memberJob"/>
+		<result column="ER_APPROVER_TEAM_KEY" property="memberTeamKey"/>
+		<result column="ER_APPROVER_JOB_KEY" property="memberJobKey"/>
+		<result column="DEPARTMENT_NAME" property="memberTeamName"/>
+		<result column="JOB_NAME" property="memberJobName"/> 
 		<result column="ER_APPROVAL_CATEGORY" property="category"/>
 		<result column="ER_APPROVAL_STATE" property="state"/>
 		<result column="ER_APPROVAL_OPINION" property="opinion"/>
@@ -36,8 +38,10 @@
 	<resultMap id="refererMap" type="referer">
 		<id column="ER_REFERER_KEY" property="erRefererKey"/>
 		<result column="ER_DOC_SERIAL_KEY" property="erDocSerialKey"/>
-		<result column="ER_REFERER_TEAM_NAME" property="memberTeam"/>
-		<result column="ER_REFERER_JOB_NAME" property="memberJob"/>
+		<result column="ER_REFERER_TEAM_KEY" property="memberTeamKey"/>
+		<result column="DEPARTMENT_NAME" property="memberTeamName"/>
+		<result column="ER_REFERER_JOB_KEY" property="memberJobKey"/>
+		<result column="JOB_NAME" property="memberJobName"/>
 		<result column="ER_REFERER_NAME" property="memberName"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
 	</resultMap>
@@ -153,14 +157,44 @@
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
 		 <!-- select ER_DOC_KEY, ER_DOC_SERIAL_KEY, ER_DOC_WRITER, ER_DOC_TITLE, ER_DOC_CREATE_DATE, ER_DOC_EMERGENCY_YN, ER_DOC_DELETE_YN, ER_DOC_STOARGE, ER_DOC_FILENAME. ER_DOC_STATE. ER_DOC_STATE_UPDATE_DATE, ER_DOC_LAST_UPDATER, ER_DOC_LAST_UPDATE_REASON from er_document -->
-		 SELECT    
-		 	*
-		 FROM      
+		SELECT    
+		 	ER_DOC_SERIAL_KEY,
+		 	ER_DOC_KEY,
+		 	ER_DOC_WRITER,
+		 	ER_DOC_TITLE,
+		 	ER_DOC_CREATE_DATE,
+		 	ER_DOC_EMERGENCY_YN,
+		 	ER_DOC_DELETE_YN,
+		 	ER_DOC_STOARGE,
+		 	ER_DOC_FILENAME,
+		 	ER_DOC_STATE,
+		 	ER_DOC_STATE_UPDATE_DATE,
+		 	ER_DOC_LAST_UPDATER,
+		 	ER_DOC_LAST_UPDATE_REASON,
+		 	ER_APPROVER_KEY,
+		 	MEMBER_KEY,
+		 	ER_APPROVER_NAME,
+		 	ER_APPROVER_TEAM_KEY,
+		 	ER_APPROVER_JOB_KEY,
+		 	ER_APPROVAL_CATEGORY,
+		 	ER_APPROVAL_STATE,
+		 	ER_APPROVAL_OPINION,
+		 	ER_APPROVAL_DATE,
+		 	ER_APPROVAL_ORDERBY,
+		 	JOB_KEY,
+		 	JOB_NAME,
+		 	DEPARTMENT_KEY,
+		 	DEPARTMENT_NAME
+		FROM      
 		 	er_document d
 		left join 
 			er_aprover ea USING(er_doc_serial_key)
+		JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+		JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
 		WHERE     
-			er_doc_writer = ${no}
+			er_doc_writer = #{no}
 		AND       
 			er_doc_state = '처리중'
 		ORDER BY  
@@ -169,54 +203,6 @@
 	</select>
 	<!-- 로그인 사원의 결재 대기 문서 조회 -->
 	<select id="selectWaitingDocs" resultMap="documentMap" parameterType="_int">
-		 <!-- SELECT
-			d.ER_DOC_KEY, 
-		    d.ER_DOC_SERIAL_KEY, 
-		    d.ER_DOC_WRITER, 
-		    d.ER_DOC_TITLE, 
-		    d.ER_DOC_CREATE_DATE, 
-		    d.ER_DOC_EMERGENCY_YN, 
-		    d.ER_DOC_DELETE_YN, 
-		    d.ER_DOC_STOARGE, 
-		    d.ER_DOC_FILENAME,
-		    d.ER_DOC_STATE,
-		    d.ER_DOC_STATE_UPDATE_DATE, 
-		    d.ER_DOC_LAST_UPDATER, 
-		    d.ER_DOC_LAST_UPDATE_REASON,
-		    a1.ER_APPROVER_KEY,
-		    a1.MEMBER_KEY,
-		    a1.ER_APPROVER_NAME,
-		    a1.ER_APPROVER_TEAM,
-		    a1.ER_APPROVER_JOB,
-		    a1.ER_APPROVAL_CATEGORY,
-		    a1.ER_APPROVAL_STATE,
-		    a1.ER_APPROVAL_OPINION, 
-		    a1.ER_DOC_SERIAL_KEY,
-		    a1.ER_APPROVAL_DATE,
-		    a1.ER_APPROVAL_ORDERBY,
-		    er.ER_REFERER_KEY,
-		    er.ER_DOC_SERIAL_KEY,
-		    er.ER_REFERER_TEAM_NAME,
-		    er.ER_REFERER_JOB_NAME,
-		    er.ER_REFERER_NAME,
-		    er.MEMBER_KEY
-		FROM 
-		    er_document d
-		LEFT JOIN 
-		    er_aprover a1
-		ON 
-		    d.ER_DOC_SERIAL_KEY = a1.ER_DOC_SERIAL_KEY
-		LEFT JOIN 
-			ER_REFERER er 
-		ON
-			d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY
-		WHERE    
-			d.er_doc_state = '처리중'
-		ORDER BY  
-			d.er_doc_emergency_yn DESC,
-			d.er_doc_create_date,
-			a1.er_approval_orderby -->
-			
 		SELECT 
 		    d.ER_DOC_KEY, 
 			d.ER_DOC_SERIAL_KEY, 
@@ -234,8 +220,11 @@
 		    j.job_name,
 		    m.MEMBER_NAME,
 		    a.member_key,
-			a.ER_APPROVER_TEAM,
-		    a.ER_APPROVER_JOB,
+		    a.ER_APPROVER_KEY,
+			a.ER_APPROVER_TEAM_KEY,
+			de.DEPARTMENT_NAME,
+		    a.ER_APPROVER_JOB_KEY,
+		    j.JOB_NAME,
 		    a.ER_APPROVER_NAME,
 		    a.ER_APPROVAL_CATEGORY,
 		    a.ER_APPROVAL_STATE,
@@ -323,8 +312,10 @@
 			ea.ER_APPROVER_KEY,
 			ea.MEMBER_KEY,
 			ea.ER_APPROVER_NAME,
-			ea.ER_APPROVER_TEAM,
-			ea.ER_APPROVER_JOB,
+			ea.ER_APPROVER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			ea.ER_APPROVER_JOB_KEY,
+			j.JOB_NAME,
 			ea.ER_APPROVAL_CATEGORY,
 			ea.ER_APPROVAL_STATE,
 			ea.ER_APPROVAL_OPINION,
@@ -333,18 +324,24 @@
 			ea.ER_APPROVAL_ORDERBY,
 			er.ER_REFERER_KEY,
 			er.ER_DOC_SERIAL_KEY,
-			er.ER_REFERER_TEAM_NAME,
-			er.ER_REFERER_JOB_NAME,
+			er.ER_REFERER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			er.ER_REFERER_JOB_KEY,
+			j.JOB_NAME,
 			er.ER_REFERER_NAME,
 			er.MEMBER_KEY
 		FROM   
 			er_document d
-        LEFT JOIN 
-        	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
         JOIN 
        		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
 		LEFT JOIN
       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+		JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+		JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+        LEFT JOIN 
+        	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
 		WHERE  d.ER_DOC_KEY = #{docId} 
 	</select>
 	<!-- 기안 -->

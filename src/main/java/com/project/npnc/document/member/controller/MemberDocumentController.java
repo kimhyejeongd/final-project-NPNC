@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -242,7 +241,9 @@ public class MemberDocumentController {
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
-	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) //전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
+	
+	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
+	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public String insertDoc(
 			String msg, Model m, Document doc, String html, 
 //			@ModelAttribute ApproversList request, 
@@ -251,15 +252,15 @@ public class MemberDocumentController {
 		Member user = getCurrentUser();
 		log.debug("{}", html);
 		log.debug("{}", user);
-		doc.setErDocSerialKey("D2F3"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F1"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
 		
 		
 		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
 		//결재자에 기안자도 추가
 		Approver me = Approver.builder().memberKey(user.getMemberKey())
-									.memberTeam(user.getDepartmentKey())
-									.memberJob(user.getJobKey())
+									.memberTeamKey(user.getDepartmentKey())
+									.memberJobKey(user.getJobKey())
 									.memberName(user.getMemberName())
 									.category("기안")
 									.opinion(msg)

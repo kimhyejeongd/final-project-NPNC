@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 public class Approver {
 	private String erApproverKey;
 	private int memberKey;
-	private String memberTeam;
-	private String memberJob;
+	private String memberTeamKey;
+	private String memberTeamName;//join용
+	private String memberJobKey;
+	private String memberJobName;//join용
 	private String memberName;
 	private String category;
 	private String state;
