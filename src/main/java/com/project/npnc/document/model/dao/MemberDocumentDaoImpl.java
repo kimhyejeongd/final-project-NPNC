@@ -14,8 +14,12 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
+@Slf4j
 public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
@@ -65,6 +69,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<list.size();i++) {
 			Approver ap = list.get(i);
+			log.debug("{}", ap);
 			result = session.insert("document.insertApproval", ap); 
 		}
 		return result;
@@ -100,6 +105,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<list.size();i++) {
 			Referer r = list.get(i);
+			log.debug("{}", r);
 			result = session.insert("document.insertReferer", r); 
 		}
 		return result;

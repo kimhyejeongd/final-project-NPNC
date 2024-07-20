@@ -124,7 +124,7 @@
 			    <div class="form-group">
 		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 			        <div id="" class="scrollable-content" style="margin: 0px auto; width: 100%; height: 800px;">
-			        	<div id="content" class="" style="width: fit-content; height: 800px; margin: 0px auto;">
+			        	<div id="content" class="" style="width: fit-content; height: 800px; margin: 0px auto; padding: 50px;">
 				        	<c:out value="${html }" escapeXml="false"/>
 			        	</div>
 			        </div>

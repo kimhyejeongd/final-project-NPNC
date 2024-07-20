@@ -345,6 +345,36 @@ function sendDataToParent(data) {
                 maxWidth: '80px'
             },
         }).attr('readonly', true).appendTo($div);
+        $("<input>", {
+            name: 'approvers[' + index + '].memberTeamKey',
+            value: item.teamKey,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+        $("<input>", {
+            name: 'approvers[' + index + '].memberJobKey',
+            value: item.jobKey,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+        $("<input>", {
+            name: 'approvers[' + index + '].memberKey',
+            value: item.memberKey,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
 		
         let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
@@ -416,6 +446,26 @@ function sendRefererToParent(data) {
         $("<input>", {
             name: 'referers[' + index + '].memberKey',
             value: item.memberKey,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+        $("<input>", {
+            name: 'referers[' + index + '].memberTeamKey',
+            value: item.teamKey,
+            css: {
+                display: 'none',
+                border: 'none',
+                width: 'auto',
+                maxWidth: '80px'
+            },
+        }).attr('readonly', true).appendTo($div);
+        $("<input>", {
+            name: 'referers[' + index + '].memberJobKey',
+            value: item.jobKey,
             css: {
                 display: 'none',
                 border: 'none',

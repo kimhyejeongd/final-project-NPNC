@@ -134,7 +134,7 @@
 							      <div class="accordion-body" style='padding: 0!important;'>
 							         <div class="list-group" id="memberlist">
 						 				<c:forEach var="memberlist" items="${d.memberlist}">
-										  <a href="#" class="list-group-item list-group-item-action align-items-center" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-team="${d.departmentName}">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
+										  <a href="#" class="list-group-item list-group-item-action align-items-center" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-jobkey="${memberlist.jobKey }" data-team="${d.departmentName}" data-teamKey="${memberlist.departmentKey }">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
 						  				</c:forEach>
 									</div>
 							      </div>
