@@ -26,7 +26,7 @@ public class AlarmWebsocketController {
 	@MessageMapping("/msg/{reMemberKey}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/sub/{reMemberKey}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
 	public AlarmMessage test(@DestinationVariable int reMemberKey, AlarmMessage message) {
-		System.out.println("짜증나");
+		
 		System.out.println(reMemberKey);
 		System.out.println(message);
 

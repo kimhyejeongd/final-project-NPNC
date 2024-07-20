@@ -79,6 +79,41 @@ public class NoteServiceImpl implements NoteService{
 		return 0;
 	}
 	
+//	전체 쪽지 발송 파일 버전
+	@Override
+	public int noteAllWriteAndFile(NoteReceptionDto note, List<NoteFileDto> upfiles) {
+		int noteMsgKey=dao.noteMsgKey(session);
+		note.setPostMsgRecKey(noteMsgKey);
+		int result=dao.noteOneWrite(session, note);
+		int result1=dao.sendNoteOneWrite(session, note);
+		
+		Map<String,Object> param=new HashMap();
+		param.put("noteMsgKey", noteMsgKey);
+
+		List<Member> members=memberDao.selectMemberAllNoPaging(session);
+		
+		for (int i=0; i<members.size(); i++) {
+			
+			param.put("reMemberKey",members.get(i).getMemberKey());
+			int result2=dao.noteReciver(session, param);
+			
+		}
+		
+		
+		for (int i=0; i<upfiles.size();i++) {
+			NoteFileDto file=upfiles.get(i);
+			file.setPostMsgKey(noteMsgKey);
+			file.setPostMsgSendKey(noteMsgKey);
+			int result3=dao.noteFileInput(session, file);
+			
+		}
+		
+		return 0;
+
+	}
+
+
+	
 	@Override
 	public NoteReceptionDto selectNoteOne(Map<String,Integer> param) {
 		
@@ -191,7 +226,7 @@ public class NoteServiceImpl implements NoteService{
 		return result1;
 	}
 
-
+	
 
 
 }
