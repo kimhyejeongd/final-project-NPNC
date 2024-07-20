@@ -66,7 +66,6 @@
 			      		<c:if test="${l.erDocEmergencyYn eq 'N'}">
 				            <span class="h5 ms-4">일반</span>
 			      		</c:if>
-		          </label>
 			    </div>
 		    	 <div class="form-group d-flex">
 			      <label for="smallInput" class="me-3"><span class="h5 me-5">보관 </span></label>

@@ -4,11 +4,10 @@ import java.util.List;
 
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
-import com.project.npnc.document.model.dto.ApproversList;
+import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
-import com.project.npnc.document.model.dto.RefererList;
 
 public interface MemberDocumentService {
 	
@@ -18,7 +17,7 @@ public interface MemberDocumentService {
 	DocumentForm selectFormByNo(int no);
 	
 	int insertDoc(Document d) throws Exception;
-	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
+//	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
 	List<Document> selectInprocessDocs(int no);
 	List<Document> selectWaitingDocs(int no);
 	List<Document> selectRetrieveDocs(int no);
@@ -26,7 +25,8 @@ public interface MemberDocumentService {
 	
 	Document selectDocById(String docId);
 	
-	int insertApproverLine(int no, String name, List<Approver> list);
-	List<ApproverLine> selectApproverLines(int no);
+	int insertApproverLine(int no, String name, List<Approver> list) throws Exception;
+	List<ApproverLine> selectApproverLineList(int storageKey, int memberNo);
+	List<ApproverLineStorage> selectApproverLines(int memberNo);
 	int deleteApproverLine(int no);
 }

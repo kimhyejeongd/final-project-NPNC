@@ -28,5 +28,6 @@
 		<typeAlias type="com.project.npnc.chatting.model.dto.ChattingFile" alias="chattingFile"/>	
 	    <typeAlias type="com.project.npnc.document.model.dto.Referer" alias="referer"/>   
 	     <typeAlias type="com.project.npnc.document.model.dto.ApproverLine" alias="approverLine"/>
+	     <typeAlias type="com.project.npnc.document.model.dto.ApproverLineStorage" alias="approverLineStorage"/>
 	</typeAliases>
 </configuration>

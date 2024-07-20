@@ -18,10 +18,10 @@ $(document).ready(function() {
         			.addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
     				.attr({
 						'href':'#',
-						'data-id': item.no, 
-						'data-name' : item.name, 
-						'data-teamName': item.team,
-						'data-job': item.job
+						'data-id': item.memberKey, 
+						'data-name' : item.memberName, 
+						'data-team': item.memberTeam,
+						'data-job': item.memberJob
 						});
 		let $i = $("<i>").addClass('fas fa-user me-2');
 		let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -34,11 +34,11 @@ $(document).ready(function() {
 					.append($("<option>").text('후결'))
 					.append($("<option>").text('협조'));
     	$select.val(item.category); // 카테고리에 맞는 옵션 선택
-		$div.append($i).append(`<b>${item.name}</b>&ensp;${item.job}`);
+		$div.append($i).append(`<b>${item.memberName}</b>&ensp;${item.memberJob}`);
         $a.append($($div)).append($select).appendTo($("div#memberlist2"));
         //조직도에서 없앰
         $("div#memberlist>a").each(function(){
-			if ($(this).data('id') == item.no) {
+			if ($(this).data('id') == item.memberKey) {
                 $(this).css('display', 'none');
             }
 		});
@@ -66,7 +66,7 @@ $(document).ready(function() {
 								'href':'#',
 								'data-id': no, 
 								'data-name' : name, 
-								'data-teamName': teamName,
+								'data-team': teamName,
 								'data-job': job
 							});
 			let $i = $("<i>").addClass('fas fa-user me-2');
@@ -209,15 +209,15 @@ $(document).ready(function() {
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
-			let teamName = $(this).data('teamname');
+			let teamName = $(this).data('team');
 			let orderby =$(`#memberlist2 > a:nth-child(${index+1}) > div > span`).text();
 			let category=$(this).children().last().val();
 			let $app = {
 				        orderby: orderby,
-				        no: no,
-				        team: teamName,
-				        job: job,
-				        name: name,
+				        memberKey: no,
+				        memberTeam: teamName,
+				        memberJob: job,
+				        memberName: name,
 				        category: category
 					    };
 			data.push($app);
@@ -292,29 +292,29 @@ $(document).ready(function() {
 		        $("div#memberlist2>a").each(function() {
 		            let approver = {
 		                memberKey: $(this).data('id'),
-		                name: $(this).data('name'),
-		                job: $(this).data('job'),
-		                teamName: $(this).data('teamname'),
+		                memberName: $(this).data('name'),
+		                memberJob: $(this).data('job'),
+		                memberTeam: $(this).data('team'),
 		                orderby: $(this).find("div > span").text(),
 		                category: $(this).children().last().val()
 		            };
 		            approvers.push(approver);
 		        });
 		
-		        let data = {
+		        let ApproversList = {
 		            name: lineName,
 		            approvers: approvers
 		        };
-				console.log(data);
-                // 로컬 스토리지에 데이터 저장
-		    	localStorage.setItem('selectedApprover', JSON.stringify(data));
+				console.log(ApproversList);
 		        $.ajax({
 		            type: "POST",
 		            url: sessionStorage.getItem("path")+`/document/write/save/approverline`,
 		            contentType: "application/json",
-		            data: JSON.stringify(data),
+		            data: JSON.stringify(ApproversList),
 		            success: function(response) {
 		                if (response.status === "success") {
+			                // 로컬 스토리지에 데이터 저장
+					    	localStorage.setItem('selectedApprover', JSON.stringify(approvers));
 		                    alert(response.message);
 		                } else {
 		                    alert(response.message);

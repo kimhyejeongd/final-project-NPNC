@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
+import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.ApproversList;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -133,7 +134,6 @@ public class MemberDocumentController {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
 		List<DocumentForm> result = serv.selectForms(folderNo);
 		log.debug("{}", result);
-//		m.addAttribute("formlist", result);
 		return result;
 	}
 	@PostMapping("/formsearch")
@@ -142,59 +142,57 @@ public class MemberDocumentController {
 		log.debug("----전자문서 양식명 "+ target+" 조회----");
 		List<DocumentForm> result = serv.selectFormsBySearch(target);
 		log.debug("{}", result);
-//		m.addAttribute("formlist", result);
 		return result;
 	}
 	@GetMapping("/write")
 	public String formWrite(int form, Model m) {
-		switch(form) {
-		case 1 :
-			log.debug("----전자문서 작성시작----");
-			String html = readHtmlFile("docformhtml", "F"+form+".html");
-			m.addAttribute("html", html);
-			return "document/write/normal";
-		}
-		return "document/formlist.do";
+		log.debug("----전자문서 작성시작----");
+		String html = readHtmlFile("docformhtml", form+".html");
+		m.addAttribute("html", html);
+		return "document/write/normal";
 	}
 	
 //	팝업
-	//결재자 선택
+	//결재자 선택팝업 호출, 조직도와 저장된 결재라인 출력
 	@GetMapping("/write/approver")
 	public void docApprover(Model m) {
 		List<OrganizationDto> list = orserv.selectOrganAll();
 		log.debug("----- 결재자 선택 -----");
 		m.addAttribute("list", list);
 		log.debug("{}", list); 
-		List<ApproverLine> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
+		//저장된 결재라인들 출력
+		List<ApproverLineStorage> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
 		m.addAttribute("aplist", ap);
 		log.debug("{}", ap); 
 	}
-	//결재라인 불러오기
-	@GetMapping("/write/load/approverline")
-	public ResponseEntity<Map<String,Object>> selectApproverLines(@RequestBody int no, Model m) {
-		Map<String,Object> response = new HashMap<>();
-		
-		try{
-			List<ApproverLine> result = serv.selectApproverLines(no);
-			response.put("status", "ok");
-			response.put("approver", result);
-		}catch(Exception e){
-			response.put("status", "error");
-			response.put("message", "결재라인 불러오기에 실패했습니다.");
-		}
-		return ResponseEntity.ok(response);
-	}
+//	//특정 결재라인 결재자들 불러오기
+//	@GetMapping("/write/load/approverline")
+//	public ResponseEntity<Map<String,Object>> selectApproverLines(int lineKey, String lineName) {
+//		Map<String,Object> response = new HashMap<>();
+//		
+//		try{
+//			List<ApproverLine> result = serv.selectApproverLineList(lineName, getCurrentUser().getMemberKey());
+//			response.put("status", "ok");
+//			response.put("approver", result);
+//		}catch(Exception e){
+//			response.put("status", "error");
+//			response.put("message", "결재라인 불러오기에 실패했습니다.");
+//		}
+//		return ResponseEntity.ok(response);
+//	}
 	//결재라인 저장
 	@PostMapping("/write/save/approverline")
 	public ResponseEntity<Map<String,Object>> insertApproverLine(
-			@RequestBody Map<String, Object> data) {
+			@RequestBody ApproversList data) throws Exception {
+//			@RequestBody Map<String, Object> data) {
 		log.debug("----- 결재라인 저장 -----");
-		String name = (String) data.get("name");
-		 List<Approver> list = (List<Approver>) data.get("approvers");
-		 
-		log.debug(name);
-		log.debug("{}", list);
-		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(),name, list);
+		log.debug(data.getName());
+		log.debug("{}", data.getApprovers());
+		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(),data.getName(), data.getApprovers());
+//		log.debug("{}", data.get("name"));
+//		List<Approver> list = (List<Approver>) data.get("approvers");
+//		log.debug("{}", list);
+//		int result = serv.insertApproverLine(getCurrentUser().getMemberKey(),(String) data.get("name"), list);
 		Map<String,Object> response = new HashMap<>();
 		
 		if(result>0) {

@@ -112,6 +112,12 @@
 				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
 			          </label>
 				    </div>
+				    <div class="form-group d-flex align-items-center gap-3">
+				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      </div>
+				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
+				    </div>
 				    <div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
 				      	<div class="col w-100 align-items-center p-0">
@@ -137,12 +143,12 @@
 					      </div>
 					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
-				    <div class="form-group d-flex align-items-center gap-3">
+				    <!-- <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
 				      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
 				      </div>
 				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
-				    </div>
+				    </div> -->
 				    <div class="form-group d-flex">
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
@@ -331,7 +337,7 @@ function sendDataToParent(data) {
 		
         $("<input>", {
             name: 'approvers[' + index + '].memberKey',
-            value: item.no,
+            value: item.memberKey,
             css: {
                 display: 'none',
                 border: 'none',
@@ -340,10 +346,10 @@ function sendDataToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 		
-        let widthCalc = (item.team.length * 1.5) + 1;
+        let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberTeam',
-            value: item.team,
+            value: item.memberTeam,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -352,10 +358,10 @@ function sendDataToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 	
-        widthCalc = (item.job.length * 1.5) + 1;
+        widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberJob',
-            value: item.job,
+            value: item.memberJob,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -364,10 +370,10 @@ function sendDataToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 
-        widthCalc = (item.name.length * 1.5) + 1;
+        widthCalc = (item.memberName.length * 1.5) + 1;
         $("<input>", {
             name: 'approvers[' + index + '].memberName',
-            value: item.name,
+            value: item.memberName,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -409,7 +415,7 @@ function sendRefererToParent(data) {
 
         $("<input>", {
             name: 'referers[' + index + '].memberKey',
-            value: item.no,
+            value: item.memberKey,
             css: {
                 display: 'none',
                 border: 'none',
@@ -418,10 +424,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 	
-        let widthCalc = (item.team.length * 1.5) + 1;
+        let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberTeam',
-            value: item.team,
+            value: item.memberTeam,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -430,10 +436,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 
-        widthCalc = (item.job.length * 1.5) + 1;
+        widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberJob',
-            value: item.job,
+            value: item.memberJob,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",
@@ -442,10 +448,10 @@ function sendRefererToParent(data) {
             },
         }).attr('readonly', true).appendTo($div);
 
-        widthCalc = (item.name.length * 1.5) + 1;
+        widthCalc = (item.memberName.length * 1.5) + 1;
         $("<input>", {
             name: 'referers[' + index + '].memberName',
-            value: item.name,
+            value: item.memberName,
             css: {
                 border: 'none',
                 width: widthCalc + "ch",

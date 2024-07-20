@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ApproverLine {
-	private int erApStorageKey;
-	private String erApStorageName;
+	private int erApLineKey;
+	private int erApLineStorageKey;
 	private int memberKey;
-	private int erApKey;
-	private String erApTeamName;
-	private String erApJobName;
+	private int erApTeamKey;
+	private String erApTeamName; //join용
+	private int erApJobKey;
+	private String erApJobName; //join용
 	private String erApName;
 	private String erApCategory;
 	private String erApOrderby;

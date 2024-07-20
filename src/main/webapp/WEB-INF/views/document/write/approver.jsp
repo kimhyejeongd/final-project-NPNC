@@ -224,8 +224,10 @@
 		                            <i class=" fa fa-search search-icon "></i>
 		                        </button>
 		                        <div id="line${vs.index }" class="modal-like" style="display:none;">
-		                            <div class="badge rounded-pill text-bg-secondary">${ap.erApOrderby}</div>
-		                            ${ap.erApTeamName } ${ap.erApJobName } ${ap.erApName } ${ap.erApCategory }
+		                        	<c:forEach var="p" items="${ap.lines }">
+		                            <div class="badge rounded-pill text-bg-secondary">${p.erApOrderby}</div>
+		                            	${p.erApTeamName } ${p.erApJobName } ${p.erApName } ${p.erApCategory }
+		                            </c:forEach>
 		                        </div>
 		                    </div>
 		                    <div>

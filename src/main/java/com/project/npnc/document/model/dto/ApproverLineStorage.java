@@ -1,5 +1,7 @@
 package com.project.npnc.document.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Referer {
-	private int erRefererKey;
-	private String erDocSerialKey;
-	private String memberTeam;
-	private String memberJob;
-	private String memberName;
+public class ApproverLineStorage {
+	private int erApLineStorageKey;
+	private String erApLineStorageName;
 	private int memberKey;
+	private List<ApproverLine> approvers;
 }
