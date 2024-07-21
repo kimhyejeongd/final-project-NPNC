@@ -75,4 +75,34 @@
 			FROM MEMBER
 	</select>
 	
+	<select id="searchMember" parameterType="string" resultMap="memberMap">
+		SELECT 
+		MEMBER_KEY,
+		DEPARTMENT_KEY,
+		JOB_KEY, 
+		MEMBER_ID, 
+		MEMBER_PW, 
+		MEMBER_PHONE, 
+		MEMBER_EMAIL, 
+		MEMBER_MESSAGE, 
+		MEMBER_ENROLL_DATE, 
+		MEMBER_LEAVE_DATE, 
+		MEMBER_TELL, 
+		MEMBER_ADDRESS, 
+		ACCESS_KEY, 
+		MEMBER_NAME, 
+		MEMBER_GENDER, 
+		MEMBER_STATE, 
+		MEMBER_BIRTHDATE, 
+		MEMBER_PROFILE_IMAGE
+		FROM MEMBER
+		WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	</select>
+	
+	<select id="searchMemberCount" parameterType="string" resultType="_int">
+	SELECT 
+	COUNT(MEMBER_KEY)
+	FROM MEMBER
+	WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	</select>
 </mapper>

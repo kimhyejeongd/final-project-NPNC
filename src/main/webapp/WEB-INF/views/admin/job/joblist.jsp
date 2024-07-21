@@ -10,35 +10,71 @@
 <body>
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
-	<div>	
+ 		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+		<br><br><br><br>
+		<div>
+		   	<h4 class="card-title">직급관리</h4>
+		</div>
 		<form action="${path }/admin/job/insertjob.do" method="post">
-			직급명<input type="text" name="jobName">
-			<input type="submit" value="등록">
+			<div class="form-group">
+            		<div class="form-group form-inline">
+                          <label
+                            for="jobName"
+                            class="col-md-3 col-form-label"
+                            >직급등록</label
+                          >
+                          <div class="col-md-9 p-0" style="display:flex">
+                            <input
+                              type="text"
+                              class="form-control input-full"
+                              id="jobName"
+                              name="jobName"
+                              placeholder="직급명"
+                            />
+                             &ensp;&ensp;&ensp;
+							<input type="submit" value="등록" class="btn btn-dark btn-round" data-color="dark">
+                          </div>
+               		</div>	 				
+			</div>
 		</form>
-	</div>
-	<table>
+	<div class="col-md-12">
+		<div class="card">
+		    <div class="card-body">
+		       <div class="table-responsive">
+	<table
+		id="multi-filter-select"
+		class="display table table-striped table-hover"
+	>
 		<tr>
 			<th>직급번호</th>
 			<th>직급명</th>
+			<th></th>
+			<th></th>
 		</tr>
 		<c:if test="${not empty job}">
 			<c:forEach var="j" items="${job}">
 				<tr>
 					<td>${j.jobKey }</td>
 					<td>${j.jobName }</td>
+					<td></td>
 					<td>
-						<button onclick="updateJob('${j.jobKey }','${j.jobName }');">수정</button>
+						<button onclick="updateJob('${j.jobKey }','${j.jobName }');" class="btn btn-dark btn-round">수정</button>
+						 &ensp;&ensp;&ensp;
+						<button onclick="deleteJob('${j.jobKey}');" class="btn btn-dark btn-round">삭제</button>
 					</td>
-					<td>
-						<button onclick="deleteJob('${j.jobKey}');">삭제</button>
-					</td>
-					
 				</tr>
 			</c:forEach>
-		</c:if>
-		
+		</c:if>	
 	</table>
+	    </div>
+	   </div>
+	  </div>
+	 </div>
+	 
+	 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
+	
+
 	<script>
 		const updateJob=(key,name)=>{
             let form = document.createElement("form");

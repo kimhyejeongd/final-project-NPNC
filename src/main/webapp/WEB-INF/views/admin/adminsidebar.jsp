@@ -77,7 +77,7 @@
                   <ul class="nav nav-collapse">
                     <li>
                       <a href="${path }/admin/member/selectmemberall.do">
-                        <span class="sub-item">전체사원조회</span>
+                        <span class="sub-item">전체사원관리</span>
                       </a>
                     </li>
                     <li>

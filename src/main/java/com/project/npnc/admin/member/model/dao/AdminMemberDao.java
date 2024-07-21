@@ -19,4 +19,7 @@ public interface AdminMemberDao {
 	int updateMember(SqlSession session,AdminMember m);
 	int deleteMember(SqlSession session,int memberKey);
 	
+	List<AdminMember> searchMember(SqlSession session,String searchKey, Map<String,Integer> page);
+	int searchMemberCount(SqlSession session,String searchKey);
+	
 }

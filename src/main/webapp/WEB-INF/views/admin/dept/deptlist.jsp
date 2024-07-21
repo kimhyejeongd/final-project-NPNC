@@ -9,38 +9,70 @@
 </head>
 <body>
 
-	<%-- <%@ include file="/WEB-INF/views/common/script_gather.jsp" %>  --%>
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-	  <div class="wrapper">
-    <div class="main-panel">
-		<div>	
+    	<div class="main-panel">
+    	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+
+		<div >	
+			<br><br><br><br>
+		    <div>
+		   		<h4 class="card-title">부서관리</h4>
+			</div>
 			<form action="${path }/admin/dept/insertdept.do" method="post">
-				부서명<input type="text" name="deptName">
-				<input type="submit" value="등록">
+				<div class="form-group">
+            		<div class="form-group form-inline">
+                          <label
+                            for="deptName"
+                            class="col-md-3 col-form-label"
+                            >부서등록</label
+                          >
+                          <div class="col-md-9 p-0" style="display:flex">
+                            <input
+                              type="text"
+                              class="form-control input-full"
+                              id="deptName"
+                              name="deptName"
+                              placeholder="부서명"
+                            />
+                            &ensp;&ensp;&ensp;
+							<input type="submit" value="등록" class="btn btn-dark btn-round" data-color="dark">
+                          </div>
+               		</div>			
 			</form>
 		</div>
-		<table>
-			<tr>
-				<th>부서코드</th>
-				<th>부서명</th>
-			</tr>
-			<c:if test="${not empty dept}">
-				<c:forEach var="d" items="${dept}">
-					<tr>
-						<td>${d.deptKey }</td>
-						<td>${d.deptName }</td>
-						<td>
-							<button onclick="updateDept('${d.deptKey }','${d.deptName }');">수정</button>
-						</td>
-						<td>
-							<button onclick="deleteDept('${d.deptKey}');">삭제</button>
-						</td>
-					</tr>
-				</c:forEach>
-			</c:if>
-			
-		</table>
+		<div class="col-md-12">
+			<div class="card">
+		    <div class="card-body">
+		     <div class="table-responsive">
+			<table
+				id="multi-filter-select"
+			    class="display table table-striped table-hover"
+			>
+				<tr>
+					<th>부서코드</th>
+					<th>부서명</th>
+					<th>비고</th>
+				</tr>
+				<c:if test="${not empty dept}">
+					<c:forEach var="d" items="${dept}">
+						<tr>
+							<td>${d.deptKey }</td>
+							<td>${d.deptName }</td>
+							<td>
+								<button onclick="updateDept('${d.deptKey }','${d.deptName }');" class="btn btn-dark btn-round">수정</button>
+								 &ensp;&ensp;&ensp;
+								<button onclick="deleteDept('${d.deptKey}');" class="btn btn-dark btn-round">삭제</button>
+							</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+				
+			</table>
 		</div>
+	   </div>
+	  </div>
+	 </div>
+	 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 	
 	<script>

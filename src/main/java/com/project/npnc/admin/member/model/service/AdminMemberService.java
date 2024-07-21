@@ -3,6 +3,8 @@ package com.project.npnc.admin.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
+
 import com.project.npnc.admin.member.model.dto.AdminMember;
 
 public interface AdminMemberService {
@@ -16,6 +18,7 @@ public interface AdminMemberService {
 	int insertMember(AdminMember m);
 	int updateMember(AdminMember m);
 	int deleteMember(int memberKey);
-	
+	List<AdminMember> searchMember(String searchKey, Map<String,Integer> page);
+	int searchMemberCount(String searchKey);
 	
 }

@@ -1,8 +1,10 @@
 package com.project.npnc.admin.member.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -144,5 +146,19 @@ public class AdminMemberController {
 		return "common/msg";
 	}
 	
+	@GetMapping("/searchMember")
+	public String searchMember(
+			String searchKey,
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,			
+			Model m
+			){
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		int totaldata=service.searchMemberCount(searchKey);
+		List<AdminMember> members= service.searchMember(searchKey, page);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "searchMember"));
+		m.addAttribute("members",members);
+		return "admin/member/memberlist";
+	}
 	
 }

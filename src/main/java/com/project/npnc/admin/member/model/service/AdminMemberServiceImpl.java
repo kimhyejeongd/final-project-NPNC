@@ -65,5 +65,18 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return dao.selectMemberKeyAll(session);
 	}
 
+	@Override
+	public List<AdminMember> searchMember(String searchKey, Map<String, Integer> page) {
+		
+		return dao.searchMember(session, searchKey, page);
+	}
+
+	@Override
+	public int searchMemberCount(String searchKey) {
+	
+		return dao.searchMemberCount(session, searchKey);
+	}
+
+	
 	
 }
