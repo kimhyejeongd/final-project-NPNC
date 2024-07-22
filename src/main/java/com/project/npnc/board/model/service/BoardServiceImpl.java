@@ -1,10 +1,8 @@
 package com.project.npnc.board.model.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.project.npnc.board.model.dao.BoardDao;
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
@@ -31,7 +29,7 @@ public class BoardServiceImpl implements BoardService {
     public void createBoard(BoardDto boardDto, List<BoardFileDto> fileList) {
         boardDao.insertBoard(boardDto);
         for (BoardFileDto fileDto : fileList) {
-            fileDto.setBOARD_KEY(boardDto.getBOARD_KEY());
+            fileDto.setBOARD_KEY(boardDto.getBOARD_KEY()); // 게시물 키 설정
             boardDao.insertBoardFile(fileDto);
         }
     }

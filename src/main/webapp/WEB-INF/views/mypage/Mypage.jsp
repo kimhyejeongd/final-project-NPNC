@@ -6,7 +6,7 @@
 <html>
   <head>
   	<meta charset="UTF-8">
-  	
+  	 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Mypage</title>
     <meta
@@ -136,150 +136,183 @@
       
       
       
-		<div class="main-panel">
-		    <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-		    <div class="container">
-		        <div class="page-inner">
-		            <div class="container-fluid mt--6">
-		                <div class="row">
-		                    <div class="col">
-		                        <div class="card card-round">
-		                            <div class="card-header">
-		                                <div class="card-head-row card-tools-still-right">
-		                                    <h4 class="card-title">My Page</h4>
-		                                    <div class="card-tools">
-		                                        <button class="btn btn-icon btn-link btn-primary btn-xs">
-		                                            <span class="fa fa-angle-down"></span>
-		                                        </button>
-		                                        <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card">
-		                                            <span class="fa fa-sync-alt"></span>
-		                                        </button>
-		                                        <button class="btn btn-icon btn-link btn-primary btn-xs">
-		                                            <span class="fa fa-times"></span>
-		                                        </button>
-		                                    </div>
-		                                </div>
-		                            </div>
-		                            <div class="card-body">
-		                                <div class="row">
-		                                    <div class="col-md-4">
-		                                        <div class="table-responsive table-hover table-sales">
-		                                            <img id="profileImage" src="${path}/${member.memberProfileImage}" alt="Profile Image" style="width:150px;height:150px;">
-		                                        </div>
-		                                    </div>
-		                                    <div class="col-md-8">
-		                                        <p>아이디: <span>${member.memberId}</span></p>
-		                                        <p>이름: <span>${member.memberName}</span></p>
-		                                        <p>
-		                                            주소: <span id="memberAddressText">${member.memberAddress}</span>
-		                                            <button class="btn btn-sm btn-primary" id="editAddressButton">수정</button>
-		                                            <input type="text" id="memberAddress" name="memberAddress" value="${member.memberAddress}" style="display:none;">
-		                                        </p>
-		                                        <p>핸드폰: <span>${member.memberPhone}</span></p>
-		                                        <p>
-		                                            e-mail: <span id="memberEmailText">${member.memberEmail}</span>
-		                                            <button class="btn btn-sm btn-primary" id="editEmailButton">수정</button>
-		                                            <input type="email" id="memberEmail" name="memberEmail" value="${member.memberEmail}" style="display:none;">
-		                                        </p>
-		                                        <p>
-		                                            비밀번호:
-		                                            <button class="btn btn-sm btn-primary" id="editPasswordButton">수정</button>
-		                                            <div id="passwordForm" style="display:none;">
-		                                                <p>이메일 인증이 필요합니다.</p>
-		                                                <input type="email" id="verificationEmail" placeholder="이메일 입력">
-		                                                <button class="btn btn-sm btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
-		                                                <div id="emailVerificationForm" style="display: none;">
-		                                                    <input type="text" id="emailVerificationCode" placeholder="인증 코드 입력">
-		                                                    <button class="btn btn-sm btn-secondary" id="verifyCodeButton">인증 코드 확인</button>
-		                                                </div>
-		                                                <div id="passwordChangeForm" style="display: none;">
-		                                                    <p>새 비밀번호: <input type="password" id="newPassword" name="newPassword"></p>
-		                                                    <button class="btn btn-sm btn-secondary" id="saveNewPasswordButton">비밀번호 저장</button>
-		                                                </div>
-		                                            </div>
-		                                        </p>
-		                                        <p>성별: <span>${member.memberGender}</span></p>
-		                                        <p>입사일: <span>${member.memberEnrollDate}</span></p>
-		                                        <p>퇴사일: <span>${member.memberLeaveDate}</span></p>
-		                                        <p>부서: <span>${member.departmentName}</span></p>
-		                                        <p>직급: <span>${member.jobKey}</span></p>
-		                                        <p>권한: <span>${member.accessKey}</span></p>
-		                                        <p>현황: <span>${member.memberState}</span></p>
 		
-		                                        <button id="saveChangesButton" class="btn btn-primary" style="display:none;">저장</button>
-		                                    </div>
-		                                </div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
-		</div>
+<div class="main-panel">
+    <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+    <div class="container">
+        <div class="page-inner">
+            <div class="container-fluid mt--6">
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-round">
+                            <div class="card-header">
+                                <div class="card-head-row card-tools-still-right">
+                                    <h4 class="card-title">My Page</h4>
+                                    <div class="card-tools">
+                                        <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                            <span class="fa fa-angle-down"></span>
+                                        </button>
+                                        <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card">
+                                            <span class="fa fa-sync-alt"></span>
+                                        </button>
+                                        <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                            <span class="fa fa-times"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="table-responsive table-hover table-sales">
+                                            <img id="profileImage" src="${path}/${member.memberProfileImage}" alt="Profile Image" style="width:150px;height:150px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p>아이디: <span>${member.memberId}</span></p>
+                                        <p>이름: <span>${member.memberName}</span></p>
+                                        <p>
+                                            주소: <span id="memberAddressText">${member.memberAddress}</span>
+                                            <button class="btn btn-sm btn-primary" id="editAddressButton">수정</button>
+                                            <input type="text" id="memberAddress" name="memberAddress" value="${member.memberAddress}" style="display:none;">
+                                            <div id="addressSearchBox" style="display:none;">
+                                                <input type="text" id="postcode" placeholder="우편번호">
+                                                <input type="text" id="roadAddress" placeholder="도로명주소">
+                                                <input type="text" id="jibunAddress" placeholder="지번주소">
+                                                <button class="btn btn-sm btn-secondary" id="searchAddressButton">주소 검색</button>
+                                                <button class="btn btn-sm btn-secondary" id="saveAddressButton">주소 저장</button>
+                                            </div>
+                                        </p>
+                                        <p>핸드폰: <span>${member.memberPhone}</span></p>
+                                        <p>
+                                            e-mail: <span id="memberEmailText">${member.memberEmail}</span>
+                                            <input type="email" id="memberEmail" name="memberEmail" value="${member.memberEmail}" style="display:none;">
+                                        </p>
+                                        <p>
+                                            비밀번호:
+                                            <button class="btn btn-sm btn-primary" id="editPasswordButton">수정</button>
+                                            <div id="passwordForm" style="display:none;">
+                                                <p>이메일 인증이 필요합니다.</p>
+                                                <input type="email" id="verificationEmail" placeholder="이메일 입력">
+                                                <button class="btn btn-sm btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
+                                                <div id="emailVerificationForm" style="display: none;">
+                                                    <input type="text" id="emailVerificationCode" placeholder="인증 코드 입력">
+                                                    <button class="btn btn-sm btn-secondary" id="verifyCodeButton">인증 코드 확인</button>
+                                                </div>
+                                                <div id="passwordChangeForm" style="display: none;">
+                                                    <p>새 비밀번호: <input type="password" id="newPassword" name="newPassword"></p>
+                                                    <button class="btn btn-sm btn-secondary" id="saveNewPasswordButton">비밀번호 저장</button>
+                                                </div>
+                                            </div>
+                                        </p>
+                                        <p>성별: <span>${member.memberGender}</span></p>
+                                        <p>입사일: <span>${member.memberEnrollDate}</span></p>
+                                        <p>퇴사일: <span>${member.memberLeaveDate}</span></p>
+                                        <p>부서: <span>${member.departmentName}</span></p>
+                                        <p>직급: <span>${member.jobKey}</span></p>
+                                        <p>권한: <span>${member.accessKey}</span></p>
+                                        <p>현황: <span>${member.memberState}</span></p>
+        
+                                        <button id="saveChangesButton" class="btn btn-primary" style="display:none;">저장</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-		<script>
-		    $(document).ready(function() {
-		        $('#editPasswordButton').click(function() {
-		            $('#passwordForm').toggle();
-		        });
-		
-		        $('#sendEmailVerificationButton').click(function() {
-		            var email = $('#verificationEmail').val();
-		            $.ajax({
-		                url: '/member/sendPasswordResetEmail',
-		                type: 'POST',
-		                contentType: 'application/json',
-		                data: JSON.stringify({ email: email }),
-		                success: function(response) {
-		                    if (response.success) {
-		                        alert('인증 이메일이 전송되었습니다.');
-		                        $('#emailVerificationForm').show();
-		                    } else {
-		                        alert('인증 이메일 전송에 실패했습니다.');
-		                    }
-		                }
-		            });
-		        });
-		
-		        $('#verifyCodeButton').click(function() {
-		            var code = $('#emailVerificationCode').val();
-		            $.ajax({
-		                url: '/member/verifyCode',
-		                type: 'POST',
-		                contentType: 'application/json',
-		                data: JSON.stringify({ code: code }),
-		                success: function(response) {
-		                    if (response.success) {
-		                        alert('인증 성공');
-		                        $('#passwordChangeForm').show();
-		                    } else {
-		                        alert('인증 실패');
-		                    }
-		                }
-		            });
-		        });
-		
-		        $('#saveNewPasswordButton').click(function() {
-		            var email = $('#verificationEmail').val();
-		            var newPassword = $('#newPassword').val();
-		            $.ajax({
-		                url: '/member/changePassword',
-		                type: 'POST',
-		                contentType: 'application/json',
-		                data: JSON.stringify({ email: email, newPassword: newPassword }),
-		                success: function(response) {
-		                    if (response.success) {
-		                        alert('비밀번호가 성공적으로 변경되었습니다.');
-		                        $('#passwordForm').hide();
-		                    } else {
-		                        alert('비밀번호 변경에 실패했습니다.');
-		                    }
-		                }
-		            });
-		        });
-		    });
-		</script>
+<script>
+    $(document).ready(function() {
+        $('#editPasswordButton').click(function() {
+            $('#passwordForm').toggle();
+        });
+
+        $('#sendEmailVerificationButton').click(function() {
+            var email = $('#verificationEmail').val();
+            $.ajax({
+                url: '/member/sendPasswordResetEmail',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ email: email }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('인증 이메일이 전송되었습니다.');
+                        $('#emailVerificationForm').show();
+                    } else {
+                        alert('인증 이메일 전송에 실패했습니다.');
+                    }
+                }
+            });
+        });
+
+        $('#verifyCodeButton').click(function() {
+            var code = $('#emailVerificationCode').val();
+            $.ajax({
+                url: '/member/verifyCode',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ code: code }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('인증 성공');
+                        $('#passwordChangeForm').show();
+                    } else {
+                        alert('인증 실패');
+                    }
+                }
+            });
+        });
+
+        $('#saveNewPasswordButton').click(function() {
+            var email = $('#verificationEmail').val();
+            var newPassword = $('#newPassword').val();
+            $.ajax({
+                url: '/member/changePassword',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ email: email, newPassword: newPassword }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('비밀번호가 성공적으로 변경되었습니다.');
+                        $('#passwordForm').hide();
+                    } else {
+                        alert('비밀번호 변경에 실패했습니다.');
+                    }
+                }
+            });
+        });
+
+        // 주소 수정 버튼 클릭 시
+        $('#editAddressButton').click(function() {
+            $('#addressSearchBox').toggle();
+        });
+
+        // 주소 검색 버튼 클릭 시
+        $('#searchAddressButton').click(function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 검색한 주소를 해당 인풋 필드에 넣습니다.
+                    $('#postcode').val(data.zonecode);
+                    $('#roadAddress').val(data.roadAddress);
+                    $('#jibunAddress').val(data.jibunAddress);
+                }
+            }).open();
+        });
+
+        // 주소 저장 버튼 클릭 시
+        $('#saveAddressButton').click(function() {
+            var address = $('#roadAddress').val() || $('#jibunAddress').val();
+            $('#memberAddressText').text(address);
+            $('#memberAddress').val(address);
+            $('#addressSearchBox').hide();
+        });
+    });
+</script>
+
 		      
 
 
