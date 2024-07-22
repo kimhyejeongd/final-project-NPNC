@@ -58,7 +58,7 @@ public class AdminAttendanceController {
 	public String adminAttendanceEditDetail(int attendanceEditKey,Model m) {
 		AttendanceEdit attendanceEdit=service.selectAttendanceEditByKey(attendanceEditKey);
 		m.addAttribute("attendanceEdit",attendanceEdit);
-		
+		System.out.println("admin : "+attendanceEdit);
 		return "admin/attendance/adminattendanceEditDetail";
 	}
 	
@@ -120,6 +120,21 @@ public class AdminAttendanceController {
 		
 	}
 	
+	@GetMapping("searchAdminAttendanceEdit")
+	public String searchAdminAttendanceEdit(
+			String searchKey,
+			String searchType,
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "10") int numPerpage,
+			Model m) {
+		Map<String,String> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<AttendanceEdit> attendanceEdit=service.searchAdminAttendanceEdit(searchMap,page);
+		int totaldata=service.searchAdminAttendanceEditCount(searchMap);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "searchAdminAttendanceEdit"));
+		m.addAttribute("attendanceEdit",attendanceEdit);
+		return "admin/attendance/adminattendanceeditlist";
+	}
 	
 	
 }

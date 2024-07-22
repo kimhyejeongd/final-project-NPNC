@@ -179,25 +179,36 @@
 		                              class="form-control"
 		                              id="attendanceEditOpinion"
 		                              name="attendanceEditOpinion"
-		                            ></textarea>
+		                              required
+		                              <c:if test="${not empty attendanceEdit.attendanceEditOpinion}">
+		                              	readonly
+		                              </c:if>
+		                            >${attendanceEdit.attendanceEditOpinion}</textarea>
 		                          </div>
 		           	</div>
-		           	
+		           		
 		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
 		           		<input type="hidden" id="attendanceKey" name="attendanceKey" value="${attendanceEdit.attendance.attendanceKey }">
 		           		
-		           		
-		           	<button
-					  	type="submit"
-					 	class="btn btn-success"
-		 				data-color="dark"
-					>승인</button>
+		          	<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+			           	<button
+						  	type="submit"
+						 	class="btn btn-success"
+			 				data-color="dark"
+						>승인</button>
+					</c:if>
 			</div>
 
-		</form>
+		</form>		
+					<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+					<div>
 	         		<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
 					반려</button>
-				
+					</div>
+					</c:if>
+					<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
+					닫기</button>
+					
 				<script>
 				const rejectionAttendanceEdit=(key)=>{
 					   if(confirm("반려 하시겠습니까?")){

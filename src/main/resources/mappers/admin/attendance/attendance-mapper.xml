@@ -121,7 +121,7 @@
 		<result column="ATTENDANCE_EDIT_AFTERTIME"  property="attendanceEditAfterTime"/>
 		<result column="ATTENDANCE_EDIT_AFTER_STATE"  property="attendanceEditAfterState"/>
 		<result column="ATTENDANCE_EDIT_REQUEST"  property="attendanceEditRequest"/>
-		<result column="ATTENDANCE_EDIT_OPNION"  property="attendanceEditOpinion"/>
+		<result column="ATTENDANCE_EDIT_OPINION"  property="attendanceEditOpinion"/>
 		<result column="ATTENDANCE_EDIT_STATE"  property="attendanceEditState"/>
 		<association property="attendance" resultMap="attendance.attendanceMap"/>
 	</resultMap>
@@ -147,7 +147,7 @@
             TO_TIMESTAMP(to_char(#{attendanceEditRequestDate},'yyyy-mm-dd') ||' '||#{attendanceEditAfterTime}, 'YYYY-MM-DD HH24:MI:SS'),
             #{attendanceEditAfterState},
             #{attendanceEditRequest},
-            ' ',
+            '',
             '처리중') 
 	</insert>
 
@@ -297,6 +297,52 @@
 			COUNT(ATTENDANCE_KEY)
 			FROM ATTENDANCE
 		    WHERE MEMBER_KEY=#{memberKey}
+	</select>
+	
+	<select id="searchAdminAttendanceEdit" parameterType="map" resultMap="attendanceEditMap">
+		SELECT
+		ATTENDANCE_EDIT_KEY, 
+		ATTENDANCE_KEY, 
+		ATTENDANCE_EDIT_MEMBER, 
+		ATTENDANCE_EDIT_DATE, 
+		ATTENDANCE_EDIT_REQUEST_DATE, 
+		ATTENDANCE_EDIT_STARTEND, 
+		ATTENDANCE_EDIT_BEFORETIME, 
+		ATTENDANCE_EDIT_BEFORE_STATE, 
+		ATTENDANCE_EDIT_AFTERTIME, 
+		ATTENDANCE_EDIT_AFTER_STATE, 
+		ATTENDANCE_EDIT_REQUEST, 
+		ATTENDANCE_EDIT_OPINION,
+		ATTENDANCE_EDIT_STATE
+		FROM ATTENDANCE_EDIT
+		<where>
+			<if test="searchType !=null and searchType!= ''">
+				ATTENDANCE_EDIT_STATE=#{searchType}
+			</if>
+			<if test="searchType !=null and searchType!= '' and searchKey !=null and searchKey != ''" >
+				AND
+			</if>
+			<if test="searchKey !=null and searchKey != ''">
+				ATTENDANCE_EDIT_MEMBER LIKE '%' || #{searchKey} || '%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchAdminAttendanceEditCount" parameterType="map" resultType="_int">
+		SELECT
+		COUNT(ATTENDANCE_EDIT_KEY) 
+		FROM ATTENDANCE_EDIT
+		<where>
+			<if test="searchType !=null and searchType!= ''">
+				ATTENDANCE_EDIT_STATE=#{searchType}
+			</if>
+			<if test="searchType !=null and searchType!= '' and searchKey !=null and searchKey != ''" >
+				AND
+			</if>
+			<if test="searchKey !=null and searchKey != ''">
+				ATTENDANCE_EDIT_MEMBER LIKE '%' || #{searchKey} || '%'
+			</if>
+		</where>
 	</select>
 	
 </mapper>

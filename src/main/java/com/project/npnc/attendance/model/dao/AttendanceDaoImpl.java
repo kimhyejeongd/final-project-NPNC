@@ -180,6 +180,21 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAdminAttendanceBymemberKeyCount",memberKey);
 	}
 
+	@Override
+	public List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session, Map<String, String> searchMap,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAdminAttendanceEdit",searchMap,rb);
+	}
+
+	@Override
+	public int searchAdminAttendanceEditCount(SqlSession session, Map<String, String> searchMap) {
+		
+		return session.selectOne("attendance.searchAdminAttendanceEditCount",searchMap);
+	}
+
+
+	
 	
 	
 	

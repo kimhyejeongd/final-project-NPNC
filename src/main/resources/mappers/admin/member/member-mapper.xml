@@ -53,7 +53,7 @@
 	<insert id="insertMember" parameterType="adminmember">
 		INSERT INTO MEMBER 
 			VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
-			'NPNC'||SEQ_MEMBER.CURRVAL,'NPNC'||TO_CHAR(#{memberBirthdate}, 'MMDD'),#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
+			'NPNC'||SEQ_MEMBER.CURRVAL,#{memberPw},#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
 			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate},'basicPicture')
 	</insert>
 	

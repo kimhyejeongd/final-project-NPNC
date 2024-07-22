@@ -1,10 +1,9 @@
 package com.project.npnc.admin.member.controller;
 
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +32,7 @@ public class AdminMemberController {
 	private final AdminMemberService service;
 	private final DepartmentService deptService;
 	private final JobService jobService;
-//	private final BCryptPasswordEncoder pwencoder;
+	private final BCryptPasswordEncoder pwencoder;
 	private final PageFactory pageFactory;
 
 	
@@ -78,8 +77,13 @@ public class AdminMemberController {
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
 		log.info("{}",mem);
 		//패스워드 암호화
-//		String encodePw=pwencoder.encode(mem.getMemberPw());
-//		mem.setMemberPw(encodePw);
+		SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+		String monthDay = sdf.format(mem.getMemberBirthdate());
+//		String pw="NPNC"+monthDay;
+		String pw="1234";
+		System.out.println(pw);
+		String encodePw=pwencoder.encode(pw);
+		mem.setMemberPw(encodePw);
 		
 		int result=service.insertMember(mem);
 		String msg,loc;
