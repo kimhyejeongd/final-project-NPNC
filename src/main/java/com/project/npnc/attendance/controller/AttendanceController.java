@@ -77,15 +77,14 @@ public class AttendanceController{
 	@PostMapping("/startattendance")
 	public ResponseEntity<Map<String,String>> startAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-//		LocalDate today=LocalDate.now();
-//		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
-//		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+		LocalDate today=LocalDate.now();
+		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
 		Map<String,String> response =new HashMap<>();
-//		String msg;
-//		if(attendanceCheck>0) {
-//			msg="오늘 이미 출근 등록이 완료되었습니다";+
-//			
-//		}else {
+		String msg;
+		if(attendanceCheck>0) {
+			msg="오늘 이미 출근 등록이 완료되었습니다";
+		}else {
 			LocalTime attendanceStart=LocalTime.now();
 			int attendanceHour=attendanceStart.getHour();
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -106,6 +105,7 @@ public class AttendanceController{
 		attendanceService.startAttendance(a); //insert
 		response.put("attendanceStart",attendanceStartTime);
 		response.put("msg","출근완료!");
+		}
 		return ResponseEntity.ok(response);
 		
 	}
@@ -155,7 +155,7 @@ public class AttendanceController{
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll.do"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());

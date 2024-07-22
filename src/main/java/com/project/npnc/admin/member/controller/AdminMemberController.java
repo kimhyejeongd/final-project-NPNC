@@ -1,5 +1,6 @@
 package com.project.npnc.admin.member.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class AdminMemberController {
 	private final AdminMemberService service;
 	private final DepartmentService deptService;
 	private final JobService jobService;
-//	private final BCryptPasswordEncoder pwencoder;
+	private final BCryptPasswordEncoder pwencoder;
 	private final PageFactory pageFactory;
 
 	
@@ -76,8 +77,13 @@ public class AdminMemberController {
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
 		log.info("{}",mem);
 		//패스워드 암호화
-//		String encodePw=pwencoder.encode(mem.getMemberPw());
-//		mem.setMemberPw(encodePw);
+		SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+		String monthDay = sdf.format(mem.getMemberBirthdate());
+//		String pw="NPNC"+monthDay;
+		String pw="1234";
+		System.out.println(pw);
+		String encodePw=pwencoder.encode(pw);
+		mem.setMemberPw(encodePw);
 		
 		int result=service.insertMember(mem);
 		String msg,loc;
@@ -144,5 +150,19 @@ public class AdminMemberController {
 		return "common/msg";
 	}
 	
+	@GetMapping("/searchMember")
+	public String searchMember(
+			String searchKey,
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,			
+			Model m
+			){
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		int totaldata=service.searchMemberCount(searchKey);
+		List<AdminMember> members= service.searchMember(searchKey, page);
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "searchMember"));
+		m.addAttribute("members",members);
+		return "admin/member/memberlist";
+	}
 	
 }

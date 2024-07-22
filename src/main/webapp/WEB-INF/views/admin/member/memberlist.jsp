@@ -11,14 +11,45 @@
 </head>
 <body>
 	
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
-	<div>
+ 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
+ 	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+
+		<div>	
+			<br><br><br><br>
+		    <div>
+		   		<h4 class="card-title">전체사원관리</h4>
+			</div>
+			<br>
 		<div class="col-md-12">
 		                <div class="card">
-		                  <div class="card-header">
-		                    <h4 class="card-title">전체사원관리</h4>
-		                  </div>
 		                  <div class="card-body">
+		                  <form action="${path }/admin/member/searchMember">
+		                   <nav
+					        class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+					       >
+<!-- 					              <select class="form-select input-fixed" name="" >
+					              	<option>1</option>
+					              	<option>2</option>
+					              	<option>3</option>
+					              </select> -->
+		                          <div class="input-group">
+				                    <div class="input-group-prepend">
+				                      <button type="submit" class="btn btn-search pe-1">
+				                        <i class="fa fa-search search-icon"></i>
+				                      </button>
+				                    </div>
+				                    <input
+				                      type="text"
+				                      id="searchKey"
+				                      name="searchKey"
+				                      placeholder="Search name..."
+				                      class="form-control"
+				                    />
+				                  </div>          
+				               </nav>
+				              </form>
+				              
 		                    <div class="table-responsive">
 		                      <table
 		                        id="multi-filter-select"
@@ -36,8 +67,7 @@
 		                        </thead>
 		                        <tbody>	
 		                        <c:if test="${not empty members }">
-		                        	<c:forEach var="m" items="${members }">
-				                        <a href="location.assign('${path}/admin/member/updatemember.do')">
+		                        	<c:forEach var="m" items="${members }">		                 
 				                          <tr>
 				                            <td>${m.memberId }</td>
 				                            <td>${m.memberName }</td>
@@ -46,13 +76,11 @@
 				                            <td>${m.memberTell }</td>
 				                            <td>${m.memberState }</td>
 				                            <td>
-				                            	<button onclick="updateMember('${m.memberKey}');" class="btn btn-dark">수정</button>
-				                            </td>
-				                            <td>
-				                            	<button onclick="deleteMember('${m.memberKey}');" class="btn btn-dark">삭제</button>
+				                            	<button onclick="updateMember('${m.memberKey}');" class="btn btn-dark btn-round">수정</button>
+				                            	 &ensp;&ensp;&ensp;
+				                            	<button onclick="deleteMember('${m.memberKey}');" class="btn btn-dark btn-round">삭제</button>
 				                            </td>
 				                          </tr>
-				                       	</a>
 			                        </c:forEach>
 		                         </c:if>
 		                         <c:if test="${empty members }">
@@ -65,11 +93,13 @@
 		                        </tbody>
 		                      </table>
 		                    </div>
-					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')" class="btn btn-success">등록</button>
+					  			<button onclick="location.assign('${path}/admin/member/insertmember.do')" class="btn btn-success btn-round" >등록</button>
 		                  </div>
 		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
+			</div>
+				<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 			</div>
 			<script>
 				

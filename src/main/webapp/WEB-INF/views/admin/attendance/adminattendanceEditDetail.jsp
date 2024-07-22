@@ -12,7 +12,7 @@
 
 	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
 				
-				<form action="${path}/admin/attendance/updateattendanceEdit" method="post">
+				<form action="${path}/admin/attendance/updateAttendance" method="post">
 				<div class="form-group">
 					<div class="form-group form-inline">
 		                          <label
@@ -179,32 +179,42 @@
 		                              class="form-control"
 		                              id="attendanceEditOpinion"
 		                              name="attendanceEditOpinion"
-
-		                            ></textarea>
+		                              required
+		                              <c:if test="${not empty attendanceEdit.attendanceEditOpinion}">
+		                              	readonly
+		                              </c:if>
+		                            >${attendanceEdit.attendanceEditOpinion}</textarea>
 		                          </div>
 		           	</div>
-		           	
-		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
 		           		
-		           	<button
-					  	type="submit"
-					 	class="btn btn-success"
-		 				data-color="dark"
-					>승인</button>
-					
-					<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
-					반려</button>
+		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
+		           		<input type="hidden" id="attendanceKey" name="attendanceKey" value="${attendanceEdit.attendance.attendanceKey }">
+		           		
+		          	<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+			           	<button
+						  	type="submit"
+						 	class="btn btn-success"
+			 				data-color="dark"
+						>승인</button>
+					</c:if>
 			</div>
 
-		</form>
-	         
-				
+		</form>		
+					<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+					<div>
+	         		<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
+					반려</button>
+					</div>
+					</c:if>
+					<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
+					닫기</button>
+					
 				<script>
 				const rejectionAttendanceEdit=(key)=>{
-					   if(confirm("정말 삭제 하시겠습니까?")){
+					   if(confirm("반려 하시겠습니까?")){
 				           let form = document.createElement("form");
 				           form.setAttribute("method", "post");
-				           form.setAttribute("action", "${path}/attendance/deleteAttendanceEdit");
+				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
 				
 				           let $key = document.createElement("input");
 				           $key.setAttribute("type", "hidden");
@@ -212,11 +222,19 @@
 				           $key.setAttribute("value", key);
 				 
 				           form.appendChild($key);
-				
+							
+				           let opinion = document.getElementById("attendanceEditOpinion").value;
+				           let $opinion = document.createElement("input");
+				           $opinion.setAttribute("type", "hidden");
+				           $opinion.setAttribute("name", "attendanceEditOpinion");
+				           $opinion.setAttribute("value", opinion);
+				           form.appendChild($opinion);
+				           
 				           document.body.appendChild(form);
 				           form.submit();
 					   }else{
-						   alert("삭제가 취소되었습니다.");
+						   alert("반려가 취소되었습니다.");
+						   location.replace("${path}/admin/attendance/selectAdminAttendanceEditAll");
 					   }
 					   
 					}
