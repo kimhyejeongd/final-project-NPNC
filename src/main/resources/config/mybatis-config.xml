@@ -31,5 +31,6 @@
 	     <typeAlias type="com.project.npnc.document.model.dto.ApproverLineStorage" alias="approverLineStorage"/>
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteFileDto" alias="noteFileDto"/>
+		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>
 	</typeAliases>
 </configuration>

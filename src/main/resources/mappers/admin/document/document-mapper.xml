@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admindoc">
+	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
+		  SELECT * FROM ER_STORAGE_FOLDER ORDER BY ER_FOLDER_GROUP DESC, ER_FOLDER_LEVEL ASC
+	</select>
+	
+    <resultMap id="StorageFolder" type="storageFolder">
+        <id property="folderKey" column="ER_FOLDER_KEY" />
+        <result property="folderName" column="ER_FOLDER_NAME" />
+        <result property="parentFolderKey" column="ER_FOLDER_REF" />
+        <result property="folderLevel" column="ER_FOLDER_LEVEL" />
+        <result property="useYn" column="ER_FOLDER_USE_YN" />
+    </resultMap>
+</mapper>
