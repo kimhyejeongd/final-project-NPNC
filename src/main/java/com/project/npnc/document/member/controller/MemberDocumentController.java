@@ -88,6 +88,14 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
+	@GetMapping("/list/draft")
+	public void draftDocs(Model m){
+		log.debug("----임시보관 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectDraftDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
 	@GetMapping("/list/waiting")
 	public void waitingDoc(Model m){
 		log.debug("----결재 대기 문서 조회----");
@@ -241,6 +249,43 @@ public class MemberDocumentController {
 	@GetMapping("/doc4")
 	public void doc4Write() {
 	}
+	//문서 임시저장
+	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
+	public ResponseEntity<Map<String,Object>> insertDraftDoc(
+			String msg, Model m, Document doc, String html, int form,
+			@RequestParam(value="file")MultipartFile[] file
+			){
+		Member user = getCurrentUser();
+		log.debug("{}", html);
+		log.debug("{}", user);
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+		
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		log.debug("{}", doc);
+		
+		int result=0;
+		Map<String,Object> response = new HashMap<>();
+		
+		//문서 등록
+		try { 
+			log.debug(user.getMemberName()+ "사원의 문서 임시저장");
+			result = serv.insertDraftDoc(doc, file, html);
+		} catch (Exception e) {
+			log.debug("문서 임시저장 실패");
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 임시저장에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		
+		//기안, 결재자 등록 성공시
+		response.put("status", "success");
+		response.put("message", "문서 등록 완료");
+		
+		return ResponseEntity.ok(response);
+	}
 	
 	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
@@ -304,6 +349,18 @@ public class MemberDocumentController {
 		int result=0;
 		try {
 			result = serv.retrieveDoc(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	@PostMapping("/delete")
+	@ResponseBody
+	public int deleteDraftDoc(String serial) {
+		log.debug("------"+serial + " 임시 보관 문서 삭제 요청------");
+		int result=0;
+		try {
+			result = serv.deleteDraftDoc(serial);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

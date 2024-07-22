@@ -25,7 +25,12 @@
         overflow-y: scroll; /* 세로 스크롤만 */
         overflow-x: auto;  /* 가로 스크롤도 필요할 경우 */
      }
+     /* a:hover{
+     	cursor: pointer;
+     	text-decoration: underline !important;
+     } */
  </style>
+ <script src="${path}/resources/jh/js/docDetail.js"></script>
 <body>
 
 	<div class="wrapper">
@@ -115,9 +120,20 @@
 			    </div>
 	          	<c:if test="${l.files[0].fileKey ne 0}">
 			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
+		          <label for="exampleFormControlFile1"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
-		          	<span style="font-size: larger;">첨부파일 있음</span>
+	          		<c:forEach items="${l.files }" var="f" varStatus="vs">
+					  <div class="m-0 p-2 d-flex align-items-center justify-content-between" id="approval1" style="width: 100%; font-size: larger; text-align: left; border-radius: 15px;">
+					  	<div class="d-flex align-items-center">
+						  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${f.fileOrderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+						  	<span href="#" id="approvers[${vs.index }].fileOriName" style="color: black;">${f.fileOriName }</span>
+					  	</div>
+					  	<div class="d-flex">
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+					  	</div>
+					  </div>
+					</c:forEach>
 		          </div>
 		        </div>
 	          	</c:if>
@@ -130,7 +146,7 @@
 			        </div>
 		        </div>
                   <div class="p-3 text-center">
-                  		<button class="btn btn-primary" id="closeBtn" type="button">닫기</button>
+                  		<button class="btn btn-primary" id="closeBtn" type="button">이전으로</button>
                   </div>
                 </div>
               </div>
@@ -141,8 +157,7 @@
        </div>
       </div>
 <script>
-$(document).ready();
-//TODO 재기안
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
 </body>
 </html>

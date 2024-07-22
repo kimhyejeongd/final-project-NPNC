@@ -158,8 +158,8 @@
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
 		 <!-- select ER_DOC_KEY, ER_DOC_SERIAL_KEY, ER_DOC_WRITER, ER_DOC_TITLE, ER_DOC_CREATE_DATE, ER_DOC_EMERGENCY_YN, ER_DOC_DELETE_YN, ER_DOC_STOARGE, ER_DOC_FILENAME. ER_DOC_STATE. ER_DOC_STATE_UPDATE_DATE, ER_DOC_LAST_UPDATER, ER_DOC_LAST_UPDATE_REASON from er_document -->
 		SELECT    
-		 	ER_DOC_SERIAL_KEY,
 		 	ER_DOC_KEY,
+		 	ER_DOC_SERIAL_KEY,
 		 	ER_DOC_WRITER,
 		 	ER_DOC_TITLE,
 		 	ER_DOC_CREATE_DATE,
@@ -186,21 +186,68 @@
 		 	DEPARTMENT_KEY,
 		 	DEPARTMENT_NAME
 		FROM      
-		 	er_document d
-		left join 
-			er_aprover ea USING(er_doc_serial_key)
+		 	ER_DOCUMENT d
+		LEFT JOIN
+			ER_APROVER ea USING(ER_DOC_SERIAL_KEY)
 		JOIN
-			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+			JOB j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
 		JOIN
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
 		WHERE     
-			er_doc_writer = #{no}
+			ER_DOC_WRITER = #{no}
 		AND       
-			er_doc_state = '처리중'
+			ER_DOC_STATE = '처리중'
 		ORDER BY  
-			er_doc_emergency_yn DESC,
+			ER_DOC_EMERGENCY_YN DESC,
 			ER_APPROVAL_DATE desc,
-			er_approval_orderby
+			ER_APPROVAL_ORDERBY
+	</select>
+	<!-- 로그인 사원의 임시저장 문서 조회 -->
+	<select id="selectDraftDocs" resultMap="documentMap" parameterType="_int">
+		SELECT    
+		 	ER_DOC_KEY,
+		 	ER_DOC_SERIAL_KEY,
+		 	ER_DOC_WRITER,
+		 	ER_DOC_TITLE,
+		 	ER_DOC_CREATE_DATE,
+		 	ER_DOC_EMERGENCY_YN,
+		 	ER_DOC_DELETE_YN,
+		 	ER_DOC_STOARGE,
+		 	ER_DOC_FILENAME,
+		 	ER_DOC_STATE,
+		 	ER_DOC_STATE_UPDATE_DATE,
+		 	ER_DOC_LAST_UPDATER,
+		 	ER_DOC_LAST_UPDATE_REASON,
+		 	ER_APPROVER_KEY,
+		 	MEMBER_KEY,
+		 	ER_APPROVER_NAME,
+		 	ER_APPROVER_TEAM_KEY,
+		 	ER_APPROVER_JOB_KEY,
+		 	ER_APPROVAL_CATEGORY,
+		 	ER_APPROVAL_STATE,
+		 	ER_APPROVAL_OPINION,
+		 	ER_APPROVAL_DATE,
+		 	ER_APPROVAL_ORDERBY,
+		 	JOB_KEY,
+		 	JOB_NAME,
+		 	DEPARTMENT_KEY,
+		 	DEPARTMENT_NAME
+		FROM      
+		 	ER_DOCUMENT d
+		LEFT JOIN
+			ER_APROVER ea USING(ER_DOC_SERIAL_KEY)
+		JOIN
+			JOB j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+		JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+		WHERE     
+			ER_DOC_WRITER = #{no}
+		AND       
+			ER_DOC_STATE = '임시저장'
+		ORDER BY  
+			ER_DOC_EMERGENCY_YN DESC,
+			ER_APPROVAL_DATE DESC,
+			ER_APPROVAL_ORDERBY
 	</select>
 	<!-- 로그인 사원의 결재 대기 문서 조회 -->
 	<select id="selectWaitingDocs" resultMap="documentMap" parameterType="_int">
@@ -282,7 +329,7 @@
 			ea.er_approval_orderby
 	</select>
 	<!-- 문서 상세보기 -->
-	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
+	<select id="selectDocById" parameterType="string" resultMap="documentMap">
 		SELECT 
 			d.ER_DOC_KEY,
 			d.ER_DOC_SERIAL_KEY,
@@ -345,6 +392,69 @@
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
 		WHERE  d.ER_DOC_KEY = #{docId} 
 	</select>
+	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
+		SELECT 
+			d.ER_DOC_KEY,
+			d.ER_DOC_SERIAL_KEY,
+			d.ER_DOC_WRITER,
+			d.ER_DOC_TITLE,
+			d.ER_DOC_CREATE_DATE,
+			d.ER_DOC_EMERGENCY_YN,
+			d.ER_DOC_DELETE_YN,
+			d.ER_DOC_STOARGE,
+			d.ER_DOC_FILENAME, 
+			d.ER_DOC_STATE, 
+			d.ER_DOC_STATE_UPDATE_DATE,
+			d.ER_DOC_LAST_UPDATER,
+			d.ER_DOC_LAST_UPDATE_REASON,
+			f.ER_FILE_KEY,
+			f.ER_FILE_ORI_NAME,
+			f.ER_FILE_RENAME,
+			f.ER_DOC_KEY,
+			f.ER_DOC_SERIAL_KEY,
+			f.ER_FILE_SIZE,
+			f.ER_FILE_FORM,
+			f.ER_FILE_UPLOAD_DATE,
+			f.ER_FILE_ORDERBY,
+			f.ER_FILE_UPLODAER,
+			f.ER_FILE_UPDATE_DATE,
+			f.ER_FILE_UPDATER,
+			f.ER_FILE_UPDATE_REASON,
+			ea.ER_APPROVER_KEY,
+			ea.MEMBER_KEY,
+			ea.ER_APPROVER_NAME,
+			ea.ER_APPROVER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			ea.ER_APPROVER_JOB_KEY,
+			j.JOB_NAME,
+			ea.ER_APPROVAL_CATEGORY,
+			ea.ER_APPROVAL_STATE,
+			ea.ER_APPROVAL_OPINION,
+			ea.ER_DOC_SERIAL_KEY,
+			ea.ER_APPROVAL_DATE,
+			ea.ER_APPROVAL_ORDERBY,
+			er.ER_REFERER_KEY,
+			er.ER_DOC_SERIAL_KEY,
+			er.ER_REFERER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			er.ER_REFERER_JOB_KEY,
+			j.JOB_NAME,
+			er.ER_REFERER_NAME,
+			er.MEMBER_KEY
+		FROM   
+			er_document d
+        JOIN 
+       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		LEFT JOIN
+      		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+		JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+		JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+        LEFT JOIN 
+        	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
+		WHERE  d.ER_DOC_SERIAL_KEY = #{serial} 
+	</select>
 	<!-- 기안 -->
 	<insert id="insertDoc" parameterType="document">
 		INSERT INTO 
@@ -399,6 +509,53 @@
 				FROM   dual 
 		</selectKey>
 	</insert>
+	<!-- 문서 임시저장 -->
+	<insert id="insertDraftDoc" parameterType="document">
+		INSERT INTO 
+			er_document 
+			(
+				ER_DOC_KEY,
+				ER_DOC_SERIAL_KEY,
+				ER_DOC_WRITER,
+				ER_DOC_TITLE,
+				ER_DOC_CREATE_DATE,
+				ER_DOC_EMERGENCY_YN,
+				ER_DOC_DELETE_YN,
+				ER_DOC_STOARGE,
+				ER_DOC_FILENAME, 
+				ER_DOC_STATE, 
+				ER_DOC_STATE_UPDATE_DATE,
+				ER_DOC_LAST_UPDATER,
+				ER_DOC_LAST_UPDATE_REASON
+			)
+		VALUES
+            (
+              seq_er_doc_key.NEXTVAL,
+              To_char(SYSDATE, 'YYMMDD')
+                        || '-'
+                        || #{erDocSerialKey}
+                        || '-'
+                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.NEXTVAL),
+              ${erDocWriter},
+              #{erDocTitle},
+              DEFAULT,
+              #{erDocEmergencyYn},
+              DEFAULT,
+              #{erDocStorage},
+              #{erDocSerialKey},
+              '임시저장',
+              NULL,
+              NULL,
+              NULL
+            )
+        <!-- 등록 문서의 시리얼키 반환 -->
+		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
+			SELECT 
+				'TEMP'
+			FROM   
+				dual 
+		</selectKey>
+	</insert>
 	<update id="updateDocFilename" parameterType="string">
 		UPDATE 
 			er_document
@@ -421,9 +578,9 @@
 	
 	<!-- 첨부파일 -->
 	<!-- 존재여부 확인 -->
-	<select id="selectDocFile" parameterType="string" resultType="_int">
+	<select id="selectDocFile" parameterType="string" resultMap="docFileMap">
 		SELECT 
-			Count(*)
+			*
 		FROM   
 			er_file
 		WHERE  
@@ -657,5 +814,41 @@
         	FROM 
         		DUAL
         </selectKey> -->
+	</insert>
+	<!-- 전자문서 임시저장 첨부파일 등록 -->
+	<insert id="insertDraftDocFile" parameterType="docFile">
+		INSERT INTO 
+			er_file
+			(
+			ER_FILE_KEY,
+			ER_FILE_ORI_NAME,
+			ER_FILE_RENAME,
+			ER_DOC_KEY,
+			ER_DOC_SERIAL_KEY,
+			ER_FILE_SIZE,
+			ER_FILE_FORM,
+			ER_FILE_UPLOAD_DATE,
+			ER_FILE_ORDERBY,
+			ER_FILE_UPLODAER,
+			ER_FILE_UPDATE_DATE,
+			ER_FILE_UPDATER,
+			ER_FILE_UPDATE_REASON
+			)
+		VALUES
+            (
+	         SEQ_ER_FILE_KEY.NEXTVAL,
+	         #{fileOriName},
+	         #{fileRename},
+	         #{erDocKey},
+	         #{erDocSerialKey},
+	         #{fileSize},
+	         #{fileForm},
+	         default,
+	         #{fileOrderby},
+	         #{fileUploader},
+	         null,
+	         null,
+	         null
+            )
 	</insert>
 </mapper>

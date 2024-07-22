@@ -170,7 +170,7 @@
 			        </div>
 	                  <div class="p-3 text-center">
 	                  		<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
-	                  		<button class="btn btn-primary ms-2" id="formsearchbtn" type="button">임시저장</button>
+	                  		<button class="btn btn-primary ms-2" id="savedraftbtn" type="button">임시저장</button>
 	                  </div>
                </form>
 		        </div>
@@ -302,7 +302,7 @@ $(document).ready(function() {
 		});
 	});
 	// TODO: 임시저장 버튼 클릭 시 모달 띄우기 구현
-	$("#formsearchbtn").click(function() {
+	$("#savedraftbtn").click(function() {
 		Swal.fire({
 			title: '임시저장',
 			text: '작성중인 문서 내용이 저장됩니다.',
@@ -316,7 +316,31 @@ $(document).ready(function() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				// 임시저장 버튼이 클릭되었을 때 처리할 로직
-				Swal.fire("", "임시저장되었습니다.", "success");
+				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+				// 폼 데이터를 수집
+		        let formData = new FormData(document.getElementById("docForm"));
+		     	// AJAX로 폼 데이터를 전송
+		        fetch(sessionStorage.getItem("path")+'/document/savedraft', {
+		            method: 'POST',
+		            body: formData,
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            if (data.status === "success") {
+		                alert(data.message);
+		                // 성공 시 페이지 리다이렉트
+		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
+		                window.location.href = sessionStorage.getItem("path")+"/document/home";
+		            } else {
+		                alert(data.message);
+		            }
+		        })
+		        .catch(error => {
+		            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+		        });
 			}
 		});
 	});

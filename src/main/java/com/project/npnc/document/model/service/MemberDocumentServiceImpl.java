@@ -59,6 +59,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.selectInprocessDocs(session, no);
 	}
 	@Override
+	public List<Document> selectDraftDocs(int no) {
+		return dao.selectDraftDocs(session, no);
+	}
+	@Override
 	public List<Document> selectWaitingDocs(int no) {
 	    List<Document> result = dao.selectWaitingDocs(session, no);
 //	     Document 리스트에서 본인이 이미 승인한 결과 제거
@@ -137,6 +141,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    				.build();
 	            
 	            //db insert
+	    		//er_document erDocKey selectKey
 	            result = dao.insertDocFile(session, docFile);
 	            log.debug("{}",docFile);
 	            //Document 객체의 files 리스트에 추가
@@ -164,7 +169,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	        log.debug("[3] 참조인 insert 성공");
 	    }
 	    
-    	fileUpload("dochtml",d.getErDocSerialKey(), html);
+	    result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");
     	}
@@ -174,27 +179,170 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	@Transactional	
-	public int retrieveDoc(String docKey) throws Exception {
-		int result = dao.retrieveDoc(session, docKey); //전자문서 테이블 상태변경
-		if(result>0) {
-			log.debug("[1]문서 회수 완료");
-//			//첨부파일 있는지 확인
-			int fileCk = dao.selectDocFile(session, docKey);
-			if(fileCk > 0) {
-				//첨부파일 상태 
-				log.debug("첨부파일 있음");
-				result = dao.deleteDocFile(session, docKey);
-				if(result>0) {
-					log.debug("[2]첨부파일 삭제 완료");
-				}else {
-					throw new Exception("[2]첨부파일 삭제 실패");
+	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
+//		d.setErDocFilename(d.getErDocSerialKey()+".html"); //문서파일명 설정
+		
+		int result = dao.insertDraftDoc(session, d);
+		if (result <= 0) {
+			throw new Exception("[1]draft 문서 insert 실패");
+		}
+		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocKey());
+		
+		//첨부파일 있으면 파일 insert 및 업로드
+		if (file.length > 0 || file != null) {
+			log.debug("첨부파일 있음");
+			int count=0;
+			DocFile docFile = null;
+			List<DocFile> list = new ArrayList<>();
+			
+			for(MultipartFile f : file) {
+				count++;
+				log.debug("파일 이름: " + f.getOriginalFilename());
+				// 고유한 파일 이름 생성 (UUID 사용)
+				String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
+				
+				// 절대 경로 설정
+				String upload = Paths.get(uploadDir+"/docfile").toAbsolutePath().toString();
+				
+				// 파일 저장 경로 설정
+				Path filePath = Paths.get(upload, fileName);
+				// 부모 디렉토리가 존재하지 않으면 생성
+				File parentDir = filePath.getParent().toFile();
+				if (!parentDir.exists()) {
+					parentDir.mkdirs(); // 디렉토리 생성
+				}	            
+				// 파일 저장
+				Files.copy(f.getInputStream(), filePath);
+				// 파일 메타 데이터 생성
+				// 파일을 DocFile 객체로 변환
+				docFile = docFile.builder()
+						.fileOriName(f.getOriginalFilename())
+						.fileRename(fileName)
+						.erDocKey(d.getErDocKey())
+						.erDocSerialKey(d.getErDocSerialKey())
+						.fileSize(Long.toString(f.getSize()))
+						.fileForm(f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".")+1))
+						.fileOrderby(count)
+						.fileUploader(d.getErDocWriter())
+						.build();
+				
+				//db insert
+				result = dao.insertDraftDocFile(session, docFile);
+				log.debug("{}",docFile);
+				//Document 객체의 files 리스트에 추가
+				//list.add(docFile);
+				if(result <= 0) {
+					throw new Exception("파일 insert 실패 : " + count + "/" + file.length);
 				}
-			}else {
-				log.debug("첨부파일 없음");
+				log.debug("파일 저장 성공 : " + count + "/" + file.length);
+				d.setFiles(list);
 			}
-		}else {
+		}
+		
+		result = insertApprovers(d);
+		if (result <= 0) {
+			throw new Exception("[2] 결재자 insert 실패");
+		}
+		log.debug("[2] 결재자 insert 성공");
+		
+		if (d.getReferers().size() > 0) {
+			log.debug("참조인 있음");
+			result = insertReferers(d);
+			if (result <= 0) {
+				throw new Exception("[3] 참조인 insert 실패");
+			}
+			log.debug("[3] 참조인 insert 성공");
+		}
+		
+		result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
+		if(result <= 0) {
+			throw new Exception("[4] 문서 html 등록 실패");
+		}
+		log.debug("[4] 문서 html 등록 성공");
+		
+		return result;
+	}
+	@Override
+	@Transactional	
+	public int retrieveDoc(String docKey) throws Exception {
+		//전자문서 테이블 상태변경 (처리중 -> 회수)
+		int result = dao.retrieveDoc(session, docKey); 
+		//selectKey "fileRename"
+		if(result<=0) {
 			throw new Exception("[1]문서 회수 실패");
 		}
+		log.debug("[1]문서 회수 완료");
+		
+		//첨부파일 있는지 확인
+		List<DocFile> files = dao.selectDocFile(session, docKey);
+		if(files.size() > 0) {
+			log.debug("첨부파일 있음");
+			int count =0;
+			
+			//db 삭제
+			result = dao.deleteDocFile(session, docKey);
+			if(result<=0) {
+				throw new Exception("[2]첨부파일 삭제 실패");
+			}
+			log.debug("[2]첨부파일 삭제 완료");
+			
+			//서버에서 삭제
+			for(DocFile f : files) {
+				count++;
+				result=fileRemove("docfile", f.getFileRename());
+				if(result<=0) {
+					throw new Exception("[2]첨부파일 삭제 실패" + count + "/" + files.size());
+				}
+			}
+		}
+		return result;
+	}
+	@Override
+	@Transactional	
+	public int deleteDraftDoc(String serial) throws Exception {
+		//문서 전체 정보 가져오기
+		Document d = dao.selectDocBySerial(session, serial);
+		log.debug("{}", d);
+		
+		//전자결재 테이블 삭제
+		int result = dao.deleteDraftDoc(session, serial);
+		if(result<=0) {
+			throw new Exception("[1]임시보관 문서 삭제 실패");
+		}
+		log.debug("[1]임시보관 문서 삭제 완료");
+		
+		
+		//첨부파일 있는지 확인
+		List<DocFile> files = dao.selectDocFile(session, serial);
+		if(files.size() > 0) {
+			log.debug("첨부파일 있음");
+			int count = 0;
+			result = dao.deleteDocFile(session, serial);
+			if(result<=0) {
+				throw new Exception("[2]첨부파일 삭제 실패");
+			}
+			log.debug("[2]첨부파일 삭제 완료");
+			
+			//서버에서 삭제
+			for(DocFile f : files) {
+				count++;
+				result=fileRemove("dochtml", d.getErDocTitle()+".html");
+				if(result<=0) {
+					throw new Exception("[2]첨부파일 삭제 실패" + count + "/" + files.size());
+				}
+			}
+			
+		}else {
+			log.debug("첨부파일 없음");
+		}
+		
+		result = fileRemove("dochtml", d.getErDocTitle()+ ".html");
+		if(result<=0) {
+			throw new Exception("[3]임시보관 문서 html 삭제 실패");
+		}
+		log.debug("[3]임시보관 문서 html 삭제 완료");
+		//결재자 있으면 삭제
+		//참조인 있으면 삭제
 		return result;
 	}
 	@Override
@@ -278,7 +426,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.deleteDocFile(session, docSerial);
 	}
 	//html파일로 문서 저장 메소드
-	private int fileUpload(String dir, String title, String content) throws IOException {
+	private int htmlFileUpload(String dir, String title, String content) throws IOException {
 		String path = uploadDir+ dir + "/" +title + ".html";
 		log.debug("문서 저장 경로 : " + path);
 			File file = new File(path);
@@ -292,5 +440,28 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
             writer.write(content);
             writer.close();
             return 1;
+	}
+	//파일 삭제 메소드
+	private int fileRemove(String dir, String title) throws IOException {
+		String path = uploadDir + dir + "/" +title;
+		log.debug("문서 경로 : " + path);
+		File file = new File(path);
+		
+		if (file.exists()) {
+	        if (file.delete()) {
+	            log.debug("파일 삭제 성공: " + path);
+	            return 1; // 성공
+	        } else {
+	            log.debug("파일 삭제 실패: " + path);
+	            return 0; // 실패
+	        }
+	    } else {
+	        log.debug("파일이 존재하지 않음: " + path);
+	        return -1; // 파일 없음
+	    }
+	}
+	@Override
+	public Document selectDocBySerial(String serial) {
+		return dao.selectDocBySerial(session, serial);
 	}
 }

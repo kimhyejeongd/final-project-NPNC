@@ -21,6 +21,7 @@ public interface MemberDocumentService {
 	DocumentForm selectFormByNo(int no);
 	
 	int insertDoc(Document d, MultipartFile[] file, String html) throws Exception;
+	int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception;
 //	int deleteDoc(Document d) throws Exception;
 //	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
 	int insertApprovers(Document d) throws Exception;
@@ -28,9 +29,12 @@ public interface MemberDocumentService {
 	List<Document> selectInprocessDocs(int no);
 	List<Document> selectWaitingDocs(int no);
 	List<Document> selectRetrieveDocs(int no);
+	List<Document> selectDraftDocs(int no);
 	int retrieveDoc(String docSerial) throws Exception;
+	int deleteDraftDoc(String docSerial) throws Exception;
 	
 	Document selectDocById(String docId);
+	Document selectDocBySerial(String serial);
 	
 	int insertApproverLine(int no, String name, List<ApproverLine> list) throws Exception;
 	List<ApproverLine> selectApproverLineList(int storageKey, int memberNo);

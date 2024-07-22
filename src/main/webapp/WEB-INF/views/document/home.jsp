@@ -18,7 +18,13 @@
       rel="icon"
       type="image/x-icon"
     />
+    <style>
+    	#tablerow:hover{
+    		cursor: pointer; 
+    	}
+    </style>
   </head>
+  <script src="${path}/resources/jh/js/inprocess.js"></script>
   <body>
     <div class="wrapper">
       <!-- Sidebar -->

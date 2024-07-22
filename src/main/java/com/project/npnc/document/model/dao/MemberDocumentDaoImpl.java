@@ -35,6 +35,10 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.selectList("document.selectInprocessDocs", no);
 	}
 	@Override
+	public List<Document> selectDraftDocs(SqlSession session, int no) {
+		return session.selectList("document.selectDraftDocs", no);
+	}
+	@Override
 	public List<Document> selectWaitingDocs(SqlSession session, int no) {
 		return session.selectList("document.selectWaitingDocs", no);
 	}
@@ -56,6 +60,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int insertDoc(SqlSession session, Document d) {
 		int result = session.insert("document.insertDoc", d);
+		return result;
+	}
+	@Override
+	public int insertDraftDoc(SqlSession session, Document d) {
+		int result = session.insert("document.insertDraftDoc", d);
 		return result;
 	}
 	@Override
@@ -85,8 +94,8 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public int selectDocFile(SqlSession session, String erDocSerialKey) {
-		return session.selectOne("document.selectDocFile", erDocSerialKey);
+	public List<DocFile> selectDocFile(SqlSession session, String erDocSerialKey) {
+		return session.selectList("document.selectDocFile", erDocSerialKey);
 	}
 
 	@Override
@@ -96,7 +105,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 
 	@Override
 	public Document selectDocById(SqlSession session, String docId) {
-		return session.selectOne("document.selectDocBySerial", docId);
+		return session.selectOne("document.selectDocById", docId);
+	}
+	@Override
+	public Document selectDocBySerial(SqlSession session, String serial) {
+		return session.selectOne("document.selectDocBySerial", serial);
 	}
 
 	@Override
@@ -137,6 +150,15 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int insertDocFile(SqlSession session, DocFile d) {
 		return session.insert("document.insertDocFile", d);
+	}
+	@Override
+	public int insertDraftDocFile(SqlSession session, DocFile d) {
+		return session.insert("document.insertDraftDocFile", d);
+	}
+
+	@Override
+	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
+		return session.delete("document.deleteDraftDoc", erDocSerialKey);
 	}
 
 }

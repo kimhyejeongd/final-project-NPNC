@@ -99,7 +99,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/draft">
                         <span class="sub-item">임시 보관 문서</span>
                       </a>
                     </li>
