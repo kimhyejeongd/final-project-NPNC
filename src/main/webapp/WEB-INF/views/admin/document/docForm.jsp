@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
  <!-- Fonts and icons -->
 <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
 <!-- bootstrap js -->
@@ -62,85 +63,112 @@
  <!-- Kaiadmin DEMO methods, don't include it in your project! -->
  <script src="${path}/resources/assets/js/setting-demo.js"></script>
  <script src="${path}/resources/assets/js/demo.js"></script>
-<body>
-<%-- 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
- --%>
- 
-	 				<div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
-		                    <div class="accordion" id="accordionPanelsStayOpenExample">
-							<c:forEach var="f" items="${folders}">
-						
-						           
-						 
-								<div class="accordion-item">
-								    <h2 class="accordion-header">
-								      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse0" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
-								        <i class="fas fa-bookmark me-2"></i> ${f.folderName} 
-								      </button>
-								    </h2>
-					    			<div id="panelsStayOpen-collapse0" class="accordion-collapse collapse show">
-								      <div class="accordion-body" style="padding: 0!important;">
-								         <div class="list-group" id="memberlist">
-							  				
-										</div>
-								      </div>
-								    </div>
-								</div>
-							
-						</div> 
-			        </c:forEach>
-	              </div>
 
-    <c:out value="${folders}"></c:out>
-   
-   
-   <div class="col w-45" style="">
-                <div class="card card-round" style="height: 500px;">
-                <div class="card-header">
-                   <div class="card-head-row card-tools-still-right">
-                      <div class="card-title" id="formfoldername">조직도</div>
-                      <div class="card-tools"></div>
-                    </div>
-                  </div>
-                  <div class="p-4 overflow-hidden">
-                    <div class="form-group d-flex gap-1 p-0 pb-4">
-		                <input type="text" class="form-control" placeholder="이름으로 검색">
-		                <button class="btn btn-outline-info btn-sm"><i class="fa fa-search search-icon"></i></button>
-		            </div>
-                    <div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
-	                    <div class="accordion" id="accordionPanelsStayOpenExample">
-						
-							    <c:forEach var="f" items="${folders }">
-							<div class="accordion-item">
-								        <c:if test="${f.folderLevel==1}">
-							    <h2 class="accordion-header">
-								      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse0" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
-								        <i class="fas fa-bookmark me-2"></i>
-								        	${f.folderName } 
-								      </button>
-								    </h2>
-								        </c:if>
-					    			<div id="panelsStayOpen-collapse0" class="accordion-collapse collapse show">
-								      <div class="accordion-body" style="padding: 0!important;">
-								         <div class="list-group" id="memberlist">
-							 				<c:if test="${f.folderLevel==2 }">
-											  <a href="#" class="list-group-item list-group-item-action align-items-center"> 
-												  <i class="fas fa-user me-2"></i>
-												  ${f.folderName }
-											  </a>
-							 				</c:if>
-							  				
-										</div>
-								      </div>
-								    </div>
-								</div>
-							    </c:forEach>
+<body>
+				 <%--   <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %>  --%>
+ 
+   <div style="display:flex">
+	   <div class="col w-45"  style="width:500px">
+	                <div class="card card-round" style="height: 500px;">
+	                <div class="card-header">
+	                   <div class="card-head-row card-tools-still-right">
+	                      <div class="card-title" id="formfoldername">조직도</div>
+	                      <div class="card-tools"></div>
+	                    </div>
+	                  </div>
+	                  <div class="p-4 overflow-hidden">
+	                    <div class="form-group d-flex gap-1 p-0 pb-4">
+			                <input type="text" class="form-control" placeholder="이름으로 검색">
+			                <button class="btn btn-outline-info btn-sm"><i class="fa fa-search search-icon"></i></button>
+			            </div>
+	                    <div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
+		                    <div class="accordion" id="accordionPanelsStayOpenExample">
 							
-					</div> 
-                    </div>
-                  </div>
-                </div>
-              </div>
+								    <c:forEach var="f" items="${folders }">
+								<div class="accordion-item">
+									        <c:if test="${f.folderLevel==1}">
+								    <h2 class="accordion-header">
+									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse0" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
+									        <i class="fas fa-bookmark me-2"></i>
+									        	${f.folderName } 
+									      </button>
+									    </h2>
+									        </c:if>
+						    			<div id="panelsStayOpen-collapse0" class="accordion-collapse collapse show">
+									      <div class="accordion-body" style="padding: 0!important;">
+									         <div class="list-group" id="memberlist">
+								 				<c:if test="${f.folderLevel==2 }">
+												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}"> 
+													  <i class="fas fa-user me-2"></i>
+													  ${f.folderName }
+												  </a>
+								 				</c:if>
+								  				
+											</div>
+									      </div>
+									    </div>
+									</div>
+								    </c:forEach>
+								
+						</div> 
+	                    </div>
+	                  </div>
+	                </div>
+          </div>
+          <div style="width:70%">
+          		 <!-- Projects table -->
+                      <table class="table table-hover align-items-center mb-0" id="docTable">
+                        <thead class="thead-light">
+                          <tr class="text-center">
+                          	<!-- <th><input type="checkbox"></th> -->
+                            <th scope="col" class="">#</th>
+                            <th scope="col" class="">보관함명</th>
+                            <th scope="col" class="">보관함 관리자</th>
+                            <th scope="col" class="">보관 기한</th>
+                            <th scope="col" class="">사용여부</th>
+                          </tr>
+                        </thead>
+                        <tbody id="docTableBody">
+                        </tbody>
+                      </table>
+          </div>
+	              
+	              
+   </div>
+   
+    <script>
+    $(document).ready(function() {
+        $('.folder-item').on('click', function(e) {
+            e.preventDefault(); // 기본 클릭 동작을 막음
+
+            var folderKey = $(this).data('folder-key'); // 클릭된 항목의 folderId 가져오기
+
+            $.ajax({
+                url: '${path}/admin/documentForm/selectDoc', // 서버 요청 URL
+                type: 'GET',
+                data: { folderKey: folderKey }, // 요청에 포함될 데이터
+                success: function(response) {
+                    // 서버에서 받은 데이터를 사용하여 테이블을 동적으로 생성
+                    var tableBody = $('#docTableBody');
+                    tableBody.empty(); // 기존 내용을 비움
+
+                    response.forEach(function(doc, index) {
+                    	console.log(doc);
+                    	var row = 
+                    	    '<tr class="text-center">' +
+                    	        '<td class="approverNow p-3">' + (index + 1) + '</td>' +
+                    	        '<td class="approverNow p-3">' + doc.erStorageName + '</td>' +
+                    	        '<td class="approverNow p-3">' + doc.erStorageManager + '</td>' +
+                    	        '<td class="approverNow p-3">' + doc.erStorageTerm + '</td>' +
+                    	        '<td class="approverNow p-3"> x </td>' +
+                    	    '</tr>';
+                        tableBody.append(row);
+                    });
+                }
+            });
+        });
+    });
+</script>
     
 	
 </body>

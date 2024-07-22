@@ -4,6 +4,9 @@
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
 		  SELECT * FROM ER_STORAGE_FOLDER ORDER BY ER_FOLDER_GROUP DESC, ER_FOLDER_LEVEL ASC
 	</select>
+	<select id="selectDocAll" resultMap="adminDocument" parameterType="int">
+		SELECT * FROM ER_STORAGE es WHERE ER_STORAGE_FOLDER_KEY=#{folderKey}
+	</select>
 	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
@@ -12,4 +15,13 @@
         <result property="folderLevel" column="ER_FOLDER_LEVEL" />
         <result property="useYn" column="ER_FOLDER_USE_YN" />
     </resultMap>
+    
+    <resultMap id="adminDocument" type="adminDocument">
+	    <id property="erStorageKey" column="ER_STOARGE_KEY"/>
+	    <result property="erStorageFolderKey" column="ER_STORAGE_FOLDER_KEY"/>
+	    <result property="erStorageName" column="ER_STORAGE_NAME"/>
+	    <result property="erStorageTerm" column="ER_STORAGE_TERM"/>
+	    <result property="erStorageManager" column="ER_STORAGE_MANAGER"/>
+	    <result property="erStorageOrderby" column="ER_STORAGE_ORDERBY"/>
+	</resultMap>
 </mapper>

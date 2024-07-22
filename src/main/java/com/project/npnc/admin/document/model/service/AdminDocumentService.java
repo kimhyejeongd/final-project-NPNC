@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.admin.document.model.dao.AdminDocumentDao;
+import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
 
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,9 @@ public class AdminDocumentService {
 	
 	public List<StorageFolder> selectAdminDocumentFormAll (){
 		return dao.selectAdminDocumentFormAll(session);
+	}
+	
+	public List<AdminDocument> selectDocAll(int folderKey){
+		return dao.selectDocAll(session,folderKey);
 	}
 }
