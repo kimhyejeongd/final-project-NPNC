@@ -11,24 +11,17 @@ import com.project.npnc.board.model.dto.BoardFileDto;
 public interface BoardDao {
 
     List<BoardDto> selectAllBoards();
-
+    List<BoardDto> selectNotices(); // 공지사항 조회 메서드 추가
     BoardDto selectBoardById(int boardKey);
-
     void insertBoard(BoardDto boardDto);
-
     void updateBoard(BoardDto boardDto);
-
     void deleteBoard(int boardKey);
 
     List<BoardCommentDto> selectCommentsByBoardId(int boardKey);
-
     void insertComment(BoardCommentDto commentDto);
-
     void updateComment(BoardCommentDto commentDto);
-
     void deleteComment(int commentKey);
 
     List<BoardCategoryDto> selectAllCategories();
-
     void insertBoardFile(BoardFileDto boardFileDto);
 }

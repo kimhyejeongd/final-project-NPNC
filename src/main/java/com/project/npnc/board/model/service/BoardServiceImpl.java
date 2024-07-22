@@ -11,13 +11,19 @@ import com.project.npnc.board.model.dto.BoardFileDto;
 
 @Service
 public class BoardServiceImpl implements BoardService {
-
+    
     @Autowired
     private BoardDao boardDao;
 
     @Override
     public List<BoardDto> getAllBoards() {
         return boardDao.selectAllBoards();
+    }
+
+    
+    @Override
+    public List<BoardDto> getNotices() {
+        return boardDao.selectNotices(); // 공지사항 조회 메서드 호출
     }
 
     @Override

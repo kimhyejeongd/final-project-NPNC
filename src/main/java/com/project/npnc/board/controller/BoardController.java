@@ -34,47 +34,28 @@ public class BoardController {
     public String getAllBoards(Model model) {
         List<BoardDto> boards = boardService.getAllBoards();
         model.addAttribute("boardList", boards);
-        return "board/boardList"; // 뷰 이름 반환 (JSP 파일명)
+        return "board/boardList";
+    }
+
+    @GetMapping("/notices")
+    public String getNotices(Model model) {
+        List<BoardDto> notices = boardService.getNotices();
+        model.addAttribute("boardList", notices);
+        return "board/noticeList";
     }
 
     @GetMapping("/write")
     public String showWriteBoardForm(Model model) {
         model.addAttribute("boardDto", new BoardDto()); // 빈 BoardDto를 모델에 추가
-        return "board/writeBoard"; // 뷰 이름 반환 (JSP 파일명)
+        return "board/writeBoard"; // 게시물 작성 뷰 반환
     }
+    
 
-    @PostMapping("/new")
-    public String createBoard(@ModelAttribute("boardDto") BoardDto boardDto, @RequestParam("upFile") MultipartFile file) {
-        // 파일이 존재하면 처리
-        if (!file.isEmpty()) {
-            try {
-                // 파일을 서버에 저장할 경로를 설정
-                String uploadDir = "path/to/upload/dir"; // 실제 경로로 변경 필요
-                File uploadFile = new File(uploadDir, file.getOriginalFilename());
-                file.transferTo(uploadFile);
-
-                // BoardFileDto 객체 생성 및 파일 정보 설정
-                BoardFileDto boardFileDto = new BoardFileDto();
-                boardFileDto.setBOARD_KEY(boardDto.getBOARD_KEY()); // 게시물 키는 게시물 저장 후 설정되어야 함
-                boardFileDto.setBOARD_FILE_FILE_ORI(file.getOriginalFilename());
-                boardFileDto.setBOARD_FILE_FILE_POST(uploadFile.getAbsolutePath());
-
-                // 게시물과 파일 정보 저장
-                boardService.createBoard(boardDto, List.of(boardFileDto));
-            } catch (IOException e) {
-                e.printStackTrace();
-                // 파일 저장 실패 처리
-            }
-        } else {
-            boardService.createBoard(boardDto, List.of()); // 파일이 없는 경우
-        }
-        return "redirect:/board/list"; // 리다이렉트
-    }
-
-    @GetMapping("/boardKey")
-    public String getBoardById(int boardKey, Model model) {
+    @GetMapping("/detail/{boardKey}")
+    public String getBoardById(@PathVariable("boardKey") int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
         model.addAttribute("board", board);
-        return "board/boardDetail"; // 뷰 이름 반환 (JSP 파일명)
+        return "board/detail";
     }
+    
 }

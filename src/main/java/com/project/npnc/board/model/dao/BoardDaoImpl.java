@@ -27,6 +27,11 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public List<BoardDto> selectNotices() {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectNotices");
+    }
+
+    @Override
     public BoardDto selectBoardById(int boardKey) {
         return sqlSession.selectOne("com.project.npnc.board.model.dao.BoardDao.selectBoardById", boardKey);
     }

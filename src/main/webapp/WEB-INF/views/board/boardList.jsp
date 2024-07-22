@@ -34,5 +34,8 @@
     <form action="${path }/board/write" method="get">
         <button type="submit">게시글 작성</button>
     </form>
+        <form action="${path}/board/notices" method="get">
+        <button type="submit">공지사항</button>
+    </form>
 </body>
 </html>
