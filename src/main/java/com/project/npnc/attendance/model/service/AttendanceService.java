@@ -45,7 +45,8 @@ public interface AttendanceService {
 	List<AttendanceEdit> searchAdminAttendanceEdit(Map<String,String> searchMap,Map<String,Integer> page);
 	int searchAdminAttendanceEditCount(Map<String,String> searchMap);
 	
-	
+	List<Attendance> searchAdminAttendance(Map<String,String> searchMap, Map<String,Integer> page);
+	int searchAdminAttendanceCount(Map<String,String> searchMap);
 	
 	
 	

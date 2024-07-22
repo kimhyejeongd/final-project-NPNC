@@ -256,6 +256,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		// TODO Auto-generated method stub
 		return attendanceDao.searchAdminAttendanceEditCount(session, searchMap);
 	}
+
+	@Override
+	public List<Attendance> searchAdminAttendance(Map<String, String> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchAdminAttendance(session, searchMap, page);
+	}
+
+	@Override
+	public int searchAdminAttendanceCount(Map<String, String> searchMap) {
+		
+		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
+	}
 	
 	
 	

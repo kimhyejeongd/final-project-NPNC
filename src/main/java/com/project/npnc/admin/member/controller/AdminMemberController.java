@@ -19,6 +19,7 @@ import com.project.npnc.admin.job.model.service.JobService;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.common.SearchPageFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class AdminMemberController {
 	private final JobService jobService;
 	private final BCryptPasswordEncoder pwencoder;
 	private final PageFactory pageFactory;
+	private final SearchPageFactory searchPageFactory;
 
 	
 	
@@ -160,8 +162,9 @@ public class AdminMemberController {
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.searchMemberCount(searchKey);
 		List<AdminMember> members= service.searchMember(searchKey, page);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "searchMember"));
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,"searchMember"));
 		m.addAttribute("members",members);
+		m.addAttribute("searchK",searchKey);
 		return "admin/member/memberlist";
 	}
 	

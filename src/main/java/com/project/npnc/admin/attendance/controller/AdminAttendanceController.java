@@ -14,6 +14,7 @@ import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.common.SearchPageFactory;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 
@@ -27,6 +28,7 @@ public class AdminAttendanceController {
 	private final AttendanceService service;
 	private final PageFactory pageFactory;
 	private final OrganizationService organService;
+	private final SearchPageFactory searchPageFactory;
 	
 	@GetMapping("/selectAdminAttendanceAll")
 	public String selectAdminAttendanceAll(
@@ -131,9 +133,30 @@ public class AdminAttendanceController {
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendanceEdit=service.searchAdminAttendanceEdit(searchMap,page);
 		int totaldata=service.searchAdminAttendanceEditCount(searchMap);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "searchAdminAttendanceEdit"));
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType, "searchAdminAttendanceEdit"));
 		m.addAttribute("attendanceEdit",attendanceEdit);
+		m.addAttribute("searchK",searchKey);
+		m.addAttribute("searchT",searchType);
 		return "admin/attendance/adminattendanceeditlist";
+	}
+	
+	@GetMapping("/searchAdminAttendance")
+	public String searchAdminAttendance(
+			String searchKey,
+			String searchType,
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "10") int numPerpage,		
+			Model m
+			) {
+		Map<String,String> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<AttendanceEdit> attendance=service.searchAdminAttendance(searchMap,page);
+		int totaldata=service.searchAdminAttendanceCount(searchMap);
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType, "searchAdminAttendance"));
+		m.addAttribute("attendance",attendance);
+		m.addAttribute("searchK",searchKey);
+		m.addAttribute("searchT",searchType);
+		return "admin/attendance/adminattendancelist";
 	}
 	
 	

@@ -345,4 +345,48 @@
 		</where>
 	</select>
 	
+	<select id="searchAdminAttendance" parameterType="map" resultMap="attendanceMap">
+		SELECT
+		ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY,
+		    MEMBER_ID,
+		    MEMBER_NAME
+		    FROM ATTENDANCE 
+		    JOIN MEMBER USING(MEMBER_KEY)
+		<where>
+			<if test="searchType !=null and searchType!= ''">
+				ATTENDANCE_STATE=#{searchType}
+			</if>
+			<if test="searchType !=null and searchType!= '' and searchKey !=null and searchKey != ''" >
+				AND
+			</if>
+			<if test="searchKey !=null and searchKey != ''">
+				MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchAdminAttendanceCount" parameterType="map" resultType="_int">
+		SELECT
+		COUNT(ATTENDANCE_KEY)
+		FROM ATTENDANCE 
+		JOIN MEMBER USING(MEMBER_KEY)
+		<where>
+			<if test="searchType !=null and searchType!= ''">
+				ATTENDANCE_STATE=#{searchType}
+			</if>
+			<if test="searchType !=null and searchType!= '' and searchKey !=null and searchKey != ''" >
+				AND
+			</if>
+			<if test="searchKey !=null and searchKey != ''">
+				MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+			</if>
+		</where>
+	</select>
+	
+	
 </mapper>

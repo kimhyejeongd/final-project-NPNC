@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
@@ -49,6 +50,7 @@ public interface AttendanceDao {
 	List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session,Map<String,String> searchMap,Map<String,Integer> page);
 	int searchAdminAttendanceEditCount(SqlSession session,Map<String,String> searchMap);
 	
-	
+	List<Attendance> searchAdminAttendance(SqlSession session,Map<String,String> searchMap, Map<String,Integer> page);
+	int searchAdminAttendanceCount(SqlSession session,Map<String,String> searchMap);
 	
 }

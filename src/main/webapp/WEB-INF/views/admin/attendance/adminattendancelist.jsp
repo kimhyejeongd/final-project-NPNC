@@ -20,14 +20,17 @@
 		                    <h4 class="card-title">전체사원근태관리</h4>
 		                  </div>
 		                  <div class="card-body">
+		                  		<form action="${path }/admin/attendance/searchAdminAttendance">  
 		                  		  <nav
 					                 class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
 					              >
 					              
-					              <select class="form-select input-fixed" >
-					              	<option>1</option>
-					              	<option>2</option>
-					              	<option>3</option>
+					              <select class="form-select input-fixed" name="searchType">					              	
+					              	<option></option>
+					              	<option value="조퇴" <c:if test="${searchT eq '조퇴'}">selected</c:if>>조퇴</option>
+					              	<option value="지각" <c:if test="${searchT eq '지각'}">selected</c:if>>지각</option>
+					              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
+					              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
 					              </select>
 		                          <div class="input-group">
 				                    <div class="input-group-prepend">
@@ -39,11 +42,13 @@
 				                      type="text"
 				                      id="searchKey"
 				                      name="searchKey"
-				                      placeholder="Search ..."
+				                      placeholder="Search name..."
 				                      class="form-control"
+				                      value="${searchK }"
 				                    />
 				                  </div>          
 				               </nav>
+				               </form>
 		                    <div class="table-responsive">
 		                      <table
 		                        id="multi-filter-select"
