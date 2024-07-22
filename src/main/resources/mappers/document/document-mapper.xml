@@ -378,7 +378,12 @@
               #{erDocEmergencyYn},
               DEFAULT,
               #{erDocStorage},
-              null,
+              To_char(SYSDATE, 'YYMMDD')
+                        || '-'
+                        || #{erDocSerialKey}
+                        || '-'
+                        || To_char(seq_er_doc_serial_key.CURRVAL)
+                        || '.html',
               DEFAULT,
               NULL,
               NULL,
@@ -602,5 +607,55 @@
 	         #{memberName},
 	         ${memberKey}
             )
+	</insert>
+	<!-- 전자문서 첨부파일 등록 -->
+	<insert id="insertDocFile" parameterType="docFile">
+		<selectKey keyProperty="erDocKey" resultType="int" order="BEFORE">
+	        SELECT 
+	        	ER_DOC_KEY 
+        	FROM
+        		ER_DOCUMENT 
+       		WHERE
+       			ER_DOC_SERIAL_KEY = #{erDocSerialKey}
+	    </selectKey>
+		INSERT INTO 
+			er_file
+			(
+			ER_FILE_KEY,
+			ER_FILE_ORI_NAME,
+			ER_FILE_RENAME,
+			ER_DOC_KEY,
+			ER_DOC_SERIAL_KEY,
+			ER_FILE_SIZE,
+			ER_FILE_FORM,
+			ER_FILE_UPLOAD_DATE,
+			ER_FILE_ORDERBY,
+			ER_FILE_UPLODAER,
+			ER_FILE_UPDATE_DATE,
+			ER_FILE_UPDATER,
+			ER_FILE_UPDATE_REASON
+			)
+		VALUES
+            (
+	         SEQ_ER_FILE_KEY.NEXTVAL,
+	         #{fileOriName},
+	         #{fileRename},
+	         #{erDocKey},
+	         #{erDocSerialKey},
+	         #{fileSize},
+	         #{fileForm},
+	         default,
+	         #{fileOrderby},
+	         #{fileUploader},
+	         null,
+	         null,
+	         null
+            )
+        <!-- <selectKey order="AFTER" keyProperty="fileKey" resultType="int">
+        	SELECT 
+        		SEQ_ER_FILE_KEY.CURRVAL
+        	FROM 
+        		DUAL
+        </selectKey> -->
 	</insert>
 </mapper>

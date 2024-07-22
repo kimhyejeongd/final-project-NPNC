@@ -273,10 +273,31 @@ $(document).ready(function() {
 					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
 					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
-					$("#docForm").submit();
-				} else{
-					alert('문서 양식 불러오기 오류');
-				}
+					
+					// 폼 데이터를 수집
+			        let formData = new FormData(document.getElementById("docForm"));
+			     	// AJAX로 폼 데이터를 전송
+			        fetch(sessionStorage.getItem("path")+'/document/writeend', {
+			            method: 'POST',
+			            body: formData,
+			        })
+			        .then(response => response.json())
+			        .then(data => {
+			            if (data.status === "success") {
+			                alert(data.message);
+			                // 성공 시 페이지 리다이렉트
+			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
+			                window.location.href = sessionStorage.getItem("path")+"/document/home";
+			            } else {
+			                alert(data.message);
+			            }
+			        })
+			        .catch(error => {
+			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+			        });
+			    } else{
+			        alert('문서 양식 불러오기 오류');
+			    }
 			}
 		});
 	});

@@ -1,17 +1,28 @@
 package com.project.npnc.document.model.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
-import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -25,6 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberDocumentServiceImpl implements MemberDocumentService {
 	private final SqlSession session;
 	private final MemberDocumentDaoImpl dao;
+	@Value("${file.upload-dir}")
+    private String uploadDir;
 	@Override
 	public List<DocumentFormFolder> selectformFolders() {
 		return dao.selectformFolders(session);
@@ -59,85 +72,104 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectRetrieveDocs(int no) {
 		return dao.selectRetrieveDocs(session, no);
 	}
-//	@Override
-//	@Transactional	
-//	public int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception {
-//		int result = dao.insertDoc(session, d); //문서 등록
-//		if(result>0) {
-//			log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
-//			request.getApprovers().forEach(e->{
-//				e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
-//			});
-//			result=dao.insertApproval(session, request); //결재자 등록
-////			result=dao.insertApproval(session, request); //결재자 등록
-//			if(result>0) {
-//				log.debug("[2] 결재자 insert 성공");
-//				if(referers != null) {
-//					referers.getReferers().forEach(e->{
-//						e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
-//					});
-////					result = dao.insertReferer(session, referers);
-//					if(result>0) {
-//						log.debug("[3] 참조인 insert 성공");
-//					}else if(result<=0) {
-//						throw new Exception("[3] 참조인 insert 실패");
-//					}
-//				}else if(referers == null) {
-//					log.debug("[3] 참조인 없음");
-//				} 
-//			}else {
-//				log.debug("[2] 결재자 insert 실패");
-//				throw new Exception("[2] 결재자 insert 실패");
-//			}
-//		}else {
-//			log.debug("[1]문서 insert 실패");
-//			throw new Exception("[1]문서 insert 실패");
-//		}
-//		return result;
-//	}
+	
+	@Override
+	public int insertApprovers(Document d) throws Exception {
+		//등록된 문서키 정보로 넘겨주기
+		d.getApprovers().forEach(e -> e.setErDocSerialKey(d.getErDocSerialKey()));
+		return dao.insertApprovers(session, d.getApprovers());
+	}
+	@Override
+	public int insertReferers(Document d) throws Exception {
+		//등록된 문서키 정보 넘겨주기
+	    d.getReferers().forEach(e -> e.setErDocSerialKey(d.getErDocSerialKey()));
+	    return dao.insertReferer(session, d.getReferers());
+	}
+	
 	@Override
 	@Transactional	
-	public int insertDoc(Document d) throws Exception {
-		int result = dao.insertDoc(session, d); //문서 등록
-		if(result>0) {
-			log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
-			d.getApprovers().forEach(e->{
-				e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
-			});
-			d.setErDocFilename(d.getErDocSerialKey()+".html"); //문서파일명 설정
-			//문서파일 등록
-			String erDocSerialKey = d.getErDocSerialKey();
-			result = session.update("document.updateDocFilename", erDocSerialKey);
-			if(result>0) {
-				log.debug("[1]문서.html 등록 성공");
-				result=dao.insertApproval(session, d.getApprovers()); //결재자 등록
-				if(result>0) {
-					log.debug("[2] 결재자 insert 성공");
-					if(d.getReferers().size()>0) {
-						d.getReferers().forEach(e->{
-							e.setErDocSerialKey(d.getErDocSerialKey()); //등록된 문서키 정보로 넘겨주기
-						});
-						result = dao.insertReferer(session, d.getReferers());
-						if(result>0) {
-							log.debug("[3] 참조인 insert 성공");
-						}else if(result<=0) {
-							throw new Exception("[3] 참조인 insert 실패");
-						}
-					}else {
-						log.debug("[3] 참조인 없음");
-					} 
-				}else {
-					log.debug("[2] 결재자 insert 실패");
-					throw new Exception("[2] 결재자 insert 실패");
-				}
-			}else {
-				throw new Exception("[1]문서.html 등록 실패");
-			}
+	public int insertDoc(Document d, MultipartFile[] file, String html) throws Exception {
+//		d.setErDocFilename(d.getErDocSerialKey()+".html"); //문서파일명 설정
+		
+		int result = dao.insertDoc(session, d);
+		//"erDocSerialKey" selectKey
+		if (result <= 0) {
+	        throw new Exception("[1]문서 insert 실패");
+	    }
+		log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
+		
+		//첨부파일 있으면 파일 insert 및 업로드
+		if (file.length > 0 || file != null) {
+			log.debug("첨부파일 있음");
+			int count=0;
+			DocFile docFile = null;
+			List<DocFile> list = new ArrayList<>();
 			
-		}else {
-			log.debug("[1]문서 insert 실패");
-			throw new Exception("[1]문서 insert 실패");
-		}
+			for(MultipartFile f : file) {
+				count++;
+				log.debug("파일 이름: " + f.getOriginalFilename());
+	            // 고유한 파일 이름 생성 (UUID 사용)
+	            String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
+	
+	            // 절대 경로 설정
+	            String upload = Paths.get(uploadDir+"/docfile").toAbsolutePath().toString();
+	
+	            // 파일 저장 경로 설정
+	            Path filePath = Paths.get(upload, fileName);
+	            // 부모 디렉토리가 존재하지 않으면 생성
+	            File parentDir = filePath.getParent().toFile();
+	            if (!parentDir.exists()) {
+	                parentDir.mkdirs(); // 디렉토리 생성
+	            }	            
+	            // 파일 저장
+	            Files.copy(f.getInputStream(), filePath);
+	            // 파일 메타 데이터 생성
+	//    		// 파일을 DocFile 객체로 변환
+	    		docFile = docFile.builder()
+	    				.fileOriName(f.getOriginalFilename())
+	    				.fileRename(fileName)
+	    				.erDocKey(d.getErDocKey())
+	    				.erDocSerialKey(d.getErDocSerialKey())
+	    				.fileSize(Long.toString(f.getSize()))
+	    				.fileForm(f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".")+1))
+	    				.fileOrderby(count)
+	    				.fileUploader(d.getErDocWriter())
+	    				.build();
+	            
+	            //db insert
+	            result = dao.insertDocFile(session, docFile);
+	            log.debug("{}",docFile);
+	            //Document 객체의 files 리스트에 추가
+	            //list.add(docFile);
+	            if(result <= 0) {
+					throw new Exception("파일 insert 실패 : " + count + "/" + file.length);
+				}
+	            log.debug("파일 저장 성공 : " + count + "/" + file.length);
+	            d.setFiles(list);
+			}
+        }
+
+	    result = insertApprovers(d);
+	    if (result <= 0) {
+	        throw new Exception("[2] 결재자 insert 실패");
+	    }
+	    log.debug("[2] 결재자 insert 성공");
+
+	    if (d.getReferers().size() > 0) {
+	    	log.debug("참조인 있음");
+	        result = insertReferers(d);
+	        if (result <= 0) {
+	            throw new Exception("[3] 참조인 insert 실패");
+	        }
+	        log.debug("[3] 참조인 insert 성공");
+	    }
+	    
+    	fileUpload("dochtml",d.getErDocSerialKey(), html);
+    	if(result <= 0) {
+    		throw new Exception("[4] 문서 html 등록 실패");
+    	}
+	    log.debug("[4] 문서 html 등록 성공");
+	    
 		return result;
 	}
 	@Override
@@ -221,5 +253,44 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public int deleteApproverLine(int no) {
 		return dao.deleteApproverLines(session, no);
+	}
+	
+//	첨부파일
+	@Override
+	public int insertDocFile(List<DocFile> d) throws Exception {
+		int result = 0;
+		int count = 0;
+		for(DocFile f : d) {
+			count++;
+			//첨부파일 등록
+			result = dao.insertDocFile(session, f);
+			if(result>0) {
+				log.debug("첨부파일 등록 성공");
+				log.debug("{}", d);
+			}else {
+				throw new Exception("첨부파일 등록 실패 : " + count + "/" + d.size());
+			}
+		};
+		return result;
+	}
+	@Override
+	public int deleteDocFile(String docSerial) throws Exception {
+		return dao.deleteDocFile(session, docSerial);
+	}
+	//html파일로 문서 저장 메소드
+	private int fileUpload(String dir, String title, String content) throws IOException {
+		String path = uploadDir+ dir + "/" +title + ".html";
+		log.debug("문서 저장 경로 : " + path);
+			File file = new File(path);
+			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+			log.debug(content);
+            writer.write(content);
+            writer.close();
+            return 1;
 	}
 }

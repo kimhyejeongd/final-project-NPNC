@@ -1,6 +1,5 @@
 package com.project.npnc.document.model.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
-import com.project.npnc.document.model.service.MemberDocumentServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,7 +64,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public int insertApproval(SqlSession session, List<Approver> list) {
+	public int insertApprovers(SqlSession session, List<Approver> list) {
 		int result =0;
 		for(int i=0; i<list.size();i++) {
 			Approver ap = list.get(i);
@@ -133,6 +132,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int deleteApproverLines(SqlSession session, int no) {
 		return session.update("document.deleteApproverLines", no);
+	}
+
+	@Override
+	public int insertDocFile(SqlSession session, DocFile d) {
+		return session.insert("document.insertDocFile", d);
 	}
 
 }
