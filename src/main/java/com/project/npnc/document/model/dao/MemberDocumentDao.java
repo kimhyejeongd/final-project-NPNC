@@ -35,11 +35,12 @@ public interface MemberDocumentDao {
 	List<Document> selectInprocessDocs(SqlSession session, int no);
 	List<Document> selectWaitingDocs(SqlSession session, int no);
 	List<Document> selectDraftDocs(SqlSession session, int no);
-	Document selectDocById(SqlSession session, String docId);
+	Document selectDocById(SqlSession session, int docId);
 	Document selectDocBySerial(SqlSession session, String serial);
 	
 	int insertApproverLineStorage(SqlSession session, Map<String,Object> map);
 	int insertApproverLine(SqlSession session, Map<String,Object> map);
+	List<Referer> selectReferer(SqlSession session, String serial);
 	List<ApproverLine> selectApproverLineList(SqlSession session, Map<String,Integer> map);
 	List<ApproverLineStorage> selectApproverLines(SqlSession session, int no);
 	int deleteApproverLines(SqlSession session, int no);

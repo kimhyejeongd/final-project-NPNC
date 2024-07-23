@@ -76,7 +76,7 @@
 	<resultMap type="approverLineStorage" id="approverLineStorageMap">
 		<id column="ER_AP_LINE_STORAGE_KEY" property="erApLineStorageKey"/>
 		<result column="ER_AP_LINE_STORAGE_NAME" property="erApLineStorageName"/>
-		<result column="MEMBER_KEY" property="memberKey"/>
+		<result column="OWNER_MEMBER_KEY" property="memberKey"/>
 		<collection property="approvers" resultMap="approverLineMap" ofType="approverLine"/>
 	</resultMap>
 	<!-- 양식 -->
@@ -199,7 +199,7 @@
 			ER_DOC_STATE = '처리중'
 		ORDER BY  
 			ER_DOC_EMERGENCY_YN DESC,
-			ER_APPROVAL_DATE desc,
+			ER_DOC_CREATE_DATE DESC,
 			ER_APPROVAL_ORDERBY
 	</select>
 	<!-- 로그인 사원의 임시저장 문서 조회 -->
@@ -217,37 +217,16 @@
 		 	ER_DOC_STATE,
 		 	ER_DOC_STATE_UPDATE_DATE,
 		 	ER_DOC_LAST_UPDATER,
-		 	ER_DOC_LAST_UPDATE_REASON,
-		 	ER_APPROVER_KEY,
-		 	MEMBER_KEY,
-		 	ER_APPROVER_NAME,
-		 	ER_APPROVER_TEAM_KEY,
-		 	ER_APPROVER_JOB_KEY,
-		 	ER_APPROVAL_CATEGORY,
-		 	ER_APPROVAL_STATE,
-		 	ER_APPROVAL_OPINION,
-		 	ER_APPROVAL_DATE,
-		 	ER_APPROVAL_ORDERBY,
-		 	JOB_KEY,
-		 	JOB_NAME,
-		 	DEPARTMENT_KEY,
-		 	DEPARTMENT_NAME
+		 	ER_DOC_LAST_UPDATE_REASON
 		FROM      
 		 	ER_DOCUMENT d
-		LEFT JOIN
-			ER_APROVER ea USING(ER_DOC_SERIAL_KEY)
-		JOIN
-			JOB j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
-		JOIN
-			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
 		WHERE     
 			ER_DOC_WRITER = #{no}
 		AND       
 			ER_DOC_STATE = '임시저장'
 		ORDER BY  
 			ER_DOC_EMERGENCY_YN DESC,
-			ER_APPROVAL_DATE DESC,
-			ER_APPROVAL_ORDERBY
+			ER_DOC_CREATE_DATE DESC
 	</select>
 	<!-- 로그인 사원의 결재 대기 문서 조회 -->
 	<select id="selectWaitingDocs" resultMap="documentMap" parameterType="_int">
@@ -289,15 +268,8 @@
 		    ER_APROVER a ON d.er_doc_serial_key = a.er_doc_serial_key
 		WHERE
 		    d.er_doc_state = '처리중'
-		    AND NOT EXISTS (
-		        SELECT 1 
-		        FROM ER_APROVER a3
-		        WHERE a3.er_doc_serial_key = d.er_doc_serial_key
-		        AND a3.er_approval_orderby <![CDATA[<]]> a.er_approval_orderby
-		        AND a3.ER_APPROVAL_STATE != '승인'
-		    )
 		ORDER BY 
-			d.er_doc_create_date DESC, 
+			d.ER_DOC_CREATE_DATE DESC, 
 			a.er_approval_orderby
 	</select>
 	<!-- 로그인 사원의 회수 문서 조회 -->
@@ -326,10 +298,11 @@
 			d.er_doc_state = '회수'
 		ORDER BY  
 			d.er_doc_emergency_yn DESC,
+			ER_DOC_CREATE_DATE DESC,
 			ea.er_approval_orderby
 	</select>
 	<!-- 문서 상세보기 -->
-	<select id="selectDocById" parameterType="string" resultMap="documentMap">
+	<select id="selectDocById" parameterType="int" resultMap="documentMap">
 		SELECT 
 			d.ER_DOC_KEY,
 			d.ER_DOC_SERIAL_KEY,
@@ -380,17 +353,17 @@
 			er.MEMBER_KEY
 		FROM   
 			er_document d
-        JOIN 
+        LEFT JOIN 
        		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
 		LEFT JOIN
       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
-		JOIN
+		LEFT JOIN
 			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
-		JOIN
+		LEFT JOIN
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
         LEFT JOIN 
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
-		WHERE  d.ER_DOC_KEY = #{docId} 
+		WHERE  d.ER_DOC_KEY = #{docId}
 	</select>
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
 		SELECT 
@@ -443,17 +416,33 @@
 			er.MEMBER_KEY
 		FROM   
 			er_document d
-        JOIN 
-       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
-		LEFT JOIN
-      		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
-		JOIN
-			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
-		JOIN
-			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
         LEFT JOIN 
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
-		WHERE  d.ER_DOC_SERIAL_KEY = #{serial} 
+        LEFT JOIN 
+       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		LEFT JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+		LEFT JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+		LEFT JOIN
+      		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+		WHERE  
+			d.ER_DOC_SERIAL_KEY = #{serial} 
+		ORDER BY
+			ea.ER_APPROVAL_ORDERBY
+	</select>
+	<select id="selectReferer" parameterType="string" resultMap="refererMap">
+		SELECT
+			ER_REFERER_KEY,
+			ER_DOC_SERIAL_KEY,
+			ER_REFERER_TEAM_KEY,
+			ER_REFERER_JOB_KEY,
+			ER_REFERER_NAME,
+			MEMBER_KEY
+		FROM
+			ER_REFERER
+		WHERE
+			ER_DOC_SERIAL_KEY = #{erDocSerialKey}
 	</select>
 	<!-- 기안 -->
 	<insert id="insertDoc" parameterType="document">
@@ -536,13 +525,18 @@
                         || #{erDocSerialKey}
                         || '-'
                         || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.NEXTVAL),
-              ${erDocWriter},
+              #{erDocWriter},
               #{erDocTitle},
               DEFAULT,
               #{erDocEmergencyYn},
               DEFAULT,
               #{erDocStorage},
-              #{erDocSerialKey},
+              To_char(SYSDATE, 'YYMMDD')
+                        || '-'
+                        || #{erDocSerialKey}
+                        || '-'
+                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.currval)
+              			|| '.html',
               '임시저장',
               NULL,
               NULL,
@@ -551,11 +545,29 @@
         <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
 			SELECT 
-				'TEMP'
+				ER_DOC_SERIAL_KEY
 			FROM   
-				dual 
+				er_document 
+			WHERE
+				ER_DOC_WRITER = #{erDocWriter}
+			AND 
+				ER_DOC_SERIAL_KEY like '%' || 'TEMP' || '%'
+			AND 
+				ER_DOC_SERIAL_KEY like '%' || To_char(SYSDATE, 'YYMMDD') || '%'
+			AND
+				ROWNUM = 1
+			ORDER BY 
+				ER_DOC_KEY DESC
 		</selectKey>
 	</insert>
+	<!-- 문서 삭제 -->
+	<delete id="deleteDraftDoc" parameterType="string">
+		DELETE 
+			er_document
+		WHERE 
+			er_doc_serial_key = #{erDocSerialKey}
+	</delete>
+	<!-- 문서 제목 변경 -->
 	<update id="updateDocFilename" parameterType="string">
 		UPDATE 
 			er_document
@@ -682,10 +694,10 @@
 		SELECT 
 			s.ER_AP_LINE_STORAGE_KEY,
 			s.ER_AP_LINE_STORAGE_NAME,
-			s.MEMBER_KEY,
+			s.MEMBER_KEY as OWNER_MEMBER_KEY,
 			l.ER_AP_LINE_KEY,
 			l.ER_AP_LINE_STORAGE_KEY,
-			l.MEMBER_KEY,
+			l.MEMBER_KEY ,
 			l.ER_AP_TEAM_KEY,
 			d.DEPARTMENT_NAME,
 			l.ER_AP_JOB_KEY,

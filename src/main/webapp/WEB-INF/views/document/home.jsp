@@ -18,6 +18,10 @@
       rel="icon"
       type="image/x-icon"
     />
+      <!-- SweetAlert2 CSS -->
+	  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+	  <!-- SweetAlert2 JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
     <style>
     	#tablerow:hover{
     		cursor: pointer; 
@@ -57,5 +61,8 @@
           </div>
           </div>
         </div>
+<script>
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+</script>
   </body>
 </html>

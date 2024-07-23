@@ -104,7 +104,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
-	public Document selectDocById(SqlSession session, String docId) {
+	public Document selectDocById(SqlSession session, int docId) {
 		return session.selectOne("document.selectDocById", docId);
 	}
 	@Override
@@ -159,6 +159,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
+	}
+
+	@Override
+	public List<Referer> selectReferer(SqlSession session, String serial) {
+		return session.selectList("document.selectReferer", serial);
 	}
 
 }

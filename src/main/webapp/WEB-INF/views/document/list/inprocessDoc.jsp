@@ -47,7 +47,7 @@
                   	<c:forEach items="${l.approvers }" var="ap">
                   		<c:if test="${ap.state eq '승인' }">
                     			<div class="badge badge-success" style="min-width: 60px;">
-                    				<span class="">${ap.memberTeamName }</span><br>
+                    				<small class="">${ap.memberTeamName }</small><br>
                     				<small class="">${ap.memberJobName} ${ap.memberName}</small>
                     			</div>
                     		</c:if>
@@ -71,9 +71,9 @@
                     		</c:if>
                     </c:forEach>
                   </td>
-               	<td colspan="">
+               		<td colspan="">
                			<input type="button" value="회수" class="btn btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocSerialKey}');">
-              		</td>
+             		</td>
                 </tr>
                 </c:forEach>
                </c:if>

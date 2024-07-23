@@ -21,7 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +40,6 @@ import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -108,18 +107,11 @@ public class MemberDocumentController {
 	
 //	전자문서 상세보기
 	@PostMapping("/view/docDetail{docId}")
-	public void viewDoc(String docId, Model m, HttpSession session) {
-		Document document = null;
-		if(docId != null) {
-			log.debug("----" + docId + "번 문서 상세보기----");
-			session.setAttribute("docId", docId);
-		}else{
-			log.debug(docId);
-			docId = (String) session.getAttribute("docId");
-		}
-		document = serv.selectDocById(docId);
-		m.addAttribute("l", document);
+	public void viewDoc(int docId, Model m) {
+		log.debug("----" + docId + "번 문서 상세보기----");
+		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
+		m.addAttribute("l", document);
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		log.debug("{}", html);
@@ -134,7 +126,7 @@ public class MemberDocumentController {
 	}
 	
 	
-	@PostMapping("/formlist.do")
+	@PostMapping("/formlist")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -158,7 +150,32 @@ public class MemberDocumentController {
 		m.addAttribute("form", form);
 		return "document/write/normal";
 	}
-	
+	@PostMapping("/rewrite")
+	public String docRewrite(String serial, Model m) {
+		log.debug("----전자문서 재작성----");
+		Document d = serv.selectDocBySerial(serial);
+		String html = readHtmlFile("dochtml", d.getErDocFilename());
+		log.debug(html);
+		m.addAttribute("html", html);
+		m.addAttribute("doc", d);
+		log.debug("{}", d);
+		
+		//날짜- 제거
+		String afterF = serial.substring(serial.indexOf("F"));
+		//뒤 -이후 제거
+		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
+		if(afterFbeforebar.contains("TEMP")) {
+			afterFbeforebar.replace("TEMP", "");
+		}
+		String formNo = afterFbeforebar.replace("F", "");
+		System.out.println(formNo);
+        	m.addAttribute("form", formNo);
+        	log.debug(m.getAttribute("form").toString());
+//        }else {
+//            log.warn("No match found.");
+//        }
+		return "document/rewrite/normal";
+	}
 //	팝업
 	//결재자 선택팝업 호출, 조직도와 저장된 결재라인 출력
 	@GetMapping("/write/approver")
@@ -252,8 +269,8 @@ public class MemberDocumentController {
 	//문서 임시저장
 	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftDoc(
-			String msg, Model m, Document doc, String html, int form,
-			@RequestParam(value="file")MultipartFile[] file
+			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			@RequestParam(value="upfile")MultipartFile[] file
 			){
 		Member user = getCurrentUser();
 		log.debug("{}", html);
@@ -282,7 +299,7 @@ public class MemberDocumentController {
 		
 		//기안, 결재자 등록 성공시
 		response.put("status", "success");
-		response.put("message", "문서 등록 완료");
+		response.put("message", "문서 임시저장 완료");
 		
 		return ResponseEntity.ok(response);
 	}
@@ -290,11 +307,12 @@ public class MemberDocumentController {
 	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertDoc(
-			String msg, Model m, Document doc, String html, int form,
-			@RequestParam(value="file")MultipartFile[] file) {
+			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			@RequestParam(value="upfile") MultipartFile[] file) {
 		
 		Member user = getCurrentUser();
 		log.debug("{}", html);
+		log.debug(file.toString());
 		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
@@ -313,6 +331,13 @@ public class MemberDocumentController {
 									.orderby(0)
 						.build();
 		List<Approver> ap = doc.getApprovers();
+		for(Approver a : ap) {
+			if(a.getMemberKey()==0) {
+				log.debug("없는 결재자 삭제");
+				log.debug("{}", a);
+				ap.remove(a);
+			}
+		};
 		ap.add(me);
 		doc.setApprovers(ap);
 		log.debug("{}", doc);
@@ -356,15 +381,21 @@ public class MemberDocumentController {
 	}
 	@PostMapping("/delete")
 	@ResponseBody
-	public int deleteDraftDoc(String serial) {
-		log.debug("------"+serial + " 임시 보관 문서 삭제 요청------");
+	public ResponseEntity<Map<String,Object>> deleteDraftDoc(int no) {
+		log.debug("------"+no + " 임시 보관 문서 삭제 요청------");
+		Map<String,Object> response = new HashMap<>();
 		int result=0;
 		try {
-			result = serv.deleteDraftDoc(serial);
+			result = serv.deleteDraftDoc(no);
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "임시 보관 문서 삭제에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-		return result;
+		response.put("status", "success");
+		response.put("message", "임시 보관 문서 삭제 완료");
+		return ResponseEntity.ok(response);
 	}
 	
 	//html 파일 읽기

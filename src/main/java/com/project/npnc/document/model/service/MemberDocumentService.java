@@ -31,9 +31,9 @@ public interface MemberDocumentService {
 	List<Document> selectRetrieveDocs(int no);
 	List<Document> selectDraftDocs(int no);
 	int retrieveDoc(String docSerial) throws Exception;
-	int deleteDraftDoc(String docSerial) throws Exception;
+	int deleteDraftDoc(int docKey) throws Exception;
 	
-	Document selectDocById(String docId);
+	Document selectDocById(int docId);
 	Document selectDocBySerial(String serial);
 	
 	int insertApproverLine(int no, String name, List<ApproverLine> list) throws Exception;

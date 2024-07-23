@@ -1,9 +1,8 @@
 /**
  *  진행중 문서
  */
-
+	
 function modal(no){
-	// SweetAlert2 모달 띄우기
 	console.log(no);
 	Swal.fire({
 		title: '회수 확인',

@@ -15,7 +15,7 @@
 <html lang="ko">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>문서 작성</title>
+  <title>문서 재작성</title>
   <meta
     content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
     name="viewport"
@@ -101,16 +101,23 @@
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle" value="${doc.erDocTitle }">
 				      </div>
 				    </div>
 				    <div class="form-group">
 				      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
-				          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
-				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
-			          </label>
+				          <c:if test="${doc.erDocEmergencyYn == 'Y'}">
+					          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1" checked>
+					          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
+					          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2">
+					          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span></label>
+				          </c:if>
+			      		<c:if test="${doc.erDocEmergencyYn == 'N'}">
+					          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
+					          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
+					          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+					          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span></label>
+			      		</c:if>
 				    </div>
 				    <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
@@ -122,17 +129,25 @@
 				      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
 				      	<div class="col w-100 align-items-center p-0">
 						      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
-									 <!-- <div class="border" id="approval1">
-									  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
-									  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-									  	<input name="approvers[0].memberKey" value="2" style="display:none">
-									  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-									  	<input name="approvers[0].memberJob" value="사원" style="">
-									  	<input name="approvers[0].memberName" value="김사원" style="">
-									  	<input name="approvers[0].category" value="기안" style="">
+						      	<c:if test="${doc.approvers eq null || empty doc.approvers}">
+									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span>
+								</c:if> 
+						      	<c:if test="${doc.approvers ne null || not empty doc.approvers}">
+						      		<c:forEach items="${doc.approvers }" var="ap" varStatus="vs">
+									<c:if test="${ap.orderby ne 0}">
+									  <div class="col m-0 p-2" id="approval1" style="width: 100%; font-size: larger; text-align: lef; border-radius: 15px;">
+									  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${ap.orderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;" readonly="readonly">
+									  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none">
+									  	<input name="approvers[${vs.index }].memberTeamName" value="${ap.memberTeamName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" readonly="readonly">
+									  	<input type="hidden" name="approvers[${vs.index }].memberTeamKey" value="${ap.memberTeamKey }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" readonly="readonly">
+									  	<input name="approvers[${vs.index }].memberJobName" value="${ap.memberJobName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;"  readonly="readonly">
+									  	<input type="hidden" name="approvers[${vs.index }].memberJobKey" value="${ap.memberJobKey }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;"  readonly="readonly">
+									  	<input name="approvers[${vs.index }].memberName" value="${ap.memberName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;"  readonly="readonly">
+									  	<input name="approvers[${vs.index }].category" value="${ap.category }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;"  readonly="readonly">
 									  </div>
-									   -->
+									 </c:if>
+								  </c:forEach>
+								 </c:if>
 						      </div>
 						      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
 						    </div>
@@ -140,6 +155,19 @@
 				    <div class="form-group d-flex align-items-top gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
 					      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
+					      	<c:if test="${doc.referers ne null ||not empty doc.referers}">
+						      <c:forEach items="${doc.referers }" var="ap" varStatus="vs">
+						      		<div id="referer0" class="col m-0 p-2" style="width: 100%; text-align: left; border-radius: 15px;">
+						      			<input name="referers[${vs.index }].memberKey" value="${ap.memberKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
+						      			<input name="referers[${vs.index }].memberTeamKey" value="${ap.memberTeamKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
+						      			<input name="referers[${vs.index }].memberJobKey" value="${ap.memberJobKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
+						      			<input name="referers[${vs.index }].memberTeam" value="${ap.memberTeamName }" readonly="readonly" style="border: none; width: 5.5ch; max-width: 80px; background-color: white;">
+						      			<input name="referers[${vs.index }].memberJob" value="${ap.memberJobName }" readonly="readonly" style="border: none; width: 4ch; max-width: 80px; background-color: white;">
+						      			<input name="referers[${vs.index }].memberName" value="${ap.memberName }" readonly="readonly" style="border: none; width: 5.5ch; max-width: 80px; background-color: white;">
+						      			<button class="badge rounded-pill text-bg-secondary Xbtn" type="button" style="width: 3.2ch;">X</button>
+					      			</div>
+						      </c:forEach>
+					      </c:if>
 					      </div>
 					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
@@ -150,17 +178,40 @@
 				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
 				    </div> -->
 				    <div class="form-group d-flex" id="fileDiv">
+			          <label for="exampleFormControlFile1"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
+			          <div class="border" style="width:100%; height: auto;" id="fileinputDiv">
+			          	<input type="file" class="form-control" id="formFile" name="upfile"  multiple style="display:none;">
+					    <c:if test="${doc.files[0].fileKey ne 0}">
+		          		<c:forEach items="${doc.files }" var="f" varStatus="vs">
+		          		<!-- 추가된 파일 출력 위치 -->
+						  <div class="m-0 p-2 d-flex align-items-center justify-content-between file-name" id="" style="width: 100%; min-height: 30px;  font-size: larger; text-align: left; border-radius: 15px;">
+						  	<div class="d-flex align-items-center savedFile">
+							  	<input name="files[${vs.index }].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="${f.fileOrderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+							  	<input name="files[${vs.index }].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="${f.fileOriName }" readonly>
+							  	<input name="files[${vs.index }].fileRename" class="fileInput form-control " style="color: black; " value="${f.fileRename }" type="hidden">
+							  	<input name="files[${vs.index }].fileKey" class="fileInput form-control" style="color: black;" value="${f.fileKey }" type="hidden">
+						  	</div>
+						  	<div class="d-flex">
+							  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
+							  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+							  	<button class="btn btn-sm btn-outline-primary ml-2 bringBtn ms-2" id="fileDeleteBtn" type="button">삭제</button>
+						  	</div>
+						  </div>
+						</c:forEach>
+			          	</c:if>
+			          </div>
+			      	  <button class="btn btn-sm btn-info btn-block ms-4" type="button" style="width: 70px; height: 30px" id="fileBtn">선택</button>
+			        </div>
+				    <!-- <div class="form-group d-flex">
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
-				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="fileinputDiv">
-								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
-					          	<input type="file" class="form-control" id="formFile" name="upfile" multiple style="display:none;">
-					          	<!-- 추가된 파일 출력 위치 -->
+				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+					          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
 					      </div>
-				      	  <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="fileBtn">선택</button>
 				     </div>
-				    </div>
-				    <div class="form-group" id="">
+				    </div> -->
+				    <div class="form-group">
 			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
@@ -194,13 +245,15 @@
 
 <script>
 $(document).ready(function() {
+	
+	
 	// 파일 선택 버튼과 파일 입력 필드
     const fileBtn = document.getElementById('fileBtn');
     const fileInput = document.getElementById('formFile');
     const fileDiv = document.getElementById('fileDiv');
 	
  	// 파일 선택 버튼 클릭 시 파일 입력 필드 클릭
-     $('#fileBtn').on('click', function() {
+    $('#fileBtn').on('click', function() {
         $('#formFile').click();
     });
  	
@@ -208,13 +261,13 @@ $(document).ready(function() {
     $('#formFile').on('change', function() {
         // 선택한 파일 가져오기
         let files = fileInput.files;
-		$("#dragspan").removeClass('d-flex').css('display', 'none');
-		// 현재 파일 리스트에서 이미 추가된 파일의 개수를 계산
+        console.dir(fileInput);
+    	 // 현재 파일 리스트에서 이미 추가된 파일의 개수를 계산
 	    let existingCount = $('#fileinputDiv .file-name').length;
         
-     // 선택한 파일 이름을 표시하기 위한 내용 추가
+        // 선택한 파일 이름을 표시하기 위한 내용 추가
         Array.from(files).forEach((file, index) => {
-	       	let adjustedIndex = existingCount + index + 1;
+        	let adjustedIndex = existingCount + index + 1;
         	let files=this.files;
         	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
 									.css({
@@ -245,10 +298,9 @@ $(document).ready(function() {
 			$('#fileinputDiv').append($div);
         });
     });
-	
+ 
 	 var ui = $.summernote.ui;
 	//기안 작성
-	<%-- var table = '<%= request.getAttribute("html") != null ? request.getAttribute("html") : "" %>'; --%>
 	var table = `<c:out value="${html}" escapeXml="false"/>`;
 
 	// Initialize Summernote
@@ -301,8 +353,8 @@ $(document).ready(function() {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
 				// 로컬 스토리지에서 데이터를 삭제
-				localStorage.removeItem('selectedReferer'); 
-				localStorage.removeItem('selectedApprover'); 
+				//localStorage.removeItem('selectedReferer'); 
+				//localStorage.removeItem('selectedApprover'); 
 				
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				console.log(dochtml);
@@ -314,20 +366,12 @@ $(document).ready(function() {
 					
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
-			        formData.delete("files");
-			        
-		            let files = fileInput.files;
-
-		            // 다중 파일 추가
-		            for (let i = 0; i < files.length; i++) {
-		            	formData.append('upfile', fileInput.files[i]);
-		            } 
-
-		            // FormData의 내용 확인
-					formData.entries().forEach(e=>{
-		            	console.log(e);
-	            	});
+	                formData.delete("files");
 					
+			        console.dir(formData);
+	                const en=formData.entries().forEach(e=>{console.log(e);});
+					
+					console.dir(formData);
 			     	// AJAX로 폼 데이터를 전송
 			        fetch(sessionStorage.getItem("path")+'/document/writeend', {
 			            method: 'POST',
@@ -346,7 +390,7 @@ $(document).ready(function() {
 			        })
 			        .catch(error => {
 			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-			        }); 
+			        });
 			    } else{
 			        alert('문서 양식 불러오기 오류');
 			    }
@@ -369,7 +413,6 @@ $(document).ready(function() {
 				// 임시저장 버튼이 클릭되었을 때 처리할 로직
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
@@ -384,7 +427,7 @@ $(document).ready(function() {
 		                alert(data.message);
 		                // 성공 시 페이지 리다이렉트
 		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
-		                window.location.href = sessionStorage.getItem("path")+"/document/list/draft";
+		                window.location.href = sessionStorage.getItem("path")+"/document/home";
 		            } else {
 		                alert(data.message);
 		            }
@@ -396,16 +439,6 @@ $(document).ready(function() {
 		});
 	});
 });
-
-$("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', function(e) {
-	e.stopPropagation(); // 이벤트 버블링 방지
-	$(e.target).parent().parent().remove();
-	//인덱스 재조정
-    $('#fileinputDiv .file-name').each(function(index, element) {
-        $(element).find('.badge').val(index + 1); 
-    });
-});
-
 $("#approverBtn").click(function() {
 	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
@@ -626,18 +659,26 @@ function sendRefererToParent(data) {
 
         $div.appendTo($("#refererDiv"));
         
-        $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
-        	e.stopPropagation(); // 이벤트 버블링 방지
-        	let $div = $(e.target).closest('div.col');
-        	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
-        	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
-        	console.log(index);
-            savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
-            localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
-        	$(e.target).parent().remove();
-        });
     });
 }
+$("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', function(e) {
+	e.stopPropagation(); // 이벤트 버블링 방지
+	$(e.target).parent().parent().remove();
+	//인덱스 재조정
+    $('#fileinputDiv .file-name').each(function(index, element) {
+        $(element).find('.badge').val(index + 1); 
+    });
+});
+$("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
+	e.stopPropagation(); // 이벤트 버블링 방지
+	let $div = $(e.target).closest('div.col');
+	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
+	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
+	console.log(index);
+    savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
+    localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
+	$(e.target).parent().remove();
+});
 </script>
 </body>
 </html>

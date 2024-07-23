@@ -4,7 +4,7 @@
 $(document).ready();
 const viewFormList =(no, name)=>{
 	$.ajax({
-		url: `${path}/document/formlist.do`,
+		url: `${path}/document/formlist`,
 		type: "post",
 		data: {"folderNo" : no},
 		success: function(data){
@@ -30,7 +30,7 @@ $("#formsearchbtn").click(e=>{
 	let target = $("#formsearchtarget").val();
 	console.log(target);
 	$.ajax({
-		url: `${path}/document/formsearch.do`,
+		url: `${path}/document/formsearch`,
 		type: "post",
 		data: {"target" : target},
 		success: function(data){

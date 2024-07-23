@@ -4,14 +4,30 @@
 
  function rewriteModal(no){
 	console.log(no);
-	$.ajax({
-		url: sessionStorage.getItem("path") + `/document/retrieve`,
-		data: {no : no},
-		dataType: "text",
-		method: "post",
-		success: data=>{
-			if(data==1){
-			}
+	Swal.fire({
+		title: '문서 재작성 확인',
+		html: '문서를 다시 작성하시겠습니까?',
+		showCancelButton: true,
+		confirmButtonClass: 'btn btn-success',
+		cancelButtonClass: 'btn btn-danger ms-2',
+		confirmButtonText: '확인',
+		cancelButtonText: '취소',
+		buttonsStyling: false,
+		reverseButtons: false
+	}).then(result => {
+		if (result.isConfirmed) {
+			let $form = $("<form>").attr({
+									'method' : 'post', 
+									'action': sessionStorage.getItem("path") + `/document/rewrite`,
+									'type' : 'hidden'
+									})
+								;
+			$("<input>").attr({
+								'name' : 'serial',
+								'value' : no,
+								'type' : 'hidden'
+							}).appendTo($form)
+			$form.appendTo($("body")).submit();
 		}
 	});
 };
@@ -29,13 +45,15 @@
 		reverseButtons: false
 	}).then(result => {
 		if (result.isConfirmed) {
+			//삭제 요청 전송
 			$.ajax({
 				url: sessionStorage.getItem("path") + `/document/delete`,
 				data: {no : no},
 				dataType: "text",
 				method: "post",
 				success: data=>{
-					if(data==1){
+					console.log()
+					if(data.status==="success"){
 						Swal.fire({
 							title: '삭제 완료',
 							html: '<h4>정상적으로 삭제되었습니다.</h4>',
@@ -49,6 +67,24 @@
 						}).then(() => {
 							location.reload();
 						});
+					}else{
+				        fetch(sessionStorage.getItem("path")+'/document/writeend', {
+				            method: 'POST',
+				            body: formData,
+				        })
+				        .then(response => response.json())
+				        .then(data => {
+				            if (data.status === "success") {
+				                alert(data.message);
+				                // 성공 시 페이지 새로고침
+				                location.reload();
+				            } else {
+				                alert(data.message);
+				            }
+				        })
+				        .catch(error => {
+				            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+				        });
 					}
 				}
 			});

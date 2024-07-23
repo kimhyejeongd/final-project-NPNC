@@ -57,7 +57,7 @@
 		                            	<c:forEach items="${l.approvers }" var="ap">
 		                            		<c:if test="${ap.state eq '승인' }">
 		                              			<div class="badge badge-success" style="min-width: 60px;">
-		                              				<span class="">${ap.memberTeamName }</span><br>
+		                              				<small class="">${ap.memberTeamName }</small><br>
 		                              				<small class="">${ap.memberJobName} ${ap.memberName}</small>
 		                              			</div>
 		                              		</c:if>

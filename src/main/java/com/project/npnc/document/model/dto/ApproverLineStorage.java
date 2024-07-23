@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class ApproverLineStorage {
 	private int erApLineStorageKey;
 	private String erApLineStorageName;
-	private int memberKey;
+	private int memberKey; //"OWNER_MEMBER_KEY"
 	private List<ApproverLine> approvers;
 }
