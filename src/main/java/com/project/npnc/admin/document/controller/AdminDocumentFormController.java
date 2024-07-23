@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,7 +25,7 @@ public class AdminDocumentFormController {
 	public String selectAdminDocumentFormAll(Model model) {
 		List<StorageFolder> folders = service.selectAdminDocumentFormAll();
 		model.addAttribute("folders",folders);
-		return "admin/document/docForm";
+		return "admin/document/docStorage";
 		
 	}
 	@GetMapping("/selectDoc")
@@ -32,5 +33,8 @@ public class AdminDocumentFormController {
 		List<AdminDocument> docs = service.selectDocAll(folderKey);
 		return ResponseEntity.ok(docs);
 	}
+	
+//	@PostMapping("/updateOrder")
+//	public int updateOrder ()
 
 }
