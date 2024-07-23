@@ -83,7 +83,7 @@ public class HomeController {
 //	}
 
 	@GetMapping("chatRoom")
-	public String chatRoom(Model model,HttpSession session,@RequestParam String inputValue) {
+	public String chatRoom(Model model,HttpSession session) {
 		
 
 		Member member = getCurrentUser();
@@ -100,9 +100,20 @@ public class HomeController {
 		List<Member>members = service.selectAllMembers();	
 		model.addAttribute("members",members);
 		
+		System.out.println("mychatRoomListmychatRoomListmychatRoomList"+mychatRoomList);
 		
-
 		return "chatting/chatRoom";
+	}
+	
+	@GetMapping("/")
+	public String headerChatroom(Model model) {
+		Member member = getCurrentUser();
+
+		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
+		model.addAttribute("mychatRoomList",mychatRoomList);
+		System.out.println(mychatRoomList+"========================================");
+		System.out.println("========================================");
+		return "index";
 	}
 	
 	
