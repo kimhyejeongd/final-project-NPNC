@@ -753,6 +753,7 @@
             	
 
       		}
+			
           	/* 타입 , 알람 , 수신인, 메세지  */
          	function send(reMemberKey1, memberKey){
    		   	 console.log('send보내짐');
@@ -766,7 +767,20 @@
    		   				
    		   		);
 		   		  
-   		   	} 
+   		   	}
+			
+			<!--전체 알람 함수-->
+			function sendAll(alarmSendMember){
+					   	 console.log('send보내짐');
+					   		stompClient.send("/pub/all",{},
+					   			JSON.stringify({
+					   				
+					   				alarmSendMember : alarmSendMember
+					   				
+					   			})
+					   				
+					   		);
+			}  
         	
          	/* 파일 다운로드 버튼 로직 */
           	function fn_download(ori,post){
@@ -877,7 +891,8 @@
 			    	contentType: false, 
 		    		success : function(){
 		    			alert('성공');
-		    				
+						sendAll(memberKey);
+
 		    			/* send(reMemberKey1, memberKey); */
 		    		}
 		    	});

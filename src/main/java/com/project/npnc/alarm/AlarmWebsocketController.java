@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.project.npnc.alarm.dto.AlarmMessage;
-import com.project.npnc.alarm.service.AlarmService;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AlarmWebsocketController {
+	
+	
 	
 	@MessageMapping("/msg/{reMemberKey}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/sub/{reMemberKey}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨

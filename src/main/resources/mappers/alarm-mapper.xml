@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="alarm">
+		<resultMap id="alarmMap" type="alarmMessage">
+		
+			<result column="ALARM_TPYE" property="alarmType"></result>
+			<result column="ALARM_PATH" property="alarmPath"></result>
+			<result column="ALARM_RE_MEMBER" property="alarmReMember"></result>
+			<result column="ALARM_SEND_MEMBER" property="alarmSendMember"></result>
+			<result column="ALARM_DATE" property="alarmDate"></result>
+			<result column="ALARM_DATE_READ" property="alarmRead"></result>
+		</resultMap>
+		
+	
+	
+	
+	<select id="alarmSelectAll" resultMap="alarmMap">
+		SELECT * FROM ALARM WHERE ALARM_DATE_READ='N'
+	</select>
+	<insert id="alarmInsert"  parameterType="alarmMessage">
+ 		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N')
+
+	</insert>
+</mapper>

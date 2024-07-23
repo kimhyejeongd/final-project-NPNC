@@ -501,55 +501,49 @@
                     >
                       <li>
                         <div class="dropdown-title">
-                          You have 4 new notification
+                          읽지 않은 알람이 4개 있습니다.
                         </div>
                       </li>
                       <li>
-                        <div class="notif-scroll scrollbar-outer">
+                        <div class="notif-scroll scrollbar-outer" style="overflow: auto;">
                           <div class="notif-center">
                             <a href="#">
-                              <div class="notif-icon notif-primary">
-                                <i class="fa fa-user-plus"></i>
+                              <div class="notif-icon notif-secondary">
+                                <i class="fa fa-file-invoice-dollar"></i>
                               </div>
                               <div class="notif-content">
                                 <span class="block"> New user registered </span>
                                 <span class="time">5 minutes ago</span>
                               </div>
                             </a>
-                            <a href="#">
-                              <div class="notif-icon notif-success">
-                                <i class="fa fa-comment"></i>
-                              </div>
-                              <div class="notif-content">
-                                <span class="block">
-                                  Rahmad commented on Admin
-                                </span>
-                                <span class="time">12 minutes ago</span>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div class="notif-img">
-                                <img
-                                  src="assets/img/profile2.jpg"
-                                  alt="Img Profile"
-                                />
-                              </div>
-                              <div class="notif-content">
-                                <span class="block">
-                                  Reza send messages to you
-                                </span>
-                                <span class="time">12 minutes ago</span>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div class="notif-icon notif-danger">
-                                <i class="fa fa-heart"></i>
-                              </div>
-                              <div class="notif-content">
-                                <span class="block"> Farrah liked Admin </span>
-                                <span class="time">17 minutes ago</span>
-                              </div>
-                            </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>
+                         
                           </div>
                         </div>
                       </li>
@@ -698,9 +692,36 @@
 				   		 	},
 				   		 	time: 1000,
 				   		 });
+						 
+						 
+						 <a href="#">
+                          <div class="notif-icon notif-success">
+                            <i class="fa fa-envelope"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> new user registered </span>
+                            <span class="time">5 minutes ago</span>
+                          </div>
+                        </a>
 		            });
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
+						
+						var bodyObject= JSON.parse(msg.body);
+							                console.log('test'+bodyObject.message);
+							                
+							             	$.notify({
+									   		 	icon: 'icon-bell',
+									   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
+									   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+									   		 },{
+									   		 	type: 'primary',
+									   		 	placement: {
+									   		 		from: "bottom",
+									   		 		align: "right"
+									   		 	},
+									   		 	time: 1000,
+									   		 });
 		            });
 		            
 		            stompClient.subscribe('/user/queue/users', function (message) {
