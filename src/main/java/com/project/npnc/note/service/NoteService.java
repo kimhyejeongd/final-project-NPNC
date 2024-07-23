@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
 import com.project.npnc.note.dto.NoteSendDto;
@@ -25,4 +26,5 @@ public interface NoteService {
 	public int noteWritesAndFile(int[] reMemberKey, NoteReceptionDto note, List<NoteFileDto> upfiles);
 	public int noteSendDelete(int[] checkDeleteValue);
 	public int noteRecDelete(int[] checkDeleteValue, int memberKey);
+	public List<Member> selectMemberAllNoPaging();
 }

@@ -759,9 +759,14 @@
    		   	 console.log('send보내짐');
    		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
    		   			JSON.stringify({
-   		   				'reMemberKey' : reMemberKey1,
-   		   				'memberKey' : memberKey,
-   		   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
+						
+						alarmType : 'Note',
+						alarmPath : 'notein',
+		   				alarmSendMember : memberKey,
+						alarmReMember : reMemberKey1,
+						alarmDate : new Date().toISOString()
+						
+   		   				
    		   				
    		   			})
    		   				
@@ -772,11 +777,13 @@
 			<!--전체 알람 함수-->
 			function sendAll(alarmSendMember){
 					   	 console.log('send보내짐');
+						 
 					   		stompClient.send("/pub/all",{},
 					   			JSON.stringify({
-					   				
-					   				alarmSendMember : alarmSendMember
-					   				
+									alarmType : 'Note',
+									alarmPath : 'notein',
+					   				alarmSendMember : alarmSendMember,
+									alarmDate : new Date().toISOString()
 					   			})
 					   				
 					   		);

@@ -314,6 +314,9 @@
 			}
 	
 	  </style>
+
+	  
+	  
       <div class="main-header">
             <div class="main-header-logo">
               <!-- Logo Header -->
@@ -390,21 +393,106 @@
 					            });
 					        });
 					    });
+					<!-- 조직도 내용 함수-->
 					 $(document).ready(
-					            function(){
-					               $("#organ").on('show.bs.dropdown', function(){
-					            	     event.stopPropagation();
-					            	     $.ajax({
-					            	    	url : '${path}/organ',
-					            	    	type: 'GET',
-					            	    	success : function(response){
-					            	    		$('#organcontainer').html("");
-					            	    		$('#organcontainer').html(response);
-					            	    	}
-					            	     });
-					               });   
-					            }
-					         );
+			            function(){
+			               $("#organ").on('show.bs.dropdown', function(){
+			            	     event.stopPropagation();
+			            	     $.ajax({
+			            	    	url : '${path}/organ',
+			            	    	type: 'GET',
+			            	    	success : function(response){
+			            	    		$('#organcontainer').html("");
+			            	    		$('#organcontainer').html(response);
+			            	    	}
+			            	     });
+			               });   
+			            }
+			         );
+					 
+					<!-- 알람 내용 드랍다운 함수 -->
+					$(document).ready(
+			            function(){
+			               $("#notifDropdown").on('show.bs.dropdown', function(){
+								
+								$.ajax({
+									url:'${path}/alarmSelectAll',
+									type:'POST',
+									data:{
+										
+										memberKey : ${loginMember.memberKey}
+											
+										},
+									success:function(response){
+										
+										var alarmBox = document.getElementById('alarmBox');
+										 alarmBox.innerHTML = ''; // Clear innerHTML
+										for(let i=0; i<response.length;i++){
+											if(response[i].alarmType=='Note'){
+
+												var a = document.createElement('a');
+										          a.href = 'javascript:alarmDeleteOne(\''+response[i].alarmKey+'\''+'\,\''+'${path}/'+response[i].alarmPath+'\');';
+												  a.className='noteDeleteOne';		
+												  a.id = response[i].alarmKey;
+												  
+										          var divIcon = document.createElement('div');
+										          divIcon.className = 'notif-icon notif-success';
+
+										          var faIcon = document.createElement('i');
+										          faIcon.className = 'fa fa-envelope';
+
+										          var divContent = document.createElement('div');
+										          divContent.className = 'notif-content';
+
+										          var spanBlock = document.createElement('span');
+										          spanBlock.className = 'block';
+										          spanBlock.textContent = response[i].alarmSendMember+'님의 쪽지';
+										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+
+										          var spanTime = document.createElement('span');
+										          spanTime.className = 'time';
+											   	
+												   	// 예시 ISO 8601 날짜 문자열
+												   	const isoDateString = response[i].alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+		
+												   	// ISO 8601 문자열을 Date 객체로 변환
+												   	const date = new Date(isoDateString);
+		
+												   	// Date 객체를 로컬 형식으로 변환하여 출력
+												   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+		
+												   	// 또는 직접 포맷하여 사용할 수 있습니다.
+												   	const year = date.getFullYear();
+												   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+												   	const day = date.getDate().toString().padStart(2, '0');
+												   	const hours = date.getHours().toString().padStart(2, '0');
+												   	const minutes = date.getMinutes().toString().padStart(2, '0');
+												   	const seconds = date.getSeconds().toString().padStart(2, '0');
+												   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+		
+												   	// spanTime에 포맷된 날짜를 설정
+												   	spanTime.textContent = customFormattedDate + " ";
+												   	
+											          // Append the child elements
+											          divIcon.appendChild(faIcon);
+											          divContent.appendChild(spanBlock);
+											          divContent.appendChild(spanTime);
+											          a.appendChild(divIcon);
+											          a.appendChild(divContent);
+	
+											   		document.getElementById('alarmBox').appendChild(a);				
+											}
+																					
+												
+										} 
+										
+									   
+									}
+								});
+			               });   
+			            }
+			         );
+							 		 
 					 var headerUnread = ()=>{						 
 						$.ajax({
 							url:'${path}/headerUnread',
@@ -505,9 +593,9 @@
                         </div>
                       </li>
                       <li>
-                        <div class="notif-scroll scrollbar-outer" style="overflow: auto;">
-                          <div class="notif-center">
-                            <a href="#">
+                        <div class="notif-scroll scrollbar-outer" style="overflow: auto;" >
+                          <div class="notif-center" id="alarmBox">
+                           <!-- <a href="#">
                               <div class="notif-icon notif-secondary">
                                 <i class="fa fa-file-invoice-dollar"></i>
                               </div>
@@ -542,14 +630,15 @@
 	                            <span class="block"> New user registered </span>
 	                            <span class="time">5 minutes ago</span>
 	                          </div>
-	                        </a>
+	                        </a>-->
                          
                           </div>
+						 
                         </div>
                       </li>
                       <li>
-                        <a class="see-all" href="javascript:void(0);"
-                          >See all notifications<i class="fa fa-angle-right"></i>
+                        <a class="see-all" href="javascript:alarmReadAll();"
+                          >전체 확인<i class="fa fa-angle-right"></i>
                         </a>
                       </li>
                     </ul>
@@ -638,6 +727,57 @@
             <!-- End Navbar -->
             
             <script>
+		
+			<!-- 알람 이동 전 삭제 로직 -->
+			
+			function alarmDeleteOne(alarmKey, path){
+				console.log(path);
+				$.ajax({
+					url:'${path}/alarmDeleteOne',
+					type:'POST',
+					data:{ memberKey:${loginMember.memberKey},
+						   alarmKey: alarmKey
+					},
+					success:function(response){
+						window.location.href = path;
+
+					}
+				});	
+			}	
+		
+			<!-- 알람 전체 삭제 -->
+			function alarmReadAll(){
+				$.ajax({
+					url:'${path}/alarmDeleteAll',
+					type:'POST',
+					data:{ memberKey:${loginMember.memberKey}},
+					success:function(response){
+						var alarmBox = document.getElementById('alarmBox');
+						alarmBox.innerHTML = ''; // Clear innerHTML
+						$('.notification').eq(1).text(0);
+													
+						$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+0+"개 있습니다.");
+					}
+				});
+			}	
+				
+			<!-- 알람 숫자 온로드 함수 -->		
+			function onWindowLoadAlarmNum() {
+					$.ajax({
+						url:'${path}/alarmSelectAll',
+						type:'POST',
+						data:{ memberKey:${loginMember.memberKey}},
+						success:function(response){
+			                $('.notification').eq(1).text(response.length);
+								
+							$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+response.length+"개 있습니다.");
+						}
+					});
+			      }
+	
+	        // 알람 숫자 표기
+	     	window.onload = onWindowLoadAlarmNum();
+					  
             var stompClient = null;
             var userStatusMap = {};
             var totalUnread = 0;
@@ -694,34 +834,57 @@
 				   		 });
 						 
 						 
-						 <a href="#">
-                          <div class="notif-icon notif-success">
-                            <i class="fa fa-envelope"></i>
-                          </div>
-                          <div class="notif-content">
-                            <span class="block"> new user registered </span>
-                            <span class="time">5 minutes ago</span>
-                          </div>
-                        </a>
+						 // Step 1: Extract the current number from the element
+				           var notificationText = $('.notification').eq(1).text();
+				           var currentCount = parseInt(notificationText, 10);
+	
+				           // Step 2: Perform the desired operation (e.g., increment by 1)
+				           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+	
+				           // Step 3: Update the elements with the new value
+				           $('.notification').eq(1).text(updatedCount);
+	
+				           var dropdownTitle = $('.dropdown-title').eq(1).text();
+				           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+				           $('.dropdown-title').eq(1).text(newDropdownTitle);
+						
 		            });
+					
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
 						
 						var bodyObject= JSON.parse(msg.body);
-							                console.log('test'+bodyObject.message);
-							                
-							             	$.notify({
-									   		 	icon: 'icon-bell',
-									   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-									   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
-									   		 },{
-									   		 	type: 'primary',
-									   		 	placement: {
-									   		 		from: "bottom",
-									   		 		align: "right"
-									   		 	},
-									   		 	time: 1000,
-									   		 });
+						
+			                if(bodyObject.alarmType=='Note'){
+			             	$.notify({
+					   		 	icon: 'icon-bell',
+					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
+					   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+					   		 },{
+					   		 	type: 'primary',
+					   		 	placement: {
+					   		 		from: "bottom",
+					   		 		align: "right"
+					   		 	},
+					   		 	time: 1000,
+					   		 });
+							 
+	 							}
+								
+							   // Step 1: Extract the current number from the element
+					           var notificationText = $('.notification').eq(1).text();
+					           var currentCount = parseInt(notificationText, 10);
+
+					           // Step 2: Perform the desired operation (e.g., increment by 1)
+					           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+
+					           // Step 3: Update the elements with the new value
+					           $('.notification').eq(1).text(updatedCount);
+
+					           var dropdownTitle = $('.dropdown-title').eq(1).text();
+					           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+					           $('.dropdown-title').eq(1).text(newDropdownTitle);
+											 
 		            });
 		            
 		            stompClient.subscribe('/user/queue/users', function (message) {

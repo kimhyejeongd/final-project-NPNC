@@ -28,6 +28,15 @@ public class NoteServiceImpl implements NoteService{
 	private final SqlSession session;
 	private final MemberDao memberDao;
 	
+	@Override
+	public List<Member> selectMemberAllNoPaging() {
+		
+		List<Member> result =memberDao.selectMemberAllNoPaging(session);
+		
+		return result;
+	}
+
+	
 // 개별, 다중 쪽지 발송 파일 있는 버전	
 	@Override
 	public int noteWritesAndFile(int[] reMemberKey, NoteReceptionDto note, List<NoteFileDto> upfiles) {
@@ -225,6 +234,7 @@ public class NoteServiceImpl implements NoteService{
 		
 		return result1;
 	}
+
 
 	
 

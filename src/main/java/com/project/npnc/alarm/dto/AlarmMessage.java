@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AlarmMessage {
 	
+	private int alarmKey;
 	private String alarmType;
 	private String alarmPath;
 	private int alarmReMember;
