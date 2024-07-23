@@ -45,7 +45,7 @@
 		 					<c:if test="${currentUserId != memberlist.memberId }">
 							  <a href="#" class="list-group-item list-group-item-action"><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
 							  <div>
-							  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
+							  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}','${memberlist.memberKey}');" class="btn btn-icon btn-round btn-success modal_btn1" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
 		                        <i class="fas fa-envelope"></i>
 		                      </button>
 		                      <div class="btn btn-icon btn-round btn-primary" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
@@ -118,11 +118,16 @@
 	                modal1[0].classList.remove('on1');
 	            });
 	        });
-          	function noteOrganGo(memberName,jobName){
+          	function noteOrganGo(memberName,jobName,memberKey){
+				console.log(memberKey);
           		const organNoteTitle = document.getElementById("organNoteTitle");
           		event.stopPropagation();
           		console.log(memberName+jobName);
           		organNoteTitle.innerHTML=memberName+"&nbsp;"+jobName
+				
+				// 전송 버튼의 onclick 속성을 동적으로 생성하여 설정
+		         var sendButton = document.getElementById('organNoteSendButton');
+		         sendButton.setAttribute('onclick', `organNoteOneGo(\${memberKey});`);
           	} 
           	</script>
           	<!-- 모달 팝업 창 내용 -->
@@ -159,10 +164,136 @@
 			                          </div>
                     			   </div>		           	   
 								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
+								<button class="btn btn-primary" style="margin-right: 10px;" id="organNoteSendButton">전송</button>
 								<button class="btn btn-primary btn-border close_btn1" >닫기</button>
 								</div>
 				          </div>
 				    </div>
 			  </div>
+			  <script>
+				
+				/* 개별발송 파일 추가 로직*/
+		    	const addDelFunction=(function(){
+		    		let count=2;
+		    		const addFileform=()=>{
+		    			if(count<=5){
+		    				const fileForm=$("#basicFileForm").clone(true);
+		    				fileForm.find("span.input-group-text1").text("첨부파일"+count);
+		    			
+		    				fileForm.find("input[type=file]").attr("id","upFile"+count).val("");
+		    				/* $("textarea[name=boardContent]").before(fileForm); */
+		    				   fileForm.appendTo("#fileInputsContainer");
+		    				count++;
+		    			}else{
+		    				alert("첨부파일은 5개까지 가능합니다");
+		    			}
+		    		}
+		    		
+		    		const delFileform=()=>{
+		    			if(count!=2){
+		    				$("#fileInputsContainer").children().last().remove();
+		    				count--;
+		    			}
+		    			
+		    		}
+		    		return {addFileform,delFileform};
+		    	})();
+		    	const fn_addFile=addDelFunction.addFileform;
+		    	const fn_delFile=addDelFunction.delFileform;
+		    	
+				
+				function organNoteGo(){
+				         	
+		         	var formData = new FormData();
+		         	var upFiles = document.getElementsByName('upFile');
+					
+		         	for (var i = 0; i < upFiles.length; i++) {
+		         		   var fileList = upFiles[i].files;
+		         		    for (var j = 0; j < fileList.length; j++) {
+		         		        formData.append('upFile', fileList[j]);
+		         		    }
+
+		         	}
+		           
+		            var selectedRadio = document.getElementsByName('reMemberKey1');
+		            var reMemberKey1=[];
+		            	  for(let i=0; i<selectedRadio.length;i++){
+		                       
+		                              reMemberKey1.push( selectedRadio[i].id);  
+		                         
+		                  }
+					console.log(reMemberKey1);
+		            // 나머지 인풋 값들을 가져옴
+		            var memberKey = document.getElementById('memberKey').value;
+		            console.log(memberKey);
+		            var postMsgDetail = document.getElementById('postMsgDetail').value;
+		            console.log(postMsgDetail);
+					var postMsgTitle =document.getElementById('postMsgTitle').value;
+					console.log(postMsgTitle);
+					
+					
+					formData.append('reMemberKey',JSON.stringify(reMemberKey1));
+					
+					formData.append('memberKey', memberKey);
+					formData.append('postMsgDetail', postMsgDetail);
+					formData.append('postMsgTitle', postMsgTitle);
+					
+					formData.forEach((value, key) => {
+					    console.log(key, value);
+					});
+
+			    	$.ajax({
+			    		url : '${path}/notewrite',
+			    		type : 'POST',
+			    		data :
+				    		/* 	"reMemberKey" : reMemberKey1,
+				    			"memberKey" : memberKey,
+				    			"postMsgTitle" : postMsgTitle,
+				    			"postMsgDetail" : postMsgDetail, */
+			    			formData,
+			    	    processData: false, // 필수 항목
+			    	    contentType: false, // 필수 항목
+			    		success : function(){
+			    			alert('성공');
+			    			for (let i=0; i<reMemberKey1.length;i++)	{
+			    				send(reMemberKey1[i], memberKey);
+			    			}
+			    			
+			    			/* send(reMemberKey1, memberKey); */
+			    		}
+			    	});
+			    	modal[0].classList.remove('on');
+		      		var namebox=document.getElementsByClassName("namebox");
+		      	 	document.getElementById('postMsgDetail').value='';
+		      		document.getElementById('postMsgTitle').value='';
+			    	namebox[0].innerHTML = '';
+			    }
+		
+				
+				/* 타입 , 알람 , 수신인, 메세지  */
+		     	function organNoteAlarmSend(reMemberKey, memberKey){
+			   	 console.log('send보내짐');
+			   		stompClient.send("/pub/msg/"+reMemberKey,{},
+			   			JSON.stringify({
+							
+							alarmType : 'Note',
+							alarmPath : 'notein',
+			   				alarmSendMember : memberKey,
+							alarmReMember : reMemberKey1,
+							alarmDate : new Date().toISOString()
+							
+			   				
+			   				
+			   			})
+			   				
+			   		);
+			   		  
+			   	}
+				
+				function organNoteOneGo(memberKey){
+					
+				}	
+				
+			  </script>
+			  
 </body>
