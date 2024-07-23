@@ -275,7 +275,7 @@
 			
 			
 			/*모달 팝업 영역 스타일링*/
-			.modal1 {
+			.modal1Organ {
 			/*팝업 배경*/
 				display: none; /*평소에는 보이지 않도록*/
 			    position: fixed;
@@ -286,18 +286,18 @@
 			    overflow: hidden;
 			    background: rgba(0,0,0,0.5);
 			}
-			.modal1 .modal_popup1 {
+			.modal1Organ .modal_popup1Organ {
 			/*팝업*/
 			    position: relative;
 			    top: 50%;
 			    left: 50%;
-			    width:40%;
+			    width:30%;
 			    transform: translate(-50%, -50%);
 			    padding: 20px;
 			    background: #ffffff;
 			    border-radius: 20px;
 			}
-			.modal1 .modal_popup1 .close_btn1 {
+			.modal1Organ .modal_popup1Organ .close_btn1Organ {
 			  /*   display: block; */
 			    padding: 10px 20px;
 			    background-color: rgb(116, 0, 0);
@@ -307,7 +307,7 @@
 			    cursor: pointer;
 			    transition: box-shadow 0.2s;
 			}
-			.modal1.on1 {
+			.modal1Organ.on1Organ {
 			    display: block;
 			    position: fixed;
 			    
@@ -823,7 +823,7 @@
 		             	$.notify({
 				   		 	icon: 'icon-bell',
 				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-				   		 	message: bodyObject.message /* 얘는 안깨져요 */
+				   		 	message:  bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 				   		 },{
 				   		 	type: 'primary',
 				   		 	placement: {
