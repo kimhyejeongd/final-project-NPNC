@@ -330,7 +330,8 @@ body{
 								<div class="room-title">
 									<c:forEach var="member"
 										items="${myRoomMemberList[room.chatRoomKey]}">
-                                        ${member.memberId}
+
+                                        ${member.memberName}
                                     </c:forEach>
 								</div>
 								<div class="recent-message recent-message-${room.chatRoomKey}"></div>

@@ -6,7 +6,6 @@ import static com.project.npnc.chatting.model.dto.ChattingMessage.createChatting
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -24,6 +23,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,6 +66,7 @@ public class ChatController {
 	@MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
 	public ChattingMessage test(@DestinationVariable int roomId,ChattingMessage message) {
+    	System.out.println(message);
 //		HttpSession session=(HttpSession)RequestContextHolder.currentRequestAttributes()
 //		.resolveReference(RequestAttributes.REFERENCE_SESSION);
 //		System.out.println(session);
@@ -75,11 +76,22 @@ public class ChatController {
 		System.out.println("Received message: " + message);
 //		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
 // 		채팅 저장
-		
         Map<String, Object> chatInfo = service.insertChat(message);
             System.out.println("Insert result: " + chatInfo.get("seq"));
+            System.out.println(message);
       
-            ChattingMessage chat = createChattingMessage((int)chatInfo.get("seq"),message.getMemberKey(),roomId,  message.getChatMsgDetail(), message.getChatMsgTime(),"N",(int)chatInfo.get("readCount"),message.getFile(),message.getFileContentType());
+            ChattingMessage chat = createChattingMessage(
+	            		(int)chatInfo.get("seq"),
+	            		message.getMemberKey(),
+	            		roomId,
+	            		message.getChatMsgDetail(),
+	            		message.getChatMsgTime(),
+	            		"N",
+	            		(int)chatInfo.get("readCount"),
+	            		message.getFile(),
+	            		message.getFileContentType(),
+	            		message.getMemberName()
+            		);
         
         // 파일 메타 데이터 저장
        //ChattingFile chattingFile= service.insertChattingFile(chattingFile);
@@ -229,6 +241,7 @@ public class ChatController {
     @PostMapping("/myChatRoomList")
     public ResponseEntity<?> myChatRoomList(@RequestParam("memberKey")int memberKey){
     	Member member = getCurrentUser();
+    	System.out.println(member);
 		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
 		return ResponseEntity.ok(mychatRoomList);
 

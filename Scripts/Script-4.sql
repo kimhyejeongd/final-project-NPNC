@@ -289,8 +289,28 @@ INSERT INTO ER_STORAGE es (
 SELECT * FROM ER_STORAGE es WHERE ER_STORAGE_FOLDER_KEY=  ;
 
 
+SELECT * FROM CHATTING_MESSAGE cm ;
+    
+    SELECT 
+			cm.CHAT_MSG_KEY,
+			cm.MEMBER_KEY,
+			cm.CHAT_ROOM_KEY,
+			cm.CHAT_MSG_DETAIL,
+			cm.CHAT_MSG_TIME,
+			cm.CHAT_MSG_NOTICE,
+			cm.CHAT_READ_COUNT,
+			cf.CHAT_MSG_FILE_POST,
+			cf.FILE_CONTENT_TYPE ,
+			m.MEMBER_NAME 
+		FROM chatting_message cm 
+		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
+		LEFT JOIN MEMBER m ON cm.MEMBER_KEY  = m.MEMBER_KEY 
+		WHERE CM.chat_room_key = 88
+		ORDER BY chat_msg_time ASC;
+    
+SELECT * FROM MEMBER;
 
-    
-    
-    
-
+SELECT *
+			FROM CHATTING_GROUP cg
+			LEFT JOIN MEMBER m ON cg.MEMBER_KEY = m.MEMBER_KEY
+			WHERE cg.CHAT_ROOM_KEY = 89 and cg.CHAT_GROUP_STATUS='Y';
