@@ -20,6 +20,10 @@ public class Document {
 	private int erDocKey;
 	private String erDocSerialKey;
 	private int erDocWriter;
+	private String writerDeptKey;//join용
+	private String writerDeptName;//join용
+	private String writerJobKey;//join용
+	private String writerJobName;//join용
 	private String erDocTitle;
 	private Date erDocCreateDate;
 	private String erDocEmergencyYn;

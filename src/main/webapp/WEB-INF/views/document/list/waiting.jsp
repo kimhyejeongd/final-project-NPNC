@@ -4,7 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <%
-  String contextPath = request.getContextPath();
+	String contextPath = request.getContextPath();
+	// 세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -29,6 +31,7 @@
     	}
     </style>
   </head>
+  <script src="${path}/resources/jh/js/waiting.js"></script>
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
@@ -61,37 +64,7 @@
         </div>
       </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const table = document.getElementById('docTable');
-
-/*     $("table").on('click', "button", function(e) {
-        e.stopPropagation();
-    });
- */    
-    $("table").on('click', function(event) {
-        const target = event.target;
-     // 버튼이 클릭된 경우 이벤트 전파를 막고 함수를 종료
-/*         if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {
-            event.stopPropagation();
-            return;
-        } */
-
-        const row = target.closest('tr');
-        if (row && row.dataset.docId) {
-            const docId = row.dataset.docId;
-            console.log(docId);
-            selectDoc(docId);
-        }
-    });
-    
-    
-	//상세보기
-	function selectDoc(docId){
-		const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
-		$("<input>").attr({'value': docId, 'name': 'docId','type': 'hidden'}).appendTo($form);
-		$form.appendTo("body").submit();
-	}
-});
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
   </body>
 </html>
