@@ -3,6 +3,8 @@ package com.project.npnc.attendance.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
+
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 
@@ -35,9 +37,13 @@ public interface AttendanceService {
 	int selectAdminAttendanceAllCount();
 	List<AttendanceEdit> selectAdminAttendanceEditAll(Map page);
 	int selectAdminAttendanceEditCount();
+	int updateAttendanceEdit(AttendanceEdit attendanceEdit);
+	int updateAttendance(AttendanceEdit attendanceEdit);
+	List<Attendance> selectAdminAttendanceBymemberKey(int memberKey,Map page);
+	int selectAdminAttendanceBymemberKeyCount(int memberKey);
 	
-	
-	
+	List<AttendanceEdit> searchAdminAttendanceEdit(Map<String,String> searchMap,Map<String,Integer> page);
+	int searchAdminAttendanceEditCount(Map<String,String> searchMap);
 	
 	
 	

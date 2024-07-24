@@ -10,264 +10,265 @@
     
     
 
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<style>
-	.unread-badge {
-		background-color: red;
-		color: white;
-		border-radius: 50%;
-		display: inline-block;
-		padding: 2px 6px;
-		font-size: 0.8em;
-		font-weight: bold;
-		position: absolute;
-		top: 5px;
-		right: 5px;
-		display: none; /* ê¸°ë³¸ì ì¼ë¡ ì¨ê¹ ì²ë¦¬ */
-	}
-	
-	.room-item {
-		position: relative;
-	}
-	/* ê¸°ë³¸ ì¤íì¼ */
-	.roomForm {
-		display: flex;
-	}
-	
-	/* body {
-		font-family: 'Arial', sans-serif;
-		background-color: #f0f0f0;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		justify-content: center;
-		align-items: flex-start; /* ìì : ììë ì¤í¬ë¡¤ ê°ë¥íê² */
-		min-height: 100vh; /* ì¶ê°: íë©´ í¬ê¸° ìµì ëì´ */
-	} */
-	
-	.container {
-		background-color: #fff;
-		border-radius: 10px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		width: 400px;
-		max-width: 100%;
-		margin: 20px 0; /* ì¶ê°: ìí ë§ì§ */
-	}
-	
-	.header {
-		background-color: #4CAF50;
-		color: #fff;
-		padding: 15px;
-		text-align: center;
-		font-size: 1.5em;
-	}
-	
-	.tabs {
-		display: flex;
-		justify-content: space-around;
-		margin: 20px 0;
-		position: relative;
-	}
-	
-	.tab {
-		padding: 10px 20px;
-		cursor: pointer;
-	}
-	
-	.tab.active {
-		background-color: #4CAF50;
-		color: white;
-		border-radius: 10px;
-	}
-	
-	.menu-button {
-		background-color: transparent;
-		border: none;
-		cursor: pointer;
-		font-size: 1.5em;
-		
-	}
-	
-	.dropdown-menu {
-		display: none;
-		position: absolute;
-		right: 0;
-		top: 40px;
-		background-color: white;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		border-radius: 5px;
-		overflow: hidden;
-		z-index: 1;
-	}
-	
-	.dropdown-menu a {
-		display: block;
-		padding: 10px 20px;
-		text-decoration: none;
-		color: black;
-	}
-	
-	.dropdown-menu a:hover {
-		background-color: #f0f0f0;
-	}
-	
-	.friend-list, .room-list {
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-	}
-	
-	.friend-item, .room-item {
-		display: flex;
-		align-items: center;
-		padding: 15px;
-		border-bottom: 1px solid #eee;
-		transition: background-color 0.3s;
-	}
-	
-	.friend-item img, .room-item img {
-		width: 50px;
-		height: 50px;
-		border-radius: 50%;
-		margin-right: 15px;
-		object-fit: cover;
-	}
-	
-	.friend-item .friend-info, .room-item .room-info {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-	}
-	
-	.friend-item .friend-name, .room-item {
-		font-weight: bold;
-		font-size: 1.1em;
-		color: #333;
-		margin-bottom: 5px;
-		display: block;
-	}
-	
-	.room-title {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	
-	.friend-item .friend-status, .room-item .recent-message {
-		color: #777;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	
-	.friend-item.selected {
-		background-color: #3a3f3e4d; /* ì í ì ë°°ê²½ìì ê²ì ì¼ë¡ ì¤ì  */
-	}
-	
-	.content {
-		display: none;
-	}
-	
-	.content.active {
-		display: block;
-	}
-	/* ëª¨ë¬ ì¤íì¼ */
-	.modal {
-		display: none;
-		position: fixed;
-		z-index: 2;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-		background-color: rgba(0, 0, 0, 0.4);
-		justify-content: center;
-		align-items: center;
-	}
-	
-	.modal-content {
-		background-color: #fff;
-		margin: auto;
-		padding: 20px;
-		border: 1px solid #888;
-		width: 80%;
-		max-width: 500px;
-		border-radius: 10px;
-	}
-	
-	.close {
-		color: #aaa;
-		float: right;
-		font-size: 28px;
-		font-weight: bold;
-	}
-	
-	.close:hover, .close:focus {
-		color: black;
-		text-decoration: none;
-		cursor: pointer;
-	}
-	
-	.search-bar {
-		width: 80%; /* ìë ¥ íëì ëë¹ë¥¼ ì¤ìëë¤ */
-		margin: 10px auto 20px; /* ì, ìë ì¬ë°±ê³¼ ìë ì¸ë¶ ì¬ë°±ì¼ë¡ ì¤ì ì ë ¬ */
-		padding: 8px 10px; /* í¨ë©ì ì¡°ì íì¬ ìë ¥ íëì ëì´ë¥¼ ì¡°ê¸ ì¤ìëë¤ */
-		box-sizing: border-box;
-		border-radius: 5px;
-		border: 1px solid #ccc;
-		display: block; /* íëë¥¼ ë¸ë¡ ììë¡ ë§ë¤ì´ ì¤ ì ì²´ ì¬ì© */
-	}
-	
-	.modal-content {
-		width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
-		padding: 20px;
-		border-radius: 10px;
-		text-align: center;
-	}
-	
-	.profile-info {
-		margin-top: 20px;
-	}
-	
-	.profile-image {
-		width: 100px;
-		height: 100px;
-		border-radius: 50%;
-		margin-bottom: 10px;
-	}
-	
-	.profile-name, .profile-department {
-		font-size: 16px;
-		color: #333;
-	}
-	
-	.start-chat-btn {
-		padding: 10px 20px;
-		background-color: #4CAF50;
-		color: white;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		margin-top: 15px;
-	}
-	
-	.start-chat-btn:hover {
-		background-color: #45a049;
-	}
-	</style>
-	<style>
-	.list-group-item{
-			display: flex;
-			flex-direction: row;
-		justify-content: space-between;
-	}
+   <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+   <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   <style>
+   .unread-badge {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 0.8em;
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: none; /* ê¸°ë³¸ì ì¼ë¡ ì¨ê¹ ì²ë¦¬ */
+   }
+   
+   .room-item {
+      position: relative;
+   }
+   /* ê¸°ë³¸ ì¤íì¼ */
+   .roomForm {
+      display: flex;
+   }
+   
+   /* body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* ìì : ììë ì¤í¬ë¡¤ ê°ë¥íê² */
+      min-height: 100vh; /* ì¶ê°: íë©´ í¬ê¸° ìµì ëì´ */
+   } */
+   
+   .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      max-width: 100%;
+      margin: 20px 0; /* ì¶ê°: ìí ë§ì§ */
+   }
+   
+   .header {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+   }
+   
+   .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      position: relative;
+   }
+   
+   .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+   }
+   
+   .tab.active {
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 10px;
+   }
+   
+   .menu-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5em;
+      
+   }
+   
+   .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 40px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 1;
+   }
+   
+   .dropdown-menu a {
+      display: block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: black;
+   }
+   
+   .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+   }
+   
+   .friend-list, .room-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+   }
+   
+   .friend-item, .room-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+   }
+   
+   .friend-item img, .room-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+   }
+   
+   .friend-item .friend-info, .room-item .room-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+   }
+   
+   .friend-item .friend-name, .room-item {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #333;
+      margin-bottom: 5px;
+      display: block;
+   }
+   
+   .room-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+   
+   .friend-item .friend-status, .room-item .recent-message {
+      color: #777;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+   
+   .friend-item.selected {
+      background-color: #3a3f3e4d; /* ì í ì ë°°ê²½ìì ê²ì ì¼ë¡ ì¤ì  */
+   }
+   
+   .content {
+      display: none;
+   }
+   
+   .content.active {
+      display: block;
+   }
+   /* ëª¨ë¬ ì¤íì¼ */
+   .modal {
+      display: none;
+      position: fixed;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+   }
+   
+   .modal-content {
+      background-color: #fff;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+   }
+   
+   .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+   }
+   
+   .close:hover, .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+   }
+   
+   .search-bar {
+      width: 80%; /* ìë ¥ íëì ëë¹ë¥¼ ì¤ìëë¤ */
+      margin: 10px auto 20px; /* ì, ìë ì¬ë°±ê³¼ ìë ì¸ë¶ ì¬ë°±ì¼ë¡ ì¤ì ì ë ¬ */
+      padding: 8px 10px; /* í¨ë©ì ì¡°ì íì¬ ìë ¥ íëì ëì´ë¥¼ ì¡°ê¸ ì¤ìëë¤ */
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: block; /* íëë¥¼ ë¸ë¡ ììë¡ ë§ë¤ì´ ì¤ ì ì²´ ì¬ì© */
+   }
+   
+   .modal-content {
+      width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+   }
+   
+   .profile-info {
+      margin-top: 20px;
+   }
+   
+   .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+   }
+   
+   .profile-name, .profile-department {
+      font-size: 16px;
+      color: #333;
+   }
+   
+   .start-chat-btn {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+   }
+   
+   .start-chat-btn:hover {
+      background-color: #45a049;
+   }
+   </style>
+   <style>
+   .list-group-item{
+         display: flex;
+         flex-direction: row;
+      justify-content: space-between;
+   }
 </style>
 <!--이성록 모달 팝업 스타일 -->
+
 	<style>
 			h2{
     			text-align: center;
@@ -317,6 +318,7 @@
 
 	  
 	  
+
       <div class="main-header">
             <div class="main-header-logo">
               <!-- Logo Header -->
@@ -363,27 +365,26 @@
                     />
                   </div>
                 </nav>
-		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+      <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
-				 <script type="text/javascript">
-				 var myChatRoomList=null;
-					 $(document).ready(function() {
-	
-						 		headerUnread();
+             <script type="text/javascript">
+             var myChatRoomList;
+                $(document).ready(function() {
+   
+                         headerUnread();
 
-						 
-					        $('#messageDropdown').on('show.bs.dropdown', function() {
-			                event.stopPropagation(); // Ã¬ÂÂ´Ã«Â²Â¤Ã­ÂÂ¸ Ã«Â²ÂÃ«Â¸ÂÃ«Â§Â Ã«Â°Â©Ã¬Â§Â
-					            $.ajax({
-					                url: '${path}/chatRoom', // Ã¬ÂÂ¬ÃªÂ¸Â° URLÃ¬ÂÂ Ã¬Â ÂÃ¬Â ÂÃ­ÂÂÃªÂ²Â Ã¬ÂÂÃ¬Â ÂÃ­ÂÂ´Ã¬ÂÂ¼ Ã­ÂÂ©Ã«ÂÂÃ«ÂÂ¤.
-					                type: 'GET',
-					                data: {
-					                    inputValue: '1' // Ã­ÂÂÃ¬ÂÂÃ­ÂÂ Ã­ÂÂÃ«ÂÂ¼Ã«Â¯Â¸Ã­ÂÂ°Ã«Â¥Â¼ Ã¬ÂÂ¬ÃªÂ¸Â°Ã¬ÂÂ Ã¬Â ÂÃ«ÂÂ¬Ã­ÂÂ©Ã«ÂÂÃ«ÂÂ¤.
-					                },
-					                success: function(response) {
+                   
+                       $('#messageDropdown').on('show.bs.dropdown', function() {
+                         event.stopPropagation(); 
+                           $.ajax({
+                               url: '${path}/chatRoom', 
+                               data: {
+                                   inputValue: '1' 
+                               },
+                               success: function(response) {
 
-					                    $('.notif-center').eq(0).html(response);
-					                    console.log(response);
+                                   $('.notif-center').eq(0).html(response);
+
 
 					                },
 					                error: function(xhr, status, error) {
@@ -505,6 +506,7 @@
 						});
 					 }
 				</script> 
+
                 <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                   <li
                     class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
@@ -542,7 +544,7 @@
                       aria-expanded="false"
                     >
                       <i class="fa fa-envelope"></i>
-						<span class="notification">4</span>
+                  <span class="notification">4</span>
                       
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
@@ -555,8 +557,8 @@
                       </li>
                       <li>
                       <div id="messageContent">
-          				<%-- 	<jsp:include page="${path }chatting/chatRoom.jsp"></jsp:include> 			        --%>   
-				        </div>
+                      <%--    <jsp:include page="${path }chatting/chatRoom.jsp"></jsp:include>                  --%>   
+                    </div>
                          <div class="message-notif-scroll ">
                           <div class="notif-center">
                             
@@ -787,19 +789,19 @@
                 $('.notification').eq(0).text(totalUnread);
             }
 
-			
-		    function setConnected(connected) {
-		        $("#connect").prop("disabled", connected);
-		        $("#disconnect").prop("disabled", !connected);
-		        if (connected) {
-		            $("#conversation").show();
-		        }
-		        else {
-		            $("#conversation").hide();
-		        }
-		        $("#greetings").html("");
-		    }
-		   	
+         
+          function setConnected(connected) {
+              $("#connect").prop("disabled", connected);
+              $("#disconnect").prop("disabled", !connected);
+              if (connected) {
+                  $("#conversation").show();
+              }
+              else {
+                  $("#conversation").hide();
+              }
+              $("#greetings").html("");
+          }
+            
             function connect() {
 		        let socket = new SockJS('http://localhost:8080/ws-stomp');
 		        stompClient = Stomp.over(socket);
@@ -890,15 +892,16 @@
 		            stompClient.subscribe('/user/queue/users', function (message) {
 		                var users = JSON.parse(message.body);
 
-		                for (var username in users) {
-		                    if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
-		                        userStatusMap[username] = users[username];
-		                        updateUserStatus(username, users[username]);
-		                    }
-		                }
-		            });
-		        });
-		    }
+
+                      for (var username in users) {
+                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+                              userStatusMap[username] = users[username];
+                              updateUserStatus(username, users[username]);
+                          }
+                      }
+                  });
+              });
+          }
             function updateUserStatus(username, isOnline) {
                 var statusDot = document.getElementById('status-dot-' + username);
                 
@@ -912,33 +915,34 @@
             }
             
             function disconnect() {
-		        if (stompClient !== null) {
-		            stompClient.disconnect();
-		        }
-		        setConnected(false);
-		        console.log("Disconnected");
-		    }
-			
-		    window.onload = function () {
- 				console.log("---=-=-=-=-=-=");
+              if (stompClient !== null) {
+                  stompClient.disconnect();
+              }
+              setConnected(false);
+              console.log("Disconnected");
+          }
+         
+          window.onload = function () {
+             console.log("---=-=-=-=-=-=");
 
-		 		$.ajax({
-		 			url:'${path}/myChatRoomList',
-		 			data:{memberKey:'${loginMember.memberKey}'},
-		 			type:'POST',
-		 			success:function(response){
-		 				console.log(response+"---=-=-=-=-=-=");
-		 				myChatRoomList = response;
-		 			}
-		 		})
-		 		
-		        connect();
-		    }
+             $.ajax({
+                url:'${path}/myChatRoomList',
+                data:{memberKey:'${loginMember.memberKey}'},
+                type:'POST',
+                success:function(response){
+                   console.log(response+"---=-=-=-=-=-=");
+                   myChatRoomList = response;
+                   connect();
+                }
+             })
+             
+              
+          }
 
-		    window.onbeforeunload = function () {
-		        disconnect();
-		    }
-		    
+          window.onbeforeunload = function () {
+              disconnect();
+          }
+          
             
             </script>
             

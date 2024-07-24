@@ -99,7 +99,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/draft">
                         <span class="sub-item">임시 보관 문서</span>
                       </a>
                     </li>
@@ -115,7 +115,7 @@
                 <div class="collapse" id="sidebarLayouts">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/waiting">
                         <span class="sub-item">결재 대기 문서</span>
                       </a>
                     </li>

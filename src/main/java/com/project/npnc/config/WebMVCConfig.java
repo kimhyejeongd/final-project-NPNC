@@ -1,11 +1,12 @@
 package com.project.npnc.config;
 
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.w3c.dom.views.AbstractView;
+
+import com.project.npnc.common.MultipartFileToDocFileConverter;
 
 
 @Configuration
@@ -27,6 +28,10 @@ public class WebMVCConfig implements WebMvcConfigurer{
                 .allowedMethods("*");  // 모든 HTTP 메소드 허용
     }
 
+	@Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new MultipartFileToDocFileConverter());
+    }
 	
 	
 }

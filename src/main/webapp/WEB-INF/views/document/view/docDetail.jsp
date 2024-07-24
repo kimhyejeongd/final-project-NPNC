@@ -25,7 +25,12 @@
         overflow-y: scroll; /* 세로 스크롤만 */
         overflow-x: auto;  /* 가로 스크롤도 필요할 경우 */
      }
+     /* a:hover{
+     	cursor: pointer;
+     	text-decoration: underline !important;
+     } */
  </style>
+ <script src="${path}/resources/jh/js/docDetail.js"></script>
 <body>
 
 	<div class="wrapper">
@@ -54,63 +59,94 @@
                   <div class="card-body">
                	<div class="form-group d-flex">
 			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <input type="text" class="form-control form-control-sm" id="smallInput" value="${l.erDocTitle }">
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      	<span style="font-size: larger;">${l.erDocTitle }</span>
+			      </div>
 			    </div>
 			    <div class="form-group">
 			      <label class=""><span class="h5">긴급 여부</span></label>
-			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault1" <c:if test="${l.erDocEmergencyYn eq 'Y'}">checked</c:if>>
-			          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-			          <input class="ms-3" type="radio" name="flexRadioDefault" id="flexRadioDefault2" <c:if test="${l.erDocEmergencyYn eq 'N'}">checked</c:if>>
-			          <label class="ms-1" for="flexRadioDefault2">
-			            <span class="h5">일반</span>
-		          </label>
+			      		<c:if test="${l.erDocEmergencyYn eq 'Y'}">
+				          <span class="h5 ms-4">긴급</span>
+			      		</c:if>
+			      		<c:if test="${l.erDocEmergencyYn eq 'N'}">
+				            <span class="h5 ms-4">일반</span>
+			      		</c:if>
+			    </div>
+		    	 <div class="form-group d-flex">
+			      <label for="smallInput" class="me-3"><span class="h5 me-5">보관 </span></label>
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      	<span style="font-size: larger;">${l.erDocStorage}</span>
+			      </div>
 			    </div>
 			    <div class="form-group d-flex">
-		      <label for="smallInput"><span class="h5 me-5">결재자</span></label>
-				<div class="col w-100 align-items-center">
-			      <div class="border" style="width:100%; height: 150px;" id="approvalDiv">
+		      <span class="h5 me-5">결재자</span>
+				<div class="col w-100 align-items-center p-0">
+			      <div class="border col" style="height: auto; min-height: 30px; width:100%;" id="approvalDiv">
 						<!-- <span class="" style="color: gray;">결재자를 선택하세요</span> -->
 						<c:forEach items="${l.approvers }" var="ap" varStatus="vs">
+						<c:if test="${ap.orderby ne 0}">
 						  <div class="col m-0 p-2" id="approval1" style="width: 100%; font-size: larger; text-align: lef; border-radius: 15px;">
 						  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${ap.orderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-						  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none" disabled>
-						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeam }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
-						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJob }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberKey" value="${ap.memberKey }" style="display:none">
+						  	<input name="approvers[${vs.index }].memberTeam" value="${ap.memberTeamName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
+						  	<input name="approvers[${vs.index }].memberJob" value="${ap.memberJobName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  	<input name="approvers[${vs.index }].memberName" value="${ap.memberName }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  	<input name="approvers[${vs.index }].category" value="${ap.category }" style="border: none; width: auto; background-color: none; max-width: 80px; background-color: white;" disabled>
 						  </div>
+						 </c:if>
 					  </c:forEach>
 			      </div>
 			      </div>
 			    </div>
-			    <div class="form-group d-flex align-items-center gap-3">
-			      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;">참조인</span></label>
-			      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="approvalDiv">
-			      </div>
+			    <div class="form-group d-flex">
+			      <label for="smallInput" class="me-3"><span class="h5 me-5" style="margin-right: 1.9rem !important;">참조인 </span></label>
+			      <div class="col w-100 align-items-center p-0">
+		      		<div class="border d-block form-control form-control-sm d-flex align-items-center d-flex gap-2" style="height: auto; min-height: 30px; width: 100%;" id="">
+				      <!-- <div class="col m-0 p-2" style="height: auto; min-height: 30px; width: 100%; text-align: left; fontSize: larger; border-radius: 15px;" id=""> -->
+					      <c:if test="${not empty l.referers}">
+						      <c:forEach items="${l.referers }" var="ap" varStatus="vs">
+						      	<c:if test="${ap.erRefererKey ne 0}">
+						      	<div class="row m-0 p-2 border text-align-center justify-content-center " style="width: 140px; font-size: larger; border-radius: 10px; background-color: var(--bs-border-color);">${ap.memberTeamName } ${ap.memberJobName } ${ap.memberName }</div>
+						      	</c:if>
+						      </c:forEach>
+					      </c:if>
+				      </div>
+				     </div>
 			    </div>
 			    <div class="form-group d-flex align-items-center gap-3">
 			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;">참조문서</span></label>
 			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
 			      </div>
 			    </div>
-	          	<c:if test="${l.files[0].fileKey != 0}">
+	          	<c:if test="${l.files[0].fileKey ne 0}">
 			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
+		          <label for="exampleFormControlFile1"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
-		          	첨부파일 있음
+	          		<c:forEach items="${l.files }" var="f" varStatus="vs">
+					  <div class="m-0 p-2 d-flex align-items-center justify-content-between" id="approval1" style="width: 100%; font-size: larger; text-align: left; border-radius: 15px;">
+					  	<div class="d-flex align-items-center">
+						  	<input class="badge rounded-pill text-bg-secondary me-2 ms-0" name="approvers[${vs.index }].orderby" value="${f.fileOrderby }" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
+						  	<span href="#" id="approvers[${vs.index }].fileOriName" style="color: black;">${f.fileOriName }</span>
+					  	</div>
+					  	<div class="d-flex">
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+					  	</div>
+					  </div>
+					</c:forEach>
 		          </div>
 		        </div>
 	          	</c:if>
 			    <div class="form-group">
 		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
-			        <div id="" class="border scrollable-content" style="margin: 0px auto; width: 100%; height: 800px;">
-			        	<div id="content" class="border" style="width: fit-content; height: 800px; margin: 0px auto;">
+			        <div id="" class="scrollable-content" style="margin: 0px auto; width: 100%; height: 800px;">
+			        	<div id="content" class="" style="width: fit-content; height: 800px; margin: 0px auto; padding: 50px;">
 				        	<c:out value="${html }" escapeXml="false"/>
 			        	</div>
 			        </div>
 		        </div>
                   <div class="p-3 text-center">
-                  		<button class="btn btn-primary" id="closeBtn" type="button">닫기</button>
+                  		<button class="btn btn-primary" id="closeBtn" type="button">이전으로</button>
                   </div>
                 </div>
               </div>
@@ -121,8 +157,7 @@
        </div>
       </div>
 <script>
-$(document).ready();
-//TODO 재기안
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
 </body>
 </html>

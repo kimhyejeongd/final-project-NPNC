@@ -1,0 +1,76 @@
+
+   
+		SELECT    *
+			FROM      er_document d
+			left join er_aprover ea
+			USING    (er_doc_serial_key)
+			WHERE     er_doc_writer = ${no}
+			AND       er_doc_state = '처리중'
+			ORDER BY  er_doc_emergency_yn DESC,
+			          er_approval_orderby;
+			         
+SELECT    
+			d.ER_DOC_KEY, 
+			d.ER_DOC_SERIAL_KEY, 
+			d.ER_DOC_TITLE, 
+			d.ER_DOC_CREATE_DATE, 
+			d.ER_DOC_EMERGENCY_YN, 
+			d.ER_DOC_DELETE_YN, 
+			d.ER_DOC_STOARGE, 
+			d.ER_DOC_FILENAME,
+			d.ER_DOC_STATE,
+			d.ER_DOC_STATE_UPDATE_DATE, 
+			d.ER_DOC_LAST_UPDATER, 
+			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_WRITER
+		FROM      er_document d
+		left join er_aprover ea on d.er_doc_serial_key = ea.er_doc_serial_key
+		WHERE     d.er_doc_writer = ${no}
+		AND       d.er_doc_state = '회수'
+		ORDER BY  d.er_doc_emergency_yn DESC,
+		          ea.er_approval_orderby;
+		
+SELECT * FROM ER_DOCUMENT ed ;
+SELECT * from ER_APPROVAL_LINE ;
+SELECT * from ER_APROVER ;
+SELECT * FROM MEMBER;
+SELECT * FROM job;
+SELECT * FROM DEPARTMENT d ;
+SELECT * FROM ER_AL_STORAGE;
+SELECT * FROM ER_APROVER ea ;
+SELECT * FROM ER_REFERER er ;
+SELECT * FROM ER_FILE ;
+SELECT * FROM ER_STORAGE es ;
+SELECT * FROM DEPARTMENT d ;
+SELECT * FROM ER_FORM ef ;
+SELECT * FROM ER_FORM_FOLDER eff ;
+		
+DROP TABLE ER_REFERER;
+
+SELECT * FROM ER_REFERER er ;
+CREATE TABLE ER_REFERER (
+	ER_REFERER_KEY	NUMBER		NOT NULL,
+	ER_DOC_SERIAL_KEY	VARCHAR2(500)		NOT NULL,
+	ER_REFERER_TEAM_KEY	VARCHAR2(50)		NULL,
+	ER_REFERER_JOB_KEY	VARCHAR(255)		NULL,
+	ER_REFERER_NAME	VARCHAR2(50)		NOT NULL,
+	MEMBER_KEY NUMBER NOT null
+);
+
+ALTER TABLE ER_REFERER ADD CONSTRAINT PK_ER_REFERER PRIMARY KEY (
+	ER_REFERER_KEY
+);
+
+ALTER TABLE ER_REFERER RENAME column ER_REFERER_JOB_NAME TO ER_REFERER_JOB_KEY;
+
+DROP sequence SEQ_ER_REFERER_KEY;
+
+CREATE SEQUENCE SEQ_ER_REFERER_KEY
+START WITH 1
+INCREMENT BY 1
+NOMINVALUE
+NOMAXVALUE
+NOCYCLE
+CACHE 20;
+COMMIT;
+SELECT SEQ_ER_REFERER_KEY.nextval FROM DUAL;

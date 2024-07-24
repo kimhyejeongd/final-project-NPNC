@@ -296,10 +296,10 @@ body{
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
-<!-- 		<div class="tabs">
+ 		<div class="tabs">
 			<div class="tab" data-tab="contacts">연락처</div>
 			<div class="tab active" data-tab="chat">채팅</div>
-		</div> -->
+		</div> 
 		<div id="contacts" class="content">
 			<input type="text" id="searchFriend" class="search-bar"
 				placeholder="친구 검색...">

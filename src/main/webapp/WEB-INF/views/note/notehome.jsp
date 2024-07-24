@@ -286,7 +286,7 @@
 										<span class="badge badge-info  badge-margin">이성록 사원</span>
 										<span class="badge badge-info  badge-margin">이성록 사원</span>  -->
 										</div>								
-									  <ul class="dropdown-menu" style="width: 300px !important; height: 400px !important; overflow-y: auto;"">
+									  <ul class="dropdown-menu" style="width: 300px !important; height: 400px !important; overflow-y: auto;">
 												<div class="accordion" id="accordionPanelsStayOpenExample">
 														<c:forEach var="d" items="${organlist}" varStatus="status">
 														

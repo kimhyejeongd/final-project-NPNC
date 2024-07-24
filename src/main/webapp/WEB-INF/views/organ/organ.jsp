@@ -6,6 +6,7 @@
 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <sec:authentication var="currentUserId" property="principal.memberId"/>
+<sec:authentication var="loginMember" property="principal"/>
 
 
 <head>
@@ -48,7 +49,7 @@
 							  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}','${memberlist.memberKey}');" class="btn btn-icon btn-round btn-success modal_btn1Organ" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
 		                        <i class="fas fa-envelope"></i>
 		                      </button>
-		                      <div class="btn btn-icon btn-round btn-primary" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
+		                      <div class="btn btn-icon btn-round btn-primary messageBtn"  data-member-id="${memberlist.memberKey}" style=" height: 1.6rem; width: 1.6rem!important;  border-radius: 50%!important; min-width: 0rem!important; margin-left:7px; font-size: 1rem;">
 	                              <i class="fa fa-comment"></i>
 	                            </div>
 							  </div>
@@ -95,7 +96,39 @@
 
      connectMainPage(); // WebSocket 연결
      
-     
+
+            $(document).on('click', '.messageBtn', function(event) {
+                event.stopPropagation();
+
+                var memberId = $(this).data('member-id'); // 대상 멤버 ID
+                var chatWindowUrl = '${path}/chat'; // 채팅 창 URL
+
+                // 팝업 창의 옵션 설정
+                var popupOptions = 'width=400,height=500,left=' + (screen.width - 400) / 2 + ',top=' + (screen.height - 500) / 2;
+
+                // 팝업 창 생성
+                var chatWindow = window.open(chatWindowUrl, 'chatWindow', popupOptions);
+
+                // 폼 생성 및 전송
+                var form = $('<form>', {
+                    'action': chatWindowUrl,
+                    'method': 'post',
+                    'target': 'chatWindow'
+                }).append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'memberNo',
+                    'value': memberId
+                }), $('<input>', {
+                    'type': 'hidden',
+                    'name': 'memberNo',
+                    'value': '${loginMember.memberKey}'
+                }));
+
+                // 폼을 body에 추가하고 제출
+                form.appendTo('body').submit();
+                form.remove(); // 폼 제거
+            });
+   
           	</script>
           	<!-- 모달 팝업 창 내용 -->
               <div class="modal1Organ">

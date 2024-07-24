@@ -215,6 +215,47 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.selectAdminAttendanceEditCount(session);
 	}
+
+	@Override
+	public int updateAttendanceEdit(AttendanceEdit attendanceEdit) {
+		
+		return attendanceDao.updateAttendanceEdit(session, attendanceEdit);
+	}
+
+	@Override
+	public int updateAttendance(AttendanceEdit attendanceEdit) {
+		int result=attendanceDao.updateAttendance(session,attendanceEdit);
+		if(result>0) {
+			return attendanceDao.updateAttendanceEditState(session,attendanceEdit.getAttendanceEditKey());
+		}else {
+			session.rollback();
+			return 0;
+		}
+	}
+
+	@Override
+	public List<Attendance> selectAdminAttendanceBymemberKey(int memberKey, Map page) {
+		
+		return attendanceDao.selectAdminAttendanceBymemberKey(session, memberKey, page);
+	}
+
+	@Override
+	public int selectAdminAttendanceBymemberKeyCount(int memberKey) {
+		
+		return attendanceDao.selectAdminAttendanceBymemberKeyCount(session, memberKey);
+	}
+
+	@Override
+	public List<AttendanceEdit> searchAdminAttendanceEdit(Map<String, String> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchAdminAttendanceEdit(session, searchMap, page);
+	}
+
+	@Override
+	public int searchAdminAttendanceEditCount(Map<String, String> searchMap) {
+		// TODO Auto-generated method stub
+		return attendanceDao.searchAdminAttendanceEditCount(session, searchMap);
+	}
 	
 	
 	

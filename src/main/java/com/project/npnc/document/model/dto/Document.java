@@ -1,7 +1,11 @@
 package com.project.npnc.document.model.dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.Transient;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +31,8 @@ public class Document {
 	private int erDocLastUpdater;
 	private Date erDocUpdateDate;
 	private String erDocUpdateReason;
-	private List<Approver> approvers;
-//	private List<DocFile> docFiles;
-	private List<Referer> referers;
+	private List<Approver> approvers = new ArrayList<Approver>();
+	private List<DocFile> files = new ArrayList<DocFile>();
+//	private List<MultipartFile> multifiles = new ArrayList<MultipartFile>();
+	private List<Referer> referers = new ArrayList<Referer>();
 }

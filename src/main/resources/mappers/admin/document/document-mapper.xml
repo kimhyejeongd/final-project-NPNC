@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admindoc">
+	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
+		  SELECT * FROM ER_STORAGE_FOLDER ORDER BY ER_FOLDER_GROUP DESC, ER_FOLDER_LEVEL ASC
+	</select>
+	<select id="selectDocAll" resultMap="adminDocument" parameterType="int">
+			SELECT 
+				es.ER_STOARGE_KEY,
+				es.ER_STORAGE_FOLDER_KEY,
+				es.ER_STORAGE_NAME,
+				es.ER_STORAGE_TERM,
+				es.ER_STORAGE_MANAGER,
+				es.ER_STORAGE_ORDERBY,
+				esf.ER_FOLDER_KEY,
+				esf.ER_FOLDER_NAME,
+				esf.ER_FOLDER_GROUP,
+				esf.ER_FOLDER_LEVEL,
+				esf.ER_FOLDER_USE_YN,
+				m.MEMBER_KEY,
+				m.DEPARTMENT_KEY,
+				m.JOB_KEY,
+				m.MEMBER_ID,
+				m.MEMBER_PW,
+				m.MEMBER_PHONE,
+				m.MEMBER_EMAIL,
+				m.MEMBER_MESSAGE,
+				m.MEMBER_ENROLL_DATE,
+				m.MEMBER_LEAVE_DATE,
+				m.MEMBER_TELL,
+				m.MEMBER_ADDRESS,
+				m.ACCESS_KEY,
+				m.MEMBER_NAME,
+				m.MEMBER_GENDER,
+				m.MEMBER_STATE,
+				m.MEMBER_BIRTHDATE,
+				m.MEMBER_PROFILE_IMAGE,
+				j.JOB_NAME,
+				d.DEPARTMENT_NAME
+				FROM ER_STORAGE es
+			LEFT JOIN MEMBER m ON es.ER_STORAGE_MANAGER = m.MEMBER_KEY
+			LEFT JOIN ER_STORAGE_FOLDER esf ON esf.er_folder_key = es.ER_STORAGE_FOLDER_KEY
+			LEFT JOIN DEPARTMENT d ON m.DEPARTMENT_KEY = d.DEPARTMENT_KEY 
+			LEFT JOIN job j ON j.JOB_KEY = m.JOB_KEY  
+			WHERE es.ER_STORAGE_FOLDER_KEY=#{folderKey}
+
+	</select>
+	
+    <resultMap id="StorageFolder" type="storageFolder">
+        <id property="folderKey" column="ER_FOLDER_KEY" />
+        <result property="folderName" column="ER_FOLDER_NAME" />
+        <result property="parentFolderKey" column="ER_FOLDER_REF" />
+        <result property="folderLevel" column="ER_FOLDER_LEVEL" />
+        <result property="useYn" column="ER_FOLDER_USE_YN" />   
+	</resultMap>
+    
+    <resultMap id="adminDocument" type="adminDocument">
+	    <id property="erStorageKey" column="ER_STOARGE_KEY"/>
+	    <result property="erStorageFolderKey" column="ER_STORAGE_FOLDER_KEY"/>
+	    <result property="erStorageName" column="ER_STORAGE_NAME"/>
+	    <result property="erStorageTerm" column="ER_STORAGE_TERM"/>
+	    <result property="erStorageManager" column="ER_STORAGE_MANAGER"/>
+	    <result property="erStorageOrderby" column="ER_STORAGE_ORDERBY"/>
+	    
+		<association property="member" javaType="com.project.npnc.security.dto.Member">
+            <id property="memberKey" column="MEMBER_KEY" />
+            <result property="departmentKey" column="DEPARTMENT_KEY" />
+            <result property="jobKey" column="JOB_KEY" />
+            <result property="memberId" column="MEMBER_ID" />
+            <result property="memberPw" column="MEMBER_PW" />
+            <result property="memberPhone" column="MEMBER_PHONE" />
+            <result property="memberEmail" column="MEMBER_EMAIL" />
+            <result property="memberMessage" column="MEMBER_MESSAGE" />
+            <result property="memberEnrollDate" column="MEMBER_ENROLL_DATE" />
+            <result property="memberLeaveDate" column="MEMBER_LEAVE_DATE" />
+            <result property="memberTell" column="MEMBER_TELL" />
+            <result property="memberAddress" column="MEMBER_ADDRESS" />
+            <result property="accessKey" column="ACCESS_KEY" />
+            <result property="memberName" column="MEMBER_NAME" />
+            <result property="memberGender" column="MEMBER_GENDER" />
+            <result property="memberState" column="MEMBER_STATE" />
+            <result property="memberBirthdate" column="MEMBER_BIRTHDATE" />
+        </association> 
+        
+        <association property="storageFolder" javaType="com.project.npnc.admin.document.model.dto.StorageFolder">
+        	<id property="folderKey" column="ER_FOLDER_KEY" />
+	        <result property="folderName" column="ER_FOLDER_NAME" />
+	        <result property="parentFolderKey" column="ER_FOLDER_REF" />
+	        <result property="folderLevel" column="ER_FOLDER_LEVEL" />
+	        <result property="useYn" column="ER_FOLDER_USE_YN" />  
+        </association>
+        
+        <association property="job" javaType="com.project.npnc.admin.job.model.dto.Job">
+        	<id property="jobKey" column="JOB_KEY"/>
+        	<result property="jobName" column="JOB_NAME"/>
+        </association>
+        
+        <association property="department" javaType="com.project.npnc.admin.department.model.dto.Department">
+        	<id property="deptKey" column="DEPARTMENT_KEY"/>
+        	<result property="deptName" column="DEPARTMENT_NAME"/>
+        </association>
+	</resultMap>
+	
+    <resultMap id="member" type="member">
+        <id property="memberKey" column="MEMBER_KEY" />
+        <result property="departmentKey" column="DEPARTMENT_KEY" />
+        <result property="jobKey" column="JOB_KEY" />
+        <result property="memberId" column="MEMBER_ID" />
+        <result property="memberPw" column="MEMBER_PW" />
+        <result property="memberPhone" column="MEMBER_PHONE" />
+        <result property="memberEmail" column="MEMBER_EMAIL" />
+        <result property="memberMessage" column="MEMBER_MESSAGE" />
+        <result property="memberEnrollDate" column="MEMBER_ENROLL_DATE" />
+        <result property="memberLeaveDate" column="MEMBER_LEAVE_DATE" />
+        <result property="memberTell" column="MEMBER_TELL" />
+        <result property="memberAddress" column="MEMBER_ADDRESS" />
+        <result property="accessKey" column="ACCESS_KEY" />
+        <result property="memberName" column="MEMBER_NAME" />
+        <result property="memberGender" column="MEMBER_GENDER" />
+        <result property="memberState" column="MEMBER_STATE" />
+        <result property="memberBirthdate" column="MEMBER_BIRTHDATE" />
+    </resultMap>
+	
+</mapper>

@@ -291,7 +291,6 @@
     <script src="${path }/resources/bm/js/index.global.min.js"></script>
  	<script src="${path }/resources/bm/js/daterangepicker.js"></script>
  	<script src="${path }/resources/bm/js/sweetalert2.min.js"></script>
- 	<%-- <script src="${path }/resources/bm/js/fullcalendar-init.js"></script> --%>
     <script src="${path }/resources/bm/js/calendar.js"></script>
     <script src="${path }/resources/bm/js/addEvent.js"></script>
     <script src="${path }/resources/bm/js/editEvent.js"></script>

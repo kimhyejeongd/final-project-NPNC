@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ApproversList {
+	private String name;
 	private List<Approver> approvers;
 }
