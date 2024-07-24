@@ -132,6 +132,15 @@
          <groupId>org.springframework.security</groupId>
          <artifactId>spring-security-test</artifactId>
          <scope>test</scope>
+        
+      <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-mail</artifactId>
+   	</dependency>
+
+ 
+   
+=======
       </dependency>
          <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
 		<dependency>
@@ -154,6 +163,7 @@
 
    </dependencies>
    
+
 
 
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mypage">
+	<select id="findById" resultMap="membermap" parameterType="string" >
+	SELECT * FROM member WHERE MEMBER_ID = #{memberId}
+	</select>
+	<update id="updateMember" parameterType="mypagemember">
+	UPDATE member
+	SET    member_Name = # {MEMBER_NAME},
+	       member_Email = # {MEMBER_EMAIL},
+	       member_Phone = # {MEMBER_PHONE},
+	       member_Address = # {MEMBER_ADDRESS}
+	WHERE  member_Id = # {MEMBER_ID} 	
+	</update>
+	<resultMap type="mypagemember" id="membermap">
+      <id column="MEMBER_KEY" property="memberKey"/>
+      <result column="MEMBER_ID" property="memberId"/>
+      <result column="MEMBER_PW" property="memberPw"/>
+      <result column="MEMBER_PHONE" property="memberPhone"/>
+      <result column="MEMBER_EMAIL" property="memberEmail"/>
+      <result column="MEMBER_MESSAGE" property="memberMessage"/>
+      <result column="MEMBER_ENROLL_DATE" property="memberEnrollDate"/>
+      <result column="MEMBER_LEAVE_DATE" property="memberLeaveDate"/>
+      <result column="MEMBER_TELL" property="memberTell"/>
+      <result column="MEMBER_ADDRESS" property="memberAddress"/>
+      <result column="ACCESS_KEY" property="accessKey"/>
+      <result column="MEMBER_NAME" property="memberName"/>
+      <result column="MEMBER_GENDER" property="memberGender"/>
+      <result column="MEMBER_STATE" property="memberState"/>
+      <result column="MEMBER_BIRTHDATE" property="memberBirthdate"/>
+      <result column="DEPARTMENT_KEY" property="departmentKey"/>
+      <result column="JOB_KEY" property="jobKey"/>
+	</resultMap>
+
+        <update id="updatePassword">
+        UPDATE member
+        SET MEMBER_PW = #{newPassword}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+</mapper>

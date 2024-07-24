@@ -406,8 +406,8 @@ public class MemberDocumentController {
         StringBuilder content = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(
-        		new InputStreamReader(
-        				new FileInputStream(file), StandardCharsets.UTF_8))) {
+              new InputStreamReader(
+                    new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 content.append(line).append("\n");
@@ -418,7 +418,7 @@ public class MemberDocumentController {
             e.printStackTrace();
         }
         return content.toString();
-    }
+  }
 	private Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();
