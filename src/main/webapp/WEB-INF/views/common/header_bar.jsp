@@ -352,21 +352,68 @@
                 <nav
                   class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
                 >
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <button type="submit" class="btn btn-search pe-1">
-                        <i class="fa fa-search search-icon"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search ..."
-                      class="form-control"
-                    />
-                  </div>
+				<div class="container-fluid">
+				   <a class="navbar-brand" href="#" id="headerNavLogo">
+					<img
+		               src="${path}/resources/assets/img/KakaoTalk_Photo_2024-06-28-10-37-54.png"
+		               alt="navbar brand"
+		               class="navbar-brand"
+		               height="70"
+		             />
+				   </a>
+				   <button
+				     class="navbar-toggler"
+				     type="button"
+				     data-bs-toggle="collapse"
+				     data-bs-target="#navbarNav"
+				     aria-controls="navbarNav"
+				     aria-expanded="false"
+				     aria-label="Toggle navigation"
+				   >
+				     <span class="navbar-toggler-icon"></span>
+				   </button>
+				   <div class="collapse navbar-collapse" id="navbarNav">
+				     <ul class="navbar-nav">
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/document/home" 
+				           >전자결제 <span class="sr-only">(current)</span></a
+				         >
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/calendar">캘린더</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/notein">쪽지</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/board/list">게시판</a>
+				       </li>
+				     </ul>
+				   </div>
+				 </div>
+				
                 </nav>
-      <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+      		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+			
+			<!-- 로고 메인화면 아닐 시 숨기는 로직 -->
+		
+			<script>
+				// 원하는 URL을 설정
+				const targetUrl = "http://localhost:8080/";
 
+				// 현재 URL을 확인
+				const currentUrl = window.location.href;
+				console.log(currentUrl+"들어오나요");
+				// navbar-brand 요소 선택
+				const headerNavLogo = document.getElementById("headerNavLogo");
+
+				// 현재 URL이 targetUrl과 일치하지 않으면 요소 숨기기
+				if (currentUrl !== targetUrl) {
+				    headerNavLogo.style.display = "none";
+				}
+				
+			</script>
+			
              <script type="text/javascript">
              var myChatRoomList;
                 $(document).ready(function() {
