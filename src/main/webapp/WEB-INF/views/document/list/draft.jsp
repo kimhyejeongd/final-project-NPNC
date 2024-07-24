@@ -4,7 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <%
-  String contextPath = request.getContextPath();
+	String contextPath = request.getContextPath();	
+	//세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
 %>
 <!DOCTYPE html>
 <html lang="ko">

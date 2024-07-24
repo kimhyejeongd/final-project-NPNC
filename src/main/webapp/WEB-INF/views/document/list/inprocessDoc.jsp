@@ -16,7 +16,7 @@
       <div class="card-body p-0">
         <div class="table-responsive">
           <!-- Projects table -->
-          <table class="table table-hover align-items-center mb-0" id="docTable">
+          <table class="table table-hover align-items-center mb-0" id="inproTable">
             <thead class="thead-light">
               <tr class="text-center">
               	<!-- <th><input type="checkbox"></th> -->

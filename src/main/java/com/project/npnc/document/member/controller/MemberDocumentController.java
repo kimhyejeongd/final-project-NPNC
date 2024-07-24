@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,14 +106,24 @@ public class MemberDocumentController {
 	
 //	전자문서 상세보기
 	@PostMapping("/view/docDetail{docId}")
-	public void viewDoc(int docId, Model m) {
+	public void viewDoc(int docId, 
+			@RequestParam(required = false) String history, 
+											Model m) throws Exception {
 		log.debug("----" + docId + "번 문서 상세보기----");
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
-		log.debug("{}", html);
+		if(html == null || html.equals("")) {
+			log.debug("문서 내용 -> " + html);
+			throw new Exception("문서 불러오기 실패");
+		}
+		
+		if(history != null) {
+			m.addAttribute("history", history);
+		}
+		log.debug("문서 내용 -> " + html);
 		m.addAttribute("html", html);
 	}
 	
@@ -308,9 +317,9 @@ public class MemberDocumentController {
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertDoc(
 			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
-			@RequestParam(value="upfile") MultipartFile[] file) {
-		
+			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
 		Member user = getCurrentUser();
+		if(msg.equals(",")) msg=""; //debug
 		log.debug("{}", html);
 		log.debug(file.toString());
 		log.debug("{}", user);
@@ -331,13 +340,14 @@ public class MemberDocumentController {
 									.orderby(0)
 						.build();
 		List<Approver> ap = doc.getApprovers();
-		for(Approver a : ap) {
-			if(a.getMemberKey()==0) {
-				log.debug("없는 결재자 삭제");
-				log.debug("{}", a);
-				ap.remove(a);
-			}
-		};
+		ap.removeIf(a -> {
+		    boolean toRemove = a.getMemberKey() == 0;
+		    if (toRemove) {
+		        log.debug("없는 결재자 삭제");
+		        log.debug("{}", a);
+		    }
+		    return toRemove;
+		});
 		ap.add(me);
 		doc.setApprovers(ap);
 		log.debug("{}", doc);

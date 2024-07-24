@@ -49,11 +49,11 @@ function modal(no){
 document.addEventListener("DOMContentLoaded", function() {
     //const table = document.getElementById('docTable');
 
-    $("table").on('click', "button", function(e) {
+    $("#inproTable").on('click', "button", function(e) {
         e.stopPropagation();
     });
     
-    $("table").on('click', function(event) {
+    $("#inproTable").on('click', function(event) {
         const target = event.target;
      // 버튼이 클릭된 경우 이벤트 전파를 막고 함수를 종료
         if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	function selectDoc(docId){
 		const $form = $("<form>").attr({'action': sessionStorage.getItem("path") + '/document/view/docDetail', 'method': 'post'});
 		$("<input>").attr({'value': docId, 'name': 'docId','type': 'hidden'}).appendTo($form);
+		$("<input>").attr({'value': 'document/list/inprocess', 'name': 'history','type': 'hidden'}).appendTo($form);
 		$form.appendTo("body").submit();
 	}
 });

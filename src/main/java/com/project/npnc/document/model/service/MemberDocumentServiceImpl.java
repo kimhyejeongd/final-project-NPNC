@@ -66,7 +66,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public List<Document> selectWaitingDocs(int no) {
 	    List<Document> result = dao.selectWaitingDocs(session, no);
-//	     Document 리스트에서 본인이 이미 승인한 결과 제거
+	    log.debug("[1] 조회" + result.toString());
+	    //Document 리스트에서 본인이 이미 승인한 결과 제거
 	    result.removeIf(doc -> doc.getApprovers().stream()
 	                        .anyMatch(approver -> 
                     		approver.getMemberKey() == no && approver.getState().equals("승인")));
@@ -114,6 +115,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			for(MultipartFile f : file) {
 				count++;
 				log.debug("파일 이름: " + f.getOriginalFilename());
+				if(f.isEmpty()) {
+					continue;
+				}
 	            // 고유한 파일 이름 생성 (UUID 사용)
 	            String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
 	
