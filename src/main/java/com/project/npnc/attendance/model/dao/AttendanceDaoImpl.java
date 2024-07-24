@@ -122,6 +122,18 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.delete("attendance.deleteAttendanceEdit",attendanceEditKey);
 	}
 
+	@Override
+	public List<Attendance> searchAttendanceEdit(SqlSession session, String searchType, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAttendanceEdit",searchType,rb);
+	}
+
+	@Override
+	public int searchAttendanceEditCount(SqlSession session, String searchType) {
+		
+		return session.selectOne("attendance.searchAttendanceEditCount",searchType);
+	}
+	
 	
 	//admin attendance
 	
@@ -181,30 +193,32 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	}
 
 	@Override
-	public List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session, Map<String, String> searchMap,
+	public List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session, Map<String, Object> searchMap,
 			Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		return session.selectList("attendance.searchAdminAttendanceEdit",searchMap,rb);
 	}
 
 	@Override
-	public int searchAdminAttendanceEditCount(SqlSession session, Map<String, String> searchMap) {
+	public int searchAdminAttendanceEditCount(SqlSession session, Map<String, Object> searchMap) {
 		
 		return session.selectOne("attendance.searchAdminAttendanceEditCount",searchMap);
 	}
 
 	@Override
-	public List<Attendance> searchAdminAttendance(SqlSession session, Map<String, String> searchMap,
+	public List<Attendance> searchAdminAttendance(SqlSession session, Map<String, Object> searchMap,
 			Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
 		return session.selectList("attendance.searchAdminAttendance",searchMap,rb);
 	}
 
 	@Override
-	public int searchAdminAttendanceCount(SqlSession session, Map<String, String> searchMap) {
+	public int searchAdminAttendanceCount(SqlSession session, Map<String, Object> searchMap) {
 		
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
+
+
 
 
 	

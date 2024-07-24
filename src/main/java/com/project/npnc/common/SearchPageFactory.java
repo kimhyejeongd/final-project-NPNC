@@ -1,11 +1,13 @@
 package com.project.npnc.common;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class SearchPageFactory {
 	
-	public String getPage(int cPage,int numPerpage,int totalData,String searchKey,String searchType,String url) {
+	public String getPage(int cPage,int numPerpage,int totalData,String searchKey,String searchType,String searchStartDate,String searchEndDate,String url) {
 		
 		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
 		int pageBarSize=5;
@@ -48,7 +50,7 @@ public class SearchPageFactory {
 		sb.append("<ul>");
 		sb.append("<script>");
 		sb.append("function fn_paging(pageNo){");
-		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"&searchKey="+searchKey+"&searchType="+searchType+"');");
+		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"&searchKey="+searchKey+"&searchType="+searchType+"&searchStartDate="+searchStartDate+"&searchEndDate="+searchEndDate+"');");
 //		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"');");
 		sb.append("}");
 		sb.append("</script>");

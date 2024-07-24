@@ -189,6 +189,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.deleteAttendanceEdit(session, attendanceEditKey);
 	}
 
+	@Override
+	public List<Attendance> searchAttendanceEdit(String searchType, Map<String, Integer> page) {
+		
+		return attendanceDao.searchAttendanceEdit(session, searchType, page);
+	}
+
+	@Override
+	public int searchAttendanceEditCount(String searchType) {
+		// TODO Auto-generated method stub
+		return attendanceDao.searchAttendanceEditCount(session, searchType);
+	}
+	
 	
 	//admin attendance
 	
@@ -246,29 +258,29 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public List<AttendanceEdit> searchAdminAttendanceEdit(Map<String, String> searchMap, Map<String, Integer> page) {
+	public List<AttendanceEdit> searchAdminAttendanceEdit(Map<String, Object> searchMap, Map<String, Integer> page) {
 		
 		return attendanceDao.searchAdminAttendanceEdit(session, searchMap, page);
 	}
 
 	@Override
-	public int searchAdminAttendanceEditCount(Map<String, String> searchMap) {
+	public int searchAdminAttendanceEditCount(Map<String, Object> searchMap) {
 		// TODO Auto-generated method stub
 		return attendanceDao.searchAdminAttendanceEditCount(session, searchMap);
 	}
 
 	@Override
-	public List<Attendance> searchAdminAttendance(Map<String, String> searchMap, Map<String, Integer> page) {
+	public List<Attendance> searchAdminAttendance(Map<String, Object> searchMap, Map<String, Integer> page) {
 		
 		return attendanceDao.searchAdminAttendance(session, searchMap, page);
 	}
 
 	@Override
-	public int searchAdminAttendanceCount(Map<String, String> searchMap) {
+	public int searchAdminAttendanceCount(Map<String, Object> searchMap) {
 		
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
 	}
-	
+
 	
 	
 	

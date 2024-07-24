@@ -23,6 +23,7 @@ import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.common.SearchPageFactory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,7 @@ public class AttendanceController{
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
 	private final PageFactory pageFactory;
+	private final SearchPageFactory searchPageFactory;
 	
 	
 	@Scheduled(cron="0 0 23 1 * ?")
@@ -238,7 +240,20 @@ public class AttendanceController{
 		
 	}
 	
-	
+	@GetMapping("/searchAttendanceEdit")
+	public String searchAttendanceEdit(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			String searchType,
+			Model model) {
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<Attendance> list=attendanceService.searchAttendanceEdit(searchType,page);
+		int totaldata=attendanceService.searchAttendanceEditCount(searchType);
+		System.out.println(list);
+		model.addAttribute("attendanceEdit", list);
+		model.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,null,searchType,null,null,"searchAttendanceEdit"));
+		return "attendance/ajax_response/tableresponse";
+	}
 
 	
 	

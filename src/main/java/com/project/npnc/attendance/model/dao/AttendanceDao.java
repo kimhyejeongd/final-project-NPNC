@@ -36,6 +36,9 @@ public interface AttendanceDao {
 	AttendanceEdit selectAttendanceEditByKey(SqlSession session,int attendanceEditKey);
 	int deleteAttendanceEdit(SqlSession session,int attendanceEditKey);
 	
+	List<Attendance> searchAttendanceEdit(SqlSession session,String searchType,Map<String,Integer> page);
+	int searchAttendanceEditCount(SqlSession session,String searchType);
+	
 	//admin attendacne
 	List<Attendance> selectAdminAttendanceAll(SqlSession session,Map<String,Integer> page);
 	int selectAdminAttendanceAllCount(SqlSession session);
@@ -47,10 +50,12 @@ public interface AttendanceDao {
 	List<Attendance> selectAdminAttendanceBymemberKey(SqlSession session,int memberKey,Map<String,Integer> page);
 	int selectAdminAttendanceBymemberKeyCount(SqlSession session,int memberKey);
 	
-	List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session,Map<String,String> searchMap,Map<String,Integer> page);
-	int searchAdminAttendanceEditCount(SqlSession session,Map<String,String> searchMap);
+	List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session,Map<String,Object> searchMap,Map<String,Integer> page);
+	int searchAdminAttendanceEditCount(SqlSession session,Map<String,Object> searchMap);
 	
-	List<Attendance> searchAdminAttendance(SqlSession session,Map<String,String> searchMap, Map<String,Integer> page);
-	int searchAdminAttendanceCount(SqlSession session,Map<String,String> searchMap);
+	List<Attendance> searchAdminAttendance(SqlSession session,Map<String,Object> searchMap, Map<String,Integer> page);
+	int searchAdminAttendanceCount(SqlSession session,Map<String,Object> searchMap);
+	
+	
 	
 }

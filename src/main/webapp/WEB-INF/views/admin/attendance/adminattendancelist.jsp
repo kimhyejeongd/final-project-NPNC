@@ -21,6 +21,11 @@
 		                  </div>
 		                  <div class="card-body">
 		                  		<form action="${path }/admin/attendance/searchAdminAttendance">  
+		                  			<div style="display: flex;">
+		                  				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
+		                  				<h3>~</h3>
+		                  				<input type="date" class="form-control" name="searchEndDate" id="searchEndDate" value="${searchED }">
+		                  			</div>
 		                  		  <nav
 					                 class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
 					              >

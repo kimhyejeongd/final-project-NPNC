@@ -162,7 +162,7 @@ public class AdminMemberController {
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.searchMemberCount(searchKey);
 		List<AdminMember> members= service.searchMember(searchKey, page);
-		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,"searchMember"));
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,null,null,"searchMember"));
 		m.addAttribute("members",members);
 		m.addAttribute("searchK",searchKey);
 		return "admin/member/memberlist";

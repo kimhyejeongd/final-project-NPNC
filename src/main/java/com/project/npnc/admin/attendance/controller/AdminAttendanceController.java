@@ -1,5 +1,7 @@
 package com.project.npnc.admin.attendance.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -99,28 +101,22 @@ public class AdminAttendanceController {
 		return "common/msg";
 	}
 	
-	@GetMapping("/adminAttendanceByOrgan")
-	public String adminAttendanceByOrgan(Model m) {
-		List<OrganizationDto> list=organService.selectOrganAll();
-		m.addAttribute("list",list);
-		return "admin/attendance/adminattendancebyorgan";
-	}
 	
-	@PostMapping("/selectAdminAttendanceBymemberKey")
-	public String selectAdminAttendanceBymemberKey(
-			int memberKey,
-			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "10") int numPerpage,
-			Model m) {
-		
-		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
-		List<Attendance> attendance=service.selectAdminAttendanceBymemberKey(memberKey, page);
-		int totaldata=service.selectAdminAttendanceBymemberKeyCount(memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "adminAttendanceByOrgan"));
-		m.addAttribute("attendance",attendance);
-		return null;
-		
-	}
+//	@PostMapping("/selectAdminAttendanceBymemberKey")
+//	public String selectAdminAttendanceBymemberKey(
+//			int memberKey,
+//			@RequestParam(defaultValue = "1") int cPage,
+//			@RequestParam(defaultValue = "10") int numPerpage,
+//			Model m) {
+//		
+//		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+//		List<Attendance> attendance=service.selectAdminAttendanceBymemberKey(memberKey, page);
+//		int totaldata=service.selectAdminAttendanceBymemberKeyCount(memberKey);
+//		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "adminAttendanceByOrgan"));
+//		m.addAttribute("attendance",attendance);
+//		return null;
+//		
+//	}
 	
 	@GetMapping("searchAdminAttendanceEdit")
 	public String searchAdminAttendanceEdit(
@@ -129,11 +125,11 @@ public class AdminAttendanceController {
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,
 			Model m) {
-		Map<String,String> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
+		Map<String,Object> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendanceEdit=service.searchAdminAttendanceEdit(searchMap,page);
 		int totaldata=service.searchAdminAttendanceEditCount(searchMap);
-		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType, "searchAdminAttendanceEdit"));
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,null,null, "searchAdminAttendanceEdit"));
 		m.addAttribute("attendanceEdit",attendanceEdit);
 		m.addAttribute("searchK",searchKey);
 		m.addAttribute("searchT",searchType);
@@ -144,18 +140,28 @@ public class AdminAttendanceController {
 	public String searchAdminAttendance(
 			String searchKey,
 			String searchType,
+			String searchStartDate,
+			String searchEndDate,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,		
 			Model m
 			) {
-		Map<String,String> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
+
+		LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
+		searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		System.out.println("시작시간 : "+searchStartDate
+				+"끝나는시간 : "+searchEndDate);
+		Map<String,Object> searchMap=Map.of("searchKey",searchKey,"searchType",searchType,"searchStartDate",searchStartDate,"searchEndDate",searchEndDate);
+		System.out.println("tests");
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendance=service.searchAdminAttendance(searchMap,page);
 		int totaldata=service.searchAdminAttendanceCount(searchMap);
-		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType, "searchAdminAttendance"));
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,searchStartDate,searchEndDate,"searchAdminAttendance"));
 		m.addAttribute("attendance",attendance);
 		m.addAttribute("searchK",searchKey);
 		m.addAttribute("searchT",searchType);
+		m.addAttribute("searchSD",searchStartDate);
+		m.addAttribute("searchED",searchEndDate);
 		return "admin/attendance/adminattendancelist";
 	}
 	
