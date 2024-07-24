@@ -58,4 +58,5 @@ public class BoardController {
         return "board/detail";
     }
     
+    
 }
