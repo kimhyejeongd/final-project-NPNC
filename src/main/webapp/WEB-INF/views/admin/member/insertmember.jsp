@@ -9,7 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-		<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
+	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
 		<form action="${path}/admin/member/insertmemberend.do" method="post">
 		 <div class="container">
           <div class="page-inner">
@@ -314,7 +315,7 @@
           </div>
  
 		</form>
-		
+		</div>
 		
 </body>
 </html>

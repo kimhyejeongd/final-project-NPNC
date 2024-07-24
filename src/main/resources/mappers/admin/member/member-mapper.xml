@@ -20,6 +20,7 @@
 		<result column="MEMBER_GENDER" property="memberGender"/>
 		<result column="MEMBER_STATE" property="memberState"/>
 		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"/>
+		<result column="MEMBER_PROFILE_IMAGE" property="memberProfileImage"/>
 		<association property="department" resultMap="department.deptMap"/>
 		<association property="job" resultMap="job.jobMap"/>
 	</resultMap>
@@ -52,8 +53,8 @@
 	<insert id="insertMember" parameterType="adminmember">
 		INSERT INTO MEMBER 
 			VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
-			'NPNC'||SEQ_MEMBER.CURRVAL,'NPNC'||TO_CHAR(#{memberBirthdate}, 'MMDD'),#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
-			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate})
+			'NPNC'||SEQ_MEMBER.CURRVAL,#{memberPw},#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
+			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate},'basicPicture')
 	</insert>
 	
 	<update id="updateMember" parameterType="adminmember">
@@ -74,4 +75,34 @@
 			FROM MEMBER
 	</select>
 	
+	<select id="searchMember" parameterType="string" resultMap="memberMap">
+		SELECT 
+		MEMBER_KEY,
+		DEPARTMENT_KEY,
+		JOB_KEY, 
+		MEMBER_ID, 
+		MEMBER_PW, 
+		MEMBER_PHONE, 
+		MEMBER_EMAIL, 
+		MEMBER_MESSAGE, 
+		MEMBER_ENROLL_DATE, 
+		MEMBER_LEAVE_DATE, 
+		MEMBER_TELL, 
+		MEMBER_ADDRESS, 
+		ACCESS_KEY, 
+		MEMBER_NAME, 
+		MEMBER_GENDER, 
+		MEMBER_STATE, 
+		MEMBER_BIRTHDATE, 
+		MEMBER_PROFILE_IMAGE
+		FROM MEMBER
+		WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	</select>
+	
+	<select id="searchMemberCount" parameterType="string" resultType="_int">
+	SELECT 
+	COUNT(MEMBER_KEY)
+	FROM MEMBER
+	WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	</select>
 </mapper>

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AttendanceEdit {
 	private int attendanceEditKey;
+	private Attendance attendance;
 	private String attendanceEditMember;
 	private LocalDate attendanceEditDate;
 	private LocalDate attendanceEditRequestDate;
@@ -23,5 +24,6 @@ public class AttendanceEdit {
 	private String attendanceEditAfterState;
 	private String attendanceEditRequest;
 	private String attendanceEditOpinion;
+	private String attendanceEditState;
  
 }

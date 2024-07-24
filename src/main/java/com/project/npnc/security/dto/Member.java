@@ -24,6 +24,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Member implements UserDetails {
 
+
+  private static final long serialVersionUID = 2753929692689331304L;
+
+
 	private int memberKey;
 	private String departmentKey;
 	private String jobKey;

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 
@@ -35,7 +36,7 @@ public class AttendanceController{
 	private final PageFactory pageFactory;
 	
 	
-	@Scheduled(cron="0 0 23 * * ?")
+	@Scheduled(cron="0 0 23 1 * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
@@ -76,15 +77,14 @@ public class AttendanceController{
 	@PostMapping("/startattendance")
 	public ResponseEntity<Map<String,String>> startAttendance(Attendance a,Model m,Authentication authentication) {
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-//		LocalDate today=LocalDate.now();
-//		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
-//		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
+		LocalDate today=LocalDate.now();
+		Map StartCheck=Map.of("memberKey",memberKey,"date",today);//오늘날짜와 멤버키로 오늘 출근을 하고 다시 눌렀을때 막기위해
+		int attendanceCheck=attendanceService.selectAttendanceByMemberKeyAndDate(memberKey);
 		Map<String,String> response =new HashMap<>();
-//		String msg;
-//		if(attendanceCheck>0) {
-//			msg="오늘 이미 출근 등록이 완료되었습니다";+
-//			
-//		}else {
+		String msg;
+		if(attendanceCheck>0) {
+			msg="오늘 이미 출근 등록이 완료되었습니다";
+		}else {
 			LocalTime attendanceStart=LocalTime.now();
 			int attendanceHour=attendanceStart.getHour();
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -105,6 +105,7 @@ public class AttendanceController{
 		attendanceService.startAttendance(a); //insert
 		response.put("attendanceStart",attendanceStartTime);
 		response.put("msg","출근완료!");
+		}
 		return ResponseEntity.ok(response);
 		
 	}
@@ -154,7 +155,7 @@ public class AttendanceController{
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll.do"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
@@ -174,14 +175,71 @@ public class AttendanceController{
 		
 	}
 	
+	@PostMapping("/updateAttendanceEnd")
+	public String updateAttendanceEnd(AttendanceEdit ae,int attendanceKey,String attendanceEditBeforeTimeEnd,Model m) {
+		ae.setAttendance(Attendance.builder().attendanceKey(attendanceKey).build());
+		if(ae.getAttendanceEditStartEnd().equals("퇴근")) {
+			ae.setAttendanceEditBeforeTime(attendanceEditBeforeTimeEnd);
+		}
+		System.out.println(ae);
+		if(ae.getAttendanceEditBeforeTime().equals("")) {
+			
+		}
+		int result=attendanceService.insertAttendanceEdit(ae);
+		
+		String msg,loc;
+		if(result>0) {
+			msg="요청성공";
+			loc="/attendance/selectAttendanceAll.do";
+		}else {
+			msg="요청실패";
+			loc="/attendance/selectAttendanceAll.do";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+	}
+	
+	@GetMapping("/selectAttendanceEditById")
+	public String updateAttendanceList(Model m,
+				@RequestParam(defaultValue = "1") int cPage,
+				@RequestParam(defaultValue = "5") int numPerpage,
+				Authentication authentication) {
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<AttendanceEdit> attendanceEdit= attendanceService.selectAttendanceEditById(authentication.getName(),page);
+		int totaldata=attendanceService.selectAttendanceEditCount(authentication.getName());
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "attendanceEditList"));
+		m.addAttribute("attendanceEdit",attendanceEdit);
+		return "attendance/attendanceEditList";
+	}
+	
+	@PostMapping("/attendanceEditDetail")
+	public String attendanceEditDetail(int attendanceEditKey, Model m) {
+		AttendanceEdit attendanceEdit= attendanceService.selectAttendanceEditByKey(attendanceEditKey);
+		m.addAttribute("attendanceEdit",attendanceEdit);
+		return "attendance/attendanceEditDetail";
+	}
+	
+	@PostMapping("/deleteAttendanceEdit")
+	public String deleteAttendanceEdit(int attendanceEditKey,Model m) {
+		int result=attendanceService.deleteAttendanceEdit(attendanceEditKey);
+		String msg,loc;
+		if(result>0) {
+			msg="삭제성공";
+			loc="/attendance/attendanceEditList";
+		}else {
+			msg="삭제실패";
+			loc="/attendance/attendanceEditList";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+		
+		
+	}
 	
 	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.project.npnc.member.model.dao.MemberDao;
 import com.project.npnc.member.model.dto.Member;
 import com.project.npnc.note.dao.NoteDao;
+import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
+import com.project.npnc.note.dto.NoteSendDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,10 +21,50 @@ import lombok.RequiredArgsConstructor;
 public class NoteServiceImpl implements NoteService{
 
 	
+	
+
+	
 	private final NoteDao dao;
 	private final SqlSession session;
 	private final MemberDao memberDao;
 	
+	@Override
+	public List<Member> selectMemberAllNoPaging() {
+		
+		List<Member> result =memberDao.selectMemberAllNoPaging(session);
+		
+		return result;
+	}
+
+	
+// 개별, 다중 쪽지 발송 파일 있는 버전	
+	@Override
+	public int noteWritesAndFile(int[] reMemberKey, NoteReceptionDto note, List<NoteFileDto> upfiles) {
+		int noteMsgKey=dao.noteMsgKey(session);
+		note.setPostMsgRecKey(noteMsgKey);
+		int result=dao.noteOneWrite(session, note);
+		int result1=dao.sendNoteOneWrite(session, note);
+
+		for (int i=0; i<reMemberKey.length; i++) {
+			Map<String,Object> param=new HashMap();
+			
+			param.put("reMemberKey", reMemberKey[i]);
+			param.put("noteMsgKey", noteMsgKey);
+			int result2=dao.noteReciver(session, param);
+			
+		}
+		
+		
+		for (int i=0; i<upfiles.size();i++) {
+			NoteFileDto file=upfiles.get(i);
+			file.setPostMsgKey(noteMsgKey);
+			file.setPostMsgSendKey(noteMsgKey);
+			int result3=dao.noteFileInput(session, file);
+			
+		}
+		return 0;
+	}
+
 //	전체 쪽지 발송
 	@Override
 	public int noteAllWrite(NoteReceptionDto note) {
@@ -46,10 +88,45 @@ public class NoteServiceImpl implements NoteService{
 		return 0;
 	}
 	
+//	전체 쪽지 발송 파일 버전
 	@Override
-	public NoteReceptionDto selectNoteOne() {
+	public int noteAllWriteAndFile(NoteReceptionDto note, List<NoteFileDto> upfiles) {
+		int noteMsgKey=dao.noteMsgKey(session);
+		note.setPostMsgRecKey(noteMsgKey);
+		int result=dao.noteOneWrite(session, note);
+		int result1=dao.sendNoteOneWrite(session, note);
 		
-		return dao.selectNoteOne(session);
+		Map<String,Object> param=new HashMap();
+		param.put("noteMsgKey", noteMsgKey);
+
+		List<Member> members=memberDao.selectMemberAllNoPaging(session);
+		
+		for (int i=0; i<members.size(); i++) {
+			
+			param.put("reMemberKey",members.get(i).getMemberKey());
+			int result2=dao.noteReciver(session, param);
+			
+		}
+		
+		
+		for (int i=0; i<upfiles.size();i++) {
+			NoteFileDto file=upfiles.get(i);
+			file.setPostMsgKey(noteMsgKey);
+			file.setPostMsgSendKey(noteMsgKey);
+			int result3=dao.noteFileInput(session, file);
+			
+		}
+		
+		return 0;
+
+	}
+
+
+	
+	@Override
+	public NoteReceptionDto selectNoteOne(Map<String,Integer> param) {
+		
+		return dao.selectNoteOne(session,param);
 	}
 
 	
@@ -71,6 +148,7 @@ public class NoteServiceImpl implements NoteService{
 		return result;
 	}
 
+//	개별, 다중 쪽지 발송
 	@Override
 	public int noteWrites(int[] reMemberKey, NoteReceptionDto note) {
 	
@@ -105,8 +183,60 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 
-	
+	@Override
+	public List<NoteSendDto> sendNoteSelectAll(Map<String, Integer> page) {
+		// TODO Auto-generated method stub
+		return dao.sendNoteSelectAll(session, page);
+	}
 
+	@Override
+	public int sendNoteSelectTotalData(int memberKey) {
+		
+		return dao.sendNoteSelectTotalData(session, memberKey);
+	}
+	
+	@Override
+	public NoteSendDto selectSendOne(Map<String, Integer> param) {
+		
+		return dao.selectSendOne(session,param);
+	}
+
+	@Override
+	public List<NoteSendDto> sendNoteSelectAllPaging(Map<String, Integer> page) {
+		
+		return dao.sendNoteSelectAllPaging(session, page);
+	}
+
+//	보낸쪽지 삭제
+	@Override
+	public int noteSendDelete(int[] checkDeleteValue) {
+		int result1=0;
+		for(int i=0; i<checkDeleteValue.length; i++) {
+			
+			 result1= dao.noteSendDelete(session, checkDeleteValue[i]);
+		}
+		
+		
+		return result1;
+	}
+//	받은쪽지 삭제
+	@Override
+	public int noteRecDelete(int[] checkDeleteValue, int memberKey) {
+		
+		int result1=0;
+		Map<String,Integer> param=new HashMap();
+		param.put("memberKey", memberKey);
+		for(int i=0; i<checkDeleteValue.length; i++) {
+			param.put("checkDeleteValue", checkDeleteValue[i]);	
+			 result1= dao.noteRecDelete(session, param);
+		}
+		
+		
+		return result1;
+	}
+
+
+	
 
 
 }

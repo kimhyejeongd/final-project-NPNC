@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<%
+  String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -15,7 +18,17 @@
       rel="icon"
       type="image/x-icon"
     />
+      <!-- SweetAlert2 CSS -->
+	  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+	  <!-- SweetAlert2 JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    <style>
+    	#tablerow:hover{
+    		cursor: pointer; 
+    	}
+    </style>
   </head>
+  <script src="${path}/resources/jh/js/inprocess.js"></script>
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
@@ -42,135 +55,14 @@
                 <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
               </div>
             </div>
-            <div class="row">
-              <div class="">
-                <div class="card card-round">
-                  <div class="card-header">
-                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">상신 문서 현황</div>
-                      <div class="card-tools">
-                        <div class="dropdown">
-                          <button
-                            class="btn btn-icon btn-clean me-0"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                        <thead class="thead-light">
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="col" colspan="">항목</th>
-                            <th scope="col" class="">문서 제목</th>
-                            <th scope="col" class="">상신 일자</th>
-                            <th scope="col" class="">상태</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="row">
-                              Payment from #10231
-                            </th>
-                            <td class="">$250.00</td>
-                            <td class="">Mar 19, 2020, 2.45pm</td>
-                            <td class="">
-                              <span class="badge badge-success">Completed</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-		<div class="">
-                <div class="card card-round">
-                  <div class="card-header">
-                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">결재 대기 문서</div>
-                      <div class="card-tools">
-                        <div class="dropdown">
-                          <button
-                            class="btn btn-icon btn-clean me-0"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                        <thead class="thead-light">
-                          <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="col" colspan=""> 항목</th>
-                            <th scope="col" class="">문서 제목</th>
-                            <th scope="col" class="">상신 일자</th>
-                            <th scope="col" class="">상태</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                           <tr class="text-center">
-                          	<th><input type="checkbox"></th>
-                            <th scope="row">
-                              Payment from #10231
-                            </th>
-                            <td class="">$250.00</td>
-                            <td class="">Mar 19, 2020, 2.45pm</td>
-                            <td class="">
-                              <span class="badge badge-success">Completed</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <c:import url="${path }/WEB-INF/views/document/list/inprocessDoc.jsp"/>
+            <c:import url="${path }/WEB-INF/views/document/list/waitingDocs.jsp"/>
             </div>
           </div>
           </div>
         </div>
+<script>
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+</script>
   </body>
 </html>
