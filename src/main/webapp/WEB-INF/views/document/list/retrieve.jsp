@@ -27,6 +27,7 @@
     	}
     </style>
   </head>
+  <script src="${path}/resources/jh/js/draft.js"></script>
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
@@ -81,7 +82,7 @@
 	                         	</tr>
 	                         </c:if>
 	                         <c:if test="${doclist ne null}">
-	                         	<c:forEach items="${doclist }" var="l">
+	                         	<c:forEach items="${doclist }" var="l" varStatus="vs">
 		                         <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
 		                            <td class="text-muted">${vs.index+1 }</td>
 		                            <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
@@ -91,7 +92,10 @@
 		                            <td class="">
 		                            	<fmt:formatDate value="${l.erDocStateUpdateDate}" type="date" pattern="yy/MM/dd HH:mm"/>
 		                            </td>
-		                         	<td colspan="5"><input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocKey}, '${path }'');"></td>
+		                         	<td colspan="">
+		                         		<input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
+		                         		<input type="button" value="삭제" class="btn btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}');">
+		                         	</td>
 		                          </tr>
 		                          </c:forEach>
 	                          </c:if>
@@ -107,51 +111,7 @@
         </div>
       </div>
 <script>
-	const modal = (no, path)=>{
-		// SweetAlert2 모달 띄우기
-		console.log(no);
-		Swal.fire({
-			title: '재기안',
-			html: '<h4>해당 문서 내용으로 재기안하시겠습니까?</h4>',
-			showCancelButton: true,
-			confirmButtonClass: 'btn btn-success',
-			cancelButtonClass: 'btn btn-danger ms-2',
-			confirmButtonText: '재기안',
-			cancelButtonText: '취소',
-			buttonsStyling: false,
-			reverseButtons: false
-		}).then((result) => {
-			if (result.isConfirmed) {
-				console.log('재기안하기');
-				$.ajax({
-					url: `${path}/document/retrieve`,
-					data: no,
-					success: data=>{
-						//문서 정보 전달, 문서 작성으로 이동
-						
-					}
-				});
-			}
-		});
-	};
-document.addEventListener('DOMContentLoaded', function() {
-    const table = document.getElementById('docTable');
-
-    table.addEventListener('click', function(event) {
-        const row = event.target.closest('tr');
-        if (row && row.dataset.docId) {
-            const docId = row.dataset.docId;
-            console.log(docId);
-            selectDoc(docId);
-        }
-    });
-	//상세보기
-	function selectDoc(docId){
-		const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
-		$("<input>").attr({'value': docId, 'type': 'text', 'name': 'docId'}).appendTo($form);
-		$form.appendTo("body").submit();
-	}
-});
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
   </body>
 </html>

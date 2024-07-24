@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	//상세보기
 	function selectDoc(docId){
 		const $form = $("<form>").attr({'action': '${pageContext.request.contextPath}/document/view/docDetail', 'method': 'post'});
-		$("<input>").attr({'value': docId, 'type': 'text', 'name': 'docId','type': 'hidden'}).appendTo($form);
+		$("<input>").attr({'value': docId, 'name': 'docId','type': 'hidden'}).appendTo($form);
 		$form.appendTo("body").submit();
 	}
 });
