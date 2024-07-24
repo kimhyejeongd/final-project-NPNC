@@ -39,20 +39,22 @@
 		                    <div class="accordion" id="accordionPanelsStayOpenExample">
 							
 								    <c:forEach var="f" items="${folders }">
-								<div class="accordion-item droppable">
+								        <c:set var="folderJson" value="${f}"/>
+								    
+								<div class="accordion-item">
 									        <c:if test="${f.folderLevel==1}">
-								    <h2 class="accordion-header">
+								    <h2 class="accordion-header droppable" data-folder='${folderJson}'>
 									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
 									        <i class="fas fa-bookmark me-2"></i>
 									        	${f.folderName } 
 									      </button>
-									    </h2>
+									</h2>
 									        </c:if>
 						    			<div id="panelsStayOpen-collapse${f.folderKey}" class="accordion-collapse collapse show">
 									      <div class="accordion-body" style="padding: 0!important;">
 									         <div class="list-group" id="memberlist">
 								 				<c:if test="${f.folderLevel==2 }">
-												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}"> 
+												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder='${folderJson}'> 
 													  <i class="fas fa-user me-2"></i>
 													  ${f.folderName }
 												  </a>
@@ -202,25 +204,43 @@
         });
 
         // 드롭 가능한 영역 설정
-        $(document).on('dragover', '.accordion-item.droppable', function(event) {
+        $(document).on('dragover', '.accordion-header.droppable', function(event) {
             event.stopPropagation();
 
             event.preventDefault();
             $(this).addClass('drop-hover');
         });
 
-        $(document).on('dragleave', '.accordion-item.droppable', function(event) {
+        $(document).on('dragleave', '.accordion-header.droppable', function(event) {
             $(this).removeClass('drop-hover');
         });
 
-        $(document).on('drop', '.accordion-item.droppable', function(event) {
+        $(document).on('drop', '.accordion-header.droppable', function(event) {
             event.stopPropagation();
             
             event.preventDefault();
             $(this).removeClass('drop-hover');
+            
             var draggable = window.draggedItem;  // 드래그된 요소를 가져옴
-            var targetAccordionItem = $(this).closest('.accordion-item');
+            var targetAccordionItem = $(this).closest('.accordion-item'); // 최상위 부모인 .accordion-item을 찾아서
             targetAccordionItem.find('.accordion-body .list-group').append(draggable);  // 새로운 위치에 추가
+            
+            var draggedFolder = draggable.data('folder'); // 드래그된 폴더 데이터 추출
+            var targetFolder = targetAccordionItem.data('folder'); // 타겟 폴더 데이터 추출
+			
+            $.ajax({
+                url: '${path}/admin/documentForm/updateFolderOrder', // 서버 요청 URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    draggedFolder: draggedFolder,
+                    targetFolder: targetFolder
+                }),
+                success: function(response) {
+                	console.log(response);
+                    console.log('Folders order updated successfully');
+                }
+            });
         });
     });
 </script>

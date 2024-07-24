@@ -1,12 +1,14 @@
 package com.project.npnc.admin.document.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,7 +36,13 @@ public class AdminDocumentFormController {
 		return ResponseEntity.ok(docs);
 	}
 	
-//	@PostMapping("/updateOrder")
-//	public int updateOrder ()
+	@PostMapping("/updateFolderOrder")
+	public int updateOrder (@RequestBody Map<String,Object> request) {
+		StorageFolder draggedFolder = (StorageFolder) request.get("requestFolder");
+		StorageFolder targetFolder = (StorageFolder) request.get("targetFolder");
+		System.out.println(draggedFolder);
+		System.out.println(targetFolder);
+		return 1;
+	}
 
 }
