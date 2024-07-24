@@ -4,66 +4,20 @@
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
-<head>
 <style type="text/css">
 	.drop-hover {
   border: 2px dashed #007bff;
 }
 	
 </style>
+<head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<!-- JQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- JQuery UI CSS -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<!-- JQuery UI JS -->
-<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
-<!-- Fonts and icons -->
-<script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
-<!-- bootstrap js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<!-- SweetAlert2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<!-- CSS Files -->
-<link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
-<link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
-<link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-<!-- CSS Just for demo purpose, don't include it in your project -->
-<link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-<!-- Core JS Files -->
-<script src="${path}/resources/assets/js/core/popper.min.js"></script>
-<!-- jQuery Scrollbar -->
-<script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-<!-- Chart JS -->
-<script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
-<!-- jQuery Sparkline -->
-<script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-<!-- Chart Circle -->
-<script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
-<!-- Datatables -->
-<script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
-<!-- Bootstrap Notify 1 -->
-<script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-<!-- jQuery Vector Maps -->
-<script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-<script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
-<!-- Sweet Alert -->
-<script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-<!-- Kaiadmin JS -->
-<script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-<!-- Kaiadmin DEMO methods, don't include it in your project! -->
-<script src="${path}/resources/assets/js/setting-demo.js"></script>
-<script src="${path}/resources/assets/js/demo.js"></script>
-<!-- Modal CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <body>
-				 <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %>
+    <jsp:include page="/WEB-INF/views/admin/adminsidebar.jsp"></jsp:include>
+
 <div class="main-panel">
   <div class="container">
    <div class="page-inner" style="display: flex">
@@ -85,20 +39,22 @@
 		                    <div class="accordion" id="accordionPanelsStayOpenExample">
 							
 								    <c:forEach var="f" items="${folders }">
+								        <c:set var="folderJson" value="${f}"/>
+								    
 								<div class="accordion-item">
 									        <c:if test="${f.folderLevel==1}">
-								    <h2 class="accordion-header">
-									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse0" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
+								    <h2 class="accordion-header droppable" data-folder='${folderJson}'>
+									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
 									        <i class="fas fa-bookmark me-2"></i>
 									        	${f.folderName } 
 									      </button>
-									    </h2>
+									</h2>
 									        </c:if>
-						    			<div id="panelsStayOpen-collapse0" class="accordion-collapse collapse show">
+						    			<div id="panelsStayOpen-collapse${f.folderKey}" class="accordion-collapse collapse show">
 									      <div class="accordion-body" style="padding: 0!important;">
 									         <div class="list-group" id="memberlist">
 								 				<c:if test="${f.folderLevel==2 }">
-												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}"> 
+												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder='${folderJson}'> 
 													  <i class="fas fa-user me-2"></i>
 													  ${f.folderName }
 												  </a>
@@ -187,14 +143,20 @@
    
     <script>
     $(document).ready(function() {
-    	
-    	$('#checkAll').click(function() {
-    	      if ($(this).is(':checked')) {
-    	        $('.checkItem').prop('checked', true);
-    	      } else {
-    	        $('.checkItem').prop('checked', false);
-    	      }
-    	    });
+        // jQuery로 Bootstrap Collapse 토글 처리
+        $('[data-bs-toggle="collapse"]').click(function() {
+            var target = $(this).data('bs-target');
+            $(target).collapse('toggle');
+        });
+        
+        $('#checkAll').click(function() {
+            if ($(this).is(':checked')) {
+                $('.checkItem').prop('checked', true);
+            } else {
+                $('.checkItem').prop('checked', false);
+            }
+        });
+
         $('.folder-item').on('click', function(e) {
             e.preventDefault(); // 기본 클릭 동작을 막음
 
@@ -210,62 +172,80 @@
                     tableBody.empty(); // 기존 내용을 비움
 
                     response.forEach(function(doc, index) {
-                    	console.log(doc);
-                    	var row = 
-                    	    '<tr class="text-center">' +
-                    	      '<td class="approverNow p-3"><input type="checkbox" class="checkItem"></td>' +
-
-                    	        '<td class="approverNow p-3">' + doc.erStorageName + '</td>' +
-                    	        '<td class="approverNow p-3">' +doc.department.deptName+ " "+ doc.member.memberName+" " +doc.job.jobName+ '</td>' +
-                    	        '<td class="approverNow p-3">' + doc.erStorageTerm + '년</td>' +
-                    	        '<td class="approverNow p-3">' +doc.storageFolder.useYn+ '</td>' +
-                    	    '</tr>';
+                        console.log(doc);
+                        var row = 
+                            '<tr class="text-center">' +
+                                '<td class="approverNow p-3"><input type="checkbox" class="checkItem"></td>' +
+                                '<td class="approverNow p-3">' + doc.erStorageName + '</td>' +
+                                '<td class="approverNow p-3">' + doc.department.deptName + " " + doc.member.memberName + " " + doc.job.jobName + '</td>' +
+                                '<td class="approverNow p-3">' + doc.erStorageTerm + '년</td>' +
+                                '<td class="approverNow p-3">' + doc.storageFolder.useYn + '</td>' +
+                            '</tr>';
                         tableBody.append(row);
                     });
                 }
             });
         });
+
         // 드래그 이벤트 설정
         $(document).on('dragstart', '.folder-item', function(event) {
-          event.stopPropagation();
+            event.stopPropagation();
 
-          var item = $(this);
-          event.originalEvent.dataTransfer.setData('text/plain', item.data('folder-key'));
-          item.css('opacity', '0.5');
-          window.draggedItem = item;  // 드래그된 요소를 전역 변수로 저장
+            var item = $(this);
+            event.originalEvent.dataTransfer.setData('text/plain', item.data('folder-key'));
+            item.css('opacity', '0.5');
+            window.draggedItem = item;  // 드래그된 요소를 전역 변수로 저장
         });
 
         $(document).on('dragend', '.folder-item', function(event) {
-          event.stopPropagation();
+            event.stopPropagation();
 
-          window.draggedItem.css('opacity', '1');
+            window.draggedItem.css('opacity', '1');
         });
 
         // 드롭 가능한 영역 설정
-        $(document).on('dragover', '.accordion-item.droppable', function(event) {
-          event.stopPropagation();
+        $(document).on('dragover', '.accordion-header.droppable', function(event) {
+            event.stopPropagation();
 
-          event.preventDefault();
-          $(this).addClass('drop-hover');
+            event.preventDefault();
+            $(this).addClass('drop-hover');
         });
 
-        $(document).on('dragleave', '.accordion-item.droppable', function(event) {
-          $(this).removeClass('drop-hover');
+        $(document).on('dragleave', '.accordion-header.droppable', function(event) {
+            $(this).removeClass('drop-hover');
         });
 
-        $(document).on('drop', '.accordion-item.droppable', function(event) {
-          event.stopPropagation();
-          
-          event.preventDefault();
-          $(this).removeClass('drop-hover');
-          var draggable = window.draggedItem;  // 드래그된 요소를 가져옴
-          var targetAccordionItem = $(this).closest('.accordion-item');
-          targetAccordionItem.find('.accordion-body .list-group').append(draggable);  // 새로운 위치에 추가
+        $(document).on('drop', '.accordion-header.droppable', function(event) {
+            event.stopPropagation();
+            
+            event.preventDefault();
+            $(this).removeClass('drop-hover');
+            
+            var draggable = window.draggedItem;  // 드래그된 요소를 가져옴
+            var targetAccordionItem = $(this).closest('.accordion-item'); // 최상위 부모인 .accordion-item을 찾아서
+            targetAccordionItem.find('.accordion-body .list-group').append(draggable);  // 새로운 위치에 추가
+            
+            var draggedFolder = draggable.data('folder'); // 드래그된 폴더 데이터 추출
+            var targetFolder = targetAccordionItem.data('folder'); // 타겟 폴더 데이터 추출
+			
+            $.ajax({
+                url: '${path}/admin/documentForm/updateFolderOrder', // 서버 요청 URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    draggedFolder: draggedFolder,
+                    targetFolder: targetFolder
+                }),
+                success: function(response) {
+                	console.log(response);
+                    console.log('Folders order updated successfully');
+                }
+            });
         });
     });
 </script>
-    
-	
+
+
 </body>
 </html>
 
