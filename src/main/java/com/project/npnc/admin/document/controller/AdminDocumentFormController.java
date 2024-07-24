@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
 import com.project.npnc.admin.document.model.service.AdminDocumentService;
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class AdminDocumentFormController {
+    private final ObjectMapper objectMapper;
+
 	private final AdminDocumentService service;
 	@GetMapping("/selectAdminDocumentFormAll")
 	public String selectAdminDocumentFormAll(Model model) {
@@ -36,13 +40,12 @@ public class AdminDocumentFormController {
 		return ResponseEntity.ok(docs);
 	}
 	
-	@PostMapping("/updateFolderOrder")
-	public int updateOrder (@RequestBody Map<String,Object> request) {
-		StorageFolder draggedFolder = (StorageFolder) request.get("requestFolder");
-		StorageFolder targetFolder = (StorageFolder) request.get("targetFolder");
-		System.out.println(draggedFolder);
-		System.out.println(targetFolder);
-		return 1;
-	}
+    @PostMapping("/updateFolderOrder")
+    @ResponseBody
+    public String updateOrder(@RequestParam int draggedFolder, @RequestParam(required=false) int targetFolder) {
+    	System.out.println(draggedFolder);
+    	System.out.println(targetFolder);
+    	return null;
+    }
 
 }
