@@ -358,7 +358,7 @@
 						                <div class="custom-file">
 						               
 						                    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-						                    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
+						                
 						                </div>
 						                 
 						                
@@ -405,7 +405,34 @@
 			                              rows="8" cols="50"
 			                            ></textarea>
 			                          </div>
-                    			   </div>		           	   
+                    			   </div>	
+                    			   <div class="form-group">
+                    			   		<div class="input-group-prepend" style="padding:0px;">
+					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFile2();">
+					                			추가
+					                		</button>
+					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFile2();">
+					                			삭제
+					                		</button>
+				                		</div>
+                    			   </div>
+                    			   <div class="form-group">
+				                	<form id="fileInputsContainer2">
+				                	<div id="basicFileForm2" class="input-group mb-3" style="padding:0px;">
+				                
+						                <div class="input-group-prepend" style="padding:0px;">
+						                	<span class="input-group-text2">첨부파일1</span>
+						                </div>
+						            	 <div class="custom-file">
+						               
+						                    <input type="file" class="custom-file-input" name="upFile2" id="upFile1" multiple >
+						                    
+						                </div>
+						                 
+						                
+						            </div>
+						            </form>
+						            </div>	           	   
 								 <div class="form-group">
 								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
 								<button class="btn btn-primary btn-border close_btn" >닫기</button>
@@ -461,14 +488,14 @@
 			
 			<!-- 첨부파일 -->
 			 <script>
+			 /* 개별발송 파일 추가 로직*/
 		    	const addDelFunction=(function(){
 		    		let count=2;
 		    		const addFileform=()=>{
 		    			if(count<=5){
 		    				const fileForm=$("#basicFileForm").clone(true);
 		    				fileForm.find("span.input-group-text1").text("첨부파일"+count);
-		    				fileForm.find("label.custom-file-label").text("파일을 선택하세요")
-		    				.attr("for","upFile"+count);
+		    			
 		    				fileForm.find("input[type=file]").attr("id","upFile"+count).val("");
 		    				/* $("textarea[name=boardContent]").before(fileForm); */
 		    				   fileForm.appendTo("#fileInputsContainer");
@@ -490,10 +517,39 @@
 		    	const fn_addFile=addDelFunction.addFileform;
 		    	const fn_delFile=addDelFunction.delFileform;
 		    	
-		    	$("input[name=upFile]").change(e=>{
-		    		const fileName=e.target.files[0].name;
-		    		$(e.target).next(".custom-file-label").text(fileName);
-		    	});
+		    	
+		    	
+		    /* 전체발송 파일 추가 로직  */
+		    const addDelFunction2=(function(){
+		    		let count=2;
+		    		const addFileform2=()=>{
+		    			if(count<=5){
+		    				const fileForm=$("#basicFileForm2").clone(true);
+		    				fileForm.find("span.input-group-text2").text("첨부파일"+count);
+		    				fileForm.find("input[type=file]").attr("id","upFile"+count).val("");
+		    				
+		    				/* $("textarea[name=boardContent]").before(fileForm); */
+		    				   fileForm.appendTo("#fileInputsContainer2");
+		    				count++;
+		    			}else{
+		    				alert("첨부파일은 5개까지 가능합니다");
+		    			}
+		    		}
+		    		
+		    		const delFileform2=()=>{
+		    			if(count!=2){
+		    				$("#fileInputsContainer2").children().last().remove();
+		    				count--;
+		    			}
+		    			
+		    		}
+		    		return {addFileform2,delFileform2};
+		    	})();
+		    	const fn_addFile2=addDelFunction2.addFileform2;
+		    	const fn_delFile2=addDelFunction2.delFileform2;
+		    	
+		    	
+		    	
 		    </script>
           	<script>
           	
@@ -697,20 +753,47 @@
             	
 
       		}
+			
+          	/* 타입 , 알람 , 수신인, 메세지  */
          	function send(reMemberKey1, memberKey){
    		   	 console.log('send보내짐');
    		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
    		   			JSON.stringify({
-   		   				'reMemberKey' : reMemberKey1,
-   		   				'memberKey' : memberKey,
-   		   				'message' : memberKey+'님으로부터 쪽지가 왔습니다'
+						
+						alarmType : 'Note',
+						alarmPath : 'notein',
+		   				alarmSendMember : memberKey,
+						alarmReMember : reMemberKey1,
+						alarmDate : new Date().toISOString()
+						
+   		   				
    		   				
    		   			})
    		   				
    		   		);
 		   		  
-   		   	} 
-
+   		   	}
+			
+			<!--전체 알람 함수-->
+			function sendAll(alarmSendMember){
+					   	 console.log('send보내짐');
+						 
+					   		stompClient.send("/pub/all",{},
+					   			JSON.stringify({
+									alarmType : 'Note',
+									alarmPath : 'notein',
+					   				alarmSendMember : alarmSendMember,
+									alarmDate : new Date().toISOString()
+					   			})
+					   				
+					   		);
+			}  
+        	
+         	/* 파일 다운로드 버튼 로직 */
+          	function fn_download(ori,post){
+          		location.assign("${path}/note/filedownload?oriname="+ori+"&rename="+post);
+          	}
+        	
             function notego(){
             	
             	var formData = new FormData();
@@ -780,7 +863,17 @@
           	
             function noteAllgo(){
 
-  	           
+            	
+            	var formData = new FormData();
+            	var upFiles = document.getElementsByName('upFile2');
+				console.log(upFiles);
+            	for (var i = 0; i < upFiles.length; i++) {
+            		   var fileList = upFiles[i].files;
+            		    for (var j = 0; j < fileList.length; j++) {
+            		        formData.append('upFile', fileList[j]);
+            		    }
+
+            	}
 	          
 	            // 나머지 인풋 값들을 가져옴
 	            var memberKey = document.getElementById('memberKey').value;
@@ -789,19 +882,24 @@
 	            console.log(postMsgDetail);
 				var postMsgTitle =document.getElementById('postMsgTitleAll').value;
 				console.log(postMsgTitle);
+				
+				formData.append('memberKey', memberKey);
+				formData.append('postMsgDetail', postMsgDetail);
+				formData.append('postMsgTitle', postMsgTitle);
+				
+				
 		    	$.ajax({
 		    		url : '${path}/noteAllwrite',
 		    		type : 'POST',
-		    		data : {
-		    		
-		    			"memberKey" : memberKey,
-		    			"postMsgTitle" : postMsgTitle,
-		    			"postMsgDetail" : postMsgDetail
+		    		data : 
 		    			
-		    		},
+		    		formData,
+		    		processData: false, // 필수 항목
+			    	contentType: false, 
 		    		success : function(){
 		    			alert('성공');
-		    				
+						sendAll(memberKey);
+
 		    			/* send(reMemberKey1, memberKey); */
 		    		}
 		    	});

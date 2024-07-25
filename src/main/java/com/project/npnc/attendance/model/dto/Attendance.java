@@ -23,5 +23,4 @@ public class Attendance {
 	private String attendanceState;
 	private int overtimeKey;
 	
-
 }

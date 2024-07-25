@@ -9,14 +9,51 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
-	<div>
+	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	<div class="main-panel">
+
+	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
 		<div class="col-md-12">
 		                <div class="card">
-		                  <div class="card-header">
+		                  <br><br><br><br>
+		              	  <div class="card-header">
 		                    <h4 class="card-title">전체사원근태관리</h4>
 		                  </div>
 		                  <div class="card-body">
+		                  		<form action="${path }/admin/attendance/searchAdminAttendance">  
+		                  			<div style="display: flex;">
+		                  				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
+		                  				<h3>~</h3>
+		                  				<input type="date" class="form-control" name="searchEndDate" id="searchEndDate" value="${searchED }">
+		                  			</div>
+		                  		  <nav
+					                 class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+					              >
+					              
+					              <select class="form-select input-fixed" name="searchType">					              	
+					              	<option></option>
+					              	<option value="조퇴" <c:if test="${searchT eq '조퇴'}">selected</c:if>>조퇴</option>
+					              	<option value="지각" <c:if test="${searchT eq '지각'}">selected</c:if>>지각</option>
+					              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
+					              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
+					              </select>
+		                          <div class="input-group">
+				                    <div class="input-group-prepend">
+				                      <button type="submit" class="btn btn-search pe-1">
+				                        <i class="fa fa-search search-icon"></i>
+				                      </button>
+				                    </div>
+				                    <input
+				                      type="text"
+				                      id="searchKey"
+				                      name="searchKey"
+				                      placeholder="Search name..."
+				                      class="form-control"
+				                      value="${searchK }"
+				                    />
+				                  </div>          
+				               </nav>
+				               </form>
 		                    <div class="table-responsive">
 		                      <table
 		                        id="multi-filter-select"
@@ -59,8 +96,10 @@
 		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
-			</div>
 
-		
+	</div>
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+	</div>
+	</div>
 </body>
 </html>

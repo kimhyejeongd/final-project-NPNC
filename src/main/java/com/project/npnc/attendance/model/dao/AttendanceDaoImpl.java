@@ -122,6 +122,18 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.delete("attendance.deleteAttendanceEdit",attendanceEditKey);
 	}
 
+	@Override
+	public List<Attendance> searchAttendanceEdit(SqlSession session, String searchType, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAttendanceEdit",searchType,rb);
+	}
+
+	@Override
+	public int searchAttendanceEditCount(SqlSession session, String searchType) {
+		
+		return session.selectOne("attendance.searchAttendanceEditCount",searchType);
+	}
+	
 	
 	//admin attendance
 	
@@ -149,6 +161,70 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAdminAttendanceEditCount");
 	}
 
+	@Override
+	public int updateAttendanceEdit(SqlSession session,AttendanceEdit attendanceEdit) {
+		
+		return session.update("attendance.updateAttendanceEdit",attendanceEdit);
+	}
+
+	@Override
+	public int updateAttendance(SqlSession session, AttendanceEdit attendanceEdit) {
+		
+		return session.update("attendance.updateAttendance",attendanceEdit);
+	}
+
+	@Override
+	public int updateAttendanceEditState(SqlSession session, int attendanceEditKey) {
+		// TODO Auto-generated method stub
+		return session.update("attendance.updateAttendanceEditState",attendanceEditKey);
+	}
+
+	@Override
+	public List<Attendance> selectAdminAttendanceBymemberKey(SqlSession session, int memberKey,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectAdminAttendanceBymemberKey",null,rb);
+	}
+
+	@Override
+	public int selectAdminAttendanceBymemberKeyCount(SqlSession session, int memberKey) {
+		
+		return session.selectOne("attendance.selectAdminAttendanceBymemberKeyCount",memberKey);
+	}
+
+	@Override
+	public List<AttendanceEdit> searchAdminAttendanceEdit(SqlSession session, Map<String, Object> searchMap,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAdminAttendanceEdit",searchMap,rb);
+	}
+
+	@Override
+	public int searchAdminAttendanceEditCount(SqlSession session, Map<String, Object> searchMap) {
+		
+		return session.selectOne("attendance.searchAdminAttendanceEditCount",searchMap);
+	}
+
+	@Override
+	public List<Attendance> searchAdminAttendance(SqlSession session, Map<String, Object> searchMap,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAdminAttendance",searchMap,rb);
+	}
+
+	@Override
+	public int searchAdminAttendanceCount(SqlSession session, Map<String, Object> searchMap) {
+		
+		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
+	}
+
+
+
+
+	
+
+
+	
 	
 	
 	

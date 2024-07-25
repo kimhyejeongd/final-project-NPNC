@@ -6,7 +6,6 @@ import static com.project.npnc.chatting.model.dto.ChattingMessage.createChatting
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -33,6 +32,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.project.npnc.chatting.model.dto.ChattingFile;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
@@ -52,7 +56,12 @@ public class ChatController {
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	
-	
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+    
+    private final AmazonS3 amazonS3;
+
+    
 	@MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
 	public ChattingMessage test(@DestinationVariable int roomId,ChattingMessage message) {
@@ -133,6 +142,8 @@ public class ChatController {
     @ResponseBody
     public ChattingFile uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("chatId") int chatId, @RequestParam("memberId") int memberId) {
         try {
+        	String originFileName = file.getOriginalFilename();
+        	String ext = originFileName.substring(originFileName.lastIndexOf("."));
             // 고유한 파일 이름 생성 (UUID 사용)
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
@@ -142,18 +153,30 @@ public class ChatController {
             // 파일 저장 경로 설정
             Path filePath = Paths.get(uploadDir, fileName);
             // 파일 저장
-            Files.copy(file.getInputStream(), filePath);
+           // Files.copy(file.getInputStream(), filePath);
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("image/"+ext);
+            metadata.setContentLength(file.getSize());
             
-            String webPath = "/resources/upload/chatting/" + fileName;
+            String webPath = "resources/upload/chatting/" + fileName;
             // 파일 메타 데이터 생성
+            
+            String storagePath = amazonS3.getUrl(bucketName, webPath).toString();
+            
             ChattingFile chattingFile = ChattingFile.builder()
                     .memberKey(memberId)
                     .chatMsgFileOri(file.getOriginalFilename())
-                    .chatMsgFilePost(webPath)
+                    .chatMsgFilePost(storagePath)
                     .chatFileTime(new Date(System.currentTimeMillis()))
                     .chatRoomKey(chatId)
                     .fileContentType(file.getContentType())
                     .build();
+            System.out.println("PostFile================="+chattingFile.getChatMsgFilePost());
+            
+            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(bucketName, webPath, file.getInputStream(),metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+            
+            
+            
             return chattingFile;
         } catch (IOException e) {
             // 예외 처리 로직을 추가할 수 있습니다.
