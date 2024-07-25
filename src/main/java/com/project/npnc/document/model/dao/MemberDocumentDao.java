@@ -34,12 +34,18 @@ public interface MemberDocumentDao {
 	
 	int updateDocFilename(SqlSession session, String erDocFilename);
 	int updateDocStatefinalize(SqlSession session, String serial);
-	int updateApprovalState(SqlSession session, String serial, int memberKey, String msg);
+	int updateDocStateReject(SqlSession session, String serial);
+	int updateApprovalState(SqlSession session, String serial, int memberKey, String msg, String state);
 	
 	List<Document> selectRetrieveDocs(SqlSession session, int no);
 	List<Document> selectInprocessDocs(SqlSession session, int no);
 	List<Document> selectWaitingDocs(SqlSession session, int no);
 	List<Document> selectDraftDocs(SqlSession session, int no);
+	List<Document> selectPendingDocs(SqlSession session, int no);
+	List<Document> selectMyCompleteDocs(SqlSession session, int no);
+	List<Document> selectMyRejectDocs(SqlSession session, int no);
+	List<Document> selectCompleteDocs(SqlSession session, int no);
+	List<Document> selectRejectedDocs(SqlSession session, int no);
 	List<DocFile> selectDocFile(SqlSession session, String erDocSerialKey);
 	List<DocumentFormFolder> selectformFolders(SqlSession session);
 	List<DocumentForm> selectForms(SqlSession session, int no);

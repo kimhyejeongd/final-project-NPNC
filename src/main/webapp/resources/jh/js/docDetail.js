@@ -39,7 +39,7 @@ function approveModal(no, serial){
 	        </label><br>
 	        <label>
             <input type="radio" name="approve" value="pend">
-            보류
+            보류(수정요청)
 	        </label><br>
 		<br>
 		</div>
@@ -57,12 +57,15 @@ function approveModal(no, serial){
 			console.log('결재하기');
 			
 			let dochtml = $("#content").html();
+			// 선택된 라디오 버튼의 값을 가져오기
+    		let approvalType = $('input[name="approve"]:checked').val();
+
 			if(dochtml != null){
 				let opinion = $('#input-field').val();
 				
 		     	// AJAX로 폼 데이터를 전송
 		        $.ajax({
-					url : sessionStorage.getItem("path")+'/document/approve',
+					url : sessionStorage.getItem("path")+'/document/' + approvalType,
 		            type: 'POST',
 		            data: JSON.stringify({
 						'no' : no,						
@@ -81,7 +84,7 @@ function approveModal(no, serial){
 							 
 			                // 성공 시 페이지 리다이렉트
 			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
-			                window.location.href = sessionStorage.getItem("path")+"/document/list/waiting";
+			                window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
 			            } else{
 							alert(data.message);
 						}

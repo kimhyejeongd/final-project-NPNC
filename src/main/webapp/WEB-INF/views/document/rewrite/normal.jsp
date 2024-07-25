@@ -213,9 +213,7 @@
 			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
-				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
 				        	<div id="summernote" data-form="${form }"></div>
-				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 				        </div>
 			        </div>
 	                  <div class="p-3 text-center">

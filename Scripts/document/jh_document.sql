@@ -227,7 +227,8 @@ SELECT
 --    )
 --ORDER BY
 --    d.er_doc_serial_key, a.ER_APPROVAL_ORDERBY;
-		
+		ALTER TABLE ER_DOCUMENT ADD ER_DOC_COMPLETE_DATE date DEFAULT sysdate;
+
 SELECT 
     d.ER_DOC_KEY, 
 			d.ER_DOC_SERIAL_KEY, 
@@ -371,6 +372,7 @@ SELECT table_name
 FROM user_tables;
 
 SELECT * FROM ER_DOCUMENT ed ORDER BY ER_DOC_CREATE_DATE desc;
+SELECT * FROM ER_DOCUMENT ed WHERE ER_DOC_STATE = '처리완료' ORDER BY ER_DOC_CREATE_DATE DESC;
 SELECT * from er_ap_line_storage ;
 SELECT * from er_ap_line;
 SELECT * from ER_APROVER  ORDER BY ER_DOC_SERIAL_KEY desc;
