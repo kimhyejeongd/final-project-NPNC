@@ -10,12 +10,8 @@ import java.util.List;
 @Service
 public class ExternalServiceImpl implements ExternalService {
 
-    private final ExternalDao externalDao;
-
     @Autowired
-    public ExternalServiceImpl(ExternalDao externalDao) {
-        this.externalDao = externalDao;
-    }
+    private ExternalDao externalDao;
 
     @Override
     public List<ExternalDto> getAllContacts() {
@@ -23,8 +19,8 @@ public class ExternalServiceImpl implements ExternalService {
     }
 
     @Override
-    public ExternalDto getContactById(int AB_EXTERNAL_KEY) {
-        return externalDao.getContactById(AB_EXTERNAL_KEY);
+    public ExternalDto getContactById(int id) {
+        return externalDao.getContactById(id);
     }
 
     @Override
@@ -33,12 +29,12 @@ public class ExternalServiceImpl implements ExternalService {
     }
 
     @Override
-    public void editContact(ExternalDto externalDto) {
+    public void updateContact(ExternalDto externalDto) {
         externalDao.updateContact(externalDto);
     }
 
     @Override
-    public void removeContact(int AB_EXTERNAL_KEY) {
-        externalDao.deleteContact(AB_EXTERNAL_KEY);
+    public void deleteContact(int id) {
+        externalDao.deleteContact(id);
     }
 }

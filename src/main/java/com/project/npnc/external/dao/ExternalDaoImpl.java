@@ -4,40 +4,37 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.project.npnc.external.dto.ExternalDto;
+
 import java.util.List;
 
 @Repository
 public class ExternalDaoImpl implements ExternalDao {
 
-    private final SqlSession sqlSession;
-
     @Autowired
-    public ExternalDaoImpl(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    private SqlSession sqlSession;
 
     @Override
     public List<ExternalDto> getAllContacts() {
-        return sqlSession.selectList("external.getAllContacts");
+        return sqlSession.selectList("com.project.npnc.external.dao.ExternalDao.getAllContacts");
     }
 
     @Override
-    public ExternalDto getContactById(int AB_EXTERNAL_KEY) {
-        return sqlSession.selectOne("external.getContactById", AB_EXTERNAL_KEY);
+    public ExternalDto getContactById(int id) {
+        return sqlSession.selectOne("com.project.npnc.external.dao.ExternalDao.getContactById", id);
     }
 
     @Override
     public void addContact(ExternalDto externalDto) {
-        sqlSession.insert("external.addContact", externalDto);
+        sqlSession.insert("com.project.npnc.external.dao.ExternalDao.addContact", externalDto);
     }
 
     @Override
     public void updateContact(ExternalDto externalDto) {
-        sqlSession.update("external.updateContact", externalDto);
+        sqlSession.update("com.project.npnc.external.dao.ExternalDao.updateContact", externalDto);
     }
 
     @Override
-    public void deleteContact(int AB_EXTERNAL_KEY) {
-        sqlSession.delete("external.deleteContact", AB_EXTERNAL_KEY);
+    public void deleteContact(int id) {
+        sqlSession.delete("com.project.npnc.external.dao.ExternalDao.deleteContact", id);
     }
 }

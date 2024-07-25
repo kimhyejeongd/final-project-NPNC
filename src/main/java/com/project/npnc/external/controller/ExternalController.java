@@ -1,44 +1,63 @@
 package com.project.npnc.external.controller;
 
-import com.project.npnc.external.dto.ExternalDto;
-import com.project.npnc.external.service.ExternalService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.project.npnc.external.dto.ExternalDto;
+import com.project.npnc.external.service.ExternalService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/external")
 public class ExternalController {
 
-    private final ExternalService externalService;
-
     @Autowired
-    public ExternalController(ExternalService externalService) {
-        this.externalService = externalService;
-    }
+    private ExternalService externalService;
 
     @GetMapping("/list")
-    public String listContacts(Model model) {
-        model.addAttribute("contacts", externalService.getAllContacts());
+    public String listContacts(HttpServletRequest request) {
+        List<ExternalDto> contacts = externalService.getAllContacts();
+        request.setAttribute("contacts", contacts);
         return "external/externalList";
     }
 
     @PostMapping("/add")
-    public String addContact(@ModelAttribute ExternalDto externalDto) {
+    public String addContact(ExternalDto externalDto) {
         externalService.addContact(externalDto);
         return "redirect:/external/list";
     }
 
     @PostMapping("/edit")
-    public String editContact(@ModelAttribute ExternalDto externalDto) {
-        externalService.editContact(externalDto);
+    public String editContact(ExternalDto externalDto) {
+        externalService.updateContact(externalDto);
         return "redirect:/external/list";
     }
 
     @PostMapping("/delete")
-    public String deleteContact(@RequestParam int AB_EXTERNAL_KEY) {
-        externalService.removeContact(AB_EXTERNAL_KEY);
+    public String deleteContact(@RequestParam("AB_EXTERNAL_KEY") int id) {
+        externalService.deleteContact(id);
         return "redirect:/external/list";
+    }
+
+    @PostMapping("/toggleFavorite")
+    @ResponseBody
+    public void toggleFavorite(@RequestBody ExternalDto externalDto) {
+        externalService.updateContact(externalDto);
+    }
+
+    @GetMapping("/get/{id}")
+    @ResponseBody
+    public ExternalDto getContactById(@PathVariable("id") int id) {
+        return externalService.getContactById(id);
     }
 }

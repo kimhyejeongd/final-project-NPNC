@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
@@ -60,6 +61,15 @@
         .star.favorite {
             color: gold;
         }
+
+        /* 스타일 */
+        .contact-info {
+            margin-bottom: 10px;
+        }
+
+        .contact-info label {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -69,8 +79,11 @@
             <c:forEach var="contact" items="${contacts}">
                 <div class="contact-card" data-id="${contact.AB_EXTERNAL_KEY}">
                     <div>
-                        <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" title="즐겨찾기"></span>
-                        <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})
+                        <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" title="즐겨찾기" onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})"></span>
+                        <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
+                        <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
+                        <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
+                        <span>직급: ${contact.AB_EXTERNAL_JOB}</span>
                     </div>
                     <div>
                         <button onclick="toggleMenu(this)">⋯</button>
@@ -90,12 +103,20 @@
         <h2>정보 수정</h2>
         <form id="edit-form" action="${pageContext.request.contextPath}/external/edit" method="post">
             <input type="hidden" name="AB_EXTERNAL_KEY" id="edit-id">
-            <label>이름:</label>
-            <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
-            <label>전화번호:</label>
-            <input type="text" name="AB_EXTERNAL_TELL" id="edit-phone" required><br>
-            <label>이메일:</label>
-            <input type="email" name="AB_EXTERNAL_EMAIL" id="edit-email" required><br>
+            <div class="contact-info">
+                <label>이름:</label>
+                <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
+                <label>전화번호:</label>
+                <input type="text" name="AB_EXTERNAL_TELL" id="edit-phone" required><br>
+                <label>이메일:</label>
+                <input type="email" name="AB_EXTERNAL_EMAIL" id="edit-email" required><br>
+                <label>회사:</label>
+                <input type="text" name="AB_EXTERNAL_COMPANY" id="edit-company"><br>
+                <label>부서:</label>
+                <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="edit-department"><br>
+                <label>직급:</label>
+                <input type="text" name="AB_EXTERNAL_JOB" id="edit-job"><br>
+            </div>
             <button type="submit">저장</button>
             <button type="button" onclick="closePopup()">취소</button>
         </form>
@@ -121,6 +142,12 @@
             <input type="text" name="AB_EXTERNAL_TELL" id="add-phone" required><br>
             <label>이메일:</label>
             <input type="email" name="AB_EXTERNAL_EMAIL" id="add-email" required><br>
+            <label>회사:</label>
+            <input type="text" name="AB_EXTERNAL_COMPANY" id="add-company"><br>
+            <label>부서:</label>
+            <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="add-department"><br>
+            <label>직급:</label>
+            <input type="text" name="AB_EXTERNAL_JOB" id="add-job"><br>
             <button type="submit">등록</button>
             <button type="button" onclick="closePopup()">취소</button>
         </form>
@@ -135,11 +162,39 @@
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
+        function toggleFavorite(star, id) {
+            const isFavorite = star.classList.contains('favorite');
+            const newStatus = isFavorite ? 'N' : 'Y';
+            // AJAX 요청을 통해 즐겨찾기 상태를 서버에 저장
+            fetch('${pageContext.request.contextPath}/external/toggleFavorite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ AB_EXTERNAL_KEY: id, AB_EXTERNAL_BOOKMARK: newStatus })
+            }).then(response => {
+                if (response.ok) {
+                    star.classList.toggle('favorite');
+                } else {
+                    alert('즐겨찾기 상태를 변경할 수 없습니다.');
+                }
+            });
+        }
+
         function openEditPopup(id) {
-            // AJAX를 통해 데이터를 가져오는 로직이 필요할 수 있음
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-popup').style.display = 'block';
-            document.getElementById('popup-overlay').classList.add('show');
+            fetch(`${pageContext.request.contextPath}/external/get/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('edit-id').value = data.AB_EXTERNAL_KEY;
+                    document.getElementById('edit-name').value = data.AB_EXTERNAL_NAME;
+                    document.getElementById('edit-phone').value = data.AB_EXTERNAL_TELL;
+                    document.getElementById('edit-email').value = data.AB_EXTERNAL_EMAIL;
+                    document.getElementById('edit-company').value = data.AB_EXTERNAL_COMPANY;
+                    document.getElementById('edit-department').value = data.AB_EXTERNAL_DEPARTMENT;
+                    document.getElementById('edit-job').value = data.AB_EXTERNAL_JOB;
+                    document.getElementById('edit-popup').style.display = 'block';
+                    document.getElementById('popup-overlay').classList.add('show');
+                });
         }
 
         function openDeletePopup(id) {
