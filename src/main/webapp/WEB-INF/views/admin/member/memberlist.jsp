@@ -45,6 +45,7 @@
 				                      name="searchKey"
 				                      placeholder="Search name..."
 				                      class="form-control"
+				                      value="${searchK }"
 				                    />
 				                  </div>          
 				               </nav>
