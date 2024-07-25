@@ -953,7 +953,8 @@
 		WHERE  
 			d.ER_DOC_KEY = #{docId}
 		ORDER BY
-			ea.ER_APPROVAL_ORDERBY asc
+			ea.ER_APPROVAL_ORDERBY asc,
+			ER_FILE_ORDERBY
 	</select>
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
 		SELECT 
