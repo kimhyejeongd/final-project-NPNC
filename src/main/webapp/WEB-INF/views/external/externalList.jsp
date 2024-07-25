@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <title>외부 주소록</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <!-- FontAwesome CDN 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* 팝업 스타일 */
         .popup {
@@ -58,8 +60,15 @@
             display: block;
         }
 
+        .star {
+            font-size: 24px; /* 별의 크기 */ !important;
+            color: gray; /* 기본 색상 */ 
+            cursor: pointer; /* 클릭 가능하게 보이도록 */
+            margin-left: 10px; /* 왼쪽에 여백 추가 */
+        }
+
         .star.favorite {
-            color: gold;
+            color: gold; /* 즐겨찾기 색상 */
         }
 
         /* 스타일 */
@@ -81,7 +90,9 @@
                     <div>
                         <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" 
                               title="즐겨찾기" 
-                              onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})"></span>
+                              onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})">
+                            <i class="fas fa-star"></i>
+                        </span>
                         <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
                         <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
                         <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
