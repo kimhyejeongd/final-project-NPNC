@@ -33,7 +33,9 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 		//if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
 		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
 			System.out.println("이우석");
+			
 			return new UsernamePasswordAuthenticationToken(loginMember,loginMember.getPassword(),loginMember.getAuthorities());
+			
 		}else {
 			throw new BadCredentialsException("인증실패");
 		}

@@ -34,10 +34,9 @@
     </script>
     <!-- sweetalert2 부트스트랩 -->
     <!-- CSS Files -->
-    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="${path }/resources/bm/css/bootstrap-4.min.css">
     <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.css">
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -45,35 +44,7 @@
     <link rel="stylesheet" href="${path }/resources/bm/css/daterangepicker.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-<style>
-  #content {
-    position: absolute;
-    display: none;
-    z-index: 2;
-  }
-  #calendar {
-    margin: 0 auto; /* 화면 중앙 정렬을 위한 가로 여백 설정 */
-    width: 80%; /* 부모 요소의 너비를 모두 사용하도록 설정 */
-    height: 700px;
-  }
-  .card {
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  .card-header {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .form-check {
-    margin-bottom: 10px;
-  }
-  .selected-member {
-        background-color: #d3f9d8; /* 선택된 멤버의 배경색을 변경 */
-  }
-</style>
+
 <body>
   <div class="wrapper">
     <!-- Sidebar -->
@@ -102,47 +73,7 @@
 
       <div class="container">
         <div class="page-inner">
-          <div class="row">
-            <!-- Checkboxes Section -->
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-header">
-                  <h4>일정 유형</h4>
-                </div>
-                <div class="card-body">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="myCalendar">
-                    <label class="form-check-label" for="myCalendar">내일정</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="deptCalendar">
-                    <label class="form-check-label" for="deptCalendar">부서일정</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="companyCalendar">
-                    <label class="form-check-label" for="companyCalendar">전사일정</label>
-                  </div>
-                  <div class="form-check">
-                  	<input class="form-check-input" type="checkbox" id="reservationCalendar">
-                  	<label class="form-check-label" for="reservationCalendar">예약일정</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Calendar Section -->
-            <div class="col-md-9">
-              <div class="calendarapp-content">
-                <div id="calendar"></div>
-              </div>
-            </div>
-          </div>
-          <div id="content" class="dropdown clearfix">
-            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu" style="display:block; position:static; margin-bottom:5px;">
-              <li><a tabindex="-1" href="#">내일정</a></li>
-              <li><a tabindex="-1" href="#">부서일정</a></li>
-              <li><a tabindex="-1" href="#">전사일정</a></li>
-            </ul>
-          </div>
+       
         </div>
       </div>
 
@@ -213,9 +144,7 @@
   <script src="${path}/resources/bm/js/daterangepicker-data.js"></script>
   <script src="${path}/resources/bm/js/daterangepicker.js"></script>
   <script src="${path}/resources/bm/js/sweetalert2.min.js"></script>
-  <script src="${path}/resources/bm/js/calendar.js"></script>
-  <script src="${path}/resources/bm/js/addEvent.js"></script>
-  <script src="${path}/resources/bm/js/editEvent.js"></script>
+
   
  
   
