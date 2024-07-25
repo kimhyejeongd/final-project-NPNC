@@ -69,40 +69,83 @@ public class MemberDocumentController {
 		m.addAttribute("folderlist", result);
 	}
 	
-	@GetMapping("/list/retrieve")
-	public void docRetrieve(Model m) {
-		log.debug("----회수 문서 조회----");
-		Member user = getCurrentUser();
-		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
-		log.debug("{}", result);
-		m.addAttribute("doclist", result);
-	}
-	
-	@GetMapping("/list/inprocess")
-	public void inprocessDoc(Model m){
+//	사원 문서 목록 조회
+	@GetMapping("/list/employee/inprocess")
+	public void selectInprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
 		Member user = getCurrentUser();
 		List<Document> result = serv.selectInprocessDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@GetMapping("/list/draft")
-	public void draftDocs(Model m){
+	@GetMapping("/list/employee/complete")
+	public void selectMyCompleteDocs(Model m){
+		log.debug("----승인 문서 조회----");
+		Member user = getCurrentUser();
+		log.debug(user.getMemberKey()+"번 사원");
+		List<Document> result = serv.selectMyCompleteDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("completelist", result);
+	}
+	@GetMapping("/list/employee/reject")
+	public void selectMyRejectDocs(Model m) {
+		log.debug("----반려 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectMyRejectDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/retrieve")
+	public void selectRetrieveDocs(Model m) {
+		log.debug("----회수 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/draft")
+	public void selectDraftDocs(Model m){
 		log.debug("----임시보관 문서 조회----");
 		Member user = getCurrentUser();
 		List<Document> result = serv.selectDraftDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@GetMapping("/list/waiting")
-	public void waitingDoc(Model m){
-		log.debug("----결재 대기 문서 조회----");
+	
+//	결재자 문서 목록 조회
+	@GetMapping("/list/approver/waiting")
+	public void selectWaitingDocs(Model m){
 		Member user = getCurrentUser();
-		log.debug(user.getMemberKey()+"번 사원");
+		log.debug("----- " + user.getMemberKey()+"번 사원의 결재 대기 문서 조회 -----");
 		List<Document> result = serv.selectWaitingDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("waitinglist", result);
 	}
+	@GetMapping("/list/approver/complete")
+	public void selectCompleteDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 승인한 문서 조회 -----");
+		List<Document> result = serv.selectCompleteDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("completelist", result);
+	}
+	@GetMapping("/list/approver/pending")
+	public void selectPendingDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 보류한 문서 조회 -----");
+		List<Document> result = serv.selectPendingDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("pendinglist", result);
+	}
+	@GetMapping("/list/approver/rejected")
+	public void selectRejectedDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 반려한 문서 조회 -----");
+		List<Document> result = serv.selectRejectedDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("rejectedlist", result);
+	}
+	
 	
 //	전자문서 상세보기
 	@PostMapping("/view/docDetail")
@@ -198,7 +241,7 @@ public class MemberDocumentController {
 		m.addAttribute("aplist", ap);
 		log.debug("{}", ap); 
 	}
-	//승인
+	//결재 승인
 	@PostMapping("/approve")
 	public ResponseEntity<Map<String,Object>> updateApproveDoc(
 			@RequestBody Map<String, Object> requestBody
@@ -227,8 +270,68 @@ public class MemberDocumentController {
 			response.put("status", "error");
 			response.put("message", "문서 결재 실패");
 		}
+		return ResponseEntity.ok(response);
+	}
+	//결재 반려
+	@PostMapping("/reject")
+	public ResponseEntity<Map<String,Object>> updateRejectDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+		String msg = (String) requestBody.get("msg");
+		String serial = (String) requestBody.get("serial");
+		int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 반려 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
 		
+		int result=0;
+		try {
+			result = serv.updateRejectDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
+		return ResponseEntity.ok(response);
+	}
+	//결재 보류
+	@PostMapping("/pend")
+	public ResponseEntity<Map<String,Object>> updatePendDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+		String msg = (String) requestBody.get("msg");
+		String serial = (String) requestBody.get("serial");
+		int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 보류 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
 		
+		int result=0;
+		try {
+			result = serv.updatePendDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
 		return ResponseEntity.ok(response);
 	}
 	
@@ -291,9 +394,6 @@ public class MemberDocumentController {
 	}
 //	
 	
-	@GetMapping("/doc4")
-	public void doc4Write() {
-	}
 	//문서 임시저장
 	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftDoc(

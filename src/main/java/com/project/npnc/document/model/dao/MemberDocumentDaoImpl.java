@@ -153,6 +153,16 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.insert("document.insertDocFile", d);
 	}
 	@Override
+	public List<Document> selectCompleteDocs(SqlSession session, int no) {
+		return session.selectList("document.selectCompleteDocs", no);
+	}
+
+	@Override
+	public List<Document> selectRejectedDocs(SqlSession session, int no) {
+		return session.selectList("document.selectRejectedDocs", no);
+	}
+
+	@Override
 	public int insertDraftDocFile(SqlSession session, DocFile d) {
 		return session.insert("document.insertDraftDocFile", d);
 	}
@@ -160,6 +170,21 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
+	}
+
+	@Override
+	public List<Document> selectPendingDocs(SqlSession session, int no) {
+		return session.selectList("document.selectPendingDocs", no);
+	}
+
+	@Override
+	public List<Document> selectMyCompleteDocs(SqlSession session, int no) {
+		return session.selectList("document.selectMyCompleteDocs", no);
+	}
+	
+	@Override
+	public List<Document> selectMyRejectDocs(SqlSession session, int no) {
+		return session.selectList("document.selectMyRejectDocs", no);
 	}
 
 	@Override
@@ -173,16 +198,23 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int updateDocStateReject(SqlSession session, String serial) {
+		return session.update("document.updateDocStateReject", serial);
+	}
+
+	@Override
 	public int updateDocStatefinalize(SqlSession session, String serial) {
 		return session.update("document.updateDocStatefinalize", serial);
 	}
 
 	@Override
-	public int updateApprovalState(SqlSession session, String serial, int memberKey, String msg) {
+	public int updateApprovalState(SqlSession session, String serial, int memberKey, String msg, String state) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("serial", serial);
 		map.put("memberKey", (Integer) memberKey);
 		map.put("msg", msg);
+		map.put("state", state);
+		log.debug("결재 업데이트 -> " + map.toString());
 		return session.update("document.updateApprovalState", map);
 	}
 

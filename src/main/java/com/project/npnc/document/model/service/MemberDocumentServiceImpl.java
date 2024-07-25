@@ -500,7 +500,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		try {
 			
 			//결재 상태 변경
-			result = dao.updateApprovalState(session, serial, memberKey, msg);
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "승인");
 			if(result <= 0) {
 				throw new Exception("결재 상태 승인으로 변경 실패");
 			}
@@ -556,5 +556,74 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			throw e;
 		}
 		
+	}
+	//결재 : 반려
+	@Override
+	@Transactional
+	public int updateRejectDoc(int memberKey, String serial, String msg) throws Exception {
+		int result = 0;
+		
+		try {
+			
+			//결재 상태 변경
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "반려");
+			if(result <= 0) {
+				throw new Exception("결재 상태 반려로 변경 실패");
+			}
+			log.debug("결재 상태 -> 반려(문서 종결)");
+			
+			result = dao.updateDocStateReject(session, serial);
+			if(result <= 0) {
+				throw new Exception("문서 상태 반려로 변경 실패");
+			}
+			log.debug("문서 상태 -> 반려");
+			
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		return result;
+	}
+	//결재 : 보류
+	@Override
+	@Transactional
+	public int updatePendDoc(int memberKey, String serial, String msg) throws Exception {
+		int result = 0;
+		
+		try {
+			
+			//결재 상태 변경
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "보류");
+			if(result <= 0) {
+				throw new Exception("결재 상태 보류로 변경 실패");
+			}
+			log.debug("결재 상태 -> 보류");
+			
+			
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		return result;
+	}
+	@Override
+	public List<Document> selectPendingDocs(int no) {
+		return dao.selectPendingDocs(session, no);
+	}
+	@Override
+	public List<Document> selectMyCompleteDocs(int no) {
+		return dao.selectMyCompleteDocs(session, no);
+	}
+	@Override
+	public List<Document> selectMyRejectDocs(int no) {
+		return dao.selectMyRejectDocs(session, no);
+	}
+	@Override
+	public List<Document> selectCompleteDocs(int no) {
+		return dao.selectCompleteDocs(session, no);
+	}
+	@Override
+	public List<Document> selectRejectedDocs(int no) {
+		return dao.selectRejectedDocs(session, no);
 	}
 }
