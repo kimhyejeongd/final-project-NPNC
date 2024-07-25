@@ -55,6 +55,7 @@ var newEvent = function(start, end, eventType) {
         cancelButtonText: '취소',
         focusConfirm: false,
         didOpen: () => {
+			selectedMembers = [];
             if (eventType === '내일정') {
                 document.getElementById('cal-type').value = 1;
             } else if (eventType === '부서일정') {
@@ -127,7 +128,9 @@ var newEvent = function(start, end, eventType) {
             }
             return {
                 calendarKey: '',
-                _id: '1',
+                _id: userKey,
+                empNo: userKey,
+                empName: userName,
                 title: title,
                 start: start,
                 end: end,
@@ -144,7 +147,7 @@ var newEvent = function(start, end, eventType) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const { calendarKey, _id, title, start, end, type, description, backgroundColor, allDay,selectedMembers } = result.value;
+            const { calendarKey, _id, title, start, end, type, description, backgroundColor, allDay,selectedMembers,empNo,empName } = result.value;
             console.log(result.value);
             $.ajax({
                 type: "POST",
@@ -157,6 +160,8 @@ var newEvent = function(start, end, eventType) {
 						 const newEvent = {
                             calendarKey: calendarKey,
                             _id : _id,
+                            empNo: empNo,
+                            empName: empName,
                             title: title,
                             start: start,
                             end: end,
@@ -164,6 +169,7 @@ var newEvent = function(start, end, eventType) {
                             description: description,
                             backgroundColor: backgroundColor,
                             allDay: allDay === 'Y',
+                           
                             selectedMembers: selectedMembers
                         };
                         Swal.fire({

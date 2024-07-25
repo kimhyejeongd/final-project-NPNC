@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class CalendarController {
 	private final CalendarService service;
-	
 	private final OrganizationService organService;
 	
 	
@@ -34,6 +33,7 @@ public class CalendarController {
 		m.addAttribute("organlist",organlist);
 		return "calendar/calendar";
 	}
+	
 	
 	@PostMapping("/calendar/insertcalendar")
 	public ResponseEntity<Map<String,Object>> ajaxtest(@RequestBody Calendar calendar) {

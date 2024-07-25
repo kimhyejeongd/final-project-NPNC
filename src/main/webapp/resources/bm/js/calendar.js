@@ -195,6 +195,23 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         events: function(fetchInfo, successCallback, failureCallback) {
             fetchCalendarEvents(successCallback, failureCallback);
+        },
+        eventDidMount: function(info) {
+			console.log(info.event);
+          var tooltip = new bootstrap.Tooltip(info.el, {
+            title: `
+              <div class="popoverTitleCalendar" style="background: ${info.event.backgroundColor}; color: ${info.event.textColor};">${info.event.title}</div>
+              <div class="popoverInfoCalendar">
+                <p><strong>등록자:</strong> ${info.event.extendedProps.empName}</p>
+                <p><strong>시간:</strong> ${getDisplayEventDate(info.event)}</p>
+                <div class="popoverDescCalendar"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
+              </div>
+            `,
+            html: true,
+            placement: 'top',
+            trigger: 'hover',
+            container: 'body'
+          });
         }
     });
 
@@ -210,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 체크박스 초기 상태 설정 및 이벤트 로드
-    $('#myCalendar, #deptCalendar, #companyCalendar').prop('checked', true);
+    $('#myCalendar, #deptCalendar, #companyCalendar, #reservationCalendar').prop('checked', true);
     fetchCalendarEvents(
         function(events) {
             calendar.removeAllEvents();	  // 기존 이벤트 삭제
@@ -222,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     );
 
     // 체크박스 변경 시 캘린더 이벤트를 다시 로드
-    $('#myCalendar, #deptCalendar, #companyCalendar').on('change', function() {
+    $('#myCalendar, #deptCalendar, #companyCalendar, #reservationCalendar').on('change', function() {
         reloadCalendarEvents();
     });
 
@@ -250,6 +267,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if ($('#companyCalendar').is(':checked')) {
             searchType += 'C';
         }
+        if ($('#reservationCalendar').is(':checked')){
+			searchType += 'D';
+		}
 
         $.ajax({
             url: "/calendar/checkcalendar",
@@ -266,12 +286,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 var events = data.map(function(event) {
                     return {
                         id: event._id,  // id를 추가합니다.
+                        empNo: event._id,
                         title: event.title,
                         start: event.start,
                         end: event.end,
                         backgroundColor: event.backgroundColor,
                         description: event.description,
-                        empName: event.name,
+                        empName: event.empName,
                         empDeptCode: event.deptCode,
                         allDay: event.allDay === 'Y' ? true : false,
                         type: event.type,
@@ -291,4 +312,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+     function getDisplayEventDate(event) {
+        var start = new Date(event.start);
+        var end = new Date(event.end || event.start);
+        return start.toLocaleString() + ' - ' + end.toLocaleString();
+      }
 });

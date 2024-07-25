@@ -34,4 +34,11 @@ public class WebMVCConfig implements WebMvcConfigurer{
     }
 	
 	
+	/*
+	 * @Override public void addInterceptors(InterceptorRegistry registry) {
+	 * registry.addInterceptor(new LoginInterceptor()) .addPathPatterns("/**")
+	 * .excludePathPatterns("/loginpage","/logincheck", "/resources/**",
+	 * "/static/**", "/css/**", "/js/**", "/images/**"); // 정적 리소스 경로 제외 }
+	 */
+	
 }
