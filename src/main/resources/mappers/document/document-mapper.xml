@@ -238,8 +238,10 @@
 		    fd.ER_DOC_KEY,
 		    fd.ER_DOC_SERIAL_KEY,
 		    fd.ER_DOC_WRITER,
-		    fd.department_key as writer_dept_key,
-		    fd.job_key as writer_job_key,
+		    fd.department_key AS writer_dept_key,
+		    fd.department_name AS writer_dept_name,
+		    fd.job_key AS writer_job_key,
+		    fd.job_name AS writer_job_name,
 		    fd.ER_DOC_TITLE,
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
@@ -254,7 +256,9 @@
 		    ea.MEMBER_KEY,
 		    ea.ER_APPROVER_NAME,
 		    ea.ER_APPROVER_TEAM_KEY,
+		    d.DEPARTMENT_NAME,
 		    ea.ER_APPROVER_JOB_KEY,
+		    j.JOB_NAME,
 		    ea.ER_APPROVAL_CATEGORY,
 		    ea.ER_APPROVAL_STATE,
 		    ea.ER_APPROVAL_OPINION,
@@ -283,33 +287,40 @@
 		    er.MEMBER_KEY
 		FROM ER_APROVER ea 
 		JOIN (
-		    SELECT 
-		        ed.ER_DOC_KEY,
-		        ed.ER_DOC_SERIAL_KEY,
-		        ed.ER_DOC_WRITER,
-		        m.department_key,
-		        m.job_key,
-		        ed.ER_DOC_TITLE,
-		        ed.ER_DOC_CREATE_DATE,
-		        ed.ER_DOC_EMERGENCY_YN,
-		        ed.ER_DOC_DELETE_YN,
-		        ed.ER_DOC_STOARGE,
-		        ed.ER_DOC_FILENAME,
-		        ed.ER_DOC_STATE,
-		        ed.ER_DOC_STATE_UPDATE_DATE,
-		        ed.ER_DOC_LAST_UPDATER,
-		        ed.ER_DOC_LAST_UPDATE_REASON
-		    FROM 
-		        ER_DOCUMENT ed 
-		    JOIN
-		        ER_APROVER ea ON ed.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
-		    LEFT JOIN 
-		    	MEMBER m ON ed.ER_DOC_WRITER = m.member_key
-		    WHERE
-		        ed.ER_DOC_STATE = '처리중'
-		    AND    
-		        ea.member_Key = #{no}
-		) fd ON fd.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+			    SELECT 
+			        ed.ER_DOC_KEY,
+			        ed.ER_DOC_SERIAL_KEY,
+			        ed.ER_DOC_WRITER,
+			        m.department_key,
+			        d2.department_name,
+			        m.job_key,
+			        j2.job_name,
+			        ed.ER_DOC_TITLE,
+			        ed.ER_DOC_CREATE_DATE,
+			        ed.ER_DOC_EMERGENCY_YN,
+			        ed.ER_DOC_DELETE_YN,
+			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_FILENAME,
+			        ed.ER_DOC_STATE,
+			        ed.ER_DOC_STATE_UPDATE_DATE,
+			        ed.ER_DOC_LAST_UPDATER,
+			        ed.ER_DOC_LAST_UPDATE_REASON
+			    FROM 
+			        ER_DOCUMENT ed 
+			    JOIN
+			        ER_APROVER ea ON ed.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+			    LEFT JOIN 
+			    	MEMBER m ON ed.ER_DOC_WRITER = m.member_key
+			    JOIN 
+			    	DEPARTMENT d2 ON d2.department_key = m.department_key
+			    JOIN 
+			    	job j2 ON j2.job_key = m.job_key
+			    WHERE
+			        ed.ER_DOC_STATE = '처리중'
+			    AND    
+			        ea.member_Key = #{no}
+			) fd 
+			ON fd.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
 		LEFT JOIN 
 			ER_FILE ef ON ef.ER_DOC_SERIAL_KEY = fd.ER_DOC_SERIAL_KEY
 		LEFT JOIN 
@@ -618,6 +629,7 @@
 				ER_DOC_KEY DESC
 		</selectKey>
 	</insert>
+	
 	<!-- 문서 삭제 -->
 	<delete id="deleteDraftDoc" parameterType="string">
 		DELETE 
@@ -625,6 +637,7 @@
 		WHERE 
 			er_doc_serial_key = #{erDocSerialKey}
 	</delete>
+	
 	<!-- 문서 제목 변경 -->
 	<update id="updateDocFilename" parameterType="string">
 		UPDATE 
@@ -634,6 +647,31 @@
 	    WHERE
 	        er_doc_serial_key = #{erDocSerialKey}
 	</update>
+	
+	<!-- 문서 상태 처리완료로 변경 -->
+	<update id="updateDocStatefinalize" parameterType="string">
+		UPDATE 
+			er_document
+	    SET 
+	        er_doc_state = '처리완료'
+	    WHERE
+	        er_doc_serial_key = #{erDocSerialKey}
+	</update>
+	
+	<!-- 결재 승인 업데이트 -->
+	<update id="updateApprovalState" parameterType="map">
+		UPDATE 
+			ER_APROVER
+	    SET 
+	        ER_APPROVAL_STATE = '승인',
+	        ER_APPROVAL_DATE = sysdate,
+	        ER_APPROVAL_OPINION = #{msg}
+	    WHERE
+	        MEMBER_KEY = #{memberKey, jdbcType=INTEGER}
+	    AND
+	    	ER_DOC_SERIAL_KEY = #{serial}
+	</update>
+	
 	<!-- 진행중인 문서 회수 -->
 	<update id="retrieveDoc" parameterType="string">
 		UPDATE 
@@ -668,7 +706,19 @@
 	<!-- 문서 기안시 등록 -->
 	<insert id="insertApproval" parameterType="approver">
 		INSERT INTO 
-			er_aprover 
+			er_aprover(
+				ER_APPROVER_KEY,
+				MEMBER_KEY,
+				ER_APPROVER_NAME,
+				ER_APPROVER_TEAM_KEY,
+				ER_APPROVER_JOB_KEY,
+				ER_APPROVAL_CATEGORY,
+				ER_APPROVAL_STATE,
+				ER_APPROVAL_OPINION,
+				ER_DOC_SERIAL_KEY,
+				ER_APPROVAL_DATE,
+				ER_APPROVAL_ORDERBY
+			) 
 		VALUES
             (
               seq_er_approver_key.NEXTVAL,
@@ -685,9 +735,9 @@
 			         #{state}
 			       </otherwise>
 		     </choose>,
-              NULL,
+              #{opinion, jdbcType=VARCHAR},
               #{erDocSerialKey},
-              NULL,
+              sysdate,
               ${orderby}
             )
 	</insert>
@@ -711,6 +761,7 @@
 	        SELECT SEQ_ER_AP_LINE_STORAGE_KEY.currval FROM DUAL
 	    </selectKey>
 	</insert>
+	
 	<!-- 결재라인 결재자 저장 -->
 	<insert id="insertApproverLine" parameterType="map">
 	    <selectKey keyProperty="erApLineKey" resultType="int" order="BEFORE">
@@ -740,6 +791,7 @@
 					#{approver.erApOrderby}
 				) 
 	</insert>
+	
 	<!-- 결재라인 삭제 -->
 	<delete id="deleteApproverLines" parameterType="int">
 		DELETE 
@@ -747,6 +799,7 @@
 		WHERE  
 			ER_AP_LINE_STORAGE_KEY = #{no}
 	</delete>
+	
 	<!-- 사원의 저장 결재라인 불러오기 -->
 	<select id="selectApproverLines" parameterType="int" resultMap="approverLineStorageMap">
 		SELECT 
@@ -777,6 +830,7 @@
 			s.ER_AP_LINE_STORAGE_KEY DESC,
 			l.ER_AP_ORDERBY
 	</select>
+	
 	<!-- 특정 결재라인 결재자들 불러오기 -->
 	<select id="selectApproverList" parameterType="map" resultMap="approverLineMap">
 		SELECT 
@@ -804,22 +858,16 @@
 		    l.ER_AP_LINE_STORAGE_KEY DESC, 
 		    l.ER_AP_ORDERBY
 	</select>	
-<!-- 	<select id="selectApproverLines" parameterType="int" resultMap="approverLineMap">
-		SELECT 
-			ER_AP_STORAGE_KEY,
-			ER_AP_STORAGE_NAME,
-			MEMBER_KEY,
-			ER_AP_KEY,
-			ER_AP_TEAM_NAME,
-			ER_AP_JOB_NAME,
-			ER_AP_NAME,
-			ER_AP_CATEGORY,
-			ER_AP_ORDERBY
+	
+	<!-- 해당 문서 결재자 조회 -->
+	<select id="selectDocApprovers" parameterType="string" resultMap="approverMap">
+		SELECT
+			*
 		FROM
-			ER_AP_STORAGE
+			ER_APROVER
 		WHERE
-			MEMBER_KEY = #{no}
-	</select> -->
+			ER_DOC_SERIAL_KEY = #{serial}
+	</select>
 	
 	<!-- 전자문서 참조인 등록-->
 	<insert id="insertReferer" parameterType="referer">

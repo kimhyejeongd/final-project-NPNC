@@ -43,4 +43,7 @@ public interface MemberDocumentService {
 	
 	int insertDocFile(List<DocFile> list) throws Exception;
 	int deleteDocFile(String docSerial) throws Exception;
+	
+	int updateApproveDoc(int memberKey, String serial, String msg) throws Exception;
+	List<Approver> selectDocApprovers(String serial);
 }

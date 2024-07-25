@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,8 +78,8 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<list.size();i++) {
 			Approver ap = list.get(i);
-			log.debug("{}", ap);
 			result = session.insert("document.insertApproval", ap); 
+			log.debug("결재자 등록 -> " + ap.toString());
 		}
 		return result;
 	}
@@ -164,6 +165,25 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public List<Referer> selectReferer(SqlSession session, String serial) {
 		return session.selectList("document.selectReferer", serial);
+	}
+
+	@Override
+	public List<Approver> selectDocApprovers(SqlSession session, String serial) {
+		return session.selectList("document.selectDocApprovers", serial);
+	}
+
+	@Override
+	public int updateDocStatefinalize(SqlSession session, String serial) {
+		return session.update("document.updateDocStatefinalize", serial);
+	}
+
+	@Override
+	public int updateApprovalState(SqlSession session, String serial, int memberKey, String msg) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", serial);
+		map.put("memberKey", (Integer) memberKey);
+		map.put("msg", msg);
+		return session.update("document.updateApprovalState", map);
 	}
 
 }

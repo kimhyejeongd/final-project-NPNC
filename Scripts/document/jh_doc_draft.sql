@@ -176,7 +176,9 @@ SELECT
     fd.ER_DOC_SERIAL_KEY,
     fd.ER_DOC_WRITER,
     fd.department_key AS writer_dept_key,
+    fd.department_name AS writer_dept_name,
     fd.job_key AS writer_job_key,
+    fd.job_name AS writer_job_name,
     fd.ER_DOC_TITLE,
     fd.ER_DOC_CREATE_DATE,
     fd.ER_DOC_EMERGENCY_YN,
@@ -191,7 +193,9 @@ SELECT
     ea.MEMBER_KEY,
     ea.ER_APPROVER_NAME,
     ea.ER_APPROVER_TEAM_KEY,
+    d.DEPARTMENT_NAME,
     ea.ER_APPROVER_JOB_KEY,
+    j.JOB_NAME,
     ea.ER_APPROVAL_CATEGORY,
     ea.ER_APPROVAL_STATE,
     ea.ER_APPROVAL_OPINION,
@@ -225,7 +229,9 @@ JOIN (
         ed.ER_DOC_SERIAL_KEY,
         ed.ER_DOC_WRITER,
         m.department_key,
+        d2.department_name,
         m.job_key,
+        j2.job_name,
         ed.ER_DOC_TITLE,
         ed.ER_DOC_CREATE_DATE,
         ed.ER_DOC_EMERGENCY_YN,
@@ -240,8 +246,12 @@ JOIN (
         ER_DOCUMENT ed 
     JOIN
         ER_APROVER ea ON ed.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
-    LEFT JOIN 
+    JOIN 
     	MEMBER m ON ed.ER_DOC_WRITER = m.member_key
+    JOIN 
+    	DEPARTMENT d2 ON d2.department_key = m.department_key
+    JOIN 
+    	job j2 ON j2.job_key = m.job_key
     WHERE
         ed.ER_DOC_STATE = '처리중'
     AND    

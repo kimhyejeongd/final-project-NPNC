@@ -24,3 +24,72 @@ document.addEventListener("DOMContentLoaded", function() {
 		window.history.back();
 	});
 });
+function approveModal(no, serial){
+	Swal.fire({
+		title: '결재',
+		html: `
+		<div class="approve-group">
+	      	<label>
+            <input type="radio" name="approve" value="approve">
+        	승인
+	        </label><br>
+	        <label>
+            <input type="radio" name="approve" value="reject">
+        	반려
+	        </label><br>
+	        <label>
+            <input type="radio" name="approve" value="pend">
+            보류
+	        </label><br>
+		<br>
+		</div>
+		<textarea class="form-control" id="input-field" placeholder="결재 의견을 작성하세요" style="resize:none"></textarea>`,
+		showCancelButton: true,
+		confirmButtonClass: 'btn btn-success',
+		cancelButtonClass: 'btn btn-danger ms-2',
+		confirmButtonText: '결재',
+		cancelButtonText: '취소',
+		buttonsStyling: false,
+		reverseButtons: false
+	}).then((result) => {
+		if (result.isConfirmed) {
+			// 결재 버튼이 클릭되었을 때 처리할 로직
+			console.log('결재하기');
+			
+			let dochtml = $("#content").html();
+			if(dochtml != null){
+				let opinion = $('#input-field').val();
+				
+		     	// AJAX로 폼 데이터를 전송
+		        $.ajax({
+					url : sessionStorage.getItem("path")+'/document/approve',
+		            type: 'POST',
+		            data: JSON.stringify({
+						'no' : no,						
+						'html' : dochtml,
+						'msg' : opinion,
+						'serial' : serial
+						}),
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					success : function(data){
+			            console.log(data);
+						
+			            if (data.status === "success") {
+			                alert(data.message);
+							// 로컬 스토리지에서 데이터를 삭제
+							 
+			                // 성공 시 페이지 리다이렉트
+			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
+			                window.location.href = sessionStorage.getItem("path")+"/document/list/waiting";
+			            } else{
+							alert(data.message);
+						}
+			        }
+		       });
+		    } else{
+		        alert('문서 양식 불러오기 오류');
+		    }
+		}
+	});
+}

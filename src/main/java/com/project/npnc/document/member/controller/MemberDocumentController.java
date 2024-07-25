@@ -105,7 +105,7 @@ public class MemberDocumentController {
 	}
 	
 //	전자문서 상세보기
-	@PostMapping("/view/docDetail{docId}")
+	@PostMapping("/view/docDetail")
 	public void viewDoc(int docId, 
 			@RequestParam(required = false) String history, 
 											Model m) throws Exception {
@@ -198,21 +198,40 @@ public class MemberDocumentController {
 		m.addAttribute("aplist", ap);
 		log.debug("{}", ap); 
 	}
-//	//특정 결재라인 결재자들 불러오기
-//	@GetMapping("/write/load/approverline")
-//	public ResponseEntity<Map<String,Object>> selectApproverLines(int lineKey, String lineName) {
-//		Map<String,Object> response = new HashMap<>();
-//		
-//		try{
-//			List<ApproverLine> result = serv.selectApproverLineList(lineName, getCurrentUser().getMemberKey());
-//			response.put("status", "ok");
-//			response.put("approver", result);
-//		}catch(Exception e){
-//			response.put("status", "error");
-//			response.put("message", "결재라인 불러오기에 실패했습니다.");
-//		}
-//		return ResponseEntity.ok(response);
-//	}
+	//승인
+	@PostMapping("/approve")
+	public ResponseEntity<Map<String,Object>> updateApproveDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+	    String msg = (String) requestBody.get("msg");
+	    String serial = (String) requestBody.get("serial");
+	    int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 결재 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
+		
+		int result=0;
+		try {
+			result = serv.updateApproveDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
+		
+		
+		return ResponseEntity.ok(response);
+	}
+	
 	//결재라인 저장
 	@PostMapping("/write/save/approverline")
 	public ResponseEntity<Map<String,Object>> insertApproverLine(
@@ -320,6 +339,10 @@ public class MemberDocumentController {
 			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
 		Member user = getCurrentUser();
 		if(msg.equals(",")) msg=""; //debug
+		if (msg != null && msg.endsWith(",")) {
+		    msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
+		}//debug
+		
 		log.debug("{}", html);
 		log.debug(file.toString());
 		log.debug("{}", user);
@@ -347,7 +370,7 @@ public class MemberDocumentController {
 		        log.debug("{}", a);
 		    }
 		    return toRemove;
-		});
+		});//debug
 		ap.add(me);
 		doc.setApprovers(ap);
 		log.debug("{}", doc);
@@ -360,7 +383,7 @@ public class MemberDocumentController {
 			log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 			result = serv.insertDoc(doc, file, html);
 		} catch (Exception e) {
-			log.debug("문서 등록 실패");
+			log.error(e.getMessage());
 			e.printStackTrace();
 			response.put("status", "error");
 			response.put("message", "문서 등록에 실패했습니다.");
