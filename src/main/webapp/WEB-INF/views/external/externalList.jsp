@@ -79,18 +79,17 @@
             <c:forEach var="contact" items="${contacts}">
                 <div class="contact-card" data-id="${contact.AB_EXTERNAL_KEY}">
                     <div>
-                        <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" title="즐겨찾기" onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})"></span>
+                        <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" 
+                              title="즐겨찾기" 
+                              onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})"></span>
                         <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
                         <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
                         <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
                         <span>직급: ${contact.AB_EXTERNAL_JOB}</span>
                     </div>
                     <div>
-                        <button onclick="toggleMenu(this)">⋯</button>
-                        <div class="menu">
-                            <button onclick="openEditPopup(${contact.AB_EXTERNAL_KEY})">수정</button>
-                            <button onclick="openDeletePopup(${contact.AB_EXTERNAL_KEY})">삭제</button>
-                        </div>
+                        <button onclick="openEditPopup(${contact.AB_EXTERNAL_KEY})">수정</button>
+                        <button onclick="openDeletePopup(${contact.AB_EXTERNAL_KEY})">삭제</button>
                     </div>
                 </div>
             </c:forEach>
@@ -103,20 +102,18 @@
         <h2>정보 수정</h2>
         <form id="edit-form" action="${pageContext.request.contextPath}/external/edit" method="post">
             <input type="hidden" name="AB_EXTERNAL_KEY" id="edit-id">
-            <div class="contact-info">
-                <label>이름:</label>
-                <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
-                <label>전화번호:</label>
-                <input type="text" name="AB_EXTERNAL_TELL" id="edit-phone" required><br>
-                <label>이메일:</label>
-                <input type="email" name="AB_EXTERNAL_EMAIL" id="edit-email" required><br>
-                <label>회사:</label>
-                <input type="text" name="AB_EXTERNAL_COMPANY" id="edit-company"><br>
-                <label>부서:</label>
-                <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="edit-department"><br>
-                <label>직급:</label>
-                <input type="text" name="AB_EXTERNAL_JOB" id="edit-job"><br>
-            </div>
+            <label>이름:</label>
+            <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
+            <label>전화번호:</label>
+            <input type="text" name="AB_EXTERNAL_TELL" id="edit-phone" required><br>
+            <label>이메일:</label>
+            <input type="email" name="AB_EXTERNAL_EMAIL" id="edit-email" required><br>
+            <label>회사:</label>
+            <input type="text" name="AB_EXTERNAL_COMPANY" id="edit-company"><br>
+            <label>부서:</label>
+            <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="edit-department"><br>
+            <label>직급:</label>
+            <input type="text" name="AB_EXTERNAL_JOB" id="edit-job"><br>
             <button type="submit">저장</button>
             <button type="button" onclick="closePopup()">취소</button>
         </form>
