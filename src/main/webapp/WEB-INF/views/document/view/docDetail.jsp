@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
 <%
 	String lastPage = (String) session.getAttribute("lastPage");
 %>
@@ -85,7 +87,7 @@
 							<!-- 재기안, 삭제 -->
 							<div class="d-flex">
 							<c:choose>
-								<c:when test="${loginMember.memberKey eq l.erDocWriter && fn:contains(lastPage, 'inprocess')}">
+								<c:when test="${loginMember.memberKey == l.erDocWriter && fn:contains(lastPage, 'inprocess')}">
 									<a href="#" class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
@@ -114,7 +116,7 @@
 									</button>
 								</c:when>
 								<c:when test="${fn:contains(lastPage, 'waiting') or (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting'))}">
-									<a href="#" class="btn btn-label-info btn-round">
+									<a href="#" class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
 										</span>

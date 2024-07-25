@@ -27,7 +27,7 @@ function modal(no){
 					if(data==1){
 						Swal.fire({
 							title: '회수 완료',
-							html: '<h4>정상적으로 회수되었습니다.<br>회수 문서함으로 이동하시겠습니까?</h4>',
+							html: '<h4>정상적으로 회수되었습니다.</h4>',
 							showCancelButton: true,
 							confirmButtonClass: 'btn btn-success',
 							cancelButtonClass: 'btn btn-danger ms-2',
@@ -35,10 +35,8 @@ function modal(no){
 							cancelButtonText: '취소',
 							buttonsStyling: false,
 							reverseButtons: false
-						}).then((result) => {
-							if (result.isConfirmed) {
-								location.assign(sessionStorage.getItem("path") + `/document/list/retrieve`)
-							}
+						}).then(() => {
+							location.assign(sessionStorage.getItem("path") + `/document/list/retrieve`)
 						});
 					}
 				}
