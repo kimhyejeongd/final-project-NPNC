@@ -11,7 +11,7 @@
 <body>
 
 
-	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	<%@ include file="/WEB-INF/views/attendance/attendanceSidebar.jsp" %> 
  	<div class="main-panel">
 		<div>
 		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
@@ -83,6 +83,7 @@
 				</div>
 				</div>
 			</div>
+			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 			<script>
 				document.getElementById("searchType").addEventListener("change",e=>{

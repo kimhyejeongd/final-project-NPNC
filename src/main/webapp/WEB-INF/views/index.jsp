@@ -65,8 +65,11 @@
 				<button onclick="location.assign('${path}/attendance/endattendance.do')">
 					퇴근
 				</button>
-				<button onclick="location.assign('${path}/attendance/selectAttendanceAll.do')">
+				<button onclick="location.assign('${path}/attendance/selectAttendanceAll')">
 					근태관리
+				</button>
+				<button onclick="location.assign('${path}/admin/adminMain')">
+					관리자
 				</button>
 				
 					

@@ -24,6 +24,9 @@ public interface AttendanceService {
 	int insertAbsent(int memberKey);
 	int startAttendance(Attendance a);
 	int endAttendance(Attendance a);
+	
+	List<Attendance> searchAttendance(Map searchMap,Map page);
+	int searchAttendanceCount(Map searchMap);
 
 	//attendanceEdit
 	int insertAttendanceEdit(AttendanceEdit ae);
@@ -32,8 +35,8 @@ public interface AttendanceService {
 	AttendanceEdit selectAttendanceEditByKey(int attendanceEditKey);
 	int deleteAttendanceEdit(int attendanceEditKey);
 	
-	List<Attendance> searchAttendanceEdit(String searchType,Map<String,Integer> page);
-	int searchAttendanceEditCount(String searchType);
+	List<AttendanceEdit> searchAttendanceEdit(Map<String,Object> searchMap,Map<String,Integer> page);
+	int searchAttendanceEditCount(Map<String,Object> searchMap);
 	
 	//admin attendance
 	List<Attendance> selectAdminAttendanceAll(Map page);

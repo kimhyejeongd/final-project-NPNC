@@ -101,6 +101,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 				    		a.setAttendanceState("출근");
 				    	}else if(startHour<9 && endHour<18) {
 				    		a.setAttendanceState("조퇴");
+				    	}else if(startHour>16) {
+				    		a.setAttendanceState("결근");
 				    	}else if(startHour>9 && endHour>18) {
 				    		a.setAttendanceState("지각");
 				    	}else if(startHour>9 && endHour<18) {
@@ -155,6 +157,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.selectAttendanceByAttendanceKey(session, attendanceKey);
 	}
 
+	@Override
+	public List<Attendance> searchAttendance(Map searchMap, Map page) {
+		
+		return attendanceDao.searchAttendance(session,searchMap, page);
+	}
+
+	@Override
+	public int searchAttendanceCount(Map searchMap) {
+		
+		return attendanceDao.searchAttendanceCount(session,searchMap);
+	}
+	
 	
 	
 	//attendanceEdit
@@ -190,15 +204,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public List<Attendance> searchAttendanceEdit(String searchType, Map<String, Integer> page) {
+	public List<AttendanceEdit> searchAttendanceEdit(Map<String,Object> searchMap, Map<String, Integer> page) {
 		
-		return attendanceDao.searchAttendanceEdit(session, searchType, page);
+		return attendanceDao.searchAttendanceEdit(session, searchMap, page);
 	}
 
 	@Override
-	public int searchAttendanceEditCount(String searchType) {
+	public int searchAttendanceEditCount(Map<String,Object> searchMap) {
 		// TODO Auto-generated method stub
-		return attendanceDao.searchAttendanceEditCount(session, searchType);
+		return attendanceDao.searchAttendanceEditCount(session, searchMap);
 	}
 	
 	
@@ -280,6 +294,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
 	}
+
+
 
 	
 	
