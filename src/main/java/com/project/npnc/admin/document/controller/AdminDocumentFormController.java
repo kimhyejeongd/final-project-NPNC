@@ -1,5 +1,6 @@
 package com.project.npnc.admin.document.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
@@ -41,11 +41,21 @@ public class AdminDocumentFormController {
 	}
 	
     @PostMapping("/updateFolderOrder")
-    @ResponseBody
-    public String updateOrder(@RequestParam int draggedFolder, @RequestParam(required=false) int targetFolder) {
+    public ResponseEntity<?> updateOrder(@RequestBody Map<String,Object>folderKeys) {
+    
+    	System.out.println(folderKeys.get("draggedFolder"));
+    	System.out.println(folderKeys.get("targetFolder"));
+    	int draggedFolderKey = (int)folderKeys.get("draggedFolder");
+    	int targetFolderKey = (int)folderKeys.get("targetFolder");
+    	StorageFolder draggedFolder = service.selectStorageFolder(draggedFolderKey);
+    	StorageFolder targetFolder = service.selectStorageFolder(targetFolderKey);
     	System.out.println(draggedFolder);
     	System.out.println(targetFolder);
-    	return null;
+    	Map<String,Object>folderInfo = new HashMap<>();
+    	folderInfo.put("draggedFolder", draggedFolder);
+    	folderInfo.put("targetFolder", targetFolder);
+    	service.updateStorageGroup(folderInfo);
+    	return ResponseEntity.ok(1);
     }
 
 }

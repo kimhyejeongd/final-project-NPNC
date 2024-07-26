@@ -43,7 +43,7 @@
 								    
 								<div class="accordion-item">
 									        <c:if test="${f.folderLevel==1}">
-								    <h2 class="accordion-header droppable" data-folder="${folderJson.folderKey}">
+								    <h2 class="accordion-header droppable" data-folder="${folderJson}" data-folder-key="${f.folderKey}">
 									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
 									        <i class="fas fa-bookmark me-2"></i>
 									        	${f.folderName } 
@@ -54,7 +54,7 @@
 									      <div class="accordion-body" style="padding: 0!important;">
 									         <div class="list-group" id="memberlist">
 								 				<c:if test="${f.folderLevel==2 }">
-												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder='${folderJson.folderKey}'> 
+												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder='${folderJson}'> 
 													  <i class="fas fa-user me-2"></i>
 													  ${f.folderName }
 												  </a>
@@ -223,26 +223,36 @@
             
             var draggable = window.draggedItem;  // 드래그된 요소를 가져옴
             var targetAccordionItem = $(this); // 최상위 부모인 .accordion-item을 찾아서
-            targetAccordionItem.find('.accordion-body .list-group').append(draggable);  // 새로운 위치에 추가
             
-            var draggedFolder = draggable.data('folder'); // 드래그된 폴더 데이터 추출
-            var targetFolder = targetAccordionItem.data('folder'); // 타겟 폴더 데이터 추출
-			
-            console.log(draggedFolder);
+            var draggedFolder = draggable.data('folder-key'); // 드래그된 폴더 데이터 추출
+            var targetFolder = targetAccordionItem.data('folder-key'); // 타겟 폴더 데이터 추출
+
+			var draggableEle = window.draggedItem.closest(".accordion-item")
+			var targetEle = targetAccordionItem.closest(".accordion-item")
+            
+            console.log(typeof draggedFolder);
+            console.log(typeof JSON.stringify(draggedFolder));
+            console.log(typeof targetFolder);
+            console.log(typeof JSON.stringify(targetFolder));
             console.log(targetFolder);
+            console.log(draggedFolder);
             
             $.ajax({
                 url: '${path}/admin/documentForm/updateFolderOrder', // 서버 요청 URL
                 type: 'POST',
-                data: {
-	                    draggedFolder: draggedFolder,
-	                    targetFolder: targetFolder
-                	
-                },
-                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    "draggedFolder": draggedFolder,
+                    "targetFolder": targetFolder,
+                }),
+                contentType: 'application/json;charset=utf-8',
                 success: function(response) {
                     console.log(response);
                     console.log('Folders order updated successfully');
+
+                    targetEle.after(draggableEle);
+                },
+                error: function(response) {
+                    console.error('Error updating folder order');
                 }
             });
         });

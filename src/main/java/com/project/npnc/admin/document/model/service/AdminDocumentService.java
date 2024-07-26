@@ -1,6 +1,7 @@
 package com.project.npnc.admin.document.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,11 @@ public class AdminDocumentService {
 	
 	public List<AdminDocument> selectDocAll(int folderKey){
 		return dao.selectDocAll(session,folderKey);
+	}
+	public StorageFolder selectStorageFolder(int folderKey) {
+		return dao.selectStorageFolderAll(session,folderKey);
+	}
+	public int updateStorageGroup(Map<String,Object>folderInfo) {
+		return dao.updateStorageGroup(session,folderInfo);
 	}
 }

@@ -46,10 +46,28 @@
 
 	</select>
 	
+	
+	<select id="selectStorageFolder" resultMap="StorageFolder" parameterType="int">
+			SELECT
+			ER_FOLDER_KEY,
+			ER_FOLDER_NAME,
+			ER_FOLDER_GROUP,
+			ER_FOLDER_LEVEL,
+			ER_FOLDER_USE_YN
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_KEY = #{folderKey}
+	</select>
+	
+	<update id="updateStorageGroup" parameterType="map">
+		UPDATE ER_STORAGE_FOLDER 
+		SET ER_FOLDER_GROUP = #{targetFolder.folderGroup}
+		WHERE ER_FOLDER_KEY = #{draggedFolder.folderKey}
+	</update>
+	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
-        <result property="parentFolderKey" column="ER_FOLDER_REF" />
+        <result property="folderGroup" column="ER_FOLDER_GROUP" />
         <result property="folderLevel" column="ER_FOLDER_LEVEL" />
         <result property="useYn" column="ER_FOLDER_USE_YN" />   
 	</resultMap>
