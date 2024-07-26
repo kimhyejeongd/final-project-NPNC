@@ -45,7 +45,37 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   </head>
   <body>
-
+		  <style>
+	     .main-header {
+		    background: #fff;
+		    min-height: 60px;
+		    width:100%;
+		    position: static;
+		    z-index: 1001
+		}
+		.container{
+			height: 100%;
+			/* background-color: aquamarine; */
+       		max-width: 1800px;
+			
+		}
+		.firstwidget{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: noWrap;
+       	
+		}
+		.firstwidget>div{
+			margin-right: 30px;
+		}
+		 .pagination-container {
+            display: flex;
+            justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
+           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
+        }
+		
+	</style>	
+               <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
 
         <div class="container">
           <div class="page-inner">
