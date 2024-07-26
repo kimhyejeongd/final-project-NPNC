@@ -206,10 +206,10 @@ public class AttendanceController{
 		String msg,loc;
 		if(result>0) {
 			msg="요청성공";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}else {
 			msg="요청실패";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

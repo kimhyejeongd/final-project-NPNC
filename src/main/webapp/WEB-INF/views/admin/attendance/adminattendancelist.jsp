@@ -101,5 +101,24 @@
 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 	</div>
+ 	<script>
+	function search_paging(pageNo,url,numPerpage,searchKey,searchType,searchStartDate,searchEndDate){
+		const queryParams = new URLSearchParams({
+	        cPage: pageNo,
+	        numPerpage: numPerpage,
+	        searchKey: searchKey,
+	        searchType: searchType,
+	        searchStartDate: searchStartDate,
+	        searchEndDate: searchEndDate
+	    }).toString();
+
+	    // URL을 조합
+	    
+
+	    // 페이지 이동
+	    location.assign("${path}/${url}");
+	}
+	</script> 
+	
 </body>
 </html>

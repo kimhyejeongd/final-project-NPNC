@@ -388,6 +388,9 @@
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/board/list">게시판</a>
 				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
+				       </li>
 				     </ul>
 				   </div>
 				 </div>
