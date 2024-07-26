@@ -1,6 +1,9 @@
 package com.project.npnc.note.dto;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.project.npnc.member.model.dto.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +23,8 @@ public class NoteReceptionDto {
 	private Date postMsgTime;
 	private Date postMsgReservation;
 	private String postMsgTitle;
-	
+	private String postMsgRecStatus;
+	private List<Member> recMember;
+	private List<NoteFileDto> files;
 	
 }

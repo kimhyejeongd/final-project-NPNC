@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
 import com.project.npnc.note.dto.NoteSendDto;
 
@@ -15,6 +16,13 @@ public interface NoteDao {
 	public int noteMsgKey(SqlSession session);
 	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
 	public int noteSelectTotalData(SqlSession session, int memberKey);
-	public NoteReceptionDto selectNoteOne(SqlSession session);
+	public NoteReceptionDto selectNoteOne(SqlSession session, Map<String, Integer> param);
 	public int sendNoteOneWrite(SqlSession session, NoteReceptionDto sendNote);
+	public List<NoteSendDto> sendNoteSelectAll(SqlSession session, Map<String, Integer> page);
+	public int sendNoteSelectTotalData(SqlSession session, int memberKey);
+	public NoteSendDto selectSendOne(SqlSession session, Map<String, Integer> param);
+	public List<NoteSendDto> sendNoteSelectAllPaging(SqlSession session,Map<String, Integer> page);
+	public int noteFileInput(SqlSession session, NoteFileDto noteFile);
+	public int noteSendDelete(SqlSession session, int checkDeleteValue);
+	public int noteRecDelete(SqlSession session, Map<String, Integer> param);
 }

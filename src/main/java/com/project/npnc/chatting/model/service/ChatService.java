@@ -27,6 +27,17 @@ public class ChatService {
 	private final WebSocketEventListener webSocketEventListener;
     private final ServletContext servletContext;  // ServletContext 주입
 
+    public int inviteToRoom(int roomId, List<Integer> memberIds) {
+    	int result=0;
+    	Map<String,Object> inviteInfo=new HashMap<>();
+    	inviteInfo.put("roomId", roomId);
+    	for(int m : memberIds) {
+    		inviteInfo.put("memberId",m);    		
+    		result += dao.insertChatMember(session,inviteInfo);
+    	}
+    	return result;
+    }
+    
 	public void deleteReadBadge(int currRoomId,List<Integer> currMemberKey){
 		Map<String,Integer> deleteInfo = new HashMap<>();
 		deleteInfo.put("currRoomId", currRoomId);
@@ -153,6 +164,9 @@ public class ChatService {
 			if(roomStatus ==0) {
 				dao.deleteRoom(session,exitInfo);
 			}
+		}
+		public int selectUnreadCurrent(int memberKey) {
+			return dao.selectUnreadCurrent(session,memberKey);
 		}
 		
 		   

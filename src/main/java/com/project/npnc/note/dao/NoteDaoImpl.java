@@ -7,12 +7,32 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
 import com.project.npnc.note.dto.NoteSendDto;
 
 @Repository
 public class NoteDaoImpl implements NoteDao {
 
+//	보낸 쪽지 삭제, 업데이트 구문
+	@Override
+	public int noteSendDelete(SqlSession session, int checkDeleteValue) {
+		
+		return session.update("note.noteSendDelete", checkDeleteValue);
+	}
+// 받은 쪽지 삭제, 업데이트 구문
+	@Override
+	public int noteRecDelete(SqlSession session, Map<String, Integer> param) {
+		
+		return session.update("note.noteRecDelete", param);
+	}
+
+	@Override
+	public int noteFileInput(SqlSession session, NoteFileDto noteFile) {
+			
+		return session.insert("note.noteFileInput", noteFile);
+	}
+	
 	@Override
 	public int noteOneWrite(SqlSession session, NoteReceptionDto note) {
 	System.out.println(note);
@@ -25,10 +45,23 @@ public class NoteDaoImpl implements NoteDao {
 		return session.insert("note.sendNoteOneWrite", sendNote);
 	}
 
+	
+
 	@Override
 	public int noteSelectTotalData(SqlSession session, int memberKey) {
 		
 		return session.selectOne("note.noteSelectTotalData",memberKey);
+	}
+
+	
+
+	@Override
+	public List<NoteSendDto> sendNoteSelectAllPaging(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		System.out.println(memberKey+" 여기에 들어 왔냐고");
+		
+		return session.selectList("note.sendNoteSelectAllPaging", memberKey, rb);
 	}
 
 	@Override
@@ -40,9 +73,9 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
-	public NoteReceptionDto selectNoteOne(SqlSession session) {
+	public NoteReceptionDto selectNoteOne(SqlSession session, Map<String, Integer> param) {
 	
-		return session.selectOne("note.noteSelectOne");
+		return session.selectOne("note.noteSelectOne", param);
 	}
 
 	@Override
@@ -55,6 +88,25 @@ public class NoteDaoImpl implements NoteDao {
 	public int noteMsgKey(SqlSession session) {
 		
 		return session.selectOne("note.noteMsgKey");
+	}
+	
+	@Override
+	public List<NoteSendDto> sendNoteSelectAll(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		return session.selectList("note.sendNoteSelectAll",memberKey,rb);
+	}
+
+	@Override
+	public int sendNoteSelectTotalData(SqlSession session, int memberKey) {
+		
+		return session.selectOne("note.sendNoteSelectTotalData",memberKey);
+	}
+	
+	@Override
+	public NoteSendDto selectSendOne(SqlSession session, Map<String, Integer> param) {
+		
+		return session.selectOne("note.selectSendOne", param);
 	}
 
 }

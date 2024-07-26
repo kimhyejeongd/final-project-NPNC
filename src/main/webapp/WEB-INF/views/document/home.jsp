@@ -3,7 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <%
-  String contextPath = request.getContextPath();
+	String contextPath = request.getContextPath();
+	//세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -18,6 +20,17 @@
       rel="icon"
       type="image/x-icon"
     />
+      <!-- SweetAlert2 CSS -->
+	  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+	  <!-- SweetAlert2 JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    <style>
+    	#tablerow:hover{
+    		cursor: pointer; 
+    	}
+    </style>
+  <script src="${path}/resources/jh/js/inprocess.js"></script>
+  <script src="${path}/resources/jh/js/waiting.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -51,5 +64,8 @@
           </div>
           </div>
         </div>
+<script>
+	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+</script>
   </body>
 </html>

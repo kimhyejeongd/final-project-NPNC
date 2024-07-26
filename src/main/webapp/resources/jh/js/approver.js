@@ -18,10 +18,12 @@ $(document).ready(function() {
         			.addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
     				.attr({
 						'href':'#',
-						'data-id': item.no, 
-						'data-name' : item.name, 
-						'data-teamName': item.team,
-						'data-job': item.job
+						'data-id': item.memberKey, 
+						'data-name' : item.memberName, 
+						'data-team': item.memberTeam,
+						'data-teamkey': item.teamKey,
+						'data-jobkey': item.jobKey,
+						'data-job': item.memberJob,
 						});
 		let $i = $("<i>").addClass('fas fa-user me-2');
 		let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -34,11 +36,11 @@ $(document).ready(function() {
 					.append($("<option>").text('후결'))
 					.append($("<option>").text('협조'));
     	$select.val(item.category); // 카테고리에 맞는 옵션 선택
-		$div.append($i).append(`<b>${item.name}</b>&ensp;${item.job}`);
+		$div.append($i).append(`<b>${item.memberName}</b>&ensp;${item.memberJob}`);
         $a.append($($div)).append($select).appendTo($("div#memberlist2"));
         //조직도에서 없앰
         $("div#memberlist>a").each(function(){
-			if ($(this).data('id') == item.no) {
+			if ($(this).data('id') == item.memberKey) {
                 $(this).css('display', 'none');
             }
 		});
@@ -58,7 +60,9 @@ $(document).ready(function() {
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
+			let jobKey = $(this).data('jobkey');
 			let teamName = $(this).data('team');
+			let teamKey = $(this).data('teamkey');
 			$(this).removeClass('selected');
 			$(this).css('display', 'none');
 			let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
@@ -66,8 +70,11 @@ $(document).ready(function() {
 								'href':'#',
 								'data-id': no, 
 								'data-name' : name, 
-								'data-teamName': teamName,
-								'data-job': job
+								'data-teamkey': teamKey,
+								'data-team': teamName,
+								'data-jobkey': jobKey,
+								'data-job': job,
+								'data-orderby' : count
 							});
 			let $i = $("<i>").addClass('fas fa-user me-2');
 			let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
@@ -88,7 +95,7 @@ $(document).ready(function() {
 	    console.log("left");
 	    let selectedElements = $("div#memberlist2>a.selected");
 	
-	    // 선택된 항목들 중에서 가장 높은 순서를 찾습니다.
+	    // 선택된 항목들 중에서 가장 높은 순서
 	    let maxOrder = 0;
 	    selectedElements.each(function() {
 	        let order = parseInt($(this).find("div > span").text());
@@ -209,16 +216,20 @@ $(document).ready(function() {
 			let no = $(this).data('id');
 			let name = $(this).data('name');
 			let job = $(this).data('job');
-			let teamName = $(this).data('teamname');
+			let teamName = $(this).data('team');
+			let jobKey = $(this).data('jobkey');
+			let teamKey = $(this).data('teamkey');
 			let orderby =$(`#memberlist2 > a:nth-child(${index+1}) > div > span`).text();
 			let category=$(this).children().last().val();
 			let $app = {
 				        orderby: orderby,
-				        no: no,
-				        team: teamName,
-				        job: job,
-				        name: name,
-				        category: category
+				        memberKey: no,
+				        memberTeam: teamName,
+				        memberJob: job,
+				        memberName: name,
+				        category: category,
+				        teamKey: teamKey,
+				        jobKey: jobKey
 					    };
 			data.push($app);
 		});
@@ -243,6 +254,201 @@ $(document).ready(function() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				window.close();
+			}
+		});
+	});
+	//$("#refreshBtn").click(e=>{
+	//	window.location.reload();
+	//});
+	$("#bringBtn").click(e=>{
+		let no = $(e.target).data('id');
+		$.ajax({
+			data: no,
+			
+		});
+	});
+	 $(".toggle-btn").mouseenter(function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        let target = $(this).data("target");
+        $(target).show();
+    });
+
+    $(".toggle-btn").mouseleave(function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        let target = $(this).data("target");
+        $(target).on('mouseenter', function() {
+            $(target).show();
+        })
+        $(target).hide();
+    });
+    
+    // 결재라인 저장 버튼 클릭 시
+	$("#saveBtn").click(function(e) {
+		Swal.fire({
+			title: '결재라인 저장',
+			html: '<p>현재 선택된 결제라인 정보를 저장하시겠습니까?</p><p>저장할 결재라인 명을 입력해주세요.</p>결재라인 명 : <input type="text" class="" name="name" id="linename">',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '저장',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+		    if (result.isConfirmed) {
+		        console.log('결제라인 저장');
+		        let lineName = $("input#linename").val();
+		
+		        let approvers = [];
+		        $("div#memberlist2>a").each(function() {
+		            let ApproverLine = {
+		                memberKey: $(this).data('id'),
+		                //memberName: $(this).data('name'),
+		                erApName: $(this).data('name'),
+		                //memberJob: $(this).data('job'),
+		                erApJobKey: $(this).data('jobkey'),
+		                //memberTeam: $(this).data('team'),
+		                erApTeamKey: $(this).data('teamkey'),
+		                //orderby: $(this).find("div > span").text(),
+		                erApOrderby: $(this).find("div > span").text(),
+		                //category: $(this).children().last().val()
+		                erApCategory: $(this).children().last().val()
+		            };
+		            approvers.push(ApproverLine);
+		        });
+		
+		        let ApproverLineStorage = {
+		            erApLineStorageName: lineName,
+		            approvers: approvers
+		        };
+				console.log(ApproverLineStorage);
+		        $.ajax({
+		            type: "POST",
+		            url: sessionStorage.getItem("path")+`/document/write/save/approverline`,
+		            contentType: "application/json",
+		            data: JSON.stringify(ApproverLineStorage),
+		            success: function(response) {
+		                if (response.status === "success") {
+			                // 로컬 스토리지에 데이터 저장
+					    	//localStorage.setItem('selectedApprover', JSON.stringify(approvers));
+		                    alert(response.message);
+		                } else {
+		                    alert(response.message);
+		                }
+		                window.location.reload();	
+		            }
+		        });
+		    }
+		});
+	});
+	//결재라인 불러오기
+	$(".bringBtn").click(function(e) {
+		e.stopPropagation();
+		console.dir($(this));
+		Swal.fire({
+			title: '결재라인 불러오기',
+			text: '해당 결제라인을 불러오시겠습니까? 현재 선택된 내용은 사라집니다.',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '확인',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log('결제라인 불러오기');
+				$("#memberlist2").html('');
+				//데이터 가져오기
+				let modalContent = $(this).closest('.d-flex').find('.modal-like');
+				let ids = [];
+		        modalContent.find('.badge').each(function(item) {
+					let $a = $("<a>")
+	        			.addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+	    				.attr({
+							'href':'#',
+							'data-id': $(this).data('id'),
+							'data-name' : $(this).data('name'), 
+							'data-team': $(this).data('team'),
+							'data-teamkey': $(this).data('teamkey'),
+							'data-jobkey': $(this).data('jobkey'),
+							'data-job': $(this).data('job'),
+							'data-category': $(this).data('category')
+							});
+					let $i = $("<i>").addClass('fas fa-user me-2');
+					let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0')
+											.text($(this).text());
+					let $div = $("<div>").append($($span));
+					let $select = $("<select>").addClass('form-select w-25');
+						$select.append($("<option>").text('검토'))
+								.append($("<option>").text('결재'))
+								.append($("<option>").text('전결'))
+								.append($("<option>").text('후결'))
+								.append($("<option>").text('협조'));
+			    	$select.val($(this).data('category')); // 카테고리에 맞는 옵션 선택
+					$div.append($i).append(`<b>${$(this).data('name')}</b>&ensp;${$(this).data('job')}`);
+			        $a.append($($div)).append($select).appendTo($("div#memberlist2"));
+			        ids.push($(this).text());
+				});
+		        //조직도에서 없앰
+		        $("div#memberlist>a").each(function(e){
+					console.log(ids);
+					if (ids.includes($(e.target).data('id'))) {
+		                $(e.target).css('display', 'none');
+		            }
+				});
+				}
+				/*$.ajax({
+					type: "get",
+					url: sessionStorage.getItem("path")+`/document/write/delete/approverline`,
+					data: JSON.stringify($(e.target).data('id')),
+					dataType:"json",
+					contentType: "application/json; charset=utf-8",
+					success: function(response){
+						if(response.status === "success"){
+							alert(response.message);
+							window.location.reload();
+						}
+						else{
+							alert(response.message);
+						}
+					}
+				});*/
+		});
+	});
+    // 삭제 버튼 클릭 시
+	$(".deleteBtn").click(function(e) {
+		e.stopPropagation();
+		console.dir($(this));
+		Swal.fire({
+			title: '결재라인 삭제',
+			text: '해당 결제라인을 삭제하시겠습니까?',
+			showCancelButton: true,
+			confirmButtonClass: 'btn btn-success',
+			cancelButtonClass: 'btn btn-danger ms-2',
+			confirmButtonText: '삭제',
+			cancelButtonText: '취소',
+			buttonsStyling: false,
+			reverseButtons: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log('결제라인 삭제');
+				$.ajax({
+					type: "POST",
+					url: sessionStorage.getItem("path")+`/document/write/delete/approverline`,
+					data: JSON.stringify($(e.target).data('id')),
+					dataType:"json",
+					contentType: "application/json; charset=utf-8",
+					success: function(response){
+						if(response.status === "success"){
+							alert(response.message);
+							window.location.reload();
+						}
+						else{
+							alert(response.message);
+						}
+					}
+				});
 			}
 		});
 	});

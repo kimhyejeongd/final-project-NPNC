@@ -26,8 +26,6 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
 
-    <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   	<div class="sidebar" data-background-color="dark">
   	<div class="sidebar-logo">
        <!-- Logo Header -->
@@ -130,6 +128,32 @@
                   </ul>
                 </div>
               </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#123">
+                  <i class="fas fa-pen-square"></i>
+                  <p>전자결재 관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="123">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
+                        <span class="sub-item">결재 양식</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/job/selectjoball.do">
+                        <span class="sub-item">결재 보관함</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/job/selectjoball.do">
+                        <span class="sub-item">전체 문서 목록</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -172,9 +196,6 @@
     <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 
-    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-    <script src="${path}/resources/assets/js/setting-demo.js"></script>
-    <script src="${path}/resources/assets/js/demo.js"></script>
     <script>
       $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
         type: "line",

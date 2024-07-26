@@ -118,5 +118,12 @@ public class ChatDao {
 	public void deleteRoom(SqlSessionTemplate session, Map<String,Integer> exitInfo) {
 		session.delete("chat.deleteRoom",exitInfo);
 	}
+	public int insertChatMember(SqlSessionTemplate session, Map<String,Object> inviteInfo) {
+		return session.insert("chat.insertChatMember",inviteInfo);
+	}
+	public int selectUnreadCurrent(SqlSessionTemplate session, int memberKey) {
+		return session.selectOne("chat.selectUnreadCurrent",memberKey);
+				
+	}
 
 }

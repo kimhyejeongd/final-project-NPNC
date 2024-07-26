@@ -1,5 +1,8 @@
 package com.project.npnc.calendar.model.dto;
 
+import java.sql.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,16 +13,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Calendar {
-	private String _id;
 	private int calendarKey;
-	private int memberKey;
+	//memberKey
+	private int _id;
+	private int empNo;
+	private String empName;
+	private String deptCode;
+	private int type;
 	private String title;
 	private String start;
 	private String end;
 	private String description;
-	private String type;
-	private String username;
 	private String backgroundColor;
-	private String textColor;
-	private boolean allDay;
+	private String allDay;
+	private Date update;
+	private Date enroll;
+	private String delete;
+	private List<ReferenceEmp> selectedMembers;
 }

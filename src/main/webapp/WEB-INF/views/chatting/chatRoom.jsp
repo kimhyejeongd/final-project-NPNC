@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
 
 <!DOCTYPE html>
 <c:set var="path" value="${pageContext.request.contextPath}" />
-<c:set var="loginMember" value="${sessionScope.loginMember}" />
 <html lang="en">
 <head>
 <script
@@ -53,7 +54,7 @@
 }
 
 
-.container {
+.container1 {
 	background-color: #fff;
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -290,15 +291,15 @@ body{
 	
 	
 
-	<div class="container">
+	<div class="container1">
 			<button class="menu-button">&#9776;</button>
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
-<!-- 		<div class="tabs">
+ 		<div class="tabs">
 			<div class="tab" data-tab="contacts">연락처</div>
 			<div class="tab active" data-tab="chat">채팅</div>
-		</div> -->
+		</div> 
 		<div id="contacts" class="content">
 			<input type="text" id="searchFriend" class="search-bar"
 				placeholder="친구 검색...">
@@ -340,6 +341,8 @@ body{
 			</ul>
 		</div>
 	</div>
+	
+
 
 	<!-- 모달 -->
 	<div id="newChatModal" class="modal">
@@ -574,6 +577,7 @@ body{
                     var roomItem = $("#room-" + roomId);
                     roomItem.prependTo("#roomList");
                     
+                    console.log("==================")
                     	
                     if(currentSession != null){
 	                    console.log(currentSession);
