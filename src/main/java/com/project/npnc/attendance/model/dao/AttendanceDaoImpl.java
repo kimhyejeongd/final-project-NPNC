@@ -85,7 +85,17 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.selectAttendanceByAttendanceKey",attendanceKey);
 	}
 
-	
+	@Override
+	public List<Attendance> searchAttendance(SqlSession session,Map<String, Object> searchMap, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchAttendance",searchMap,rb);
+	}
+
+	@Override
+	public int searchAttendanceCount(SqlSession session,Map<String, Object> searchMap) {
+		
+		return session.selectOne("attendance.searchAttendanceCount",searchMap);
+	}
 	
 	
 	//attendanceEdit
@@ -123,15 +133,15 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	}
 
 	@Override
-	public List<Attendance> searchAttendanceEdit(SqlSession session, String searchType, Map<String, Integer> page) {
+	public List<AttendanceEdit> searchAttendanceEdit(SqlSession session, Map<String,Object> searchMap, Map<String, Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("attendance.searchAttendanceEdit",searchType,rb);
+		return session.selectList("attendance.searchAttendanceEdit",searchMap,rb);
 	}
 
 	@Override
-	public int searchAttendanceEditCount(SqlSession session, String searchType) {
+	public int searchAttendanceEditCount(SqlSession session, Map<String,Object> searchMap) {
 		
-		return session.selectOne("attendance.searchAttendanceEditCount",searchType);
+		return session.selectOne("attendance.searchAttendanceEditCount",searchMap);
 	}
 	
 	
@@ -217,6 +227,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
+
 
 
 

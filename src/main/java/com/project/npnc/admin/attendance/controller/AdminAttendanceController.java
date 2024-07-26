@@ -146,9 +146,11 @@ public class AdminAttendanceController {
 			@RequestParam(defaultValue = "10") int numPerpage,		
 			Model m
 			) {
-
-		LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
-		searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		
+		if(!searchEndDate.equals("")) {	
+			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
+			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		};
 		System.out.println("시작시간 : "+searchStartDate
 				+"끝나는시간 : "+searchEndDate);
 		Map<String,Object> searchMap=Map.of("searchKey",searchKey,"searchType",searchType,"searchStartDate",searchStartDate,"searchEndDate",searchEndDate);
@@ -156,6 +158,12 @@ public class AdminAttendanceController {
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendance=service.searchAdminAttendance(searchMap,page);
 		int totaldata=service.searchAdminAttendanceCount(searchMap);
+		
+		if(!searchEndDate.equals("")) {	
+			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).minusDays(1);
+			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		};
+		
 		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,searchStartDate,searchEndDate,"searchAdminAttendance"));
 		m.addAttribute("attendance",attendance);
 		m.addAttribute("searchK",searchKey);

@@ -108,6 +108,47 @@
 		VALUES(SEQ_ATTENDANCE.NEXTVAL,#{memberKey},SYSDATE,NULL,NULL,'결근',NULL)
 	</insert>
 
+	<select id="searchAttendance" parameterType="map" resultMap="attendanceMap">
+		SELECT 
+			ATTENDANCE_KEY,
+		    ATTENDANCE_DATE,
+		    ATTENDANCE_START,
+		    ATTENDANCE_END,
+		    ATTENDANCE_STATE,
+		    OVERTIME_KEY
+			FROM ATTENDANCE 
+			JOIN MEMBER USING(MEMBER_KEY)
+			<where>
+				MEMBER_KEY=#{memberKey}
+				<if test="searchType !=null and searchType!= ''">
+					AND ATTENDANCE_STATE=#{searchType}
+				</if>
+				<if test="(searchStartDate != null and searchStartDate !='') and (searchEndDate != null and searchEndDate != '')">
+	        		AND ATTENDANCE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+	   			</if>
+			</where>
+			ORDER BY ATTENDANCE_DATE DESC
+	</select>
+	
+	<select id="searchAttendanceCount" parameterType="map" resultType="_int">
+		SELECT 
+			COUNT(ATTENDANCE_KEY)
+			FROM ATTENDANCE 
+			<where>
+				MEMBER_KEY=#{memberKey}
+				<if test="searchType !=null and searchType!= ''">
+					AND ATTENDANCE_STATE=#{searchType}
+				</if>
+				<if test="(searchStartDate != null and searchStartDate !='') and (searchEndDate != null and searchEndDate != '')">
+	        		AND ATTENDANCE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+	   			</if>
+			</where>
+			ORDER BY ATTENDANCE_DATE DESC
+	</select>
+
+
+
+
 	<!-- attendanceEdit -->
 
 	<resultMap type="attendanceEdit" id="attendanceEditMap">
@@ -201,7 +242,7 @@
 		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey} 
 	</delete>
 
-	<select id="searchAttendanceEdit" parameterType="string" resultMap="attendanceEditMap">
+	<select id="searchAttendanceEdit" parameterType="map" resultMap="attendanceEditMap">
 		SELECT 
 		ATTENDANCE_EDIT_KEY, 
 		ATTENDANCE_KEY, 
@@ -218,20 +259,22 @@
 		ATTENDANCE_EDIT_STATE
 		FROM ATTENDANCE_EDIT
 		<where>
+			ATTENDANCE_EDIT_MEMBER=#{memberId}
 		<if test="searchType != null and searchType !='' ">
-			ATTENDANCE_EDIT_STATE=#{searchType}
+			AND ATTENDANCE_EDIT_STATE=#{searchType}
 		</if>
 		</where>
 		ORDER BY ATTENDANCE_EDIT_DATE DESC
 	</select>
 	
-	<select id="searchAttendanceEditCount" parameterType="string" resultType="_int">
+	<select id="searchAttendanceEditCount" parameterType="map" resultType="_int">
 		SELECT 
 		COUNT(ATTENDANCE_EDIT_KEY) 
 		FROM ATTENDANCE_EDIT
 		<where>
+			ATTENDANCE_EDIT_MEMBER=#{memberId}
 		<if test="searchType != null and searchType !='' ">
-			ATTENDANCE_EDIT_STATE=#{searchType}
+			AND ATTENDANCE_EDIT_STATE=#{searchType}
 		</if>
 		</where>
 	</select>
@@ -403,7 +446,7 @@
 			<if test="searchKey !=null and searchKey != ''">
 				MEMBER_NAME LIKE '%' || #{searchKey} || '%'
 			</if>
-			<if test="(searchType !=null and searchType!= '') or (searchKey !=null and searchKey != '') 
+			<if test="((searchType !=null and searchType!= '') or (searchKey !=null and searchKey != '')) 
 				and (searchStartDate != null and searchEndDate != null) and (searchStartDate != '' and searchEndDate != '')">
 				AND 
 			</if>
@@ -429,7 +472,7 @@
 			<if test="searchKey !=null and searchKey != ''">
 				MEMBER_NAME LIKE '%' || #{searchKey} || '%'
 			</if>
-			<if test="(searchType !=null and searchType!= '') or (searchKey !=null and searchKey != '') 
+			<if test="((searchType !=null and searchType!= '') or (searchKey !=null and searchKey != '')) 
 				and searchStartDate != null and searchEndDate != null and searchStartDate != '' and searchEndDate != ''">
 				AND 
 			</if>
