@@ -43,19 +43,21 @@ public class AdminDocumentFormController {
     @PostMapping("/updateFolderOrder")
     public ResponseEntity<?> updateOrder(@RequestBody Map<String,Object>folderKeys) {
     
-    	System.out.println(folderKeys.get("draggedFolder"));
-    	System.out.println(folderKeys.get("targetFolder"));
-    	int draggedFolderKey = (int)folderKeys.get("draggedFolder");
-    	int targetFolderKey = (int)folderKeys.get("targetFolder");
-    	StorageFolder draggedFolder = service.selectStorageFolder(draggedFolderKey);
-    	StorageFolder targetFolder = service.selectStorageFolder(targetFolderKey);
-    	System.out.println(draggedFolder);
-    	System.out.println(targetFolder);
+
+    	StorageFolder draggedFolder = service.selectStorageFolder((int)folderKeys.get("draggedFolder"));
+    	StorageFolder targetFolder = service.selectStorageFolder((int)folderKeys.get("targetFolder"));
+
     	Map<String,Object>folderInfo = new HashMap<>();
     	folderInfo.put("draggedFolder", draggedFolder);
     	folderInfo.put("targetFolder", targetFolder);
-    	service.updateStorageGroup(folderInfo);
-    	return ResponseEntity.ok(1);
+    	int result = service.updateStorageGroup(folderInfo);
+    	return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/removeFolder")
+    public ResponseEntity<?>removeFolder(@RequestParam int draggedFolderKey){
+    	int result = service.removeFolder(draggedFolderKey);
+    	System.out.println(draggedFolderKey);
+    	return ResponseEntity.ok(result);
+    }
 }

@@ -25,4 +25,7 @@ public class AdminDocumentDao {
 	public int updateStorageGroup(SqlSessionTemplate session, Map<String,Object>folderInfo) {
 		return session.update("admindoc.updateStorageGroup",folderInfo);
 	}
+	public int removeFolder(SqlSessionTemplate session, int draggedFolderKey) {
+		return session.delete("admindoc.removeFolder",draggedFolderKey);
+	}
 }

@@ -64,6 +64,11 @@
 		WHERE ER_FOLDER_KEY = #{draggedFolder.folderKey}
 	</update>
 	
+	<delete id="removeFolder" parameterType="int">
+		DELETE FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_KEY = #{draggedFolderKey} 
+	</delete>
+	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
