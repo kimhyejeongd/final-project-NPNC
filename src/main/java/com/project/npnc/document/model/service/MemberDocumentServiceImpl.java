@@ -69,10 +69,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectWaitingDocs(int no) {
 	    List<Document> result = dao.selectWaitingDocs(session, no);
 	    log.debug("[1] 조회" + result.toString());
-	    //Document 리스트에서 본인이 이미 승인한 결과 제거
+	    //Document 리스트에서 본인이 이미 결재한 결과 제거
 	    result.removeIf(doc -> doc.getApprovers().stream()
 	                        .anyMatch(approver -> 
-                    		approver.getMemberKey() == no && approver.getState().equals("승인")));
+                    		approver.getMemberKey() == no && !(approver.getState().equals("대기"))));
 	    return result;
 	}
 
