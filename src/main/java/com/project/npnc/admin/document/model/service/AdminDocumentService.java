@@ -31,6 +31,9 @@ public class AdminDocumentService {
 	public int updateStorageGroup(Map<String,Object>folderInfo) {
 		return dao.updateStorageGroup(session,folderInfo);
 	}
+	public int increaseFolderOrder(Map<String,Object>folderInfo) {
+		return dao.increaseFolderOrder(session,folderInfo);
+	}
 	public int removeFolder(int draggedFolderKey) {
 		return dao.removeFolder(session,draggedFolderKey);
 	}

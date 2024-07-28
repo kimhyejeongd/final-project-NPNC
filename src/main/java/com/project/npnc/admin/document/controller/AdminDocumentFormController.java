@@ -45,10 +45,20 @@ public class AdminDocumentFormController {
     
     	StorageFolder draggedFolder = service.selectStorageFolder((int)folderKeys.get("draggedFolder"));
     	StorageFolder targetFolder = service.selectStorageFolder((int)folderKeys.get("targetFolder"));
+    	
+    	int targetOrder = targetFolder.getFolderOrderBy();
+    	System.out.println(targetOrder);
+    	if(targetFolder.getFolderLevel()==1) targetOrder+=1;
+    	System.out.println(targetOrder);
 
+    	draggedFolder.setFolderOrderBy(targetOrder);
+    	
     	Map<String,Object>folderInfo = new HashMap<>();
     	folderInfo.put("draggedFolder", draggedFolder);
     	folderInfo.put("targetFolder", targetFolder);
+    	System.out.println(draggedFolder);
+    	System.out.println(targetFolder);
+    	service.increaseFolderOrder(folderInfo);
     	
     	int result = service.updateStorageGroup(folderInfo);
     	return ResponseEntity.ok(result);

@@ -64,9 +64,33 @@
 	
 	<update id="updateStorageGroup" parameterType="map">
 		UPDATE ER_STORAGE_FOLDER 
-		SET ER_FOLDER_GROUP = #{targetFolder.folderGroup}
+		SET ER_FOLDER_GROUP = #{targetFolder.folderGroup},
+			ER_FOLDER_ORDERBY= #{draggedFolder.folderOrderBy}
+		
 		WHERE ER_FOLDER_KEY = #{draggedFolder.folderKey}
 	</update>
+	
+<update id="increaseFolderOrder" parameterType="map">
+    <choose>
+        <when test="draggedFolder.folderOrderBy &lt; targetFolder.folderOrderBy">
+            UPDATE ER_STORAGE_FOLDER
+            SET ER_FOLDER_ORDERBY = ER_FOLDER_ORDERBY-1
+            WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
+                AND ER_FOLDER_LEVEL = 2
+                AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
+                AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
+        </when>
+        <when test="draggedFolder.folderOrderBy &gt; targetFolder.folderOrderBy">
+            UPDATE ER_STORAGE_FOLDER
+            SET ER_FOLDER_ORDERBY = ER_FOLDER_ORDERBY+1
+            WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
+                AND ER_FOLDER_LEVEL = 2
+                AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
+                AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
+        </when>
+    </choose>
+</update>
+
 	
 	<delete id="removeFolder" parameterType="int">
 		DELETE FROM ER_STORAGE_FOLDER
