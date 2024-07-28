@@ -178,6 +178,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public List<Document> selectReferenceDocs(SqlSession session, int no) {
+		return session.selectList("document.selectReferenceDocs", no);
+	}
+
+	@Override
 	public List<Document> selectMyCompleteDocs(SqlSession session, int no) {
 		return session.selectList("document.selectMyCompleteDocs", no);
 	}

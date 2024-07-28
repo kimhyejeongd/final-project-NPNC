@@ -626,4 +626,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectRejectedDocs(int no) {
 		return dao.selectRejectedDocs(session, no);
 	}
+	@Override
+	public List<Document> selectReferenceDocs(int no) {
+		return dao.selectReferenceDocs(session, no);
+	}
 }
