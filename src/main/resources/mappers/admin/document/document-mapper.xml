@@ -69,12 +69,45 @@
 		WHERE ER_FOLDER_KEY = #{draggedFolderKey} 
 	</delete>
 	
+	<select id="createFolderGroup" resultType="int">
+		SELECT SEQ_ER_FOLDER_GROUP.NEXTVAL FROM DUAL
+	</select>
+	<insert id="insertFolder" parameterType="StorageFolder">
+		INSERT INTO ER_STORAGE_FOLDER(
+			ER_FOLDER_KEY,
+			ER_FOLDER_NAME,
+			ER_FOLDER_GROUP,
+			ER_FOLDER_LEVEL,
+			ER_FOLDER_USE_YN,
+			ER_FOLDER_ORDERBY
+		)VALUES(
+			SEQ_ER_STORAGE_FOLDER_KEY.NEXTVAL,
+			#{folderName},
+			#{folderGroup},
+			#{folderLevel},
+			#{useYn},
+			#{folderOrderBy}
+		)
+	</insert>
+	
+	<select id="selectFolderKey" resultType="int">
+		SELECT SEQ_ER_STORAGE_FOLDER_KEY.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<select id="selectFolderOrderBy" resultType="int" parameterType="int">
+		SELECT COUNT(*) 
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_GROUP = #{folderGroup}
+	</select>
+	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
         <result property="folderGroup" column="ER_FOLDER_GROUP" />
         <result property="folderLevel" column="ER_FOLDER_LEVEL" />
         <result property="useYn" column="ER_FOLDER_USE_YN" />   
+        <result property="folderOrderBy" column="ER_FOLDER_ORDERBY" />   
 	</resultMap>
     
     <resultMap id="adminDocument" type="adminDocument">

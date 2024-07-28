@@ -34,4 +34,23 @@ public class AdminDocumentService {
 	public int removeFolder(int draggedFolderKey) {
 		return dao.removeFolder(session,draggedFolderKey);
 	}
+	public int createFolderGroup() {
+		return dao.createFolderGroup(session);
+	}
+	public int selectFolderKey() {
+		return dao.selectFolderKey(session);
+	}
+	public int insertFolder(StorageFolder storageFolder) {
+    	int folderKey = dao.selectFolderKey(session);
+    	storageFolder.setFolderKey(folderKey);
+    	if(storageFolder.getFolderLevel()==1) {
+    		int folderGroup = dao.createFolderGroup(session);
+    		storageFolder.setFolderGroup(folderGroup+1);
+    	}else {
+    		int folderOrderBy = dao.selectFolderOrderBy(session,storageFolder.getFolderGroup());
+    		storageFolder.setFolderOrderBy(folderOrderBy);
+    	}
+    	System.out.println(storageFolder);
+		return dao.insertFolder(session, storageFolder);
+	}
 }

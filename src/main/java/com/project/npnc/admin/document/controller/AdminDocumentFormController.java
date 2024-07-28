@@ -43,13 +43,13 @@ public class AdminDocumentFormController {
     @PostMapping("/updateFolderOrder")
     public ResponseEntity<?> updateOrder(@RequestBody Map<String,Object>folderKeys) {
     
-
     	StorageFolder draggedFolder = service.selectStorageFolder((int)folderKeys.get("draggedFolder"));
     	StorageFolder targetFolder = service.selectStorageFolder((int)folderKeys.get("targetFolder"));
 
     	Map<String,Object>folderInfo = new HashMap<>();
     	folderInfo.put("draggedFolder", draggedFolder);
     	folderInfo.put("targetFolder", targetFolder);
+    	
     	int result = service.updateStorageGroup(folderInfo);
     	return ResponseEntity.ok(result);
     }
@@ -59,5 +59,11 @@ public class AdminDocumentFormController {
     	int result = service.removeFolder(draggedFolderKey);
     	System.out.println(draggedFolderKey);
     	return ResponseEntity.ok(result);
+    }
+    @PostMapping("/createFolder")
+    public ResponseEntity<?>createFolder(@RequestBody StorageFolder storageFolder ){
+    	System.out.println(storageFolder);
+    	service.insertFolder(storageFolder);
+    	return ResponseEntity.ok(storageFolder);
     }
 }

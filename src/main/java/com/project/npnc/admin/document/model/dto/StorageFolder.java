@@ -15,4 +15,5 @@ public class StorageFolder {
 	    private int folderGroup;
 	    private int folderLevel;
 	    private String useYn;
+	    private int folderOrderBy;
 }

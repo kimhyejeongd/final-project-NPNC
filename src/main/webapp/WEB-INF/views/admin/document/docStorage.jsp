@@ -123,16 +123,34 @@
                     <form id="addFolderForm">
                         <div class="mb-3">
                             <label for="folderName" class="form-label">폴더명</label>
-                            <input type="text" class="form-control" id="folderName" placeholder="폴더 이름 입력">
+                            <div>
+	                            <input type="text" class="form-control" id="folderName" placeholder="폴더 이름 입력">
+	                            <div class="form-group mb-3">
+								    <label for="folderType" class="form-label">분류</label>
+								    <select class="form-select" id="folderType">
+								        <option value="">선택하세요</option>
+								        <option value="main">대분류</option>
+								        <option value="sub">소분류</option>
+								    </select>
+								</div>
+                            </div>
+                            <div id="subCategoryMenu" class="form-group mb-3" style="display: none;">
+							    <label for="subCategoryName" class="form-label">대분류 선택</label>
+							    <select class="form-select" id="subCategoryName">
+							    	<c:forEach var="f" items="${folders}">
+							    		<c:if test="${f.folderLevel==1}">
+									        <option value="${f.folderGroup }" id="folderGroup">${f.folderName}</option>							    	
+							    		</c:if>
+							    	</c:forEach>
+							    </select>
+							</div>
                             <label for="use" class="form-label">사용 여부</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                            <div class="form-check" style="display:flex">
+                                <input class="form-check-input" type="radio" name="useYn" id="flexRadioDefault1" value="Y" checked>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     사용
                                 </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                <input class="form-check-input" type="radio" name="useYn" id="flexRadioDefault2" value="N">
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     비사용
                                 </label>
@@ -148,6 +166,60 @@
 
     <script>
         $(document).ready(function() {
+        	
+            // 폴더 추가 폼 제출 이벤트 처리
+            $('#addFolderForm').on('submit', function(e) {
+                e.preventDefault(); // 기본 폼 제출 동작을 막음
+
+                var folderName = $('#folderName').val();
+                var folderType = $('#folderType').val();
+                var useStatus = $('input[name="useYn"]:checked').val(); // 라디오 버튼 값 추출
+                var folderGroup = $('#folderGroup').val();
+
+                // 유효성 검사
+                if (!folderName || !folderType) {
+                    if (!folderName && !folderType) {
+                        alert("폴더명과 분류를 선택하세요.");
+                    } else if (!folderName) {
+                        alert("폴더명을 입력하세요.");
+                    } else {
+                        alert("분류를 선택하세요.");
+                    }
+                    return; // 폼 제출 중단
+                }
+				
+                var requestData = {
+                    folderName: folderName,
+                    folderLevel:folderType === 'sub' ? 2 : 1,
+                    useYn: useStatus,
+                    folderGroup: folderGroup
+                };
+
+                $.ajax({
+                    url: '${path}/admin/documentForm/createFolder', // 서버 요청 URL
+                    type: 'POST',
+                    data: JSON.stringify(requestData),
+                    contentType: 'application/json;charset=utf-8',
+                    success: function(response) {
+                        console.log('Folder added successfully:', response);
+                        // 성공 시 필요한 추가 동작을 여기에 작성
+                        // 예: 폴더 목록 갱신, 모달 닫기 등
+                        $('#addFolder').modal('hide');
+                        location.reload(); // 폴더 목록 갱신을 위해 페이지 새로 고침
+                    },
+                    error: function(response) {
+                        console.error('Error adding folder:', response);
+                    }
+                });
+            });
+            $('#folderType').on('change', function() {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'sub') {
+                    $('#subCategoryMenu').show(); // 대분류 선택 시 소분류 메뉴 표시
+                } else {
+                    $('#subCategoryMenu').hide(); // 소분류 선택 시 소분류 메뉴 숨김
+                }
+            });
             // 검색 입력 필드에 keyup 이벤트 추가
             $('#searchInput').on('keyup', function() {
                 var searchValue = $(this).val().toLowerCase();
