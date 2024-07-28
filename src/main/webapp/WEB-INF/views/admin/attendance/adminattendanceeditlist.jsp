@@ -27,9 +27,9 @@
 					 >   
 					              <select class="form-select input-fixed" id="searchType" name="searchType">
 					              	<option></option>
-					              	<option value="처리중">처리중</option>
-					              	<option value="승인">승인</option>
-					              	<option value="반려">반려</option>
+					              	<option value="처리중" <c:if test="${searchT eq '처리중'}">selected</c:if>>처리중</option>
+					              	<option value="승인" <c:if test="${searchT eq '승인'}">selected</c:if>>승인</option>
+					              	<option value="반려" <c:if test="${searchT eq '반려'}">selected</c:if>>반려</option>
 					              </select>
 		                          <div class="input-group">
 				                    <div class="input-group-prepend">
@@ -43,6 +43,7 @@
 				                      name="searchKey"
 				                      placeholder="Search ID ..."
 				                      class="form-control"
+				                      value="${searchK }"
 				                    />
 				                  </div>          
 				               </nav>		
@@ -97,6 +98,14 @@
 			</div>
 			</div>
 			<script>
+			
+				function fn_paging(pageNo) {
+			 	    console.log('오긴왔냐?');
+			 	    location.assign('${path}/admin/attendance/searchAdminAttendanceEdit?cPage=' + pageNo + '&searchKey=${searchK}&searchType=${searchT}');
+			 	    /* location.assign('${path}/${url}?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchType}&searchStartDate=${searchStartDate}&searchEndDate=${searchEndDate}'); */
+			 	    
+			 	}	
+				
 				const adminAttendanceEditDetail=(key)=> {
 					 let form = document.createElement("form");
 			            form.setAttribute("method", "post");

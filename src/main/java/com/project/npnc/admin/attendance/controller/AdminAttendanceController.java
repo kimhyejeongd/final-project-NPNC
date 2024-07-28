@@ -123,7 +123,7 @@ public class AdminAttendanceController {
 			String searchKey,
 			String searchType,
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "10") int numPerpage,
+			@RequestParam(defaultValue = "3") int numPerpage,
 			Model m) {
 		Map<String,Object> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);

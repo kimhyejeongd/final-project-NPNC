@@ -101,23 +101,13 @@
 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 	</div>
+	
  	<script>
-	function search_paging(pageNo,url,numPerpage,searchKey,searchType,searchStartDate,searchEndDate){
-		const queryParams = new URLSearchParams({
-	        cPage: pageNo,
-	        numPerpage: numPerpage,
-	        searchKey: searchKey,
-	        searchType: searchType,
-	        searchStartDate: searchStartDate,
-	        searchEndDate: searchEndDate
-	    }).toString();
-
-	    // URL을 조합
-	    
-
-	    // 페이지 이동
-	    location.assign("${path}/${url}");
-	}
+ 	function fn_paging(pageNo) {
+ 	    console.log('오긴왔냐?');
+ 	    location.assign('${path}/admin/attendance/searchAdminAttendance?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchT}&searchStartDate=${searchSD}&searchEndDate=${searchED}');
+ 	    
+ 	}	
 	</script> 
 	
 </body>

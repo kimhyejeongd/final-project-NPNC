@@ -37,9 +37,7 @@ public class AttendanceController{
 	private final PageFactory pageFactory;
 	private final SearchPageFactory searchPageFactory;
 	
-	
-	
-	
+
 	@GetMapping("/mainAttendance")
 	public String mainAttendance(
 			Authentication authentication,
@@ -48,7 +46,7 @@ public class AttendanceController{
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
-		return "attendance/mainAttendance";
+		return "/";
 	}
 	
 	
