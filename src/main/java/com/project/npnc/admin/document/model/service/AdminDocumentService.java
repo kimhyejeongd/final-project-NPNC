@@ -43,6 +43,7 @@ public class AdminDocumentService {
 	public int insertFolder(StorageFolder storageFolder) {
     	int folderKey = dao.selectFolderKey(session);
     	storageFolder.setFolderKey(folderKey);
+    	
     	if(storageFolder.getFolderLevel()==1) {
     		int folderGroup = dao.createFolderGroup(session);
     		storageFolder.setFolderGroup(folderGroup+1);
@@ -50,7 +51,7 @@ public class AdminDocumentService {
     		int folderOrderBy = dao.selectFolderOrderBy(session,storageFolder.getFolderGroup());
     		storageFolder.setFolderOrderBy(folderOrderBy);
     	}
-    	System.out.println(storageFolder);
+    	
 		return dao.insertFolder(session, storageFolder);
 	}
 }

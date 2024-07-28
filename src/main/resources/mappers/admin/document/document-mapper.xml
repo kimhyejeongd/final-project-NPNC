@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admindoc">
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
-		  SELECT * FROM ER_STORAGE_FOLDER ORDER BY ER_FOLDER_GROUP DESC, ER_FOLDER_LEVEL ASC
+		  SELECT * 
+		  FROM ER_STORAGE_FOLDER 
+		  ORDER BY ER_FOLDER_GROUP DESC, 
+		  			ER_FOLDER_LEVEL ASC,
+		  			er_folder_orderby asc
 	</select>
 	<select id="selectDocAll" resultMap="adminDocument" parameterType="int">
 			SELECT 
@@ -48,7 +52,7 @@
 	
 	
 	<select id="selectStorageFolder" resultMap="StorageFolder" parameterType="int">
-			SELECT
+		SELECT
 			ER_FOLDER_KEY,
 			ER_FOLDER_NAME,
 			ER_FOLDER_GROUP,
@@ -70,7 +74,9 @@
 	</delete>
 	
 	<select id="createFolderGroup" resultType="int">
-		SELECT SEQ_ER_FOLDER_GROUP.NEXTVAL FROM DUAL
+		SELECT COUNT(*)
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_LEVEL=1
 	</select>
 	<insert id="insertFolder" parameterType="StorageFolder">
 		INSERT INTO ER_STORAGE_FOLDER(

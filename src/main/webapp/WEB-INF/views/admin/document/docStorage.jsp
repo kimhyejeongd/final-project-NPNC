@@ -63,18 +63,18 @@
                                         <c:set var="folderJson" value="${f}"/>
                                         <div class="accordion-item">
                                             <c:if test="${f.folderLevel==1}">
-                                                <h2 class="accordion-header droppable" data-folder="${folderJson}" data-folder-key="${f.folderKey}">
+                                                <a href="#" class="accordion-header folder-item droppable" data-folder="${folderJson}" data-folder-key="${f.folderKey}">
                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
                                                         <i class="fas fa-bookmark me-2"></i>
                                                         ${f.folderName}
                                                     </button>
-                                                </h2>
+                                                </a>
                                             </c:if>
                                             <div id="panelsStayOpen-collapse${f.folderKey}" class="accordion-collapse collapse show">
                                                 <div class="accordion-body" style="padding: 0!important;">
                                                     <div class="list-group" id="memberlist">
                                                         <c:if test="${f.folderLevel==2}">
-                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder='${folderJson}' data-folder-level='${f.folderLevel}'> 
+                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item accordion-header droppable" data-folder-key="${f.folderKey}" data-folder='${folderJson}' data-folder-level='${f.folderLevel}'> 
                                                                 <i class="fas fa-user me-2"></i>
                                                                 ${f.folderName}
                                                             </a>
@@ -139,7 +139,7 @@
 							    <select class="form-select" id="subCategoryName">
 							    	<c:forEach var="f" items="${folders}">
 							    		<c:if test="${f.folderLevel==1}">
-									        <option value="${f.folderGroup }" id="folderGroup">${f.folderName}</option>							    	
+									        <option value="${f.folderGroup}" id="folderGroup_${f.folderKey }">${f.folderName}</option>							    	
 							    		</c:if>
 							    	</c:forEach>
 							    </select>
@@ -166,7 +166,6 @@
 
     <script>
         $(document).ready(function() {
-        	
             // 폴더 추가 폼 제출 이벤트 처리
             $('#addFolderForm').on('submit', function(e) {
                 e.preventDefault(); // 기본 폼 제출 동작을 막음
@@ -174,7 +173,7 @@
                 var folderName = $('#folderName').val();
                 var folderType = $('#folderType').val();
                 var useStatus = $('input[name="useYn"]:checked').val(); // 라디오 버튼 값 추출
-                var folderGroup = $('#folderGroup').val();
+                var folderGroup = $('#subCategoryName').val();
 
                 // 유효성 검사
                 if (!folderName || !folderType) {
