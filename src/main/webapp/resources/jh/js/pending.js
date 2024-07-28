@@ -5,11 +5,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     //const table = document.getElementById('docTable');
 
-   $("#waitingTable").on('click', "button", function(e) {
+   $("#pendingTable").on('click', "button", function(e) {
         e.stopPropagation();
     }); 
     
-    $("#waitingTable").on('click', function(event) {
+    $("#pendingTable").on('click', function(event) {
         const target = event.target;
      // 버튼이 클릭된 경우 이벤트 전파를 막고 함수를 종료
    		 if (target.tagName.toLowerCase() === 'button'|| (target.tagName.toLowerCase() === 'input' && target.type === 'button')) {

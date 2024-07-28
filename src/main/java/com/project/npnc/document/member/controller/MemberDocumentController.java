@@ -146,6 +146,16 @@ public class MemberDocumentController {
 		m.addAttribute("rejectedlist", result);
 	}
 	
+//	참조 문서 목록
+	@GetMapping("/list/referer/reference")
+	public void selectReferenceDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원의 참조 문서 조회 -----");
+		List<Document> result = serv.selectReferenceDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("referencelist", result);
+	}
+	
 	
 //	전자문서 상세보기
 	@PostMapping("/view/docDetail")
@@ -232,6 +242,18 @@ public class MemberDocumentController {
 	//결재자 선택팝업 호출, 조직도와 저장된 결재라인 출력
 	@GetMapping("/write/approver")
 	public void docApprover(Model m) {
+		List<OrganizationDto> list = orserv.selectOrganAll();
+		log.debug("----- 결재자 선택 -----");
+		m.addAttribute("list", list);
+		log.debug("{}", list); 
+		//저장된 결재라인들 출력
+		List<ApproverLineStorage> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
+		m.addAttribute("aplist", ap);
+		log.debug("{}", ap); 
+	}
+	//보관함 선택 팝업 호출
+	@GetMapping("/write/storage")
+	public void docStorage(Model m) {
 		List<OrganizationDto> list = orserv.selectOrganAll();
 		log.debug("----- 결재자 선택 -----");
 		m.addAttribute("list", list);

@@ -171,7 +171,7 @@ SELECT
 			d.er_doc_create_date,
 			a1.er_approval_orderby;
 
-		--오라클 현재 버전에서 JSON_ARRAYAGG 지원안함 12c 이상만 활용가능
+--오라클 현재 버전에서 JSON_ARRAYAGG 지원안함 12c 이상만 활용가능
 --SELECT 
 --    d.ER_DOC_KEY, 
 --    d.ER_DOC_SERIAL_KEY, 
@@ -380,7 +380,6 @@ SELECT * from ER_REFERER er ;
 SELECT * FROM MEMBER;
 SELECT * FROM ER_AL_STORAGE;
 SELECT * FROM ER_APROVER ea ;
-SELECT * FROM ER_REFERENCE er ;
 SELECT * FROM ER_FILE ORDER BY ER_FILE_UPLOAD_DATE desc;
 SELECT * FROM ER_STORAGE es ;
 SELECT * FROM DEPARTMENT d ;

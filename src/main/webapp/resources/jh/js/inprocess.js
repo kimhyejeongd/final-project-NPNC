@@ -36,7 +36,7 @@ function modal(no){
 							buttonsStyling: false,
 							reverseButtons: false
 						}).then(() => {
-							location.assign(sessionStorage.getItem("path") + `/document/list/retrieve`)
+							location.assign(sessionStorage.getItem("path") + `/document/list/employee/retrieve`)
 						});
 					}
 				}

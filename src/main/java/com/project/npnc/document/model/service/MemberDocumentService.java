@@ -35,6 +35,7 @@ public interface MemberDocumentService {
 	List<Document> selectMyCompleteDocs(int no);
 	List<Document> selectCompleteDocs(int no);
 	List<Document> selectRejectedDocs(int no);
+	List<Document> selectReferenceDocs(int no);
 	int retrieveDoc(String docSerial) throws Exception;
 	int deleteDraftDoc(int docKey) throws Exception;
 	
