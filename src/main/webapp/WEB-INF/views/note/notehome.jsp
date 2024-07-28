@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -114,6 +117,27 @@
 	.modalDetailGo:hover {
             cursor: pointer; /* 커서를 포인터로 변경 */
         }
+	
+	.noteSearchBar{
+	
+	}
+	
+	.noteTableFooter{
+		display: flex;
+		justify-content: center; /* 수평 중앙 정렬 */
+		align-items: center; /* 수직 중앙 정렬 (선택 사항) */
+		
+	}
+	
+
+	#deleteButton {
+	    margin-right: auto; /* 왼쪽으로 정렬 */
+	}
+
+	#pageBarList {
+	    margin-left: auto; /* 오른쪽으로 정렬 */
+	}
+	
 	</style>
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
@@ -165,22 +189,112 @@
               </li>
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-layer-group"></i>
+                  <i class="fas fa-file-upload"></i>
                   <p>받은 쪽지함</p>
                 </a>
                
               </li>
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-th-list"></i>
+                  <i class="fas fa-file-download"></i>
                   <p>보낸 쪽지함</p>
                 </a>
                 
               </li>
-              
-             
-              
-            
+			 
+			   <li class="nav-item">
+                  <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                    <i class="fas fa-street-view"></i>
+                    <p>내게 쓴 메일함</p>
+                  </a>
+                  
+                </li>
+				<li class="nav-item">
+	                <a data-bs-toggle="collapse" href="#base">
+					  <i class="fas fa-folder-open"></i>
+	                  <p>보관 메일함</p>
+	                  <span class="caret"></span>
+	                </a>
+	                <div class="collapse" id="base">
+	                  <ul class="nav nav-collapse">
+	               
+	                    <li>
+	                      <a href="components/avatars.html">
+	                        <span class="sub-item">Avatars</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/buttons.html">
+	                        <span class="sub-item">Buttons</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/gridsystem.html">
+	                        <span class="sub-item">Grid System</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/panels.html">
+	                        <span class="sub-item">Panels</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/notifications.html">
+	                        <span class="sub-item">Notifications</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/sweetalert.html">
+	                        <span class="sub-item">Sweet Alert</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/font-awesome-icons.html">
+	                        <span class="sub-item">Font Awesome Icons</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/simple-line-icons.html">
+	                        <span class="sub-item">Simple Line Icons</span>
+	                      </a>
+	                    </li>
+	                    <li>
+	                      <a href="components/typography.html">
+	                        <span class="sub-item">Typography</span>
+	                      </a>
+	                    </li>
+	                  </ul>
+	                </div>
+	              </li>       
+				 <li class="nav-item">
+	                 <a data-bs-toggle="collapse" href="#trash">
+						<i class="fas fa-trash-alt"></i>
+	                   <p>휴지통</p>
+	                   <span class="caret"></span>
+	                 </a>
+	                 <div class="collapse" id="trash">
+	                   <ul class="nav nav-collapse">
+	                
+	                     <li>
+	                       <a href="components/avatars.html">
+	                         <span class="sub-item">받은 메일함</span>
+	                       </a>
+	                     </li>
+	                     <li>
+	                       <a href="components/buttons.html">
+	                         <span class="sub-item">보낸 메일함</span>
+	                       </a>
+	                     </li>
+	                     <li>
+	                       <a href="components/gridsystem.html">
+	                         <span class="sub-item">내게 쓴 메일함</span>
+	                       </a>
+	                     </li>
+	                     
+	                     
+	                   </ul>
+	                 </div>
+	               </li>
               
             
             </ul>
@@ -211,10 +325,27 @@
                 <!-- <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a> -->
               </div>
             </div>
+
           	<div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4 class="card-title">Basic</h4>
+					<div class="noteSearchBar">
+						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
+					        <div class="input-group">
+					          <div class="input-group-prepend">
+					            <button type="submit" class="btn btn-search pe-1">
+					              <i class="fa fa-search search-icon"></i>
+					            </button>
+					          </div>
+					          <input
+					            type="text"
+					            placeholder="제목으로 검색하여 주세요"
+					            class="form-control"
+								id="searchNoteBarText"
+					          />
+					        </div>
+					    </nav>
+					</div>	
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
@@ -251,7 +382,7 @@
                         </tbody>
                         
                       </table>
-                      <div>
+                      <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
 	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
 	                      </div>
@@ -489,6 +620,7 @@
 			<!-- 첨부파일 -->
 			 <script>
 			 /* 개별발송 파일 추가 로직*/
+			 $(document).ready(
 		    	const addDelFunction=(function(){
 		    		let count=2;
 		    		const addFileform=()=>{
@@ -516,7 +648,7 @@
 		    	})();
 		    	const fn_addFile=addDelFunction.addFileform;
 		    	const fn_delFile=addDelFunction.delFileform;
-		    	
+		    	);
 		    	
 		    	
 		    /* 전체발송 파일 추가 로직  */
@@ -580,6 +712,7 @@
           	
          	/* 체크되어있는 체크박스의 값을 구해오는 로직 */
           	function deleteSendGo(){
+			
           		 var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
           		 let checkDeleteValue=[];
            	    for (var checkbox of checkboxes) {
@@ -599,7 +732,7 @@
 							memberKey : memberKey
 							},
 					success : function(response){
-						
+						fn_paging(1);
 					    
 					}
 				});

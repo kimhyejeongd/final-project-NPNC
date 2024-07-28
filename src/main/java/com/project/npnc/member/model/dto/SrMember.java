@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class SrMember {
 	private int memberKey;
 	private String departmentKey;
 	private String jobKey;

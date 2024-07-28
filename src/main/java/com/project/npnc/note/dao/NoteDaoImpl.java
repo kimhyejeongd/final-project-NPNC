@@ -13,14 +13,29 @@ import com.project.npnc.note.dto.NoteSendDto;
 
 @Repository
 public class NoteDaoImpl implements NoteDao {
+	
+	//내게 쓴 쪽지함 	
+	@Override
+	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String, Integer> page) {
+		return session.selectList("note.selectNoteMeAll", page);
+	
+		
+	}
 
-//	보낸 쪽지 삭제, 업데이트 구문
+	@Override
+	public int selectNoteMeTotalData(SqlSession session, int memberKey) {
+		// TODO Auto-generated method stub
+		return session.selectOne("note.selectNoteMeTotalData",memberKey);
+	}
+
+	//	보낸 쪽지 삭제, 업데이트 구문
 	@Override
 	public int noteSendDelete(SqlSession session, int checkDeleteValue) {
 		
 		return session.update("note.noteSendDelete", checkDeleteValue);
 	}
-// 받은 쪽지 삭제, 업데이트 구문
+	
+	// 받은 쪽지 삭제, 업데이트 구문
 	@Override
 	public int noteRecDelete(SqlSession session, Map<String, Integer> param) {
 		

@@ -64,12 +64,23 @@
 		
 	</select>
 	<select id="noteSelectAll" resultMap="noteRecMap">
-		SELECT * FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER USING (POST_MSG_REC_KEY) 
-		WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N' ORDER BY POST_MSG_REC_KEY DESC
+		SELECT * 
+		FROM POST_MESSAGE_RECEPTION 
+		JOIN POST_MESSAGE_RECEIVER 
+		USING (POST_MSG_REC_KEY) 
+		WHERE MEMBER_REC_KEY=#{memberKey} 
+		AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+		AND DELETE_STATUS='N' 
+		ORDER BY POST_MSG_REC_KEY DESC
 	</select>
 	<select id="noteSelectTotalData" resultType="_int" parameterType="_int">
-		SELECT COUNT(*) FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER 
-		USING (POST_MSG_REC_KEY)WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N'
+		SELECT COUNT(*) 
+		FROM POST_MESSAGE_RECEPTION 
+		JOIN POST_MESSAGE_RECEIVER 
+		USING (POST_MSG_REC_KEY)
+		WHERE MEMBER_REC_KEY=#{memberKey} 
+		AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+		AND DELETE_STATUS='N'
 
 	</select>
 	<select id="noteSelectOne" resultMap="noteRecMap" parameterType="map" >
@@ -146,5 +157,27 @@
 	WHERE POST_MSG_REC_KEY = #{checkDeleteValue}
 	AND MEMBER_REC_KEY =#{memberKey}
 	</update>
+	
+	<!-- 내게 쓴 쪽지함 매퍼-->
+	<select id="selectNoteMeAll" parameterType="noteRecMap">
+	SELECT * 
+	FROM POST_MESSAGE_RECEPTION 
+	JOIN POST_MESSAGE_RECEIVER 
+	USING (POST_MSG_REC_KEY) 
+	WHERE MEMBER_REC_KEY=#{memberKey} 
+	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND DELETE_STATUS='N' 
+	ORDER BY POST_MSG_REC_KEY DESC
+	</select>
+	
+	<select id="selectNoteMeTotalData" parameterType="_int">
+	SELECT COUNT(*) 	
+	FROM POST_MESSAGE_RECEPTION 
+	JOIN POST_MESSAGE_RECEIVER 
+	USING (POST_MSG_REC_KEY) 
+	WHERE MEMBER_REC_KEY=#{memberKey} 
+	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND DELETE_STATUS='N' 
+	</select>
 	
 </mapper>

@@ -25,4 +25,6 @@ public interface NoteDao {
 	public int noteFileInput(SqlSession session, NoteFileDto noteFile);
 	public int noteSendDelete(SqlSession session, int checkDeleteValue);
 	public int noteRecDelete(SqlSession session, Map<String, Integer> param);
+	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String,Integer> page) ;
+	public int selectNoteMeTotalData(SqlSession session, int memberKey);
 }

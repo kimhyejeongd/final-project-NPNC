@@ -2,7 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<typeAliases>
-		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
+		<typeAlias type="com.project.npnc.member.model.dto.SrMember" alias="memberSr"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
 		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
