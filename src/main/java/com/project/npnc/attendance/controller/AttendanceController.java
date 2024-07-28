@@ -38,16 +38,14 @@ public class AttendanceController{
 	private final SearchPageFactory searchPageFactory;
 	
 
-	@GetMapping("/mainAttendance")
-	public String mainAttendance(
-			Authentication authentication,
-			Model m) {
-		int memberKey =memberService.selectMemberKeyById(authentication.getName());
-		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
-		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
-		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
-		return "/";
-	}
+	/*
+	 * @GetMapping("/mainAttendance") public String mainAttendance( Authentication
+	 * authentication, Model m) { int memberKey
+	 * =memberService.selectMemberKeyById(authentication.getName()); Attendance
+	 * attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
+	 * m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+	 * m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd()); return "/"; }
+	 */
 	
 	
 	@Scheduled(cron="0 0 23 1 * ?")
@@ -161,7 +159,7 @@ public class AttendanceController{
 	@GetMapping("/selectAttendanceAll")
 	public String selectAttendanceAll(
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "2") int numPerpage,
+			@RequestParam(defaultValue = "5") int numPerpage,
 			Authentication authentication,
 			Model m){
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
@@ -255,7 +253,7 @@ public class AttendanceController{
 	@GetMapping("/searchAttendanceEdit")
 	public String searchAttendanceEdit(
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "2") int numPerpage,
+			@RequestParam(defaultValue = "5") int numPerpage,
 			String searchType,
 			Authentication authentication,
 			Model model) {
@@ -273,7 +271,7 @@ public class AttendanceController{
 	@GetMapping("/searchAttendance")
 	public String searchAttendance(
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "3") int numPerpage,
+			@RequestParam(defaultValue = "5") int numPerpage,
 			String searchType,
 			String searchStartDate,
 			String searchEndDate,

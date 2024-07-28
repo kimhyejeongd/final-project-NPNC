@@ -7,10 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
 <%--  	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 --%>
@@ -97,13 +95,13 @@
 		                         
 		                        </tbody>
 		                      </table>
+		              		<div>${pagebar}</div>
 		                    </div>
 		                    	  	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#formModal">
 								    	사원 등록
 								  	</button>
 					  			<%-- <button onclick="location.assign('${path}/admin/member/insertmember.do')" class="btn btn-success btn-round" >등록</button> --%>
 		                  </div>
-		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
 			</div>

@@ -46,7 +46,6 @@ public class AdminMemberController {
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,			
 			Model m){
-		
 		//페이징처리
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectMemberCount();
@@ -122,7 +121,7 @@ public class AdminMemberController {
 //	}
 	
 	@GetMapping("/updatemember")
-	public ResponseEntity<Map<String,AdminMember>> updateMember(Model m,int memberKey) {
+	public ResponseEntity<Map<String,AdminMember>> updateMember(int memberKey) {
 		AdminMember member =service.selectMemberByNo(memberKey);
 		Map<String,AdminMember> response =new HashMap<>();
 		response.put("member", member);

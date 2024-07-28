@@ -12,8 +12,7 @@
 
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
-	<div>
-	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+<%-- 	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 --%>
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
@@ -74,11 +73,14 @@
 				                            <td>${a.attendanceEditDate}</td>
 				                            <td>${a.attendanceEditRequestDate }</td>
 				                            <td>${a.attendanceEditStartEnd }</td>
-				                            <td>${a.attendanceEditBeforeTime }</td>
-				                            <td>${a.attendanceEditAfterTime}</td>
+				                            <td>${a.attendanceEditBeforeTime.substring(11, 19)}</td>
+          									<td>${a.attendanceEditAfterTime.substring(11, 19)}</td>
 				                            <td>${a.attendanceEditState}</td>
 				                            <td>
 				                            	<button onclick="adminAttendanceEditDetail(${a.attendanceEditKey})" class="btn btn-success">상세</button>
+				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#formModal" data-attendanceEdit-key="${a.attendanceEditKey}">
+											    	상세화면
+											  	</button>
 				                            </td>
 				                          </tr>
 			                        </c:forEach>
@@ -89,15 +91,67 @@
 		                         	</tr>
 		                         	
 		                         </c:if>
-		                         
 		                        </tbody>
 		                      </table>
 		              		<div>${pagebar}</div>
 		                </div>
 		              </div>
 			</div>
-			</div>
+		</div>
+		
+			<!--상세 모달 정의 -->
+
+			<%-- <%@ include file="/WEB-INF/views/admin/member/insertmodal.jsp" %> --%>
+	  		<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %> --%>
+	  		
+	  		
+	  		
+	</div>
+<!-- Bootstrap JS and dependencies -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+  
+
+  
+  
+  
 			<script>
+			
+			$(document).ready(function() {
+			    $('#formModal').on('show.bs.modal', function (event) {
+			        var button = $(event.relatedTarget); // 버튼을 클릭한 버튼을 참조합니다.
+			        var attendanceEditKey = button.data('attendanceeditkey'); // data-attendanceeditkey 속성의 값을 가져옵니다.
+			        
+			        // AJAX를 사용하여 서버에서 데이터 가져오기
+			        $.ajax({
+			            url: '${path}/admin/attendance/adminAttendanceEditDetail',
+			            type: 'POST',
+			            data: { attendanceEditKey: attendanceEditKey },
+			            success: function(data) {
+			                // 모달에 데이터 설정
+			                $('#attendanceEditKey').val(data.attendanceEditKey);
+			                $('#attendanceEditMember').val(data.attendanceEditMember);
+			                $('#attendanceEditDate').val(data.attendanceEditDate);
+			                $('#attendanceEditRequestDate').val(data.attendanceEditRequestDate);
+			                $('#attendanceEditBeforeState').val(data.attendanceEditBeforeState);
+			                $('#attendanceEditBeforeTime').val(data.attendanceEditBeforeTime);
+			                $('#attendanceEditStartEnd').val(data.attendanceEditStartEnd);
+			                $('#attendanceEditAfterTime').val(data.attendanceEditAfterTime);
+			                $('#attendanceEditAfterState').val(data.attendanceEditAfterState);
+			                $('#attendanceEditRequest').val(data.attendanceEditRequest);
+			                $('#attendanceEditOpinion').val(data.attendanceEditOpinion);
+			                $('#attendanceKey').val(data.attendance.attendanceKey);
+			            },
+			            error: function() {
+			                alert('Failed to fetch data.');
+			            }
+			        });
+			    });
+			});
+			
+			
+			
 			
 				function fn_paging(pageNo) {
 			 	    console.log('오긴왔냐?');
