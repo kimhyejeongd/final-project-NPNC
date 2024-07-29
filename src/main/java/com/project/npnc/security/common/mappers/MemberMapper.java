@@ -35,7 +35,12 @@ public interface MemberMapper {
     })
     List<Member> selectMemberAll();
     
-    @Select("SELECT * FROM MEMBER WHERE MEMBER_ID=#{userId}")
+//  @Select("SELECT * FROM MEMBER WHERE MEMBER_ID=#{userId}")
+    @Select("SELECT M.*, D.DEPARTMENT_NAME, J.JOB_NAME " +
+            "FROM MEMBER M " +
+            "JOIN DEPARTMENT D ON M.DEPARTMENT_KEY = D.DEPARTMENT_KEY " +
+            "JOIN JOB J ON M.JOB_KEY = J.JOB_KEY " +
+            "WHERE M.MEMBER_ID = #{userId}")
     @Results({
         @Result(property = "memberKey", column = "MEMBER_KEY"),
         @Result(property = "departmentKey", column = "DEPARTMENT_KEY"),
@@ -54,7 +59,8 @@ public interface MemberMapper {
         @Result(property = "memberGender", column = "MEMBER_GENDER"),
         @Result(property = "memberState", column = "MEMBER_STATE"),
         @Result(property = "memberBirthdate", column = "MEMBER_BIRTHDATE"),
-        @Result(property = "departmentName", column = "DAPARTMENTNAME")
+        @Result(property = "departmentName", column = "DEPARTMENT_NAME"),
+        @Result(property = "jobName", column = "JOB_NAME")
 
     })
     Member selectMemberById(String userId);

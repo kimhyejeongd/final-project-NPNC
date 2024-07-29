@@ -193,6 +193,7 @@
 
 <script>
 $(document).ready(function() {
+	
 	// 파일 선택 버튼과 파일 입력 필드
     const fileBtn = document.getElementById('fileBtn');
     const fileInput = document.getElementById('formFile');
@@ -247,7 +248,6 @@ $(document).ready(function() {
 	
 	 var ui = $.summernote.ui;
 	//기안 작성
-	<%-- var table = '<%= request.getAttribute("html") != null ? request.getAttribute("html") : "" %>'; --%>
 	var table = `<c:out value="${html}" escapeXml="false"/>`;
 
 	// Initialize Summernote
@@ -353,6 +353,7 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
 	$("#savedraftbtn").click(function() {
 		Swal.fire({
 			title: '임시저장',

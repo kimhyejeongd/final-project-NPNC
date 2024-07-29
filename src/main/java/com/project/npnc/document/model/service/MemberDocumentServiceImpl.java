@@ -634,4 +634,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectReferenceDocs(int no) {
 		return dao.selectReferenceDocs(session, no);
 	}
+	@Override
+	public int selectRemainingVac(int memberKey) {
+		return dao.selectRemainingVac(session, memberKey);
+	}
 }

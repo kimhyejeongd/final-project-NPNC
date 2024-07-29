@@ -1013,7 +1013,7 @@
 			er.ER_REFERER_KEY,
 			er.ER_DOC_SERIAL_KEY,
 			er.ER_REFERER_TEAM_KEY,
-			d2.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
+			d3.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
 			er.ER_REFERER_JOB_KEY,
 			j2.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
@@ -1030,6 +1030,8 @@
 			job j2 ON er.ER_REFERER_JOB_KEY = j2.JOB_KEY 
 		LEFT JOIN
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+		LEFT JOIN
+			DEPARTMENT d3 ON er.ER_REFERER_TEAM_KEY = d3.DEPARTMENT_KEY 
         LEFT JOIN 
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
 		WHERE  
@@ -1593,4 +1595,14 @@
 	         null
             )
 	</insert>
+	
+	<!-- 휴가 기안시 잔여 연차 확인 -->
+	<select id="selectRemainingVac" resultType="int" parameterType="int">
+		SELECT
+			MEMBER_VAC_REMAINING
+		FROM
+			MEMBER_VACATION
+		WHERE
+			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+	</select>
 </mapper>

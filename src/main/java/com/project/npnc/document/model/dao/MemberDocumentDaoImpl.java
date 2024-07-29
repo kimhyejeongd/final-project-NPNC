@@ -168,6 +168,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int selectRemainingVac(SqlSession session, int memberKey) {
+		return session.selectOne("document.selectRemainingVac", memberKey);
+	}
+
+	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
 	}

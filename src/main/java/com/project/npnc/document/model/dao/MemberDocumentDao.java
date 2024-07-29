@@ -61,5 +61,5 @@ public interface MemberDocumentDao {
 	List<ApproverLineStorage> selectApproverLines(SqlSession session, int no);
 	List<Approver> selectDocApprovers(SqlSession session, String serial);
 	
-	
+	int selectRemainingVac(SqlSession session, int memberKey);
 }
