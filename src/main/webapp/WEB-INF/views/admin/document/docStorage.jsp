@@ -142,8 +142,8 @@
 							<input type="text" class="form-control" id="storageName" placeholder="보관함 이름 입력">
                     	</div>
                     	<div class="form-group mb-3">
-						    <label for="folderType" class="form-label">보관기한</label>
-						    <select class="form-select" id="folderType">
+						    <label for="storageFolderType" class="form-label">보관기한</label>
+						    <select class="form-select" id="storageFolderType">
 						        <option value="">선택하세요</option>
 						        <option value="1">1년</option>
 						        <option value="5">5년</option>
@@ -267,7 +267,7 @@
     
 
     <!-- Add Folder Modal -->
-    <div class="modal fade" id="updateStorage" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addFolder" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -407,7 +407,7 @@
                 e.preventDefault(); // 기본 폼 제출 동작을 막음
 
                 var storageName = $('#storageName').val();
-                var folderType = $('#folderType').val();
+                var folderType = $('#storageFolderType').val();
                 var selectedMember = $('.member-item.active').data('id'); // 선택된 멤버의 ID 가져오기
                 
                 if (!selectedFolderKey) {
