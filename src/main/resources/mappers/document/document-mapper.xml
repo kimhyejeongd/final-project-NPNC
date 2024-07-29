@@ -45,9 +45,9 @@
 		<id column="ER_REFERER_KEY" property="erRefererKey"/>
 		<result column="ER_DOC_SERIAL_KEY" property="erDocSerialKey"/>
 		<result column="ER_REFERER_TEAM_KEY" property="memberTeamKey"/>
-		<result column="DEPARTMENT_NAME" property="memberTeamName"/>
+		<result column="ER_REFERER_TEAM_NAME" property="memberTeamName"/>
 		<result column="ER_REFERER_JOB_KEY" property="memberJobKey"/>
-		<result column="JOB_NAME" property="memberJobName"/>
+		<result column="ER_REFERER_JOB_NAME" property="memberJobName"/>
 		<result column="ER_REFERER_NAME" property="memberName"/>
 		<result column="MEMBER_KEY" property="memberKey"/>
 	</resultMap>
@@ -1013,9 +1013,9 @@
 			er.ER_REFERER_KEY,
 			er.ER_DOC_SERIAL_KEY,
 			er.ER_REFERER_TEAM_KEY,
-			d2.DEPARTMENT_NAME,
+			d2.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
 			er.ER_REFERER_JOB_KEY,
-			j2.JOB_NAME,
+			j2.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
 			er.MEMBER_KEY
 		FROM   
@@ -1082,9 +1082,9 @@
 			er.ER_REFERER_KEY,
 			er.ER_DOC_SERIAL_KEY,
 			er.ER_REFERER_TEAM_KEY,
-			d2.DEPARTMENT_NAME,
+			d2.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
 			er.ER_REFERER_JOB_KEY,
-			j.JOB_NAME,
+			j.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
 			er.MEMBER_KEY
 		FROM   
@@ -1105,17 +1105,25 @@
 			ea.ER_APPROVAL_ORDERBY asc
 	</select>
 	<select id="selectReferer" parameterType="string" resultMap="refererMap">
-		SELECT
-			ER_REFERER_KEY,
-			ER_DOC_SERIAL_KEY,
-			ER_REFERER_TEAM_KEY,
-			ER_REFERER_JOB_KEY,
-			ER_REFERER_NAME,
-			MEMBER_KEY
+		SELECT 
+			r.ER_REFERER_KEY,
+			r.ER_DOC_SERIAL_KEY,
+			r.ER_REFERER_TEAM_KEY,
+			r.ER_REFERER_JOB_KEY,
+			r.ER_REFERER_NAME,
+			r.MEMBER_KEY,
+			j.JOB_KEY,
+			j.JOB_NAME,
+			d.DEPARTMENT_KEY,
+			d.DEPARTMENT_NAME
 		FROM
-			ER_REFERER
+			ER_REFERER r
+		LEFT JOIN 
+			JOB j on ER_REFERER_JOB_KEY = j.JOB_KEY
+		LEFT JOIN
+			DEPARTMENT d on ER_REFERER_TEAM_KEY = d.DEPARTMENT_KEY
 		WHERE
-			ER_DOC_SERIAL_KEY = #{erDocSerialKey}
+			r.ER_DOC_SERIAL_KEY = #{erDocSerialKey}
 	</select>
 	<!-- 기안 -->
 	<insert id="insertDoc" parameterType="document">
