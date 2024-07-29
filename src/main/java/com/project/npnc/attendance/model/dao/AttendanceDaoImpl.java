@@ -184,9 +184,9 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	}
 
 	@Override
-	public int updateAttendanceEditState(SqlSession session, int attendanceEditKey) {
+	public int updateAttendanceEditState(SqlSession session, AttendanceEdit attendanceEdit) {
 		// TODO Auto-generated method stub
-		return session.update("attendance.updateAttendanceEditState",attendanceEditKey);
+		return session.update("attendance.updateAttendanceEditState",attendanceEdit);
 	}
 
 	@Override

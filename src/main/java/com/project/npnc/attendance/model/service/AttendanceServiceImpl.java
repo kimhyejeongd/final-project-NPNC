@@ -252,7 +252,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public int updateAttendance(AttendanceEdit attendanceEdit) {
 		int result=attendanceDao.updateAttendance(session,attendanceEdit);
 		if(result>0) {
-			return attendanceDao.updateAttendanceEditState(session,attendanceEdit.getAttendanceEditKey());
+			return attendanceDao.updateAttendanceEditState(session,attendanceEdit);
 		}else {
 			session.rollback();
 			return 0;
