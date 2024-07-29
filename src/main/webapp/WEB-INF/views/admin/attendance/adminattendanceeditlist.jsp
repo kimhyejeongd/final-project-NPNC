@@ -78,7 +78,7 @@
 				                            <td>${a.attendanceEditState}</td>
 				                            <td>
 				                            	<button onclick="adminAttendanceEditDetail(${a.attendanceEditKey})" class="btn btn-success">상세</button>
-				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#formModal" data-attendanceEdit-key="${a.attendanceEditKey}">
+				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
 											    	상세화면
 											  	</button>
 				                            </td>
@@ -97,12 +97,15 @@
 		                </div>
 		              </div>
 			</div>
+			
+			<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>  --%>
+			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 		</div>
 		
 			<!--상세 모달 정의 -->
 
 			<%-- <%@ include file="/WEB-INF/views/admin/member/insertmodal.jsp" %> --%>
-	  		<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %> --%>
+	  		 <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>
 	  		
 	  		
 	  		
@@ -119,25 +122,27 @@
 			<script>
 			
 			$(document).ready(function() {
-			    $('#formModal').on('show.bs.modal', function (event) {
+			    $('#editformModal').on('show.bs.modal', function (event) {
 			        var button = $(event.relatedTarget); // 버튼을 클릭한 버튼을 참조합니다.
-			        var attendanceEditKey = button.data('attendanceeditkey'); // data-attendanceeditkey 속성의 값을 가져옵니다.
-			        
+			        var attendanceEditKey = button.data('member-key'); // data-attendanceeditkey 속성의 값을 가져옵니다.
+			        console.log(attendanceEditKey);
 			        // AJAX를 사용하여 서버에서 데이터 가져오기
 			        $.ajax({
 			            url: '${path}/admin/attendance/adminAttendanceEditDetail',
 			            type: 'POST',
 			            data: { attendanceEditKey: attendanceEditKey },
+			            dataType: 'json', // 서버 응답을 JSON으로 처리
 			            success: function(data) {
+			            	console.log(data);
 			                // 모달에 데이터 설정
 			                $('#attendanceEditKey').val(data.attendanceEditKey);
 			                $('#attendanceEditMember').val(data.attendanceEditMember);
 			                $('#attendanceEditDate').val(data.attendanceEditDate);
 			                $('#attendanceEditRequestDate').val(data.attendanceEditRequestDate);
 			                $('#attendanceEditBeforeState').val(data.attendanceEditBeforeState);
-			                $('#attendanceEditBeforeTime').val(data.attendanceEditBeforeTime);
+			             /*    $('#attendanceEditBeforeTime').val(data.attendanceEditBeforeTime); */
 			                $('#attendanceEditStartEnd').val(data.attendanceEditStartEnd);
-			                $('#attendanceEditAfterTime').val(data.attendanceEditAfterTime);
+			               /*  $('#attendanceEditAfterTime').val(data.attendanceEditAfterTime); */
 			                $('#attendanceEditAfterState').val(data.attendanceEditAfterState);
 			                $('#attendanceEditRequest').val(data.attendanceEditRequest);
 			                $('#attendanceEditOpinion').val(data.attendanceEditOpinion);
@@ -176,7 +181,7 @@
 			            form.submit();
 				}
 		</script>	
-		<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+		
 		
 </body>
 </html>

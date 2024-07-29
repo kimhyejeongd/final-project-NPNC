@@ -67,7 +67,7 @@ public class AdminAttendanceController {
 		System.out.println("admin : "+attendanceEdit);
 		Map<String,AttendanceEdit> response =new HashMap<>();
 		response.put("attendanceEdit", attendanceEdit);
-		System.out.println();
+		System.out.println("test");
 		return ResponseEntity.ok(response);
 	}
 	

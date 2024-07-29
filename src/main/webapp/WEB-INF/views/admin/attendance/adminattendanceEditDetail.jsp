@@ -2,17 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>	
-<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="updateformModalLabel" aria-hidden="true">
+<div class="modal fade" id="editformModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
 	    <div class="modal-dialog modal-lg">
 	      <div class="modal-content">
 	        <div class="modal-header">
-	          <h5 class="modal-title" id="formModalLabel">사원 등록</h5>
+	          <h5 class="modal-title" id="formModalLabel">사원 수정</h5>
 	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	            <span aria-hidden="true">&times;</span>
 	          </button>
 	        </div>
-				<div class="modal-body">
-				<form action="${path}/admin/attendance/updateAttendance" method="post">
+        <div class="modal-body">
+			<form action="${path}/admin/attendance/updateAttendance" method="post">
 				<div class="container">
          		 <div class="page-inner">
 				<div class="form-group">
@@ -167,7 +167,7 @@
 		                              id="attendanceEditRequest"
 		                              name="attendanceEditRequest"
 		                             readonly
-		                            >${attendanceEdit.attendanceEditRequest }</textarea>
+		                            ><%-- ${attendanceEdit.attendanceEditRequest } --%></textarea>
 		                          </div>
 		           	</div>
 		           	
@@ -182,40 +182,41 @@
 		                              id="attendanceEditOpinion"
 		                              name="attendanceEditOpinion"
 		                              required
-		                              <c:if test="${not empty attendanceEdit.attendanceEditOpinion}">
+		                             <%--  <c:if test="${not empty attendanceEdit.attendanceEditOpinion}"> --%>
 		                              	readonly
-		                              </c:if>
-		                            >${attendanceEdit.attendanceEditOpinion}</textarea>
+		                             <%--  </c:if> --%>
+		                            ><%-- ${attendanceEdit.attendanceEditOpinion} --%></textarea>
 		                          </div>
 		           	</div>
 		           		
 		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
 		           		<input type="hidden" id="attendanceKey" name="attendanceKey" <%-- value="${attendanceEdit.attendance.attendanceKey }" --%>>
 		           		
-		          	<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+		          	<%-- <c:if test="${empty attendanceEdit.attendanceEditOpinion}"> --%>
 			           	<button
 						  	type="submit"
 						 	class="btn btn-success"
 			 				data-color="dark"
 						>승인</button>
-					</c:if>
+					<%-- </c:if> --%>
 			</div>
-			<div class="modal-footer">
-	          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-	        </div>
 			</div>
 		   </div>
 		</form>		
 		</div>
-	   </div>	
-      </div>					
-					<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
-					<div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+					<%-- <c:if test="${empty attendanceEdit.attendanceEditOpinion}"> --%>
+					<%-- <div>
 	         		<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
 					반려</button>
-					</div>
-					</c:if>
-	 </div>			
+					</div> --%>
+					<%-- </c:if> --%>
+		
 					
 					
 <!-- 				<script>

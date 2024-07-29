@@ -7,7 +7,7 @@
 	      <div class="modal-content">
 	        <div class="modal-header">
 	          <h5 class="modal-title" id="formModalLabel">사원 수정</h5>
-	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <button type="button" class="close" data-dismiss="updatemodal" aria-label="Close">
 	            <span aria-hidden="true">&times;</span>
 	          </button>
 	        </div>
