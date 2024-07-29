@@ -853,7 +853,7 @@
           }
             
             function connect() {
-		        let socket = new SockJS('http://localhost:8080/ws-stomp');
+		        let socket = new SockJS('${path}/ws-stomp');
 		        stompClient = Stomp.over(socket);
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
 		            setConnected(true);

@@ -105,10 +105,41 @@
                         </thead>
                         <tbody id="docTableBody"></tbody>
                     </table>
+                    <div style="display: ruby-text; margin-top: 10px;">
+						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#addStorage">보관함 추가</button>
+                    </div>
                 </div>
             </div>
         </div>
         <div id="dropZone" class="drop-zone">폴더를 여기로 드래그해서 삭제</div> <!-- 드롭 존 추가 -->
+    </div>
+    <div class="modal fade" id="addStorage">
+    <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    	<h3 class="modal-title">보관함 추가</h3>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+                 <div class="modal-body">
+                    <form id="addStorageForm">
+                    	<div class="mb-3">
+							<label for="storageName" class="form-label">폴더명</label>
+							<input type="text" class="form-control" id="storageName" placeholder="폴더 이름 입력">
+                    	</div>
+                    	<div class="form-group mb-3">
+						    <label for="folderType" class="form-label">보관기한</label>
+						    <select class="form-select" id="folderType">
+						        <option value="">선택하세요</option>
+						        <option value="1">1년</option>
+						        <option value="5">5년</option>
+						        <option value=10>10년</option>
+						    </select>
+						</div>
+                    </form>
+                </div>
+               
+			</div>
+		</div>
     </div>
 
     <!-- Add Folder Modal -->
@@ -334,8 +365,16 @@
                         "targetFolder": targetFolder,
                     }),
                     contentType: 'application/json;charset=utf-8',
-                    success: function(response) {
-                        targetEle.after(draggableEle);
+                    success: function(response) {       
+                    	console.log(response.draggedOrder);
+                    	console.log(response.targetFolder.folderOrderBy);
+                    	if(response.targetFolder.folderLevel ==2 && 
+                    			response.draggedOrder>response.targetFolder.folderOrderBy){                    		
+                        	targetEle.before(draggableEle);
+                        	console.log("beforebeforebeforebefore");
+                    	}else{
+                        	targetEle.after(draggableEle);
+                    	}
                     },
                     error: function(response) {
                         console.error('Error updating folder order');
@@ -391,3 +430,5 @@
     </script>
 </body>
 </html>
+
+
