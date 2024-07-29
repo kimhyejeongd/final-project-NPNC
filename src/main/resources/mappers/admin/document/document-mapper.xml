@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admindoc">
+	<insert id="insertStorage">
+		INSERT INTO ER_STORAGE (
+				ER_STOARGE_KEY,
+				ER_STORAGE_FOLDER_KEY,
+				ER_STORAGE_NAME,
+				ER_STORAGE_TERM,
+				ER_STORAGE_MANAGER,
+				ER_STORAGE_ORDERBY)VALUES(
+					SEQ_ER_STORAGE_KEY.NEXTVAL,
+					
+				)
+	</insert>
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
 		  SELECT * 
 		  FROM ER_STORAGE_FOLDER 
@@ -134,6 +146,10 @@
 		WHERE ER_FOLDER_GROUP = #{folderGroup}
 	</select>
 	
+	<select id="selectAllMembers" resultType="member">
+		SELECT * FROM MEMBER
+	</select>
+	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
@@ -210,4 +226,12 @@
         <result property="memberBirthdate" column="MEMBER_BIRTHDATE" />
     </resultMap>
 	
+	<resultMap type="storage" id="storage">
+		<result property="storageKey" column="ER_STOARGE_KEY"/>
+		<result property="storageFolderKey" column="ER_STORAGE_FOLDER_KEY"/>
+		<result property="storageName" column="ER_STORAGE_NAME"/>
+		<result property="storageTerm" column="ER_STORAGE_TERM"/>
+		<result property="storageManager" column="ER_STORAGE_MANAGER"/>
+		<result property="storageOrderBy" column="ER_STORAGE_ORDERBY"/>
+	</resultMap>
 </mapper>

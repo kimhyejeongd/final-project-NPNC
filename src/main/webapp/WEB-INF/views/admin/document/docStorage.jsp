@@ -123,8 +123,8 @@
                  <div class="modal-body">
                     <form id="addStorageForm">
                     	<div class="mb-3">
-							<label for="storageName" class="form-label">폴더명</label>
-							<input type="text" class="form-control" id="storageName" placeholder="폴더 이름 입력">
+							<label for="storageName" class="form-label">보관함 명</label>
+							<input type="text" class="form-control" id="storageName" placeholder="보관함 이름 입력">
                     	</div>
                     	<div class="form-group mb-3">
 						    <label for="folderType" class="form-label">보관기한</label>
@@ -135,6 +135,45 @@
 						        <option value=10>10년</option>
 						    </select>
 						</div>
+						              <div class="col w-45" style="">
+                <div class="card card-round" style="height: 500px;" >
+                <div class="card-header">
+                	보관함 관리자
+                  </div>
+                  <div class="p-4 overflow-hidden">
+                    <div class="form-group d-flex gap-1 p-0 pb-4">
+		                <input type="text" class="form-control" placeholder="이름으로 검색">
+		                <button class="btn btn-outline-info btn-sm"><i class="fa fa-search search-icon"></i></button>
+		            </div>
+                    <div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
+	                    <div class="accordion" id="accordionPanelsStayOpenExample">
+						<c:forEach var="d" items="${members }" varStatus="status">
+							<div class="accordion-item">
+							    <h2 class="accordion-header">
+							      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
+							        <i class="fas fa-bookmark me-2"></i>${d.departmentName} 
+							      </button>
+							    </h2>
+				    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse show">
+							      <div class="accordion-body" style='padding: 0!important;'>
+							         <div class="list-group" id="memberlist">
+						 				<c:forEach var="memberlist" items="${d.memberlist}">
+										  <a href="#" class="list-group-item list-group-item-action align-items-center member-item" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-jobkey="${memberlist.jobKey }" data-team="${d.departmentName}" data-teamKey="${memberlist.departmentKey }">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
+						  				</c:forEach>
+									</div>
+							      </div>
+							    </div>
+							</div>
+						</c:forEach>	
+					</div> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex;justify-content: center;">
+                         <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              </div>
                     </form>
                 </div>
                
@@ -197,6 +236,55 @@
 
     <script>
         $(document).ready(function() {
+        	$('#addStorageForm').on('submit', function(e) {
+                e.preventDefault(); // 기본 폼 제출 동작을 막음
+
+                var storageName = $('#storageName').val();
+                var folderType = $('#folderType').val();
+                var selectedMember = $('.member-item.active').data('id'); // 선택된 멤버의 ID 가져오기
+
+                // 유효성 검사
+                if (!storageName || !folderType || !selectedMember) {
+                    alert("모든 필드를 채워주세요.");
+                    return;
+                }
+
+                var requestData = {
+                    storageName: storageName,
+                    storageTerm: storageTerm,
+                    storageManager: selectedMember
+                };
+
+                $.ajax({
+                    url: '${path}/admin/documentForm/createStorage', // 서버 요청 URL
+                    type: 'POST',
+                    data: JSON.stringify(requestData),
+                    contentType: 'application/json;charset=utf-8',
+                    success: function(response) {
+                        console.log('Storage added successfully:', response);
+                        $('#addStorage').modal('hide');
+                        location.reload(); // 페이지 새로 고침
+                    },
+                    error: function(response) {
+                        console.error('Error adding storage:', response);
+                    }
+                });
+            });
+
+            // 멤버 클릭 이벤트 처리
+            $(document).on('click', '.member-item', function(e) {
+                e.preventDefault();
+                $('.member-item').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            // 이름으로 검색
+            $('#searchInput').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.member-item').filter(function() {
+                    $(this).toggle($(this).data('name').toLowerCase().indexOf(value) > -1);
+                });
+            });
             // 폴더 추가 폼 제출 이벤트 처리
             $('#addFolderForm').on('submit', function(e) {
                 e.preventDefault(); // 기본 폼 제출 동작을 막음

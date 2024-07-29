@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.project.npnc.admin.document.model.dao.AdminDocumentDao;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
+import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,5 +58,11 @@ public class AdminDocumentService {
     	}
     	
 		return dao.insertFolder(session, storageFolder);
+	}
+	public List<Member>selectAllMembers(){
+		return dao.selectAllMembers(session);
+	}
+	public int insertStorage(Storage storage) {
+		return dao.insertStorage(session,storage);
 	}
 }

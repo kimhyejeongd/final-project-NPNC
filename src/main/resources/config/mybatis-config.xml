@@ -55,6 +55,7 @@
 		<typeAlias type="com.project.npnc.alarm.dto.AlarmMessage" alias="alarmMessage"/>   
 		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>
 		<typeAlias type="com.project.npnc.admin.document.model.dto.AdminDocument" alias="adminDocument"/>
+		<typeAlias type="com.project.npnc.admin.document.model.dto.Storage" alias="storage"/>
         <typeAlias type="com.project.npnc.external.dto.ExternalDto" alias="ExternalDto"/>
 	</typeAliases>
 </configuration> 
