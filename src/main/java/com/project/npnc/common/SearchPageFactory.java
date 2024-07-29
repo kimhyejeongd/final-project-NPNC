@@ -23,6 +23,7 @@ public class SearchPageFactory {
 		}else {
 			sb.append("<li class='page-item'>");
 			sb.append("<a class='page-link' href='javascript:fn_paging("+(pageNo-1)+")'>이전</a>");
+//			url+numPerpage+searchKey+searchType+searchStartDate+searchEndDate+
 			sb.append("</li>");
 		}
 		
@@ -48,12 +49,13 @@ public class SearchPageFactory {
 			sb.append("</li>");
 		}
 		sb.append("<ul>");
-		sb.append("<script>");
-		sb.append("function fn_paging(pageNo){");
-		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"&searchKey="+searchKey+"&searchType="+searchType+"&searchStartDate="+searchStartDate+"&searchEndDate="+searchEndDate+"');");
+//		sb.append("<script>");
+//		sb.append("function fn_paging(pageNo){");
+//		sb.append("console.log('오긴왔냐?')");
+//		sb.append("location.assign('${path }/"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"&searchKey="+searchKey+"&searchType="+searchType+"&searchStartDate="+searchStartDate+"&searchEndDate="+searchEndDate+"');");
 //		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"');");
-		sb.append("}");
-		sb.append("</script>");
+//		sb.append("}");
+//		sb.append("</script>");
 		
 		return sb.toString();
 		

@@ -1,26 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<c:set var="path" value="${pageContext.request.contextPath }"/>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-
- 	<div class="main-panel">
+<c:set var="path" value="${pageContext.request.contextPath }"/>	
+  <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-lg">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="formModalLabel">사원 등록</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+        <div class="modal-body">
 		<form action="${path}/admin/member/insertmemberend.do" method="post">
 		 <div class="container">
           <div class="page-inner">
-          		<div class="page-header">
-          			<h3 class="fw-bold mb-3">회원등록</h3>
-          		</div>
-            	<div class="form-group "> 
-            		<div class="form-group " >
+            	<div class="form-group">
+            		<div class="form-group">
                           <label
                             for="memberName"
                             class="col-md-3 col-form-label"
@@ -54,6 +50,7 @@
                             />
                           </div>
                		</div>
+
                		<div class="form-group">
                           <label
                             for="memberPhone"
@@ -296,6 +293,9 @@
           </div>
 		</form>
 		</div>
-
-</body>
-</html>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div> 

@@ -25,7 +25,7 @@
 			$("<input>").attr({
 								'name' : 'serial',
 								'value' : no,
-								'type' : 'hidden'
+								'type' : 'hidden' 
 							}).appendTo($form)
 			$form.appendTo($("body")).submit();
 		}

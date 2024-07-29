@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>    
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,8 +78,8 @@
 				                            <td>${a.attendanceDate}</td>
 				                            <td>${a.member.memberId}</td>
 				                            <td>${a.member.memberName}</td>
-				                            <td>${a.attendanceStart.substring(9, 17)}</td>
-				                            <td>${a.attendanceEnd.substring(9, 17) }</td>
+				                            <td>${fn:substring(a.attendanceStart, fn:length(a.attendanceStart) - 8, fn:length(a.attendanceStart))}</td>
+          									<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
 				                            <td>${a.overtimeKey }</td>
 				                            <td>${a.attendanceState}</td>
 				                          </tr>
@@ -101,5 +102,14 @@
 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 	</div>
+	
+ 	<script>
+ 	function fn_paging(pageNo) {
+ 	    console.log('오긴왔냐?');
+ 	    location.assign('${path}/admin/attendance/searchAdminAttendance?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchT}&searchStartDate=${searchSD}&searchEndDate=${searchED}');
+ 	    
+ 	}	
+	</script> 
+	
 </body>
 </html>

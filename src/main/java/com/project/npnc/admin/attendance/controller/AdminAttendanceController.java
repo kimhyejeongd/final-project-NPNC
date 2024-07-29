@@ -2,9 +2,11 @@ package com.project.npnc.admin.attendance.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
@@ -59,11 +62,13 @@ public class AdminAttendanceController {
 	}
 	
 	@PostMapping("/adminAttendanceEditDetail")
-	public String adminAttendanceEditDetail(int attendanceEditKey,Model m) {
+	public ResponseEntity<Map<String,AttendanceEdit>> adminAttendanceEditDetail(int attendanceEditKey) {
 		AttendanceEdit attendanceEdit=service.selectAttendanceEditByKey(attendanceEditKey);
-		m.addAttribute("attendanceEdit",attendanceEdit);
 		System.out.println("admin : "+attendanceEdit);
-		return "admin/attendance/adminattendanceEditDetail";
+		Map<String,AttendanceEdit> response =new HashMap<>();
+		response.put("attendanceEdit", attendanceEdit);
+		System.out.println("test");
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/updateAttendanceEdit")

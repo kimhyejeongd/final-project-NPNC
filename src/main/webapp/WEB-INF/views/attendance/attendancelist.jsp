@@ -150,7 +150,7 @@
 		                          <tr>
 		                            <td>${a.attendanceDate}</td>
 		                            <td>${fn:substring(a.attendanceStart, fn:length(a.attendanceStart) - 8, fn:length(a.attendanceStart))}</td>
-          								<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
+          							<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
 		                            <td>${a.overtimeKey }</td>
 		                            <td>${a.attendanceState}</td>
 		                            <td>
