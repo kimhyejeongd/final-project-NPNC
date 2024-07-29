@@ -176,63 +176,114 @@
     <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
     <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Kaiadmin JS -->
-    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-    <script src="${path}/resources/assets/js/setting-demo.js"></script>
-    <script src="${path}/resources/assets/js/demo.js"></script>
+    <!-- 주소 검색을 위한 Daum Postcode API -->
+    <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
-    <!-- Page Specific JS -->
+    <!-- Atlantis JS -->
+    <script src="${path}/resources/assets/js/atlantis.min.js"></script>
+
+    <!-- Custom JS -->
     <script>
         $(document).ready(function() {
-            $('#editAddressButton').click(function() {
-                $('#memberAddress').toggle();
-                $('#addressSearchBox').toggle();
-                $('#saveChangesButton').toggle();
+            $("#editAddressButton").click(function() {
+                $("#memberAddressText").hide();
+                $("#editAddressButton").hide();
+                $("#memberAddress").show();
+                $("#addressSearchBox").show();
+                $("#saveChangesButton").show();
             });
 
-            $('#searchAddressButton').click(function() {
+            $("#searchAddressButton").click(function() {
                 new daum.Postcode({
                     oncomplete: function(data) {
+                        var roadAddr = data.roadAddress; // 도로명 주소
+                        var jibunAddr = data.jibunAddress; // 지번 주소
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣음
                         $('#postcode').val(data.zonecode);
-                        $('#roadAddress').val(data.roadAddress);
-                        $('#jibunAddress').val(data.jibunAddress);
+                        $('#roadAddress').val(roadAddr);
+                        $('#jibunAddress').val(jibunAddr);
                     }
                 }).open();
             });
 
-            $('#saveAddressButton').click(function() {
-                const newAddress = $('#roadAddress').val();
-                $('#memberAddressText').text(newAddress);
-                $('#memberAddress').val(newAddress).hide();
-                $('#addressSearchBox').hide();
-                $('#saveChangesButton').show();
+            $("#saveAddressButton").click(function() {
+                var newAddress = $("#roadAddress").val();
+                $("#memberAddress").val(newAddress);
+                $("#memberAddressText").text(newAddress).show();
+                $("#memberAddress").hide();
+                $("#addressSearchBox").hide();
+                $("#saveChangesButton").hide();
+                alert("주소가 성공적으로 저장되었습니다."); // 주소 저장 확인 메시지
             });
 
-            $('#editPasswordButton').click(function() {
-                $('#passwordForm').toggle();
+            $("#editPasswordButton").click(function() {
+                $("#passwordForm").show();
             });
 
-            $('#sendEmailVerificationButton').click(function() {
-                // 이메일 전송 로직
-                $('#emailVerificationForm').show();
+            $("#sendEmailVerificationButton").click(function() {
+                var email = $("#verificationEmail").val();
+                if (email) {
+                    $.ajax({
+                        url: '/member/sendPasswordResetEmail',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ email: email }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Verification email sent. Please check your inbox.");
+                                $("#emailVerificationForm").show();
+                            } else {
+                                alert("Failed to send verification email.");
+                            }
+                        }
+                    });
+                }
             });
 
-            $('#verifyCodeButton').click(function() {
-                // 인증 코드 확인 로직
-                $('#passwordChangeForm').show();
+            $("#verifyCodeButton").click(function() {
+                var code = $("#emailVerificationCode").val();
+                if (code) {
+                    $.ajax({
+                        url: '/member/verifyCode',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ code: code }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Code verified. You can now change your password.");
+                                $("#passwordChangeForm").show();
+                            } else {
+                                alert("Invalid code. Please try again.");
+                            }
+                        }
+                    });
+                }
             });
 
-            $('#saveNewPasswordButton').click(function() {
-                // 비밀번호 저장 로직
-            });
-
-            $('#saveChangesButton').click(function() {
-                // 변경 사항 저장 로직
+            $("#saveNewPasswordButton").click(function() {
+                var newPassword = $("#newPassword").val();
+                var email = $("#verificationEmail").val();
+                if (newPassword) {
+                    $.ajax({
+                        url: '/member/changePassword',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ email: email, newPassword: newPassword }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Password changed successfully.");
+                                $("#passwordForm").hide();
+                            } else {
+                                alert("Failed to change password.");
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>
