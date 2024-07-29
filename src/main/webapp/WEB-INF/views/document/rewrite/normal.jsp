@@ -29,8 +29,6 @@
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   
-  <!-- SweetAlert2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
@@ -157,7 +155,7 @@
 					      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="refererDiv">
 					      	<c:if test="${doc.referers ne null ||not empty doc.referers}">
 						      <c:forEach items="${doc.referers }" var="ap" varStatus="vs">
-						      		<div id="referer0" class="col m-0 p-2" style="width: 100%; text-align: left; border-radius: 15px;">
+						      		<div id="" class="col m-0 p-2" style="width: 100%; text-align: left; border-radius: 15px;">
 						      			<input name="referers[${vs.index }].memberKey" value="${ap.memberKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
 						      			<input name="referers[${vs.index }].memberTeamKey" value="${ap.memberTeamKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
 						      			<input name="referers[${vs.index }].memberJobKey" value="${ap.memberJobKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
@@ -215,9 +213,7 @@
 			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
-				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
 				        	<div id="summernote" data-form="${form }"></div>
-				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 				        </div>
 			        </div>
 	                  <div class="p-3 text-center">
@@ -353,8 +349,8 @@ $(document).ready(function() {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
 				// 로컬 스토리지에서 데이터를 삭제
-				//localStorage.removeItem('selectedReferer'); 
-				//localStorage.removeItem('selectedApprover'); 
+				localStorage.removeItem('selectedReferer'); 
+				localStorage.removeItem('selectedApprover'); 
 				
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				console.log(dochtml);
@@ -367,11 +363,27 @@ $(document).ready(function() {
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
 	                formData.delete("files");
+	                
+	                let files = fileInput.files;
+
+		            // 다중 파일 추가
+		            for (let i = 0; i < files.length; i++) {
+		            	formData.append('upfile', fileInput.files[i]);
+		            } 
 					
-			        console.dir(formData);
-	                const en=formData.entries().forEach(e=>{console.log(e);});
+		        	 // FormData의 내용 확인
+					formData.entries().forEach(e=>{
+		            	console.log(e);
+	            	});
+					for (let [key, value] of formData.entries()) {
+					    // 'upfile' 키값의 파일 객체 이름 확인
+					    if (key === 'upfile' && value instanceof File && value.name === "") {
+					        // 파일 이름이 비어 있으면 건너뜀
+					        console.log(`빈 파일 이름 발견: ${value.name}, 항목 제거됨.`);
+					    } 
+					}
 					
-					console.dir(formData);
+					
 			     	// AJAX로 폼 데이터를 전송
 			        fetch(sessionStorage.getItem("path")+'/document/writeend', {
 			            method: 'POST',
@@ -452,6 +464,7 @@ function sendDataToParent(data) {
     
     // 선택 결재자
     data.forEach(function(item, index) {
+    	console.log(index);
         let $div = $("<div>", {
             id: "approval" + index,
             css: {

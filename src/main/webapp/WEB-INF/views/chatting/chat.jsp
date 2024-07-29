@@ -613,7 +613,6 @@ $('.exit-button').click(function() {
             
             // 구독
             stompClient.subscribe('${path}/room/' + roomId, function (chatMessage) {
-            	console.log(chatMessage + "1111111111111111***************-------------");
                 showChat(chatMessage);
             });
 
@@ -653,7 +652,8 @@ $('.exit-button').click(function() {
                 'receiverKey': ${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey),
                 'chatMsgDetail':  message.replace(/\n/g, '<br>'),
                 'chatMsgTime': new Date().toISOString(),
-                'file':fileMetaData
+                'file':fileMetaData,
+                'memberName':'${loginMember.memberName}'
             }));
         $('#message').val('');
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
@@ -729,7 +729,7 @@ $('.exit-button').click(function() {
                     if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
                         var messageElement = $(
                             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                            + '<div class="sender">' + chatList[chat].memberKey + '</div>'
+                            + '<div class="sender">' + chatList[chat].memberName + '</div>'
                             + fileElement
                             + messageDetail
                             + '<div class="sendDate">' + formattedTime + '</div>'
@@ -783,7 +783,7 @@ $('.exit-button').click(function() {
 
         var messageElement = $(
             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-            + '<div class="sender">' + message.memberKey + '</div>'
+            + '<div class="sender">' + message.memberName + '</div>'
             + fileElement
             + message.chatMsgDetail 
             + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'

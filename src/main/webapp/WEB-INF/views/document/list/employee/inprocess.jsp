@@ -4,13 +4,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <%
-  String contextPath = request.getContextPath();
+	String contextPath = request.getContextPath();
+	//세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
 %>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>진행 중 문서</title>
+    <title>진행 문서</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"

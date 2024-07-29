@@ -384,7 +384,7 @@ $(document).ready(function() {
 		                alert(data.message);
 		                // 성공 시 페이지 리다이렉트
 		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
-		                window.location.href = sessionStorage.getItem("path")+"/document/list/draft";
+		                window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
 		            } else {
 		                alert(data.message);
 		            }

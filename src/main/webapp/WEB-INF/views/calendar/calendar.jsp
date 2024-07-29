@@ -34,9 +34,10 @@
     </script>
     <!-- sweetalert2 부트스트랩 -->
     <!-- CSS Files -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="${path }/resources/bm/css/bootstrap-4.min.css">
     <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.css">
-    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -121,6 +122,10 @@
                     <input class="form-check-input" type="checkbox" id="companyCalendar">
                     <label class="form-check-label" for="companyCalendar">전사일정</label>
                   </div>
+                  <div class="form-check">
+                  	<input class="form-check-input" type="checkbox" id="reservationCalendar">
+                  	<label class="form-check-label" for="reservationCalendar">예약일정</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -135,9 +140,7 @@
             <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu" style="display:block; position:static; margin-bottom:5px;">
               <li><a tabindex="-1" href="#">내일정</a></li>
               <li><a tabindex="-1" href="#">부서일정</a></li>
-              <%-- <c:if test="${loginid == 'admin' }">
-                <li><a tabindex="-1" href="#">전사일정</a></li>
-              </c:if> --%>
+              <li><a tabindex="-1" href="#">전사일정</a></li>
             </ul>
           </div>
         </div>
@@ -174,7 +177,6 @@
   <!-- fancy dropdown js -->
   
    <script>
-	
     // JavaScript 내에서 서버에서 전달받은 organlist 데이터를 할당
     var organlist = [
         <c:forEach var="d" items="${organlist}" varStatus="status">
@@ -182,21 +184,23 @@
                 departmentName: '${d.departmentName}',
                 memberlist: [
                     <c:forEach var="memberlist" items="${d.memberlist}" varStatus="memStatus">
+                        <c:if test="${memberlist.memberName != loginMember.memberName}">
                         {
                             memberKey: '${memberlist.memberKey}',
                             memberName: '${memberlist.memberName}',
                             jobName: '${memberlist.jobName}'
                         }<c:if test="${!memStatus.last}">,</c:if>
+                        </c:if>
                     </c:forEach>
                 ]
             }<c:if test="${!status.last}">,</c:if>
         </c:forEach>
     ];
-  
   </script>
   <script>
   	var userKey = "${loginMember.memberKey}";
-  	var userDeptCode = "${loginMember.departmentKey}"
+  	var userName = "${loginMember.memberName}";
+  	var userDeptCode = "${loginMember.departmentKey}";
   </script>
   
   

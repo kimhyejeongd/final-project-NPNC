@@ -13,9 +13,11 @@
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
 	<div>
+	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
+		                  <br><br><br><br>
 		                    <h4 class="card-title">관리자 수정요청목록</h4>
 		                  </div>
 		                  <div class="card-body">
