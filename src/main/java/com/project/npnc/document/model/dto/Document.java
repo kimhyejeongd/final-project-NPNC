@@ -35,8 +35,9 @@ public class Document {
 	private Date erDocStateUpdateDate;
 	private int erDocLastUpdater;
 	private Date erDocUpdateDate;
-	private Date erDocCompleteDate;
 	private String erDocUpdateReason;
+	private Date erDocCompleteDate;
+	private int docFormKey;
 	private List<Approver> approvers = new ArrayList<Approver>();
 	private List<DocFile> files = new ArrayList<DocFile>();
 //	private List<MultipartFile> multifiles = new ArrayList<MultipartFile>();
