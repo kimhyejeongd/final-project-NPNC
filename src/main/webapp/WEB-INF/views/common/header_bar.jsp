@@ -268,52 +268,57 @@
    }
 </style>
 <!--이성록 모달 팝업 스타일 -->
-   <style>
-         h2{
-             text-align: center;
-         }
-         
-         
-         /*모달 팝업 영역 스타일링*/
-         .modal1 {
-         /*팝업 배경*/
-            display: none; /*평소에는 보이지 않도록*/
-             position: fixed;
-             top:0;
-             left: 0;
-             width: 100%;
-             height: 100vh;
-             overflow: hidden;
-             background: rgba(0,0,0,0.5);
-         }
-         .modal1 .modal_popup1 {
-         /*팝업*/
-             position: relative;
-             top: 50%;
-             left: 50%;
-             width:40%;
-             transform: translate(-50%, -50%);
-             padding: 20px;
-             background: #ffffff;
-             border-radius: 20px;
-         }
-         .modal1 .modal_popup1 .close_btn1 {
-           /*   display: block; */
-             padding: 10px 20px;
-             background-color: rgb(116, 0, 0);
-             border: none;
-             border-radius: 5px;
-             color: #fff;
-             cursor: pointer;
-             transition: box-shadow 0.2s;
-         }
-         .modal1.on1 {
-             display: block;
-             position: fixed;
-             
-         }
-   
-     </style>
+
+	<style>
+			h2{
+    			text-align: center;
+			}
+			
+			
+			/*모달 팝업 영역 스타일링*/
+			.modal1Organ {
+			/*팝업 배경*/
+				display: none; /*평소에는 보이지 않도록*/
+			    position: fixed;
+			    top:0;
+			    left: 0;
+			    width: 100%;
+			    height: 100vh;
+			    overflow: hidden;
+			    background: rgba(0,0,0,0.5);
+			}
+			.modal1Organ .modal_popup1Organ {
+			/*팝업*/
+			    position: relative;
+			    top: 50%;
+			    left: 50%;
+			    width:30%;
+			    transform: translate(-50%, -50%);
+			    padding: 20px;
+			    background: #ffffff;
+			    border-radius: 20px;
+			}
+			.modal1Organ .modal_popup1Organ .close_btn1Organ {
+			  /*   display: block; */
+			    padding: 10px 20px;
+			    background-color: rgb(116, 0, 0);
+			    border: none;
+			    border-radius: 5px;
+			    color: #fff;
+			    cursor: pointer;
+			    transition: box-shadow 0.2s;
+			}
+			.modal1Organ.on1Organ {
+			    display: block;
+			    position: fixed;
+			    
+			}
+	
+	  </style>
+
+	  
+	  
+
       <div class="main-header">
             <div class="main-header-logo">
               <!-- Logo Header -->
@@ -347,21 +352,68 @@
                 <nav
                   class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
                 >
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <button type="submit" class="btn btn-search pe-1">
-                        <i class="fa fa-search search-icon"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search ..."
-                      class="form-control"
-                    />
-                  </div>
+				<div class="container-fluid">
+				   <a class="navbar-brand" href="#" id="headerNavLogo">
+					<img
+		               src="${path}/resources/assets/img/KakaoTalk_Photo_2024-06-28-10-37-54.png"
+		               alt="navbar brand"
+		               class="navbar-brand"
+		               height="70"
+		             />
+				   </a>
+				   <button
+				     class="navbar-toggler"
+				     type="button"
+				     data-bs-toggle="collapse"
+				     data-bs-target="#navbarNav"
+				     aria-controls="navbarNav"
+				     aria-expanded="false"
+				     aria-label="Toggle navigation"
+				   >
+				     <span class="navbar-toggler-icon"></span>
+				   </button>
+				   <div class="collapse navbar-collapse" id="navbarNav">
+				     <ul class="navbar-nav">
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/document/home" 
+				           >전자결제 <span class="sr-only">(current)</span></a
+				         >
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/calendar">캘린더</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/notein">쪽지</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/board/list">게시판</a>
+				       </li>
+				     </ul>
+				   </div>
+				 </div>
+				
                 </nav>
-      <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+      		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+			
+			<!-- 로고 메인화면 아닐 시 숨기는 로직 -->
+		
+			<script>
+				// 원하는 URL을 설정
+				const targetUrl = "http://localhost:8080/";
 
+				// 현재 URL을 확인
+				const currentUrl = window.location.href;
+				console.log(currentUrl+"들어오나요");
+				// navbar-brand 요소 선택
+				const headerNavLogo = document.getElementById("headerNavLogo");
+
+				// 현재 URL이 targetUrl과 일치하지 않으면 요소 숨기기
+				if (currentUrl !== targetUrl) {
+				    headerNavLogo.style.display = "none";
+				}
+				
+			</script>
+			
              <script type="text/javascript">
              var myChatRoomList;
                 $(document).ready(function() {
@@ -380,41 +432,128 @@
 
                                    $('.notif-center').eq(0).html(response);
 
-                               },
-                               error: function(xhr, status, error) {
-                                   var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
-                                   $("#messageContent").html(errorMessage);
-                               }
-                           });
-                       });
-                   });
-                $(document).ready(
-                           function(){
-                              $("#organ").on('show.bs.dropdown', function(){
-                                   event.stopPropagation();
-                                   $.ajax({
-                                     url : '${path}/organ',
-                                     type: 'GET',
-                                     success : function(response){
-                                        $('#organcontainer').html("");
-                                        $('#organcontainer').html(response);
-                                     }
-                                   });
-                              });   
-                           }
-                        );
-                var headerUnread = ()=>{                   
-                  $.ajax({
-                     url:'${path}/headerUnread',
-                     type:'POST',
-                     data:{ memberKey:${loginMember.memberKey}},
-                     success:function(response){
-                            $('.notification').eq(0).text(response);
-                        
-                     }
-                  });
-                }
-            </script> 
+
+					                },
+					                error: function(xhr, status, error) {
+					                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+					                    $("#messageContent").html(errorMessage);
+					                }
+					            });
+					        });
+					    });
+					<!-- 조직도 내용 함수-->
+					 $(document).ready(
+			            function(){
+			               $("#organ").on('show.bs.dropdown', function(){
+			            	     event.stopPropagation();
+			            	     $.ajax({
+			            	    	url : '${path}/organ',
+			            	    	type: 'GET',
+			            	    	success : function(response){
+			            	    		$('#organcontainer').html("");
+			            	    		$('#organcontainer').html(response);
+			            	    	}
+			            	     });
+			               });   
+			            }
+			         );
+					 
+					<!-- 알람 내용 드랍다운 함수 -->
+					$(document).ready(
+			            function(){
+			               $("#notifDropdown").on('show.bs.dropdown', function(){
+								
+								$.ajax({
+									url:'${path}/alarmSelectAll',
+									type:'POST',
+									data:{
+										
+										memberKey : ${loginMember.memberKey}
+											
+										},
+									success:function(response){
+										
+										var alarmBox = document.getElementById('alarmBox');
+										 alarmBox.innerHTML = ''; // Clear innerHTML
+										for(let i=0; i<response.length;i++){
+											if(response[i].alarmType=='Note'){
+
+												var a = document.createElement('a');
+										          a.href = 'javascript:alarmDeleteOne(\''+response[i].alarmKey+'\''+'\,\''+'${path}/'+response[i].alarmPath+'\');';
+												  a.className='noteDeleteOne';		
+												  a.id = response[i].alarmKey;
+												  
+										          var divIcon = document.createElement('div');
+										          divIcon.className = 'notif-icon notif-success';
+
+										          var faIcon = document.createElement('i');
+										          faIcon.className = 'fa fa-envelope';
+
+										          var divContent = document.createElement('div');
+										          divContent.className = 'notif-content';
+
+										          var spanBlock = document.createElement('span');
+										          spanBlock.className = 'block';
+										          spanBlock.textContent = response[i].alarmSendMember+'님의 쪽지';
+										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+
+										          var spanTime = document.createElement('span');
+										          spanTime.className = 'time';
+											   	
+												   	// 예시 ISO 8601 날짜 문자열
+												   	const isoDateString = response[i].alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+		
+												   	// ISO 8601 문자열을 Date 객체로 변환
+												   	const date = new Date(isoDateString);
+		
+												   	// Date 객체를 로컬 형식으로 변환하여 출력
+												   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+		
+												   	// 또는 직접 포맷하여 사용할 수 있습니다.
+												   	const year = date.getFullYear();
+												   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+												   	const day = date.getDate().toString().padStart(2, '0');
+												   	const hours = date.getHours().toString().padStart(2, '0');
+												   	const minutes = date.getMinutes().toString().padStart(2, '0');
+												   	const seconds = date.getSeconds().toString().padStart(2, '0');
+												   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+		
+												   	// spanTime에 포맷된 날짜를 설정
+												   	spanTime.textContent = customFormattedDate + " ";
+												   	
+											          // Append the child elements
+											          divIcon.appendChild(faIcon);
+											          divContent.appendChild(spanBlock);
+											          divContent.appendChild(spanTime);
+											          a.appendChild(divIcon);
+											          a.appendChild(divContent);
+	
+											   		document.getElementById('alarmBox').appendChild(a);				
+											}
+																					
+												
+										} 
+										
+									   
+									}
+								});
+			               });   
+			            }
+			         );
+							 		 
+					 var headerUnread = ()=>{						 
+						$.ajax({
+							url:'${path}/headerUnread',
+							type:'POST',
+							data:{ memberKey:${loginMember.memberKey}},
+							success:function(response){
+				                $('.notification').eq(0).text(response);
+								
+							}
+						});
+					 }
+				</script> 
+
                 <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                   <li
                     class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
@@ -499,61 +638,56 @@
                     >
                       <li>
                         <div class="dropdown-title">
-                          You have 4 new notification
+                          읽지 않은 알람이 4개 있습니다.
                         </div>
                       </li>
                       <li>
-                        <div class="notif-scroll scrollbar-outer">
-                          <div class="notif-center">
-                            <a href="#">
-                              <div class="notif-icon notif-primary">
-                                <i class="fa fa-user-plus"></i>
+                        <div class="notif-scroll scrollbar-outer" style="overflow: auto;" >
+                          <div class="notif-center" id="alarmBox">
+                           <!-- <a href="#">
+                              <div class="notif-icon notif-secondary">
+                                <i class="fa fa-file-invoice-dollar"></i>
                               </div>
                               <div class="notif-content">
                                 <span class="block"> New user registered </span>
                                 <span class="time">5 minutes ago</span>
                               </div>
                             </a>
-                            <a href="#">
-                              <div class="notif-icon notif-success">
-                                <i class="fa fa-comment"></i>
-                              </div>
-                              <div class="notif-content">
-                                <span class="block">
-                                  Rahmad commented on Admin
-                                </span>
-                                <span class="time">12 minutes ago</span>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div class="notif-img">
-                                <img
-                                  src="assets/img/profile2.jpg"
-                                  alt="Img Profile"
-                                />
-                              </div>
-                              <div class="notif-content">
-                                <span class="block">
-                                  Reza send messages to you
-                                </span>
-                                <span class="time">12 minutes ago</span>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div class="notif-icon notif-danger">
-                                <i class="fa fa-heart"></i>
-                              </div>
-                              <div class="notif-content">
-                                <span class="block"> Farrah liked Admin </span>
-                                <span class="time">17 minutes ago</span>
-                              </div>
-                            </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>
+							<a href="#">
+	                          <div class="notif-icon notif-success">
+	                            <i class="fa fa-envelope"></i>
+	                          </div>
+	                          <div class="notif-content">
+	                            <span class="block"> New user registered </span>
+	                            <span class="time">5 minutes ago</span>
+	                          </div>
+	                        </a>-->
+                         
                           </div>
+						 
                         </div>
                       </li>
                       <li>
-                        <a class="see-all" href="javascript:void(0);"
-                          >See all notifications<i class="fa fa-angle-right"></i>
+                        <a class="see-all" href="javascript:alarmReadAll();"
+                          >전체 확인<i class="fa fa-angle-right"></i>
                         </a>
                       </li>
                     </ul>
@@ -642,6 +776,57 @@
             <!-- End Navbar -->
             
             <script>
+		
+			<!-- 알람 이동 전 삭제 로직 -->
+			
+			function alarmDeleteOne(alarmKey, path){
+				console.log(path);
+				$.ajax({
+					url:'${path}/alarmDeleteOne',
+					type:'POST',
+					data:{ memberKey:${loginMember.memberKey},
+						   alarmKey: alarmKey
+					},
+					success:function(response){
+						window.location.href = path;
+
+					}
+				});	
+			}	
+		
+			<!-- 알람 전체 삭제 -->
+			function alarmReadAll(){
+				$.ajax({
+					url:'${path}/alarmDeleteAll',
+					type:'POST',
+					data:{ memberKey:${loginMember.memberKey}},
+					success:function(response){
+						var alarmBox = document.getElementById('alarmBox');
+						alarmBox.innerHTML = ''; // Clear innerHTML
+						$('.notification').eq(1).text(0);
+													
+						$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+0+"개 있습니다.");
+					}
+				});
+			}	
+				
+			<!-- 알람 숫자 온로드 함수 -->		
+			function onWindowLoadAlarmNum() {
+					$.ajax({
+						url:'${path}/alarmSelectAll',
+						type:'POST',
+						data:{ memberKey:${loginMember.memberKey}},
+						success:function(response){
+			                $('.notification').eq(1).text(response.length);
+								
+							$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+response.length+"개 있습니다.");
+						}
+					});
+			      }
+	
+	        // 알람 숫자 표기
+	     	window.onload = onWindowLoadAlarmNum();
+					  
             var stompClient = null;
             var userStatusMap = {};
             var totalUnread = 0;
@@ -665,46 +850,95 @@
           }
             
             function connect() {
-              let socket = new SockJS('http://localhost:8080/ws-stomp');
-              stompClient = Stomp.over(socket);
-              stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
-                  setConnected(true);
-                  console.log('Connected: ' + frame);
-                  
-                 /*  if(myChatRoomList!=null && myChatRoomList!=undefined){                      */
-                     myChatRoomList.forEach(function(room) {
-                         var roomId = room.chatRoomKey;
-                         stompClient.subscribe('/room/' + roomId, function() {
-                         headerUnread();
-                         });
-                     });
-                /*   } */
-   
-                  
-                  stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
-                      console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
-                      var bodyObject= JSON.parse(msg.body);
-                      console.log('test'+bodyObject.message);
-                      
-                      $.notify({
-                         icon: 'icon-bell',
-                         title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-                         message: bodyObject.message /* 얘는 안깨져요 */
-                      },{
-                         type: 'primary',
-                         placement: {
-                            from: "bottom",
-                            align: "right"
-                         },
-                         time: 1000,
-                      });
-                  });
-                  stompClient.subscribe('${path}/sub/broadcast', function (msg) {
-                      console.log('구독 중', msg);
-                  });
-                  
-                  stompClient.subscribe('/user/queue/users', function (message) {
-                      var users = JSON.parse(message.body);
+		        let socket = new SockJS('http://localhost:8080/ws-stomp');
+		        stompClient = Stomp.over(socket);
+		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
+		            setConnected(true);
+		            console.log('Connected: ' + frame);
+		            
+		            myChatRoomList.forEach(function(room) {
+		                var roomId = room.chatRoomKey;
+		                stompClient.subscribe('/room/' + roomId, function() {
+					 		headerUnread();
+		                });
+		            });
+	
+		            
+		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
+		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
+		                var bodyObject= JSON.parse(msg.body);
+		                console.log('test'+bodyObject.message);
+		                
+		             	$.notify({
+				   		 	icon: 'icon-bell',
+				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
+				   		 	message:  bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
+				   		 },{
+				   		 	type: 'primary',
+				   		 	placement: {
+				   		 		from: "bottom",
+				   		 		align: "right"
+				   		 	},
+				   		 	time: 1000,
+				   		 });
+						 
+						 
+						 // Step 1: Extract the current number from the element
+				           var notificationText = $('.notification').eq(1).text();
+				           var currentCount = parseInt(notificationText, 10);
+	
+				           // Step 2: Perform the desired operation (e.g., increment by 1)
+				           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+	
+				           // Step 3: Update the elements with the new value
+				           $('.notification').eq(1).text(updatedCount);
+	
+				           var dropdownTitle = $('.dropdown-title').eq(1).text();
+				           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+				           $('.dropdown-title').eq(1).text(newDropdownTitle);
+						
+		            });
+					
+		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
+		                console.log('구독 중', msg);
+						
+						var bodyObject= JSON.parse(msg.body);
+						
+			                if(bodyObject.alarmType=='Note'){
+			             	$.notify({
+					   		 	icon: 'icon-bell',
+					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
+					   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+					   		 },{
+					   		 	type: 'primary',
+					   		 	placement: {
+					   		 		from: "bottom",
+					   		 		align: "right"
+					   		 	},
+					   		 	time: 1000,
+					   		 });
+							 
+	 							}
+								
+							   // Step 1: Extract the current number from the element
+					           var notificationText = $('.notification').eq(1).text();
+					           var currentCount = parseInt(notificationText, 10);
+
+					           // Step 2: Perform the desired operation (e.g., increment by 1)
+					           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+
+					           // Step 3: Update the elements with the new value
+					           $('.notification').eq(1).text(updatedCount);
+
+					           var dropdownTitle = $('.dropdown-title').eq(1).text();
+					           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+					           $('.dropdown-title').eq(1).text(newDropdownTitle);
+											 
+		            });
+		            
+		            stompClient.subscribe('/user/queue/users', function (message) {
+		                var users = JSON.parse(message.body);
+
 
                       for (var username in users) {
                           if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음

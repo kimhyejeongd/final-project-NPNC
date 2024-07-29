@@ -20,6 +20,10 @@ public class Document {
 	private int erDocKey;
 	private String erDocSerialKey;
 	private int erDocWriter;
+	private String writerDeptKey;//join용 writer_dept_key
+	private String writerDeptName;//join용 writer_dept_name
+	private String writerJobKey;//join용 writer_job_key
+	private String writerJobName;//join용 writer_job_name
 	private String erDocTitle;
 	private Date erDocCreateDate;
 	private String erDocEmergencyYn;
@@ -30,6 +34,7 @@ public class Document {
 	private Date erDocStateUpdateDate;
 	private int erDocLastUpdater;
 	private Date erDocUpdateDate;
+	private Date erDocCompleteDate;
 	private String erDocUpdateReason;
 	private List<Approver> approvers = new ArrayList<Approver>();
 	private List<DocFile> files = new ArrayList<DocFile>();

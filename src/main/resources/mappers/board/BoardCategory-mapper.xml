@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.npnc.board.repository.BoardCategoryMapper">
+
+    <resultMap id="categoryResultMap" type="com.project.npnc.board.model.dto.BoardCategoryDto">
+        <id column="BOARD_CATEGORY_KEY" property="boardCategoryKey" />
+        <result column="BOARD_CATEGORY_NAME" property="boardCategoryName" />
+    </resultMap>
+
+    <select id="selectAllCategories" resultMap="categoryResultMap">
+        SELECT BOARD_CATEGORY_KEY, BOARD_CATEGORY_NAME
+        FROM BOARD_CATEGORY
+    </select>
+
+    <select id="selectCategoryById" parameterType="int" resultMap="categoryResultMap">
+        SELECT BOARD_CATEGORY_KEY, BOARD_CATEGORY_NAME
+        FROM BOARD_CATEGORY
+        WHERE BOARD_CATEGORY_KEY = #{boardCategoryKey}
+    </select>
+
+    <insert id="insertCategory" parameterType="com.project.npnc.board.model.dto.BoardCategoryDto">
+        INSERT INTO BOARD_CATEGORY (BOARD_CATEGORY_NAME)
+        VALUES (#{boardCategoryName})
+    </insert>
+
+    <update id="updateCategory" parameterType="com.project.npnc.board.model.dto.BoardCategoryDto">
+        UPDATE BOARD_CATEGORY
+        SET BOARD_CATEGORY_NAME = #{boardCategoryName}
+        WHERE BOARD_CATEGORY_KEY = #{boardCategoryKey}
+    </update>
+
+    <delete id="deleteCategory" parameterType="int">
+        DELETE FROM BOARD_CATEGORY
+        WHERE BOARD_CATEGORY_KEY = #{boardCategoryKey}
+    </delete>
+
+</mapper>

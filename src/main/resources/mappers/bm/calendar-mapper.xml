@@ -26,7 +26,7 @@
 
 
 	<insert id="insertCalendar" parameterType="calendar">
-		INSERT INTO CALENDAR VALUES(SEQ_CALENDAR.NEXTVAL,1,#{type},#{title},TO_TIMESTAMP(#{start},'YYYY-MM-DD HH24:MI'),TO_TIMESTAMP(#{end},'YYYY-MM-DD HH24:MI'),#{description},#{backgroundColor},#{allDay},DEFAULT,DEFAULT,DEFAULT)
+		INSERT INTO CALENDAR VALUES(SEQ_CALENDAR.NEXTVAL,#{empNo},#{type},#{title},TO_TIMESTAMP(#{start},'YYYY-MM-DD HH24:MI'),TO_TIMESTAMP(#{end},'YYYY-MM-DD HH24:MI'),#{description},#{backgroundColor},#{allDay},DEFAULT,DEFAULT,DEFAULT)
 	</insert>
 	
 	<select id="selectAllByKey" parameterType="_int" resultMap="calMap">
@@ -82,7 +82,7 @@
 			JOB j on m.JOB_KEY = j.JOB_KEY
 		WHERE
 			1 = 2
-		<if test="searchA != null or searchB != null or searchC != null">
+		<if test="searchA != null or searchB != null or searchC != null or searchD != null">
 			union
 		</if>
 		<if test="searchA != null">
@@ -150,7 +150,7 @@
 			<if test="searchA !=null || searchB !=null">
 				union
 			</if>
-				SELECT
+			SELECT
 				cal.CALENDAR_KEY,
 				cal.MEMBER_KEY,
 				cal.CALENDAR_TYPE,
@@ -176,12 +176,62 @@
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
-				cal.CALENDAR_TYPE = '3' AND CALENDAR_DELETE ='N'
+				cal.CALENDAR_TYPE = '3' AND cal.CALENDAR_DELETE ='N'
+		</if>
+		<if test="searchD !=null">
+			<if test="searchA !=null || searchB !=null || searchC != null">
+				union
+			</if>
+			SELECT
+				cal.CALENDAR_KEY,
+				cal.MEMBER_KEY,
+				cal.CALENDAR_TYPE,
+				cal.CALENDAR_TITLE,
+				cal.CALENDAR_START,
+				cal.CALENDAR_END,
+				cal.CALENDAR_CONTENT,
+				cal.CALENDAR_BACKGROUND_COLOR,
+				cal.CALENDAR_ALLDAY,
+				cal.CALENDAR_DELETE,
+				ref.CAL_REFERENCE_NO,
+				m.MEMBER_NAME as CAL_REFERENCE_NAME,
+				calm.DEPARTMENT_KEY,
+				j.JOB_NAME AS CAL_REFERENCE_JOB
+			FROM
+				CALENDAR cal
+			LEFT JOIN
+				CAL_REFERENCE ref on cal.CALENDAR_KEY = ref.CALENDAR_KEY
+			LEFT JOIN
+				MEMBER m on ref.CAL_REFERENCE_NO = m.MEMBER_KEY
+			LEFT JOIN
+				MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
+			LEFT JOIN
+				JOB j on m.JOB_KEY = j.JOB_KEY
+			WHERE
+				cal.CALENDAR_TYPE = '4' AND CALENDAR_DELETE = 'N'
 		</if>
 		
 		
 	</select>
+	<insert id="insertReCalendar" parameterType="reserveItem">
+		INSERT INTO CALENDAR VALUES(
+			SEQ_CALENDAR.NEXTVAL,
+			#{memberKey},
+			'4',
+			'예약',
+			#{date}||' '||#{start},
+			#{date}||' '||#{end},
+			#{itemName},
+			'#000000',
+			'N',
+			DEFAULT,
+			DEFAULT,
+			DEFAULT
+		)
+		
+		
 	
+	</insert>
 	<delete id="deleteCalendarRef" parameterType="_int">
 		DELETE
 		FROM
@@ -190,7 +240,6 @@
 			CALENDAR_KEY = ${calenarKey}	
 	
 	</delete>
-	
 	
 	<select id="selectLastInsertKey" resultType="_int">
 		SELECT SEQ_CALENDAR.CURRVAL FROM DUAL

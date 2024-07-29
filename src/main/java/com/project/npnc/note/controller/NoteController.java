@@ -238,7 +238,13 @@ public class NoteController {
 //  전체 쪽지 발송
 	@RequestMapping("/noteAllwrite")
 	@ResponseBody
-	public String noteAllWrite( int memberKey, String postMsgTitle , String postMsgDetail) {
+	public String noteAllWrite(
+				@RequestParam(value = "memberKey") int memberKey,
+	            @RequestParam(value = "postMsgTitle") String postMsgTitle,
+	            @RequestParam(value = "postMsgDetail") String postMsgDetail,
+	            @RequestPart(value = "upFile", required = false) MultipartFile[] upFiles,
+	            HttpSession session
+	            ) {
 		System.out.println(postMsgDetail);
 		String replacePostMsgDetail=postMsgDetail.replace("\r\n","<br>");
 		NoteReceptionDto insertNote=NoteReceptionDto.builder()
@@ -246,11 +252,48 @@ public class NoteController {
 				.postMsgTitle(postMsgTitle)
 				.postMsgDetail(replacePostMsgDetail)
 				.build();
-		int result=noteService.noteAllWrite(insertNote);
+		
 
 		
+		List<NoteFileDto> files=new ArrayList<>();
+		String path=session.getServletContext().getRealPath("/resources/upload");
+		if(upFiles!=null) {
+			for(MultipartFile file:upFiles) {
+				if(!file.isEmpty()) {
+					//저장할 경로를 가져오고 파일 리네임을 설정한다.
+					String oriName=file.getOriginalFilename();
+					String ext=oriName.substring( oriName.lastIndexOf(".") );
+					Date today=new Date(System.currentTimeMillis());
+					int randomVal=(int)(Math.random()*10000)+1;
+					String rename="qqqqq_"+(new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(today))+"_"+
+							randomVal+ext;
+					File dir=new File(path);
+					if(!dir.exists()) dir.mkdirs();
+					try {
+						//			파일을 저장
+					//				tomcat에 서버 모듈 윗아웃 퍼블리싱 체크 
+									file.transferTo(new File(path,rename));
+									files.add(NoteFileDto.builder().postMessageFileOri(oriName)
+											.postMessageFilePost(rename).build());
+												
+								}catch(IOException e){
+									e.printStackTrace();      
+									
+					}
+					
+				}
+			}
+			System.out.println("여기 안들어오니"+files);
+			int result1=noteService.noteAllWriteAndFile(insertNote, files);
+		    return "";
+		}else {
+			
+			int result=noteService.noteAllWrite(insertNote);
+			return "";
+
+		}
 		
-		return "";
+		
 		
 	}
 	

@@ -1,5 +1,7 @@
 package com.project.npnc.alarm.dto;
 
+import java.sql.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +18,13 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AlarmMessage {
 	
-	private int memberKey;
-	private String message;
+	private int alarmKey;
+	private String alarmType;
+	private String alarmPath;
+	private int alarmReMember;
+	private int alarmSendMember;
+	private Date alarmDate;
+	private String alarmRead;
+	
 	
 }

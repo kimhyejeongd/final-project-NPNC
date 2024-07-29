@@ -18,6 +18,7 @@ public class WebMVCConfig implements WebMvcConfigurer{
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/job/insertjob.do").setViewName("admin/job/insertjob");
 		registry.addViewController("/loginpage").setViewName("Login");
+		registry.addViewController("/admin/adminMain").setViewName("admin/adminMain");
 
 	}
 	
@@ -33,5 +34,12 @@ public class WebMVCConfig implements WebMvcConfigurer{
         registry.addConverter(new MultipartFileToDocFileConverter());
     }
 	
+	
+	/*
+	 * @Override public void addInterceptors(InterceptorRegistry registry) {
+	 * registry.addInterceptor(new LoginInterceptor()) .addPathPatterns("/**")
+	 * .excludePathPatterns("/loginpage","/logincheck", "/resources/**",
+	 * "/static/**", "/css/**", "/js/**", "/images/**"); // 정적 리소스 경로 제외 }
+	 */
 	
 }

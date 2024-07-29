@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.npnc.board.model.dao.BoardFileDao">
+
+    <resultMap id="fileResultMap" type="com.project.npnc.board.model.dto.BoardFileDto">
+        <id column="BOARD_FILE_KEY" property="BOARD_FILE_KEY" />
+        <result column="BOARD_KEY" property="BOARD_KEY" />
+        <result column="BOARD_FILE_FILE_ORI" property="BOARD_FILE_FILE_ORI" />
+        <result column="BOARD_FILE_FILE_POST" property="BOARD_FILE_FILE_POST" />
+    </resultMap>
+
+    <select id="selectFilesByBoardId" parameterType="int" resultMap="fileResultMap">
+        SELECT BOARD_FILE_KEY, BOARD_KEY, BOARD_FILE_FILE_ORI, BOARD_FILE_FILE_POST
+        FROM BOARD_FILE
+        WHERE BOARD_KEY = #{boardKey}
+    </select>
+
+    <insert id="insertFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
+        INSERT INTO BOARD_FILE (BOARD_KEY, BOARD_FILE_FILE_ORI, BOARD_FILE_FILE_POST)
+        VALUES (#{BOARD_KEY}, #{BOARD_FILE_FILE_ORI}, #{BOARD_FILE_FILE_POST})
+    </insert>
+
+    <delete id="deleteFile" parameterType="int">
+        DELETE FROM BOARD_FILE
+        WHERE BOARD_FILE_KEY = #{boardFileKey}
+    </delete>
+
+</mapper>

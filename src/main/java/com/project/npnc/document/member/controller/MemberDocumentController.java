@@ -1,11 +1,9 @@
 package com.project.npnc.document.member.controller;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +39,6 @@ import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,52 +69,115 @@ public class MemberDocumentController {
 		m.addAttribute("folderlist", result);
 	}
 	
-	@GetMapping("/list/retrieve")
-	public void docRetrieve(Model m) {
-		log.debug("----회수 문서 조회----");
-		Member user = getCurrentUser();
-		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
-		log.debug("{}", result);
-		m.addAttribute("doclist", result);
-	}
-	
-	@GetMapping("/list/inprocess")
-	public void inprocessDoc(Model m){
+//	사원 문서 목록 조회
+	@GetMapping("/list/employee/inprocess")
+	public void selectInprocessDoc(Model m){
 		log.debug("----진행중인 문서 조회----");
 		Member user = getCurrentUser();
 		List<Document> result = serv.selectInprocessDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
 	}
-	@GetMapping("/list/waiting")
-	public void waitingDoc(Model m){
-		log.debug("----결재 대기 문서 조회----");
+	@GetMapping("/list/employee/complete")
+	public void selectMyCompleteDocs(Model m){
+		log.debug("----승인 문서 조회----");
 		Member user = getCurrentUser();
 		log.debug(user.getMemberKey()+"번 사원");
+		List<Document> result = serv.selectMyCompleteDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("completelist", result);
+	}
+	@GetMapping("/list/employee/reject")
+	public void selectMyRejectDocs(Model m) {
+		log.debug("----반려 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectMyRejectDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/retrieve")
+	public void selectRetrieveDocs(Model m) {
+		log.debug("----회수 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectRetrieveDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/draft")
+	public void selectDraftDocs(Model m){
+		log.debug("----임시보관 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectDraftDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("doclist", result);
+	}
+	
+//	결재자 문서 목록 조회
+	@GetMapping("/list/approver/waiting")
+	public void selectWaitingDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원의 결재 대기 문서 조회 -----");
 		List<Document> result = serv.selectWaitingDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("waitinglist", result);
 	}
+	@GetMapping("/list/approver/complete")
+	public void selectCompleteDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 승인한 문서 조회 -----");
+		List<Document> result = serv.selectCompleteDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("completelist", result);
+	}
+	@GetMapping("/list/approver/pending")
+	public void selectPendingDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 보류한 문서 조회 -----");
+		List<Document> result = serv.selectPendingDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("pendinglist", result);
+	}
+	@GetMapping("/list/approver/rejected")
+	public void selectRejectedDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원이 반려한 문서 조회 -----");
+		List<Document> result = serv.selectRejectedDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("rejectedlist", result);
+	}
+	
+//	참조 문서 목록
+	@GetMapping("/list/referer/reference")
+	public void selectReferenceDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원의 참조 문서 조회 -----");
+		List<Document> result = serv.selectReferenceDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("referencelist", result);
+	}
+	
 	
 //	전자문서 상세보기
-	@PostMapping("/view/docDetail{docId}")
-	public void viewDoc(String docId, Model m, HttpSession session) {
-		Document document = null;
-		if(docId != null) {
-			log.debug("----" + docId + "번 문서 상세보기----");
-			session.setAttribute("docId", docId);
-		}else{
-			log.debug(docId);
-			docId = (String) session.getAttribute("docId");
-		}
-		document = serv.selectDocById(docId);
-		m.addAttribute("l", document);
+	@PostMapping("/view/docDetail")
+	public void viewDoc(int docId, 
+			@RequestParam(required = false) String history, 
+											Model m) throws Exception {
+		log.debug("----" + docId + "번 문서 상세보기----");
+		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
+		m.addAttribute("l", document);
 		//문서파일 html 가져오기
-//		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
+		if(html == null || html.equals("")) {
+			log.debug("문서 내용 -> " + html);
+			throw new Exception("문서 불러오기 실패");
+		}
+		
+		if(history != null) {
+			m.addAttribute("history", history);
+		}
+		log.debug("문서 내용 -> " + html);
 		m.addAttribute("html", html);
-//		log.debug("{}", html);
 	}
 	
 	
@@ -127,7 +188,7 @@ public class MemberDocumentController {
 	}
 	
 	
-	@PostMapping("/formlist.do")
+	@PostMapping("/formlist")
 	@ResponseBody
 	public List<DocumentForm> formList(int folderNo, Model m) {
 		log.debug("----전자문서 양식 "+ folderNo+"번 폴더 조회----");
@@ -148,9 +209,35 @@ public class MemberDocumentController {
 		log.debug("----전자문서 작성시작----");
 		String html = readHtmlFile("docformhtml", form+".html");
 		m.addAttribute("html", html);
+		m.addAttribute("form", form);
 		return "document/write/normal";
 	}
-	
+	@PostMapping("/rewrite")
+	public String docRewrite(String serial, Model m) {
+		log.debug("----전자문서 재작성----");
+		Document d = serv.selectDocBySerial(serial);
+		String html = readHtmlFile("dochtml", d.getErDocFilename());
+		log.debug(html);
+		m.addAttribute("html", html);
+		m.addAttribute("doc", d);
+		log.debug("{}", d);
+		
+		//날짜- 제거
+		String afterF = serial.substring(serial.indexOf("F"));
+		//뒤 -이후 제거
+		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
+		if(afterFbeforebar.contains("TEMP")) {
+			afterFbeforebar.replace("TEMP", "");
+		}
+		String formNo = afterFbeforebar.replace("F", "");
+		System.out.println(formNo);
+        	m.addAttribute("form", formNo);
+        	log.debug(m.getAttribute("form").toString());
+//        }else {
+//            log.warn("No match found.");
+//        }
+		return "document/rewrite/normal";
+	}
 //	팝업
 	//결재자 선택팝업 호출, 조직도와 저장된 결재라인 출력
 	@GetMapping("/write/approver")
@@ -164,21 +251,112 @@ public class MemberDocumentController {
 		m.addAttribute("aplist", ap);
 		log.debug("{}", ap); 
 	}
-//	//특정 결재라인 결재자들 불러오기
-//	@GetMapping("/write/load/approverline")
-//	public ResponseEntity<Map<String,Object>> selectApproverLines(int lineKey, String lineName) {
-//		Map<String,Object> response = new HashMap<>();
-//		
-//		try{
-//			List<ApproverLine> result = serv.selectApproverLineList(lineName, getCurrentUser().getMemberKey());
-//			response.put("status", "ok");
-//			response.put("approver", result);
-//		}catch(Exception e){
-//			response.put("status", "error");
-//			response.put("message", "결재라인 불러오기에 실패했습니다.");
-//		}
-//		return ResponseEntity.ok(response);
-//	}
+	//보관함 선택 팝업 호출
+	@GetMapping("/write/storage")
+	public void docStorage(Model m) {
+		List<OrganizationDto> list = orserv.selectOrganAll();
+		log.debug("----- 결재자 선택 -----");
+		m.addAttribute("list", list);
+		log.debug("{}", list); 
+		//저장된 결재라인들 출력
+		List<ApproverLineStorage> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
+		m.addAttribute("aplist", ap);
+		log.debug("{}", ap); 
+	}
+	//결재 승인
+	@PostMapping("/approve")
+	public ResponseEntity<Map<String,Object>> updateApproveDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+	    String msg = (String) requestBody.get("msg");
+	    String serial = (String) requestBody.get("serial");
+	    int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 결재 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
+		
+		int result=0;
+		try {
+			result = serv.updateApproveDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
+		return ResponseEntity.ok(response);
+	}
+	//결재 반려
+	@PostMapping("/reject")
+	public ResponseEntity<Map<String,Object>> updateRejectDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+		String msg = (String) requestBody.get("msg");
+		String serial = (String) requestBody.get("serial");
+		int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 반려 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
+		
+		int result=0;
+		try {
+			result = serv.updateRejectDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
+		return ResponseEntity.ok(response);
+	}
+	//결재 보류
+	@PostMapping("/pend")
+	public ResponseEntity<Map<String,Object>> updatePendDoc(
+			@RequestBody Map<String, Object> requestBody
+			){
+		log.debug("{}", requestBody);
+		String html = (String) requestBody.get("html");
+		String msg = (String) requestBody.get("msg");
+		String serial = (String) requestBody.get("serial");
+		int no = Integer.parseInt((String) requestBody.get("no"));
+		log.debug("----- " + serial + "문서 보류 : " + msg + " -----");
+		log.debug("html -> " + html);
+		Map<String,Object> response = new HashMap<>();
+		
+		int result=0;
+		try {
+			result = serv.updatePendDoc(no, serial, msg);
+			if(result <=0) {
+				response.put("status", "error");
+				response.put("message", "문서 결재 실패");
+			}else {
+				response.put("status","success");
+				response.put("message", "문서 결재 완료");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 결재 실패");
+		}
+		return ResponseEntity.ok(response);
+	}
+	
 	//결재라인 저장
 	@PostMapping("/write/save/approverline")
 	public ResponseEntity<Map<String,Object>> insertApproverLine(
@@ -238,25 +416,63 @@ public class MemberDocumentController {
 	}
 //	
 	
-	@GetMapping("/doc4")
-	public void doc4Write() {
+	//문서 임시저장
+	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
+	public ResponseEntity<Map<String,Object>> insertDraftDoc(
+			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			@RequestParam(value="upfile")MultipartFile[] file
+			){
+		Member user = getCurrentUser();
+		log.debug("{}", html);
+		log.debug("{}", user);
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+		
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		log.debug("{}", doc);
+		
+		int result=0;
+		Map<String,Object> response = new HashMap<>();
+		
+		//문서 등록
+		try { 
+			log.debug(user.getMemberName()+ "사원의 문서 임시저장");
+			result = serv.insertDraftDoc(doc, file, html);
+		} catch (Exception e) {
+			log.debug("문서 임시저장 실패");
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 임시저장에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		
+		//기안, 결재자 등록 성공시
+		response.put("status", "success");
+		response.put("message", "문서 임시저장 완료");
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
-	public String insertDoc(
-			String msg, Model m, Document doc, String html, 
-//			@ModelAttribute ApproversList request, 
-//			@ModelAttribute RefererList referers, 
-			@RequestParam(value="file")MultipartFile[] file) {
+	public ResponseEntity<Map<String,Object>> insertDoc(
+			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
 		Member user = getCurrentUser();
+		if(msg.equals(",")) msg=""; //debug
+		if (msg != null && msg.endsWith(",")) {
+		    msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
+		}//debug
+		
 		log.debug("{}", html);
+		log.debug(file.toString());
 		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F1"); //문서구분키 생성을 위한 임시사전세팅(부서코드양식코드)
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
 		
-		
-		doc.setErDocWriter(user.getMemberKey()); //작성자=로그인유저
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
 		//결재자에 기안자도 추가
 		Approver me = Approver.builder().memberKey(user.getMemberKey())
 									.memberTeamKey(user.getDepartmentKey())
@@ -269,48 +485,41 @@ public class MemberDocumentController {
 									.orderby(0)
 						.build();
 		List<Approver> ap = doc.getApprovers();
+		ap.removeIf(a -> {
+		    boolean toRemove = a.getMemberKey() == 0;
+		    if (toRemove) {
+		        log.debug("없는 결재자 삭제");
+		        log.debug("{}", a);
+		    }
+		    return toRemove;
+		});//debug
 		ap.add(me);
 		doc.setApprovers(ap);
-		
-		log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 		log.debug("{}", doc);
-//		log.debug("{}", request);
-//		log.debug("{}", referers);
-		int result=0;
 		
-		//문서, 결재자 insert
+		int result=0;
+		Map<String,Object> response = new HashMap<>();
+		
+		//문서 등록
 		try { 
-//			result = serv.insertDoc(doc, request, referers);
-			result = serv.insertDoc(doc);
+			log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
+			result = serv.insertDoc(doc, file, html);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			e.printStackTrace();
-			return "redirect:home";
+			response.put("status", "error");
+			response.put("message", "문서 등록에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 		
 		//기안, 결재자 등록 성공시
-		if(result > 0) {
-			//첨부파일 있으면 파일 등록 진행 TODO
-		    if (file.length > 0 || file != null) {
-		    	log.debug(file.toString());
-//		    	for(MultipartFile mu : file) {
-//		    		// 파일을 DocFile 객체로 변환
-//		    		DocFile docFile = new DocFile();
-//		    		docFile.setFileOriName(mu.getOriginalFilename());
-//		    		// DocFile 객체를 Document 객체의 files 리스트에 추가
-//		            doc.getFiles().add(docFile);
-//		    	}
-		    }	
-			//html파일로 문서 저장
-			try {
-				log.debug(html);
-				fileUpload("dochtml",doc.getErDocSerialKey(), html);
-	            log.debug("[4] html저장 성공");
-			}catch(IOException e) {
-				log.debug("[4] html저장 실패");
-				e.printStackTrace();
-			}
-		} 
-		return "redirect:home"; //모두 성공시 전자결재홈으로
+		response.put("status", "success");
+		response.put("message", "문서 등록 완료");
+//		response.put("no", "문서 등록 완료");
+		
+		//모두 성공시 전자결재홈으로
+		return ResponseEntity.ok(response);
+		//return "redirect:home"; 
 	}
 	
 	@PostMapping("/retrieve")
@@ -325,22 +534,25 @@ public class MemberDocumentController {
 		}
 		return result;
 	}
-	
-	//html파일로 문서 저장 메소드
-	private void fileUpload(String dir, String title, String content) throws IOException {
-		String path = uploadDir+ dir + "/" +title + ".html";
-		log.debug("문서 저장 경로 : " + path);
-			File file = new File(path);
-			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            }
-			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-			log.debug(content);
-            writer.write(content);
-            writer.close();
+	@PostMapping("/delete")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> deleteDraftDoc(int no) {
+		log.debug("------"+no + " 임시 보관 문서 삭제 요청------");
+		Map<String,Object> response = new HashMap<>();
+		int result=0;
+		try {
+			result = serv.deleteDraftDoc(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "임시 보관 문서 삭제에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		response.put("status", "success");
+		response.put("message", "임시 보관 문서 삭제 완료");
+		return ResponseEntity.ok(response);
 	}
+	
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {
         String path = uploadDir + dir + "/" + title;
@@ -349,8 +561,8 @@ public class MemberDocumentController {
         StringBuilder content = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(
-        		new InputStreamReader(
-        				new FileInputStream(file), StandardCharsets.UTF_8))) {
+              new InputStreamReader(
+                    new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 content.append(line).append("\n");
@@ -361,7 +573,7 @@ public class MemberDocumentController {
             e.printStackTrace();
         }
         return content.toString();
-    }
+  }
 	private Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();

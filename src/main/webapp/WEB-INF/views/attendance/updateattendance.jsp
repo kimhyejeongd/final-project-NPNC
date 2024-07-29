@@ -9,7 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	
+	
 	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
 		<form action="${path}/attendance/updateAttendanceEnd" method="post">
 			<div class="form-group">
