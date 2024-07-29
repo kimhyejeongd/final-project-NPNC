@@ -485,8 +485,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocBySerial(String serial) {
 		log.debug("-----" + serial + "조회-----");
 		Document d = dao.selectDocBySerial(session, serial);
+		log.debug("{}", d);
 		List<Referer> r = dao.selectReferer(session, serial);
 		if(r != null) {
+			log.debug("참조인 없음");
 			d.setReferers(r);
 		}
 		return d;

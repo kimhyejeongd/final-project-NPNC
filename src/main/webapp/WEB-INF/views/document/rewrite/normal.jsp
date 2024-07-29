@@ -98,7 +98,7 @@
                 <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
+				      <div class="border" style="height: auto; min-height: 30px; width: 100%;" id="">
 				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle" value="${doc.erDocTitle }">
 				      </div>
 				    </div>
@@ -458,6 +458,9 @@ $("#approverBtn").click(function() {
 $("#refererBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/referer', 'referer', 'width=900, height=700, left=500, top=100');
 });
+$("#storageBtn").click(function() {
+	window.open('${pageContext.request.contextPath}/document/write/storage', 'storage', 'width=900, height=700, left=500, top=100');
+});
 function sendDataToParent(data) {
     console.dir(data);
     $("#approvalDiv").html(''); // approvalDiv 초기화
@@ -692,6 +695,54 @@ $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
     localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
 	$(e.target).parent().remove();
 });
+function sendStorageToParent(data){
+	console.log(data);
+	$("#storageDiv").html('');
+	
+	 let $div = $("<div>", {
+         id: "storage",
+         css: {
+             width: '100%',
+             textAlign: 'left',
+             borderRadius: '15px'
+         },
+         class: 'col m-0 p-2'
+     });
+
+     $("<input>", {
+         name: 'erDocStorageKey',
+         value: data.erStorageKey,
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+         type: 'hidden'
+     }).appendTo($div);
+     
+     $("<span>", {
+         name: '',
+         text: data.erStorageFolder + " > ",
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+     }).attr('readonly', true).appendTo($div);
+     
+     $("<span>", {
+         name: '',
+         text: data.erStorageName,
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+     }).attr('readonly', true).appendTo($div);
+     
+     $div.appendTo($("#storageDiv"));
+     $("#storageBtn").text('재선택');
+}
 </script>
 </body>
 </html>
