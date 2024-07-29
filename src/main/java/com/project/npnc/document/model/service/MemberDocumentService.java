@@ -54,4 +54,6 @@ public interface MemberDocumentService {
 	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;
 	int updatePendDoc(int memberKey, String serial, String msg) throws Exception;
 	List<Approver> selectDocApprovers(String serial);
+	
+	int selectRemainingVac(int memberKey);
 }

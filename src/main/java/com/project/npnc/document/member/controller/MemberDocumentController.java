@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.admin.document.model.dto.StorageFolder;
 import com.project.npnc.admin.document.model.service.AdminDocumentService;
+import com.project.npnc.admin.vacation.model.dto.Vacation;
+import com.project.npnc.admin.vacation.model.service.VacationService;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
@@ -52,6 +55,7 @@ public class MemberDocumentController {
 	private final MemberDocumentService serv;
 	private final OrganizationService orserv;
 	private final AdminDocumentService adminserv;
+	private final VacationService vacserv;
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	
@@ -211,10 +215,30 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		log.debug("----전자문서 작성시작----");
 		String html = readHtmlFile("docformhtml", form+".html");
-		//휴가 신청폼인 경우 휴가 데이터 전송
+		//휴가 신청폼인 경우 휴가 데이터 첨부
 		if(form ==3) {
+			log.debug("----휴가 신청----");
+			html = html.replace("[잔여 연차]", serv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
+			
+			List<Vacation> vacation =vacserv.selectVacationAll();
+			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationHalfArea\">";
+			vacselect += "<option>---선택---</option>";
+			for(Vacation v : vacation) {
+				vacselect += "<option data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
+			}
+			vacselect += "</select>";
+			html = html.replace("[휴가 종류]", vacselect);
+			
 			m.addAttribute("vacationCategory", html);
 		}
+		//기안부서 적용
+//		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
+		//기안일 적용
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		html = html.replace("[기안일]", LocalDate.now().format(formatter));
+		//기안자
+//		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
+		
 		m.addAttribute("html", html);
 		m.addAttribute("form", form);
 		return "document/write/normal";
