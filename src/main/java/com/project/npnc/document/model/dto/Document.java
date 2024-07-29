@@ -28,7 +28,8 @@ public class Document {
 	private Date erDocCreateDate;
 	private String erDocEmergencyYn;
 	private String erDocDeleteYn;
-	private String erDocStorage;
+	private int erDocStorageKey; //보관함 pk
+	private String erDocStorageName; //join용 이름
 	private String erDocFilename;
 	private String erDocState;
 	private Date erDocStateUpdateDate;

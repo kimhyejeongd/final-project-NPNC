@@ -100,19 +100,18 @@
  <script src="${path}/resources/assets/js/setting-demo.js"></script>
  <script src="${path}/resources/assets/js/demo.js"></script>
 </head>
-<script src="${path}/resources/jh/js/referer.js"></script>
 <body>
 <div class="container">
          <div class="page-inner d-flex justify-content-between mt-4">
            <div class="d-flex align-items-md-center flex-column pt-2 pb-4 w-100">
-               <h2 class="fw-bold mb-4">참조인 선택</h2>
+               <h2 class="fw-bold mb-4">보관함 선택</h2>
            	<div class="row w-100 mx-auto">
             	<!-- 조직도 -->
               <div class="col w-45" style="">
                 <div class="card card-round" style="height: 500px;" >
-                <div class="card-header">
+                 <div class="card-header">
                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title" id="formfoldername">조직도</div>
+                      <div class="card-title" id="formfoldername" style="padding-right: 76px;">보관함 폴더 목록</div>
                       <div class="card-tools"></div>
                     </div>
                   </div>
@@ -122,40 +121,43 @@
 		                <button class="btn btn-outline-info btn-sm"><i class="fa fa-search search-icon"></i></button>
 		            </div>
                     <div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
-	                    <div class="accordion" id="accordionPanelsStayOpenExample">
-						<c:forEach var="d" items="${list}" varStatus="status">
-							<div class="accordion-item">
-							    <h2 class="accordion-header">
-							      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
-							        <i class="fas fa-bookmark me-2"></i>${d.departmentName} 
-							      </button>
-							    </h2>
-				    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse show">
-							      <div class="accordion-body" style='padding: 0!important;'>
-							         <div class="list-group" id="memberlist">
-						 				<c:forEach var="memberlist" items="${d.memberlist}">
-										  <a href="#" class="list-group-item list-group-item-action align-items-center" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-jobkey="${memberlist.jobKey }" data-team="${d.departmentName}" data-teamKey="${memberlist.departmentKey }">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
-						  				</c:forEach>
-									</div>
-							      </div>
-							    </div>
-							</div>
-						</c:forEach>	
-					</div> 
+	                    <div class="accordion" id="storagefolderlist">
+					    	<c:forEach var="f" items="${folders }">
+								<div class="accordion-item droppable parentfolder">
+								       	 <c:if test="${f.folderLevel==1}">
+								    <h2 class="accordion-header">
+									      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
+									        <i class="fas fa-bookmark me-2"></i>
+									        	${f.folderName } 
+									      </button>
+									    </h2>
+									        </c:if>
+						    			<div id="panelsStayOpen-collapse${f.folderKey}" class="accordion-collapse collapse show">
+									      <div class="accordion-body" style="padding: 0!important;">
+									         <div class="list-group" id="">
+								 				<c:if test="${f.folderLevel==2 }">
+												  <a href="#" class="list-group-item list-group-item-action align-items-center folder-item" data-folder-key="${f.folderKey}" data-folder-name="${f.folderName }"> 
+													  <i class="icon-drawer me-2"></i>
+													  ${f.folderName }
+												  </a>
+								 				</c:if>
+								  				
+											</div>
+									      </div>
+									    </div>
+								</div>
+						    </c:forEach>
+						</div> 
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="row d-flex mx-auto align-items-center justify-content-center align-content-center gap-1" style="max-width: 60px;">
-              	<button class="btn btn-sm btn-outline-secondary" id="rightBtn"><i class="icon-arrow-right"></i></button>
-              	<button class="btn btn-sm btn-outline-secondary" id="leftBtn"><i class="icon-arrow-left"></i></button>
               </div>
 				<div class="col w-45" id="formlistdiv">
 		               <div class="card card-round" style="height: 500px;" >
 		                 <div class="card-header">
 		                   <div class="card-head-row card-tools-still-right justify-content-between">
 		                      <div class="d-flex gap-1">
-			                      <div class="card-title me-2" id="formfoldername">선택된 참조인</div>
+			                      <div class="card-title me-2" id="formfoldername">보관함 목록</div>
 			                      </div>
 		                    </div>
 		                  </div>
@@ -166,19 +168,7 @@
 									<div class="accordion-item" style="border: none;">
 						    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse show">
 									      <div class="accordion-body" style='padding: 0!important;'>
-									         <div class="list-group d-flex" id="memberlist2">
-									         <!-- 선택항목 들어가는 위치 -->
-									         	<!-- <a href="#" class="border rounded list-group-item list-group-item-action align-items-center justify-content-between" data-id="2">
-									         		<div>
-									         			<span class="badge rounded-pill text-bg-secondary me-2 ms-0" >1</span><i class="fas fa-user me-2"></i><b>차은우</b>&ensp;팀장
-							         				</div>
-								         			<select class="form-select w-25">
-							                            <option>검토</option>
-							                            <option>결재</option>
-							                            <option>전결</option>
-							                            <option>후결</option>
-							                          </select>
-							         			</a> -->
+									         <div class="list-group d-flex" id="storagelist">
 											</div>
 									      </div>
 									    </div>
@@ -189,12 +179,96 @@
 		               </div>
 		          </div>	
 			</div>
-    	<div class="d-flex justify-content-end gap-2">
+    	<div class="d-flex justify-content-end gap-2" id="strageBtnBox">
 	        <button class="btn btn-primary" id="okBtn">적용</button>
 	        <button class="btn btn-outline-primary" id="cancelBtn">취소</button>
 	    </div>
 	</div>
 	</div>
 </div>
+<script>
+$(document).ready(function() {
+    // jQuery로 Bootstrap Collapse 토글 처리
+    $('[data-bs-toggle="collapse"]').click(function() {
+        var target = $(this).data('bs-target');
+        $(target).collapse('toggle');
+    });
+    
+
+    $('.folder-item').on('click', function(e) {
+        e.preventDefault(); // 기본 클릭 동작을 막음
+
+        var folderKey = $(this).data('folder-key'); // 클릭된 항목의 folderId 가져오기
+
+        $.ajax({
+            url: '${path}/admin/documentForm/selectDoc', // 서버 요청 URL
+            type: 'GET',
+            data: { folderKey: folderKey }, // 요청에 포함될 데이터
+            success: function(response) {
+                // 서버에서 받은 데이터를 사용하여 추가
+                var list = $('#storagelist');
+                list.empty(); // 기존 내용을 비움
+                
+                let count = 0;
+				//순회하며 리스트에 추가
+                response.forEach(function(doc, index) {
+                    console.log(doc);
+                    if(doc.storageFolder.useYn === 'Y'){
+                    	count++;
+	                    let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
+						.attr({
+							'href':'#',
+							'data-key': doc.erStorageKey, 
+							'data-name' : doc.erStorageName,
+							'data-folder' : doc.storageFolder.folderName							
+							});
+						let $i = $("<i>").addClass('icon-drawer me-2');
+						let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0').text(`${count}`);
+						let $div = $("<div>").append($($span));
+						$div.append($i).append("<span>" + doc.erStorageName + "</span>");
+						$a.append($($div)).appendTo(list);
+                    }
+                });
+            }
+        });
+        
+        //보관함 선택 효과
+	    $("#storagelist").on('click', "a", function(e) {
+	    	e.preventDefault(); // 기본 클릭 동작을 막음
+	    	$('#storagelist a').removeClass('selected');
+		    $(this).toggleClass('selected');
+		    e.stopPropagation();
+		});
+    });
+    
+    //적용버튼 클릭
+    $("#strageBtnBox>#okBtn").click(e=>{
+		
+		let $selectedItems = $("div#storagelist>a.selected");
+		console.log($selectedItems);
+		if($selectedItems.length == 0){
+			e.preventDefault(); // 기본 동작 방지
+			e.stopPropagation(); // 이벤트 전파 방지
+			alert('보관함을 선택하세요.');
+		}else{
+			let $parentFolder = $selectedItems.closest('.parentfolder');
+			let $app = {
+				        erStorageKey: $selectedItems.data('key'),
+				        erStorageName: $selectedItems.data('name'),
+				        erStorageFolder : $selectedItems.data('folder') 
+					    };
+			console.dir($app);
+	    	
+			//부모창에 전달
+			window.opener.sendStorageToParent($app);
+			window.close();
+		}
+	});
+    //취소
+    $("#cancelBtn").click(e=>{
+		window.close();
+	});
+});
+</script>
 </body>
 </html>

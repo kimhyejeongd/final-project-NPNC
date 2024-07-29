@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.google.gson.Gson;
+import com.project.npnc.attendance.model.dto.Attendance;
+import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.chatting.model.dto.ChattingMessage;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
@@ -30,7 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HomeController {
 	private final ChatService service;
-
+	private final AttendanceService attendanceService;	
+	
 	@PostMapping("/chat")
 	public String chat(
 			Model model,
@@ -113,6 +116,9 @@ public class HomeController {
 		model.addAttribute("mychatRoomList",mychatRoomList);
 		System.out.println(mychatRoomList+"========================================");
 		System.out.println("========================================");
+		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(member.getMemberKey());
+		model.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+		model.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
 		return "index";
 	}
 	

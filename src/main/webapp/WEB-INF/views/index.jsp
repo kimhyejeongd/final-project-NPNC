@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
     
 <c:set var="path" value="${pageContext.request.contextPath }"/>            
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -97,7 +98,70 @@
 
 
 					<!-- clock widget end -->
-                   
+					
+					<!-- 출퇴근버튼 js -->
+    				<%-- <script src="${path}/resources/ws/attendance.js"></script> --%>
+    				<script>
+    				//근태 출퇴근 버튼
+    				 $(document).ready(function(){
+    			         $('#endAttendanceBtn').click(function(){
+    			             $.ajax({
+    			                 type: 'POST',
+    			                 url: '${path}/attendance/endattendance',
+    			                 success: function(response) {
+    			                     var message = response.msg;
+    			                     var attendanceEnd = response.attendanceEnd;
+    			                     alert(message);
+    			                     $('#endAttendanceBtn').hide();
+    			                     $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
+    			                 },
+    			                 error: function(xhr, status, error) {
+    			                     alert('퇴근 처리에 실패하였습니다.');
+    			                 }
+    			             });
+    			         });
+    			     }); 
+    				 
+    				 $(document).ready(function(){
+    			         $('#startAttendanceBtn').click(function(){
+    			             $.ajax({
+    			                 type: 'POST',
+    			                 url: '${path}/attendance/startattendance',
+    			                 success: function(response) {
+    			                     var message = response.msg;
+    			                     var attendanceStart = response.attendanceStart;
+    			                     alert(message);
+    			                     $('#startAttendanceBtn').hide();
+    			                     $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
+    			                 },
+    			                 error: function(xhr, status, error) {
+    			                     alert('출근 처리에 실패하였습니다.');
+    			                 }
+    			             });
+    			         });
+    			     }); 
+    				
+    				</script>
+    				
+    				
+    				<!-- 출퇴근 end -->
+    				
+                   	<div id="attendanceResult" style="margin-top:20px;">
+						<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};" class="btn btn-dark btn-round">
+								출근
+						</button>
+						<c:if test="${not empty checkStartTime}">
+							출근 시간 : ${checkStartTime.substring(9, 17)}  
+						</c:if>	
+					</div>
+					<div id="attendanceEndResult" style="margin-top:20px;">
+						<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};"  class="btn btn-dark btn-round">
+							퇴근
+						</button>
+						<c:if test="${not empty checkEndTime}">
+							퇴근 시간 : ${checkEndTime.substring(9, 17)}  
+						</c:if>
+					</div>
                   </div>
                 </div>
               </div>
@@ -416,6 +480,7 @@
         </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
        
+
 
     
     <!--   Core JS Files   -->

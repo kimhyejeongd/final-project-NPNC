@@ -29,8 +29,6 @@
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   
-  <!-- SweetAlert2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
@@ -413,6 +411,9 @@ $("#approverBtn").click(function() {
 $("#refererBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/referer', 'referer', 'width=900, height=700, left=500, top=100');
 });
+$("#storageBtn").click(function() {
+	window.open('${pageContext.request.contextPath}/document/write/storage', 'storage', 'width=900, height=700, left=500, top=100');
+});
 function sendDataToParent(data) {
     console.dir(data);
     $("#approvalDiv").html(''); // approvalDiv 초기화
@@ -637,6 +638,54 @@ function sendRefererToParent(data) {
         	$(e.target).parent().remove();
         });
     });
+}
+function sendStorageToParent(data){
+	console.log(data);
+	$("#storageDiv").html('');
+	
+	 let $div = $("<div>", {
+         id: "storage",
+         css: {
+             width: '100%',
+             textAlign: 'left',
+             borderRadius: '15px'
+         },
+         class: 'col m-0 p-2'
+     });
+
+     $("<input>", {
+         name: 'erDocStorageKey',
+         value: data.erStorageKey,
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+         type: 'hidden'
+     }).appendTo($div);
+     
+     $("<span>", {
+         name: '',
+         text: data.erStorageFolder + " > ",
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+     }).attr('readonly', true).appendTo($div);
+     
+     $("<span>", {
+         name: '',
+         text: data.erStorageName,
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+     }).attr('readonly', true).appendTo($div);
+     
+     $div.appendTo($("#storageDiv"));
+     $("#storageBtn").text('재선택');
 }
 </script>
 </body>

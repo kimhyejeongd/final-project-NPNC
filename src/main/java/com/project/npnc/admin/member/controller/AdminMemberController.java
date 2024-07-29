@@ -1,9 +1,11 @@
 package com.project.npnc.admin.member.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,11 +46,14 @@ public class AdminMemberController {
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,			
 			Model m){
-		
 		//페이징처리
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectMemberCount();
 		List<AdminMember> members= service.selectMemeberAll(page);
+		List<Department> dept=deptService.selectDeptAll();
+		List<Job> job=jobService.selectJobAll();
+		m.addAttribute("dept",dept);
+		m.addAttribute("job",job);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("members",members);
 		m.addAttribute("totalContents",totaldata);
@@ -103,16 +108,26 @@ public class AdminMemberController {
 	}
 	
 	
-	@PostMapping("/updatemember.do")
-	public String updateMember(Model m,int memberKey) {
-		AdminMember member =service.selectMemberByNo(memberKey);
-		List<Department> dept=deptService.selectDeptAll();
-		List<Job> job=jobService.selectJobAll();
-		m.addAttribute("dept",dept);
-		m.addAttribute("job",job);
-		m.addAttribute("member",member);
+//	@PostMapping("/updatemember.do")
+//	public String updateMember(Model m,int memberKey) {
+//		AdminMember member =service.selectMemberByNo(memberKey);
+//		List<Department> dept=deptService.selectDeptAll();
+//		List<Job> job=jobService.selectJobAll();
+//		m.addAttribute("dept",dept);
+//		m.addAttribute("job",job);
+//		m.addAttribute("member",member);
 		
-		return "admin/member/updatemember";
+//		return "admin/member/updatemember";
+//	}
+	
+	@GetMapping("/updatemember")
+	public ResponseEntity<Map<String,AdminMember>> updateMember(int memberKey) {
+		AdminMember member =service.selectMemberByNo(memberKey);
+		Map<String,AdminMember> response =new HashMap<>();
+		response.put("member", member);
+		System.out.println("되나? : "+member);
+		System.out.println("되나? : "+response);
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/updatememberend.do")
@@ -160,11 +175,22 @@ public class AdminMemberController {
 			Model m
 			){
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
-		int totaldata=service.searchMemberCount(searchKey);
-		List<AdminMember> members= service.searchMember(searchKey, page);
-		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,null,null,"searchMember"));
-		m.addAttribute("members",members);
-		m.addAttribute("searchK",searchKey);
+		if(searchKey.equals("")||searchKey==null) {
+			int totaldata=service.selectMemberCount();
+			List<AdminMember> members= service.selectMemeberAll(page);
+			m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
+			m.addAttribute("members",members);
+		}else {
+			int totaldata=service.searchMemberCount(searchKey);
+			List<AdminMember> members= service.searchMember(searchKey, page);
+			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,null,null,"searchMember"));
+			m.addAttribute("members",members);
+			m.addAttribute("searchK",searchKey);
+		}
+		List<Department> dept=deptService.selectDeptAll();
+		List<Job> job=jobService.selectJobAll();
+		m.addAttribute("dept",dept);
+		m.addAttribute("job",job);
 		return "admin/member/memberlist";
 	}
 	

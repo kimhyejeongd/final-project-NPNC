@@ -9,7 +9,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
+	  	<!-- SweetAlert2 CSS -->
+  		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  		<!-- SweetAlert2 JS -->
+ 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 	
 	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %>
 		<form action="${path}/attendance/updateAttendanceEnd" method="post">
@@ -202,6 +205,39 @@
 		
 		
 		</form>
+		
+		<script>
+		function rewriteModal(no){
+			console.log(no);
+			Swal.fire({
+				title: '문서 재작성 확인',
+				html: '문서를 다시 작성하시겠습니까?',
+				showCancelButton: true,
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger ms-2',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소',
+				buttonsStyling: false,
+				reverseButtons: false
+			}).then(result => {
+				if (result.isConfirmed) {
+					let $form = $("<form>").attr({
+											'method' : 'post', 
+											'action': sessionStorage.getItem("path") + `/document/rewrite`,
+											'type' : 'hidden'
+											})
+										;
+					$("<input>").attr({
+										'name' : 'serial',
+										'value' : no,
+										'type' : 'hidden'
+									}).appendTo($form)
+					$form.appendTo($("body")).submit();
+				}
+			});
+		};
+		
+		</script>
 
 </body>
 </html>
