@@ -1,84 +1,246 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<c:set var="path" value="${pageContext.request.contextPath }"/> 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>수정요청</title>
-</head>
-<body>
-				<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
-				
+<c:set var="path" value="${pageContext.request.contextPath }"/>	
+<div class="modal fade" id="editmemModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-lg">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="formModalLabel">사원 수정</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+        <div class="modal-body">
+			<form action="${path}/attendance/updateAttendance" method="post">
+				<div class="container">
+         		 <div class="page-inner">
 				<div class="form-group">
-					<div class="col-md-9 p-0">
-		           		 작성자 <h4>${attendanceEdit.attendanceEditMember }</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 작성일 <h4>${attendanceEdit.attendanceEditDate}</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 수정요청일 <h4>${attendanceEdit.attendanceEditRequestDate }</h4>
-		            </div>        
-					
-					<div class="col-md-9 p-0">
-		           		 수정전상태 <h4>${attendanceEdit.attendanceEditBeforeState }</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 수정전시간 <h4>${attendanceEdit.attendanceEditBeforeTime }</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 출근/퇴근 <h4>${attendanceEdit.attendanceEditStartEnd }</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 수정요청상태 <h4>${attendanceEdit.attendanceEditAfterState }</h4>
-		            </div>
-		            
-		            <div class="col-md-9 p-0">
-		           		 수정요청시간 <h4>${attendanceEdit.attendanceEditAfterTime }</h4>
-		            </div>
-		            		            
-		            <div class="col-md-9 p-0">
-		           		 요청사유 <h4>${attendanceEdit.attendanceEditRequest }</h4>
-		            </div>		
+					<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditMemberMo"
+		                            class="col-md-3 col-form-label"
+		                            >작성자</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditMemberMo"
+		                              name="attendanceEditMember"
+									<%--   value="${attendanceEdit.attendanceEditMember}" --%>
+		                              placeholder="작성자"
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
 		           	
-		           	<div class="col-md-9 p-0">
-		           		 수정의견 <h4>${attendanceEdit.attendanceEditOpinion }</h4>
-		            </div>			           	
-		          	<div>
-		          		<button onclick="deleteAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">삭제</button>
-		          	</div>
-				</div>
-				
-				<script>
-				const deleteAttendanceEdit=(key)=>{
-					   if(confirm("정말 삭제 하시겠습니까?")){
+		           	<input type="hidden" id="attendanceEditKeyMo" name="attendanceEditKey" value="${attendanceEdit.attendanceEditKey }">
+		           	
+		           	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditDateMo"
+		                            class="col-md-3 col-form-label"
+		                            >작성일</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="date"
+		                              class="form-control input-full"
+		                              id="attendanceEditDateMo"
+		                              name="attendanceEditDate"
+									 <%--  value="${attendanceEdit.attendanceEditDate }" --%>
+		                              placeholder="작성일"
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
+		           	
+		           	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditRequestDateMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정요청일</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="date"
+		                              class="form-control input-full"
+		                              id="attendanceEditRequestDateMo"
+		                              name="attendanceEditRequestDate"
+									 <%--  value="${attendanceEdit.attendanceEditRequestDate }" --%>
+		                              placeholder="수정요청일"
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
+		           	
+		           		<div class="form-group form-inline">
+		                          	<label
+		                            for="attendanceEditBeforeStateMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정전상태</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditBeforeStateMo"
+		                              name="attendanceEditBeforeState"
+		                              <%-- value="${attendanceEdit.attendanceEditBeforeState }" --%>
+		                              readonly
+		                            />
+		                          </div>
+						</div>
+						
+						<div class="form-group form-inline">
+		                           	<label
+		                            for="attendanceEditBeforeTimeMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정전시간</label>
+		                 			<div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditBeforeTimeMo"
+		                              name="attendanceEditBeforeTime"
+		                             <%--  value="${attendanceEdit.attendanceEditBeforeTime }" --%>
+		                              readonly
+		                            />
+		                          </div>
+		                </div>
+		              	<div class="form-group form-inline">
+		                          	<label
+		                            for="attendanceEditStartEndMo"
+		                            class="col-md-3 col-form-label"
+		                            >출근/퇴근</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditStartEndMo"
+		                              name="attendanceEditStartEnd"
+		                            <%--   value="${attendanceEdit.attendanceEditStartEnd }" --%>
+		                              readonly
+		                            />
+		                          </div>
+						</div>            
+		                          
+		           	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditAfterTimeMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정요청시간</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditAfterTimeMo"
+		                              name="attendanceEditAfterTime"
+		                             <%--  value="${attendanceEdit.attendanceEditAfterTime }" --%>
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
+		           
+		         <div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditAfterStateMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정후상태</label>
+		                          <div class="col-md-9 p-0">
+		                            <input
+		                              type="text"
+		                              class="form-control input-full"
+		                              id="attendanceEditAfterStateMo"
+		                              name="attendanceEditAfterState"
+		                              value="${attendanceEdit.attendanceEditAfterState }"
+		                              readonly
+		                            />
+		                          </div>
+		           	</div>
+		           
+		           	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditRequestMo"
+		                            class="col-md-3 col-form-label"
+		                            >요청사유</label>
+		                          <div class="col-md-9 p-0">
+		                            <textarea
+		                              class="form-control"
+		                              id="attendanceEditRequestMo"
+		                              name="attendanceEditRequest"
+		                             readonly
+		                            ><%-- ${attendanceEdit.attendanceEditRequest } --%></textarea>
+		                          </div>
+		           	</div>
+		           	
+		           	 	<div class="form-group form-inline">
+		                          <label
+		                            for="attendanceEditOpinionMo"
+		                            class="col-md-3 col-form-label"
+		                            >수정의견</label>
+		                          <div class="col-md-9 p-0">
+		                            <textarea
+		                              class="form-control"
+		                              id="attendanceEditOpinionMo"
+		                              name="attendanceEditOpinion"
+		                              required
+<%-- 		                             <c:if test="${not empty attendanceEditOpinion}">
+		                              	readonly
+		                             </c:if> --%>
+		                            ></textarea>
+		                          </div>
+		           	</div>
+
+			           	<button
+			           		id="approveButton"
+						  	type="submit"
+						 	class="btn btn-success"
+			 				data-color="dark"
+						>삭제</button>
+			</div>
+			</div>
+		   </div>
+		</form>
+
+		</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+		
+					
+					
+ 				<script>
+				const rejectionAttendanceEdit=()=>{
+					   if(confirm("반려 하시겠습니까?")){
+
 				           let form = document.createElement("form");
 				           form.setAttribute("method", "post");
-				           form.setAttribute("action", "${path}/attendance/deleteAttendanceEdit");
+				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
 				
+				           let key = document.getElementById("attendanceEditKey").value;
 				           let $key = document.createElement("input");
 				           $key.setAttribute("type", "hidden");
 				           $key.setAttribute("name", "attendanceEditKey");
 				           $key.setAttribute("value", key);
 				 
 				           form.appendChild($key);
-				
+							
+				           let opinion = document.getElementById("attendanceEditOpinion").value;
+				           let $opinion = document.createElement("input");
+				           $opinion.setAttribute("type", "hidden");
+				           $opinion.setAttribute("name", "attendanceEditOpinion");
+				           $opinion.setAttribute("value", opinion);
+				           form.appendChild($opinion);
+				           
 				           document.body.appendChild(form);
 				           form.submit();
 					   }else{
-						   alert("삭제가 취소되었습니다.");
+						   alert("반려가 취소되었습니다.");
+						   location.replace("${path}/admin/attendance/selectAdminAttendanceEditAll");
 					   }
 					   
 					}
 
-				</script>
-
-</body>
-</html>
+				</script> 

@@ -34,6 +34,12 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		return session.delete("department.deleteDept",deptKey);
 	}
 
+	@Override
+	public Department selectDeptByKey(SqlSession session, String deptKey) {
+		
+		return session.selectOne("department.selectDeptByKey",deptKey);
+	}
+
 	
 	
 }

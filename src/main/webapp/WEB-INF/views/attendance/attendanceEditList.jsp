@@ -63,6 +63,9 @@
 					                            <td>${a.attendanceEditAfterTime}</td>
 					                            <td>${a.attendanceEditState}</td>
 					                            <td>
+					                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editmemModal" data-member-key="${a.attendanceEditKey}">
+											    		상세MO
+											  		</button>
 					                            	<button onclick="attendanceEditDetail(${a.attendanceEditKey})" class="btn btn-success">상세</button>
 					                            </td>
 					                          </tr>
@@ -84,8 +87,68 @@
 				</div>
 			</div>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+			<%-- <%@ include file="/WEB-INF/views/attendance/attendanceEditDetail.jsp" %> --%>
 	</div>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+			
 			<script>
+			
+			$(document).ready(function() {
+			    $('#editmemModal').on('show.bs.modal', function (event) {
+			        var button = $(event.relatedTarget); // 버튼을 클릭한 버튼을 참조합니다.
+			        var attendanceEditKey = button.data('member-key'); // data-attendanceeditkey 속성의 값을 가져옵니다.
+			        console.log(attendanceEditKey);
+			        // AJAX를 사용하여 서버에서 데이터 가져오기
+			        $.ajax({
+			            url: '${path}/attendance/attendanceEditDetail',
+			            type: 'POST',
+			            data: { attendanceEditKey: attendanceEditKey },
+			            /* dataType: 'json', // 서버 응답을 JSON으로 처리 */
+			            success: function(data) {
+			            	console.log(data);
+			            	console.log(data.attendanceEdit.attendanceEditKey);
+			            	
+			            	 function formatDate(timestamp) {
+				                    var date = new Date(timestamp);
+				                    var year = date.getFullYear();
+				                    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+				                    var day = ('0' + date.getDate()).slice(-2);
+				                    return year + '-' + month + '-' + day;
+				                }
+
+			                // 모달에 데이터 설정
+			                $('#attendanceEditKeyMo').val(data.attendanceEdit.attendanceEditKey);
+			                $('#attendanceEditMemberMo').val(data.attendanceEdit.attendanceEditMember); 
+			                $('#attendanceEditDateMo').val(formatDate(data.attendanceEdit.attendanceEditDate));
+			                $('#attendanceEditRequestDateMo').val(formatDate(data.attendanceEdit.attendanceEditRequestDate));
+			                $('#attendanceEditBeforeStateMo').val(data.attendanceEdit.attendanceEditBeforeState);
+			             	$('#attendanceEditBeforeTimeMo').val(data.attendanceEdit.attendanceEditBeforeTime); 
+			                $('#attendanceEditStartEndMo').val(data.attendanceEdit.attendanceEditStartEnd);
+			                $('#attendanceEditAfterTimeMo').val(data.attendanceEdit.attendanceEditAfterTime);
+			                $('#attendanceEditAfterStateMo').val(data.attendanceEdit.attendanceEditAfterState);
+			                $('#attendanceEditRequestMo').val(data.attendanceEdit.attendanceEditRequest);
+			                $('#attendanceEditOpinionMo').val(data.attendanceEdit.attendanceEditOpinion);
+			                /* $('#attendanceKeyMo').val(data.attendanceEdit.attendance.attendanceKey);  */
+			                
+
+			            },
+			            error: function() {
+			                alert('Failed to fetch data.');
+			            }
+			        });
+			    });
+			});
+			
+			/* function fn_paging(pageNo) {
+		 	    console.log('오긴왔냐?');
+		 	    location.assign('${path}/admin/attendance/searchAdminAttendanceEdit?cPage=' + pageNo + '&searchKey=${searchK}&searchType=${searchT}'); */
+		 	    /* location.assign('${path}/${url}?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchType}&searchStartDate=${searchStartDate}&searchEndDate=${searchEndDate}'); */    
+		 	/* } */	
+			
 				document.getElementById("searchType").addEventListener("change",e=>{
 					console.log("맞냐");
 					const searchType = e.currentTarget.value;

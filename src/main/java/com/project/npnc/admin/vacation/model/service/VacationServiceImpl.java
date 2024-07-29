@@ -25,9 +25,9 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	@Override
-	public int insertVacation(String vacationName) {
+	public int insertVacation(Vacation v) {
 		
-		return dao.insertVacation(session, vacationName);
+		return dao.insertVacation(session, v);
 	}
 
 	@Override
@@ -40,6 +40,12 @@ public class VacationServiceImpl implements VacationService {
 	public int deleteVacation(int vacationKey) {
 		
 		return dao.deleteVacation(session, vacationKey);
+	}
+
+	@Override
+	public Vacation selectVacationByKey(int vacationKey) {
+		
+		return dao.selectVacationByKey(session, vacationKey);
 	}
 
 	

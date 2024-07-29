@@ -97,13 +97,11 @@
 		              </div>
 			</div>
 			
-			<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>  --%>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 		</div>
 		
 			<!--상세 모달 정의 -->
 
-			<%-- <%@ include file="/WEB-INF/views/admin/member/insertmodal.jsp" %> --%>
 	  		 <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>
 	  		
 	  		

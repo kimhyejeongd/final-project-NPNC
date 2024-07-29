@@ -8,7 +8,8 @@ import com.project.npnc.admin.vacation.model.dto.Vacation;
 public interface VacationService {
 
 	List<Vacation> selectVacationAll();
-	int insertVacation(String vacationName);
+	Vacation selectVacationByKey(int vacationKey);
+	int insertVacation(Vacation v);
 	int updateVacation(Vacation v);
 	int deleteVacation(int vacationKey);
 	
