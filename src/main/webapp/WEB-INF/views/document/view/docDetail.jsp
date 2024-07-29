@@ -135,7 +135,7 @@
                   <div class="card-body">
                	<div class="form-group d-flex">
 			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
 			      	<span style="font-size: larger;">${l.erDocTitle }</span>
 			      </div>
 			    </div>
@@ -149,9 +149,9 @@
 			      		</c:if>
 			    </div>
 		    	 <div class="form-group d-flex">
-			      <label for="smallInput" class="me-3"><span class="h5 me-5">보관 </span></label>
-			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      	<span style="font-size: larger;">${l.erDocStorage}</span>
+			      <label for="smallInput" class=""><span class="h5 me-5">보관함 </span></label>
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
+			      	<span style="font-size: larger;">${l.erDocStorageKey}</span>
 			      </div>
 			    </div>
 			    <div class="form-group d-flex">
@@ -191,7 +191,7 @@
 			    </div>
 			    <div class="form-group d-flex align-items-center gap-3">
 			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;">참조문서</span></label>
-			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      <div class="border d-block" style="height: auto; min-height: 30px; width: 100%;" id="">
 			      </div>
 			    </div>
 	          	<c:if test="${l.files[0].fileKey ne 0}">

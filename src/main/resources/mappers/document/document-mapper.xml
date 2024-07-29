@@ -13,7 +13,8 @@
 	    <result column="er_doc_create_date" property="erDocCreateDate"/>
 	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
 	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
-	    <result column="er_doc_storage" property="erDocStorage"/>
+	    <result column="er_doc_storage_key" property="erDocStorageKey"/>
+	    <result column="er_doc_storage_name" property="erDocStorageName"/>
 	    <result column="er_doc_filename" property="erDocFilename"/>
 	    <result column="er_doc_state" property="erDocState"/>
 	    <result column="er_doc_state_update_date" property="erDocStateUpdateDate"/>
@@ -161,7 +162,6 @@
 	<!-- 문서 -->
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
-		 <!-- select ER_DOC_KEY, ER_DOC_SERIAL_KEY, ER_DOC_WRITER, ER_DOC_TITLE, ER_DOC_CREATE_DATE, ER_DOC_EMERGENCY_YN, ER_DOC_DELETE_YN, ER_DOC_STOARGE, ER_DOC_FILENAME. ER_DOC_STATE. ER_DOC_STATE_UPDATE_DATE, ER_DOC_LAST_UPDATER, ER_DOC_LAST_UPDATE_REASON from er_document -->
 		SELECT    
 		 	ER_DOC_KEY,
 		 	ER_DOC_SERIAL_KEY,
@@ -170,7 +170,7 @@
 		 	ER_DOC_CREATE_DATE,
 		 	ER_DOC_EMERGENCY_YN,
 		 	ER_DOC_DELETE_YN,
-		 	ER_DOC_STOARGE,
+		 	ER_DOC_STORAGE_KEY,
 		 	ER_DOC_FILENAME,
 		 	ER_DOC_STATE,
 		 	ER_DOC_STATE_UPDATE_DATE,
@@ -217,7 +217,7 @@
 		 	ER_DOC_CREATE_DATE,
 		 	ER_DOC_EMERGENCY_YN,
 		 	ER_DOC_DELETE_YN,
-		 	ER_DOC_STOARGE,
+		 	ER_DOC_STORAGE_KEY,
 		 	ER_DOC_FILENAME,
 		 	ER_DOC_STATE,
 		 	ER_DOC_STATE_UPDATE_DATE,
@@ -249,7 +249,7 @@
 		        ed.ER_DOC_CREATE_DATE,
 		        ed.ER_DOC_EMERGENCY_YN,
 		        ed.ER_DOC_DELETE_YN,
-		        ed.ER_DOC_STOARGE,
+		        ed.ER_DOC_STORAGE_KEY,
 		        ed.ER_DOC_FILENAME,
 		        ed.ER_DOC_STATE,
 		        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -290,7 +290,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -358,7 +358,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -411,7 +411,7 @@
 			        ed.ER_DOC_CREATE_DATE,
 			        ed.ER_DOC_EMERGENCY_YN,
 			        ed.ER_DOC_DELETE_YN,
-			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_STORAGE_KEY,
 			        ed.ER_DOC_FILENAME,
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -468,7 +468,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -521,7 +521,7 @@
 			        ed.ER_DOC_CREATE_DATE,
 			        ed.ER_DOC_EMERGENCY_YN,
 			        ed.ER_DOC_DELETE_YN,
-			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_STORAGE_KEY,
 			        ed.ER_DOC_FILENAME,
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -566,7 +566,7 @@
 				d.ER_DOC_CREATE_DATE,
 				d.ER_DOC_EMERGENCY_YN,
 				d.ER_DOC_DELETE_YN,
-				d.ER_DOC_STOARGE,
+				d.ER_DOC_STORAGE_KEY,
 				d.ER_DOC_FILENAME,
 				d.ER_DOC_STATE,
 				d.ER_DOC_STATE_UPDATE_DATE,
@@ -638,7 +638,7 @@
 			d.ER_DOC_CREATE_DATE, 
 			d.ER_DOC_EMERGENCY_YN, 
 			d.ER_DOC_DELETE_YN, 
-			d.ER_DOC_STOARGE, 
+			d.ER_DOC_STORAGE_KEY, 
 			d.ER_DOC_FILENAME,
 			d.ER_DOC_STATE,
 			d.ER_DOC_STATE_UPDATE_DATE, 
@@ -673,7 +673,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -726,7 +726,7 @@
 			        ed.ER_DOC_CREATE_DATE,
 			        ed.ER_DOC_EMERGENCY_YN,
 			        ed.ER_DOC_DELETE_YN,
-			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_STORAGE_KEY,
 			        ed.ER_DOC_FILENAME,
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -775,7 +775,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -828,7 +828,7 @@
 			        ed.ER_DOC_CREATE_DATE,
 			        ed.ER_DOC_EMERGENCY_YN,
 			        ed.ER_DOC_DELETE_YN,
-			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_STORAGE_KEY,
 			        ed.ER_DOC_FILENAME,
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -877,7 +877,7 @@
 		    fd.ER_DOC_CREATE_DATE,
 		    fd.ER_DOC_EMERGENCY_YN,
 		    fd.ER_DOC_DELETE_YN,
-		    fd.ER_DOC_STOARGE,
+		    fd.ER_DOC_STORAGE_KEY,
 		    fd.ER_DOC_FILENAME,
 		    fd.ER_DOC_STATE,
 		    fd.ER_DOC_STATE_UPDATE_DATE,
@@ -931,7 +931,7 @@
 			        ed.ER_DOC_CREATE_DATE,
 			        ed.ER_DOC_EMERGENCY_YN,
 			        ed.ER_DOC_DELETE_YN,
-			        ed.ER_DOC_STOARGE,
+			        ed.ER_DOC_STORAGE_KEY,
 			        ed.ER_DOC_FILENAME,
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
@@ -978,7 +978,7 @@
 			d.ER_DOC_CREATE_DATE,
 			d.ER_DOC_EMERGENCY_YN,
 			d.ER_DOC_DELETE_YN,
-			d.ER_DOC_STOARGE,
+			d.ER_DOC_STORAGE_KEY,
 			d.ER_DOC_FILENAME, 
 			d.ER_DOC_STATE, 
 			d.ER_DOC_STATE_UPDATE_DATE,
@@ -1015,7 +1015,7 @@
 			er.ER_REFERER_TEAM_KEY,
 			d2.DEPARTMENT_NAME,
 			er.ER_REFERER_JOB_KEY,
-			j.JOB_NAME,
+			j2.JOB_NAME,
 			er.ER_REFERER_NAME,
 			er.MEMBER_KEY
 		FROM   
@@ -1025,7 +1025,9 @@
 		LEFT JOIN
       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
 		LEFT JOIN
-			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY 
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY
+		LEFT JOIN
+			job j2 ON er.ER_REFERER_JOB_KEY = j2.JOB_KEY 
 		LEFT JOIN
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
         LEFT JOIN 
@@ -1045,7 +1047,7 @@
 			d.ER_DOC_CREATE_DATE,
 			d.ER_DOC_EMERGENCY_YN,
 			d.ER_DOC_DELETE_YN,
-			d.ER_DOC_STOARGE,
+			d.ER_DOC_STORAGE_KEY,
 			d.ER_DOC_FILENAME, 
 			d.ER_DOC_STATE, 
 			d.ER_DOC_STATE_UPDATE_DATE,
@@ -1127,7 +1129,7 @@
 				ER_DOC_CREATE_DATE,
 				ER_DOC_EMERGENCY_YN,
 				ER_DOC_DELETE_YN,
-				ER_DOC_STOARGE,
+				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
 				ER_DOC_STATE, 
 				ER_DOC_STATE_UPDATE_DATE,
@@ -1147,7 +1149,7 @@
               DEFAULT,
               #{erDocEmergencyYn},
               DEFAULT,
-              #{erDocStorage},
+              #{erDocStorageKey},
               To_char(SYSDATE, 'YYMMDD')
                         || '-'
                         || #{erDocSerialKey}
@@ -1181,7 +1183,7 @@
 				ER_DOC_CREATE_DATE,
 				ER_DOC_EMERGENCY_YN,
 				ER_DOC_DELETE_YN,
-				ER_DOC_STOARGE,
+				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
 				ER_DOC_STATE, 
 				ER_DOC_STATE_UPDATE_DATE,
@@ -1201,7 +1203,7 @@
               DEFAULT,
               #{erDocEmergencyYn},
               DEFAULT,
-              #{erDocStorage},
+              #{erDocStorageKey},
               To_char(SYSDATE, 'YYMMDD')
                         || '-'
                         || #{erDocSerialKey}
