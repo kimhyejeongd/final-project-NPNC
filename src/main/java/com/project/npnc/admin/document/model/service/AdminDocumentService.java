@@ -62,7 +62,20 @@ public class AdminDocumentService {
 	public List<Member>selectAllMembers(){
 		return dao.selectAllMembers(session);
 	}
-	public int insertStorage(Storage storage) {
-		return dao.insertStorage(session,storage);
+	public List<AdminDocument> insertStorage(Storage storage) {
+		int order = dao.selectStorageOrder(session,storage.getStorageFolderKey());
+		storage.setStorageOrderBy(order);
+		dao.insertStorage(session,storage);
+		return dao.selectDocAll(session,storage.getStorageFolderKey());
+	}
+	public int deleteStorage(List<Integer>deleteKeys) {
+		int result=0;
+	    for(Integer key : deleteKeys) {
+	    	result += dao.deleteStorage(session, key);
+	    }
+	    return result;
+	}
+	public int updateStorage(Storage storage) {
+		return dao.updateStorage(session,storage);
 	}
 }

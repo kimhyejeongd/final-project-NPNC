@@ -90,9 +90,23 @@
                     </div>
                 </div>
                 <div style="width:67%">
+                
+                  
                     <!-- Projects table -->
                     <table class="table table-hover align-items-center mb-0" id="docTable">
                         <thead class="thead-light">
+                        	<tr>
+                        		<th>
+                        		  <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+							        <button class="btn btn-danger btn-xs" id="deleteSelected">삭제</button>
+							    </div>
+                        		</th>
+                        		<th></th>
+                        		<th></th>
+                        		<th></th>
+                        		<th></th>
+                        		<th></th>
+                        	</tr>
                             <tr class="text-center">
                                 <th scope="col" class="">
                                     <input type="checkbox" id="checkAll">
@@ -101,6 +115,7 @@
                                 <th scope="col" class="">보관함 관리자</th>
                                 <th scope="col" class="">보관 기한</th>
                                 <th scope="col" class="">사용여부</th>
+                                <th scope="col" class="">수정</th>
                             </tr>
                         </thead>
                         <tbody id="docTableBody"></tbody>
@@ -180,9 +195,79 @@
 			</div>
 		</div>
     </div>
+    
+    <!-- Update Storage Modal -->
+	<div class="modal fade" id="updateStorage">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h3 class="modal-title">보관함 수정</h3>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	                <form id="updateStorageForm">
+
+                  	<div class="mb-3">
+							<label for="storageName" class="form-label">보관함 명</label>
+							<input type="text" class="form-control" id="updateStorageName" placeholder="보관함 이름 입력">
+                    	</div>
+                    	<div class="form-group mb-3">
+						    <label for="updateFolderType" class="form-label">보관기한</label>
+						    <select class="form-select" id="updateFolderType">
+						        <option value="">선택하세요</option>
+						        <option value="1">1년</option>
+						        <option value="5">5년</option>
+						        <option value=10>10년</option>
+						    </select>
+						</div>
+       			<div class="col w-45" style="">
+                <div class="card card-round" style="height: 500px;" >
+                <div class="card-header">
+                	보관함 관리자
+                  </div>
+                  <div class="p-4 overflow-hidden">
+                    <div class="form-group d-flex gap-1 p-0 pb-4">
+		                <input type="text" class="form-control" placeholder="이름으로 검색">
+		                <button class="btn btn-outline-info btn-sm"><i class="fa fa-search search-icon"></i></button>
+		            </div>
+                    <div class="card-list p-0 overflow-x-auto m-0 rounded" style="height: 330px;">
+	                    <div class="accordion" id="accordionPanelsStayOpenExample">
+						<c:forEach var="d" items="${members }" varStatus="status">
+							<div class="accordion-item">
+							    <h2 class="accordion-header">
+							      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
+							        <i class="fas fa-bookmark me-2"></i>${d.departmentName} 
+							      </button>
+							    </h2>
+				    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse show">
+							      <div class="accordion-body" style='padding: 0!important;'>
+							         <div class="list-group" id="memberlist">
+						 				<c:forEach var="memberlist" items="${d.memberlist}">
+										  <a href="#" class="list-group-item list-group-item-action align-items-center member-item" data-id="${memberlist.memberKey }" data-name="${memberlist.memberName }" data-job="${memberlist.jobName }" data-jobkey="${memberlist.jobKey }" data-team="${d.departmentName}" data-teamKey="${memberlist.departmentKey }">&emsp;<i class="fas fa-user me-2"></i><b>${memberlist.memberName}</b>&ensp;${memberlist.jobName}</a>
+						  				</c:forEach>
+									</div>
+							      </div>
+							    </div>
+							</div>
+						</c:forEach>	
+					</div> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+	                    <div style="display: flex; justify-content: center;">
+	                        <button type="submit" class="btn btn-primary">저장</button>
+	                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+    
 
     <!-- Add Folder Modal -->
-    <div class="modal fade" id="addFolder" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+    <div class="modal fade" id="updateStorage" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -236,13 +321,99 @@
 
     <script>
         $(document).ready(function() {
+        	var selectedFolderKey = null;
+        	
+        	 var selectedStorageId = null;
+        	
+            // 수정 버튼 클릭 이벤트
+            $(document).on('click', '.btn-primary[data-bs-target="#updateStorage"]', function() {
+                var row = $(this).closest('tr');
+                var storageId = row.data('id');
+
+                // 선택된 보관함 ID 저장
+                selectedStorageId = storageId;
+                $('#updateStorage').modal('show');
+            });
+
+            // 수정 폼 제출 이벤트
+            $('#updateStorageForm').on('submit', function(e) {
+                e.preventDefault(); // 기본 폼 제출 동작을 막음
+                var storageName = $('#updateStorageName').val();
+                var folderType = $('#updateFolderType').val();
+                var selectedMember = $('.member-item.active').data('id'); // 선택된 멤버의 ID 가져오기
+                // 유효성 검사
+                if (!storageName || !folderType || !selectedMember) {
+                    alert("모든 필드를 채워주세요.");
+                    return;
+                }
+
+                var requestData = {
+                	storageKey: selectedStorageId,
+                    storageName: storageName,
+                    storageTerm: folderType,
+                    storageManager: selectedMember
+                };
+
+                $.ajax({
+                    url: '${path}/admin/documentForm/updateStorage', // 서버 요청 URL
+                    type: 'POST',
+                    data: JSON.stringify(requestData),
+                    contentType: 'application/json;charset=utf-8',
+                    success: function(response) {
+                        console.log('Storage updated successfully:', response);
+                        $('#updateStorage').modal('hide');
+                        location.reload(); // 수정된 내용을 반영하기 위해 페이지 새로 고침
+                    },
+                    error: function(response) {
+                        console.error('Error updating storage:', response);
+                    }
+                });
+            });
+        	
+            // 삭제 버튼 클릭 이벤트
+            $('#deleteSelected').on('click', function() {
+                var selectedIds = [];
+                $('.checkItem:checked').each(function() {
+                    var row = $(this).closest('tr');
+                    var storageId = row.data('id');
+                    selectedIds.push(storageId);
+                });
+
+                if (selectedIds.length === 0) {
+                    alert("삭제할 보관함을 선택해주세요.");
+                    return;
+                }
+
+                var confirmDelete = confirm("선택한 보관함을 삭제하시겠습니까?");
+                if (confirmDelete) {
+                    $.ajax({
+                        url: '${path}/admin/documentForm/deleteStorage',
+                        type: 'POST',
+                        data: JSON.stringify(selectedIds),
+                        contentType: 'application/json;charset=utf-8',
+                        success: function(response) {
+                            console.log('Storage deleted successfully:', response);
+                            // 성공 시 삭제된 보관함을 테이블에서 제거
+                            $('.checkItem:checked').closest('tr').remove();
+                        },
+                        error: function(response) {
+                            console.error('Error deleting storage:', response);
+                        }
+                    });
+                }
+            });
+        	
         	$('#addStorageForm').on('submit', function(e) {
                 e.preventDefault(); // 기본 폼 제출 동작을 막음
 
                 var storageName = $('#storageName').val();
                 var folderType = $('#folderType').val();
                 var selectedMember = $('.member-item.active').data('id'); // 선택된 멤버의 ID 가져오기
-
+                
+                if (!selectedFolderKey) {
+                    alert("폴더를 선택해주세요.");
+                    return;
+                }
                 // 유효성 검사
                 if (!storageName || !folderType || !selectedMember) {
                     alert("모든 필드를 채워주세요.");
@@ -251,8 +422,9 @@
 
                 var requestData = {
                     storageName: storageName,
-                    storageTerm: storageTerm,
-                    storageManager: selectedMember
+                    storageTerm: folderType,
+                    storageManager: selectedMember,
+                    storageFolderKey : selectedFolderKey
                 };
 
                 $.ajax({
@@ -263,7 +435,19 @@
                     success: function(response) {
                         console.log('Storage added successfully:', response);
                         $('#addStorage').modal('hide');
-                        location.reload(); // 페이지 새로 고침
+                        $("#docTableBody").empty();
+
+                        response.forEach(function(storage) {
+                            var row = 
+                                '<tr class="text-center" data-id="'+storage.erStorageKey+'">' +
+                                    '<td class="approverNow p-3"><input type="checkbox" class="checkItem"></td>' +
+                                    '<td class="approverNow p-3">' + storage.erStorageName + '</td>' +
+                                    '<td class="approverNow p-3">' + storage.department.deptName + " " + storage.member.memberName + " " + storage.job.jobName + '</td>' +
+                                    '<td class="approverNow p-3">' + storage.erStorageTerm + '년</td>' +
+                                    '<td class="approverNow p-3">' + storage.storageFolder.useYn + '</td>' +
+                                '</tr>';
+                            $("#docTableBody").append(row);
+                        });
                     },
                     error: function(response) {
                         console.error('Error adding storage:', response);
@@ -370,9 +554,16 @@
 
             $('.folder-item').on('click', function(e) {
                 e.preventDefault(); // 기본 클릭 동작을 막음
+                
+                
 
                 var folderKey = $(this).data('folder-key'); // 클릭된 항목의 folderId 가져오기
-
+				var folderLevel = $(this).data('folder-level');
+                if(folderLevel ==2){
+                	selectedFolderKey = folderKey;
+                	console.log(selectedFolderKey);
+                }
+                
                 $.ajax({
                     url: '${path}/admin/documentForm/selectDoc', // 서버 요청 URL
                     type: 'GET',
@@ -385,14 +576,19 @@
                         response.forEach(function(doc, index) {
                             console.log(doc);
                             var row = 
-                                '<tr class="text-center">' +
+                                '<tr class="text-center" data-id="'+doc.erStorageKey+'" >'+
                                     '<td class="approverNow p-3"><input type="checkbox" class="checkItem"></td>' +
                                     '<td class="approverNow p-3">' + doc.erStorageName + '</td>' +
                                     '<td class="approverNow p-3">' + doc.department.deptName + " " + doc.member.memberName + " " + doc.job.jobName + '</td>' +
                                     '<td class="approverNow p-3">' + doc.erStorageTerm + '년</td>' +
                                     '<td class="approverNow p-3">' + doc.storageFolder.useYn + '</td>' +
+                                    '<td class="approverNow p-3">' + 
+                                    '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage">수정</button>'
+                                    + '</td>' +
                                 '</tr>';
                             tableBody.append(row);
+                            
+
                         });
                     }
                 });

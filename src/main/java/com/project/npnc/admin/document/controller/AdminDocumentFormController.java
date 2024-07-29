@@ -97,7 +97,18 @@ public class AdminDocumentFormController {
     }
     @PostMapping("/createStorage")
     public ResponseEntity<?>createStorage(@RequestBody Storage storage){
-    	int result = service.insertStorage(storage);
+    	System.out.println(storage);
+    	List<AdminDocument> result = service.insertStorage(storage);
     	return ResponseEntity.ok(result); 
+    }
+    @PostMapping("/deleteStorage")
+    public ResponseEntity<?> deleteStorage(@RequestBody List<Integer>deleteKeys) {
+    	int result = service.deleteStorage(deleteKeys);
+    	return ResponseEntity.ok(result);
+    }
+    @PostMapping("/updateStorage")
+    public ResponseEntity<?>updateStorage(@RequestBody Storage storage){
+    	int result = service.updateStorage(storage);
+    	return ResponseEntity.ok(result);
     }
 }

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admindoc">
-	<insert id="insertStorage">
+	<delete id="deleteStorage" parameterType="int">
+		DELETE FROM ER_STORAGE
+		WHERE ER_STOARGE_KEY = #{deleteKey}
+	</delete>
+	<select id="selectStorageOrder" resultType="int">
+		SELECT COUNT(*)
+		FROM ER_STORAGE
+		WHERE ER_STORAGE_FOLDER_KEY = #{storageFolderKey}
+	</select>
+	<insert id="insertStorage" parameterType="storage">
 		INSERT INTO ER_STORAGE (
 				ER_STOARGE_KEY,
 				ER_STORAGE_FOLDER_KEY,
 				ER_STORAGE_NAME,
 				ER_STORAGE_TERM,
 				ER_STORAGE_MANAGER,
-				ER_STORAGE_ORDERBY)VALUES(
+				ER_STORAGE_ORDERBY
+				)VALUES(
 					SEQ_ER_STORAGE_KEY.NEXTVAL,
-					
+					#{storageFolderKey},
+					#{storageName},
+					#{storageTerm},
+					#{storageManager},
+					#{storageOrderBy}
 				)
 	</insert>
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
@@ -149,6 +163,16 @@
 	<select id="selectAllMembers" resultType="member">
 		SELECT * FROM MEMBER
 	</select>
+	
+	<update id="updateStorage" parameterType="storage">
+		UPDATE ER_STORAGE 
+		SET ER_STORAGE_NAME = #{storageName},
+			ER_STORAGE_TERM = #{storageTerm},
+			ER_STORAGE_MANAGER = #{storageManager}
+		WHERE ER_STOARGE_KEY = #{storageKey}
+		
+		
+	</update>
 	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />

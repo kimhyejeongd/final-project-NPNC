@@ -51,4 +51,13 @@ public class AdminDocumentDao {
 	public int insertStorage(SqlSessionTemplate session, Storage storage) {
 		return session.insert("admindoc.insertStorage",storage);
 	}
+	public int selectStorageOrder(SqlSessionTemplate session, int storageFolderKey) {
+		return session.selectOne("admindoc.selectStorageOrder",storageFolderKey);
+	}
+	public int deleteStorage(SqlSessionTemplate session,int deleteKey) {
+		return session.delete("admindoc.deleteStorage",deleteKey);
+	}
+	public int updateStorage(SqlSessionTemplate session, Storage storage) {
+		return session.update("admindoc.updateStorage",storage);
+	}
 }
