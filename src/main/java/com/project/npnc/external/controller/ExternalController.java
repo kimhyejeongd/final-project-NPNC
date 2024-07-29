@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.npnc.external.dto.ExternalDto;
 import com.project.npnc.external.service.ExternalService;
 
@@ -51,8 +52,13 @@ public class ExternalController {
 
     @PostMapping("/toggleFavorite")
     @ResponseBody
-    public void toggleFavorite(@RequestBody ExternalDto externalDto) {
-        externalService.updateContact(externalDto);
+    public String toggleFavorite(@RequestBody ExternalDto externalDto) {
+        try {
+            //externalService.updateContact(externalDto);
+            return "success";
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     @GetMapping("/get/{id}")

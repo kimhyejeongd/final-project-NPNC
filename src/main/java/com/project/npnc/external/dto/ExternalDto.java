@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ExternalDto {
 	
 	private int AB_EXTERNAL_KEY; //외부 주소록 고유번호
-	private int MEMBER_KEY; //멤버고유번호
+	private String MEMBER_KEY; //멤버고유번호
 	private String AB_EXTERNAL_NAME; //이름
 	private String AB_EXTERNAL_TELL; //전화번호
 	private String AB_EXTERNAL_EMAIL; //이메일

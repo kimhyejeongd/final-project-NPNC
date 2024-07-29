@@ -161,36 +161,12 @@
         </form>
     </div>
 
-    <!-- 오버레이 -->
     <div id="popup-overlay" class="popup-overlay"></div>
 
     <script>
-        function toggleMenu(button) {
-            const menu = button.nextElementSibling;
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function toggleFavorite(star, id) {
-            const isFavorite = star.classList.contains('favorite');
-            const newStatus = isFavorite ? 'N' : 'Y';
-            // AJAX 요청을 통해 즐겨찾기 상태를 서버에 저장
-            fetch('${pageContext.request.contextPath}/external/toggleFavorite', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ AB_EXTERNAL_KEY: id, AB_EXTERNAL_BOOKMARK: newStatus })
-            }).then(response => {
-                if (response.ok) {
-                    star.classList.toggle('favorite');
-                } else {
-                    alert('즐겨찾기 상태를 변경할 수 없습니다.');
-                }
-            });
-        }
-
         function openEditPopup(id) {
-            fetch(`${pageContext.request.contextPath}/external/get/${id}`)
+      
+            fetch(`${path}/external/get/${id}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('edit-id').value = data.AB_EXTERNAL_KEY;
@@ -202,7 +178,8 @@
                     document.getElementById('edit-job').value = data.AB_EXTERNAL_JOB;
                     document.getElementById('edit-popup').style.display = 'block';
                     document.getElementById('popup-overlay').classList.add('show');
-                });
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function openDeletePopup(id) {
@@ -217,11 +194,44 @@
         }
 
         function closePopup() {
-            document.querySelectorAll('.popup').forEach(popup => {
-                popup.style.display = 'none';
-            });
+            document.getElementById('edit-popup').style.display = 'none';
+            document.getElementById('delete-popup').style.display = 'none';
+            document.getElementById('add-popup').style.display = 'none';
             document.getElementById('popup-overlay').classList.remove('show');
         }
+
+        function toggleFavorite(starElement, id) {
+        	console.log(id);
+            const isFavorite = starElement.classList.contains('favorite');
+            const newFavoriteStatus = isFavorite ? 'N' : 'Y';
+            
+            fetch(`${path}/external/toggleFavorite`, {
+                method: 'POST',
+                dataType:'JSON',
+                headers: {
+                	'Accept': 'aplication/json',
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({
+                    'AB_EXTERNAL_BOOKMARK': newFavoriteStatus,
+                    'MEMBER_KEY': id
+           
+                })
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'success') {
+                    starElement.classList.toggle('favorite', !isFavorite);
+                } else {
+                    alert('즐겨찾기 등록할 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
+            });
+        }
+
     </script>
 </body>
 </html>
