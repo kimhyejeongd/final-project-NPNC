@@ -49,10 +49,10 @@
 			$.ajax({
 				url: sessionStorage.getItem("path") + `/document/delete`,
 				data: {no : no},
-				dataType: "text",
+				dataType: "json",
 				method: "post",
 				success: data=>{
-					console.log()
+					console.log();
 					if(data.status==="success"){
 						Swal.fire({
 							title: '삭제 완료',
@@ -64,29 +64,17 @@
 							cancelButtonText: '취소',
 							buttonsStyling: false,
 							reverseButtons: false
-						}).then(() => {
+						}).then(result => {
 							location.reload();
 						});
 					}else{
-				        fetch(sessionStorage.getItem("path")+'/document/writeend', {
-				            method: 'POST',
-				            body: formData,
-				        })
-				        .then(response => response.json())
-				        .then(data => {
-				            if (data.status === "success") {
-				                alert(data.message);
-				                // 성공 시 페이지 새로고침
-				                location.reload();
-				            } else {
-				                alert(data.message);
-				            }
-				        })
-				        .catch(error => {
-				            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-				        });
-					}
-				}
+			            alert("다음과 같은 에러가 발생하였습니다. (" + data.message + ")");
+			        };
+				},
+				error: (xhr, status, error) => {
+                    console.error("Error: ", error);
+                    alert("삭제 요청 중 오류가 발생했습니다.");
+                }
 			});
 		}
 	});
