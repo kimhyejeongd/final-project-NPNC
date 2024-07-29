@@ -77,7 +77,7 @@
  var stompClient = null;
 
  function connectMainPage() {
-     var socket = new SockJS('/ws-stomp');
+     var socket = new SockJS('${path}/ws-stomp');
      stompClient = Stomp.over(socket);
      stompClient.connect({}, function (frame) {
          console.log('Connected: ' + frame);
