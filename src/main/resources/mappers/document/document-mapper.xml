@@ -85,6 +85,20 @@
 		<result column="OWNER_MEMBER_KEY" property="memberKey"/>
 		<collection property="approvers" resultMap="approverLineMap" ofType="approverLine"/>
 	</resultMap>
+	<resultMap type="vacationApply" id="vacationApplyMap">
+		<id column="VACATION_USE_KEY" property="vacationUseKey"/>
+		<result column="VACATION_KEY" property="vacationKey"/>
+		<result column="ER_DOCUMENT_KEY" property="vacationDocSerialKey"/>
+		<result column="VACATION_APPLY_DATE" property="vacationApplyDate"/>
+		<result column="VACATION_APPLY_STATUS" property="vacationApplyStatus"/>
+		<result column="VACATION_START_DATE" property="vacationStartDate"/>
+		<result column="VACATION_END_DATE" property="vacationEndDate"/>
+		<result column="VACATION_USE_COUNT" property="vacationUseCount"/>
+		<result column="VACATION_MEMBER_KEY" property="vacationMemberKey"/>
+		<result column="VACATION_REASON" property="vacationReason"/>
+		<result column="MEMBER_VAC_KEY" property="memberVacKey"/>
+	</resultMap>
+	
 	<!-- 양식 -->
 	<select id="selectformFolders" resultType="map">
 		SELECT 
@@ -1605,4 +1619,47 @@
 		WHERE
 			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
 	</select>
+	<!-- 해당 사원 휴가 신청 등록 -->
+	<insert id="insertVacationApply" parameterType="int">
+		<!-- 해당 사원의 휴가 계산 테이블 조회 -->
+		<selectKey keyProperty="memberVacKey" resultType="String" order="BEFORE">
+			SELECT 
+				MEMBER_VAC_KEY
+			FROM   
+				MEMBER_VACATION
+			WHERE
+				MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+			AND
+				MEMBER_KEY = #{vacationMemberKey}
+		</selectKey>
+		INSERT INTO 
+			VACATION_APPLY
+			(
+				VACATION_USE_KEY,
+				VACATION_KEY,
+				ER_DOCUMENT_KEY,
+				VACATION_APPLY_DATE,
+				VACATION_APPLY_STATUS,
+				VACATION_START_DATE,
+				VACATION_END_DATE,
+				VACATION_USE_COUNT,
+				VACATION_MEMBER_KEY,
+				VACATION_REASON
+			)
+		VALUES
+            (
+		         SEQ_VACATION_USE_KEY.NEXTVAL,
+		         #{vacationKey},
+		         #{vacationDocSerailKey},
+		         #{vacationApplyDate},
+		         #{vacationStartDate},
+		         #{vacationEndDate},
+		         #{vacationUseCount},
+		         default,
+		         #{vacationMemberKey},
+		         #{vacationReason},
+		         #{memberVacKey}
+            )
+	</insert>
+	
 </mapper>

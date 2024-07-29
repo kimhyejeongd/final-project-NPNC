@@ -39,6 +39,7 @@ import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.VacationApply;
 import com.project.npnc.document.model.service.MemberDocumentService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
@@ -230,14 +231,15 @@ public class MemberDocumentController {
 			html = html.replace("[휴가 종류]", vacselect);
 			
 			m.addAttribute("vacationCategory", html);
+			return "document/write/vacation";
 		}
 		//기안부서 적용
-//		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
+		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
 		//기안일 적용
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		html = html.replace("[기안일]", LocalDate.now().format(formatter));
 		//기안자
-//		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
+		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
 		
 		m.addAttribute("html", html);
 		m.addAttribute("form", form);
@@ -481,8 +483,46 @@ public class MemberDocumentController {
 		
 		return ResponseEntity.ok(response);
 	}
+	//휴가 신청 문서 임시저장
+	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
+	public ResponseEntity<Map<String,Object>> insertDraftVacDoc(
+			String msg, Model m, Document doc, String html, VacationApply vac, 
+			@RequestParam(required = false) int form,
+			@RequestParam(value="upfile")MultipartFile[] file
+			){
+		Member user = getCurrentUser();
+		log.debug("{}", html);
+		log.debug("{}", user);
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+//		doc.setErDocStorageKey(); //문서보관함 임시세팅
+		
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		log.debug("{}", doc);
+		
+		int result=0;
+		Map<String,Object> response = new HashMap<>();
+		
+		//문서 등록
+		try { 
+			log.debug(user.getMemberName()+ "사원의 문서 임시저장");
+			result = serv.insertDraftVacDoc(doc, file, html);
+		} catch (Exception e) {
+			log.debug("문서 임시저장 실패");
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 임시저장에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		
+		//기안, 결재자 등록 성공시
+		response.put("status", "success");
+		response.put("message", "문서 임시저장 완료");
+		
+		return ResponseEntity.ok(response);
+	}
 	
-	//전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
+	//일반 전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertDoc(
 			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
@@ -548,6 +588,87 @@ public class MemberDocumentController {
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
 		//return "redirect:home"; 
+	}
+	//휴가 신청 기안
+	@PostMapping(path="/writeend/vacation", consumes = {"multipart/form-data"}) 
+	public ResponseEntity<Map<String,Object>> insertVacationDoc(
+			String msg, Model m, Document doc, String html, @RequestParam(required = false) VacationApply vac,
+			@RequestParam("vacationStartDate") String startDate, @RequestParam("vacationEndDate") String endDate,
+	        @RequestParam("vacationStartTime") String startTime, @RequestParam("vacationEndTime") String endTime,
+			@RequestParam(required = false) int form,
+			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
+		log.debug(vac.toString());
+		log.debug(startDate + "," + startTime);
+		log.debug(endDate + "," + endTime);
+//		Member user = getCurrentUser();
+//		if(msg.equals(",")) msg=""; //debug
+//		if (msg != null && msg.endsWith(",")) {
+//			msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
+//		}//debug
+//		
+//		log.debug("{}", html);
+//		log.debug(file.toString());
+//		log.debug("{}", user);
+//		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+//		doc.setDocFormKey(form);
+//		
+//		//기안자=로그인유저
+//		doc.setErDocWriter(user.getMemberKey()); 
+//		//결재자에 기안자도 추가
+//		Approver me = Approver.builder().memberKey(user.getMemberKey())
+//				.memberTeamKey(user.getDepartmentKey())
+//				.memberJobKey(user.getJobKey())
+//				.memberName(user.getMemberName())
+//				.category("기안")
+//				.opinion(msg)
+//				.state("승인")
+//				.date(Date.valueOf(LocalDate.now()))
+//				.orderby(0)
+//				.build();
+//		List<Approver> ap = doc.getApprovers();
+//		ap.removeIf(a -> {
+//			boolean toRemove = a.getMemberKey() == 0;
+//			if (toRemove) {
+//				log.debug("없는 결재자 삭제");
+//				log.debug("{}", a);
+//			}
+//			return toRemove;
+//		});//debug
+//		ap.add(me);
+//		doc.setApprovers(ap);
+//		log.debug("{}", doc);
+//		
+//		int result=0;
+		Map<String,Object> response = new HashMap<>();
+//		
+//		//문서 등록
+//		try { 
+//			log.debug(user.getMemberName()+ "사원의 휴가 신청서 기안 -> " + msg);
+//			result = serv.insertVacDoc(doc, file, html, vac);
+//		} catch (Exception e) {
+//			log.error(e.getMessage());
+//			e.printStackTrace();
+//			response.put("status", "error");
+//			response.put("message", "문서 등록중 에러가 발생했습니다.");
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//		}
+//		//휴가 신청 등록
+//		try { 
+//			vac.setVacationMemberKey(user.getMemberKey());
+//		} catch (Exception e) {
+//			log.error(e.getMessage());
+//			e.printStackTrace();
+//			response.put("status", "error");
+//			response.put("message", "휴가 신청 등록중 에러가 발생했습니다.");
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//		}
+		
+		//기안, 결재자 등록 성공시
+		response.put("status", "success");
+		response.put("message", "문서 등록 완료");
+		
+		//모두 성공시 전자결재홈으로
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/retrieve")

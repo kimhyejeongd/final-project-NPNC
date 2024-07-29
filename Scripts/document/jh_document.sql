@@ -14,6 +14,7 @@ SELECT * FROM ER_AL_STORAGE;
 SELECT * FROM ER_APROVER ea ;
 SELECT * FROM ER_FILE ORDER BY ER_FILE_UPLOAD_DATE desc;
 SELECT * FROM ER_STORAGE es ;
+SELECT * FROM ER_STORAGE_FOLDER esf;
 SELECT * FROM DEPARTMENT d ;
 SELECT * FROM ER_FORM ef ;
 SELECT * FROM ER_FORM_FOLDER eff ;
@@ -98,7 +99,5 @@ NOCYCLE
 CACHE 20;
 COMMIT;
 ROLLBACK;
-INSERT INTO ER_document values(SEQ_ER_DOC_KEY.nextval, '240709-D2F1-23', 3, '2024년 기술지원팀 (주)33사 기술지원 결과보고서', default, 'Y', DEFAULT, '보관함명', '문서제목.html', DEFAULT, NULL, NULL, NULL);
-INSERT INTO ER_document values(SEQ_ER_DOC_KEY.nextval, '240709-D2F1-22', 3, '2024년 기술지원팀 (주)33사 기술지원 결과보고서', default, 'N', DEFAULT, '보관함명', '문서제목.html', DEFAULT, NULL, NULL, NULL);
-INSERT INTO ER_document values(SEQ_ER_DOC_KEY.nextval, '240710-D2F1-29', 3, '2024년 기술지원팀 (주)33사 기술지원 결과보고서', default, 'N', DEFAULT, '보관함명', '문서제목.html', DEFAULT, NULL, NULL, NULL);
+INSERT INTO ER_STORAGE values(SEQ_ER_STORAGE_KEY.nextval, 53, '휴가 신청서', 5, 8, 2);
 --INSERT INTO ER_document values(TO_CHAR(SYSDATE, 'YYMMDD') || '-' || 'D2F3' || '-' || to_char(SEQ_ER_FORM.nextval), 3, '문서제목', default, null, 'N', default, null, '보관함명', '문서제목.html');

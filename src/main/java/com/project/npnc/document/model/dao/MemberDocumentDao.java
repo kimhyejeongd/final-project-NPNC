@@ -13,6 +13,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 public interface MemberDocumentDao {
 	
@@ -62,4 +63,5 @@ public interface MemberDocumentDao {
 	List<Approver> selectDocApprovers(SqlSession session, String serial);
 	
 	int selectRemainingVac(SqlSession session, int memberKey);
+	int insertVacationApply(SqlSession session, VacationApply vac);
 }

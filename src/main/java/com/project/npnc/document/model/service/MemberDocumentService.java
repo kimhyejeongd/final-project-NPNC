@@ -2,7 +2,6 @@ package com.project.npnc.document.model.service;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
@@ -12,6 +11,7 @@ import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.VacationApply;
 
 public interface MemberDocumentService {
 	
@@ -21,6 +21,7 @@ public interface MemberDocumentService {
 	DocumentForm selectFormByNo(int no);
 	
 	int insertDoc(Document d, MultipartFile[] file, String html) throws Exception;
+	int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception;
 	int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception;
 //	int deleteDoc(Document d) throws Exception;
 //	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
@@ -56,4 +57,5 @@ public interface MemberDocumentService {
 	List<Approver> selectDocApprovers(String serial);
 	
 	int selectRemainingVac(int memberKey);
+	int insertVacationApply(VacationApply vac);
 }
