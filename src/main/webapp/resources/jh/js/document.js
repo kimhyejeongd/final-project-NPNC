@@ -18,7 +18,11 @@ const viewFormList =(no, name)=>{
 				$("<i>").addClass('icon-drawer').appendTo($icondiv);
 				let $namediv = $("<div>").addClass('info-user ms-3');
 				$("<div>").addClass('username text-start').text(e.ER_FORM_NAME).appendTo($namediv)
-				let $button = $("<button>").addClass('btn item-list border rounded w-100 mb-2').attr('onclick', `writedoc(${e.ER_FORM_KEY});`);
+				let $button = $("<button>").addClass('btn item-list border rounded w-100 mb-2')
+								.attr({
+									'onclick': `writedoc(${e.ER_FORM_KEY})`,
+									'data-folder-key' : `${no}`
+									});
 				$icondiv.appendTo($button);
 				$namediv.appendTo($button);
 				$button.appendTo($("div#formlist"));
