@@ -211,6 +211,10 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		log.debug("----전자문서 작성시작----");
 		String html = readHtmlFile("docformhtml", form+".html");
+		//휴가 신청폼인 경우 휴가 데이터 전송
+		if(form ==3) {
+			m.addAttribute("vacationCategory", html);
+		}
 		m.addAttribute("html", html);
 		m.addAttribute("form", form);
 		return "document/write/normal";
@@ -469,7 +473,7 @@ public class MemberDocumentController {
 		log.debug(file.toString());
 		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-//		doc.setErDocStorageKey("보관함명"); //문서보관함 임시세팅
+		doc.setDocFormKey(form);
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 

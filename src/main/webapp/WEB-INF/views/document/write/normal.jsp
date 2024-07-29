@@ -96,6 +96,7 @@
                 <div class="card card-round p-3">
                   <div class="card-body">
                 <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
+		      		<input type="hidden" class="form-control form-control-sm" name="erDocFormKey" value="${form }">
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
@@ -275,7 +276,8 @@ $(document).ready(function() {
 		  ],
 		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
 		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
-		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0']
+		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+		defaultFontSize: '14px' // 기본 폰트 크기 설정
 		/* buttons:{
 			undobtn: undo,
 			redobtn: redo
