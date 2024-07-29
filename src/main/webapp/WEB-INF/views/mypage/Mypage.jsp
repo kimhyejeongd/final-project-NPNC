@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<c:set var="path" value="${pageContext.request.contextPath }"/>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+<%@ page session="true" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Mypage</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
@@ -35,8 +36,6 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
 </head>
 <body>
@@ -46,8 +45,8 @@
             <div class="sidebar-logo">
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
-                    <a href="index.html" class="logo">
-                        <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20"/>
+                    <a href="${path}/home" class="logo">
+                        <img src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png" alt="navbar brand" class="navbar-brand" height="90"/>
                     </a>
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
@@ -57,46 +56,16 @@
                             <i class="gg-menu-left"></i>
                         </button>
                     </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
                 </div>
                 <!-- End Logo Header -->
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
-                        <li class="nav-item active">
-                            <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="dashboard">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a href="../demo1/index.html">
-                                            <span class="sub-item">Dashboard 1</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
-                            <h4 class="text-section">Components</h4>
-                        </li>
                         <li class="nav-item">
-                            <a data-bs-toggle="collapse" href="#base">
-                                <i class="fas fa-layer-group"></i>
-                                <p>Mypage</p>
-                                <span class="caret"></span>
+                            <a href="${path}/member/mypage">
+                                <i class="fas fa-home"></i><p>Mypage</p>
                             </a>
-                            <div class="collapse" id="base">
-                                <ul class="nav nav-collapse"></ul>
-                            </div>
                         </li>
                     </ul>
                 </div>
@@ -190,58 +159,82 @@
                     </div>
                 </div>
             </div>
-            	 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+
+            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
-
-        <script>
-            $(document).ready(function() {
-                $('#editAddressButton').click(function() {
-                    $('#memberAddress').toggle();
-                    $('#addressSearchBox').toggle();
-                    $('#saveChangesButton').toggle();
-                });
-                
-                $('#searchAddressButton').click(function() {
-                    new daum.Postcode({
-                        oncomplete: function(data) {
-                            $('#postcode').val(data.zonecode);
-                            $('#roadAddress').val(data.roadAddress);
-                            $('#jibunAddress').val(data.jibunAddress);
-                        }
-                    }).open();
-                });
-
-                $('#saveAddressButton').click(function() {
-                    const newAddress = $('#roadAddress').val();
-                    $('#memberAddressText').text(newAddress);
-                    $('#memberAddress').val(newAddress).hide();
-                    $('#addressSearchBox').hide();
-                    $('#saveChangesButton').show();
-                });
-
-                $('#editPasswordButton').click(function() {
-                    $('#passwordForm').toggle();
-                });
-
-                $('#sendEmailVerificationButton').click(function() {
-                    // 이메일 전송 로직
-                    $('#emailVerificationForm').show();
-                });
-
-                $('#verifyCodeButton').click(function() {
-                    // 인증 코드 확인 로직
-                    $('#passwordChangeForm').show();
-                });
-
-                $('#saveNewPasswordButton').click(function() {
-                    // 비밀번호 저장 로직
-                });
-
-                $('#saveChangesButton').click(function() {
-                    // 변경 사항 저장 로직
-                });
-            });
-        </script>
+        <!-- End Main Panel -->
     </div>
+
+    <!-- Core JS Files -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Plugin JS Files -->
+    <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
+    <script src="${path}/resources/assets/js/setting-demo.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script>
+
+    <!-- Page Specific JS -->
+    <script>
+        $(document).ready(function() {
+            $('#editAddressButton').click(function() {
+                $('#memberAddress').toggle();
+                $('#addressSearchBox').toggle();
+                $('#saveChangesButton').toggle();
+            });
+
+            $('#searchAddressButton').click(function() {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        $('#postcode').val(data.zonecode);
+                        $('#roadAddress').val(data.roadAddress);
+                        $('#jibunAddress').val(data.jibunAddress);
+                    }
+                }).open();
+            });
+
+            $('#saveAddressButton').click(function() {
+                const newAddress = $('#roadAddress').val();
+                $('#memberAddressText').text(newAddress);
+                $('#memberAddress').val(newAddress).hide();
+                $('#addressSearchBox').hide();
+                $('#saveChangesButton').show();
+            });
+
+            $('#editPasswordButton').click(function() {
+                $('#passwordForm').toggle();
+            });
+
+            $('#sendEmailVerificationButton').click(function() {
+                // 이메일 전송 로직
+                $('#emailVerificationForm').show();
+            });
+
+            $('#verifyCodeButton').click(function() {
+                // 인증 코드 확인 로직
+                $('#passwordChangeForm').show();
+            });
+
+            $('#saveNewPasswordButton').click(function() {
+                // 비밀번호 저장 로직
+            });
+
+            $('#saveChangesButton').click(function() {
+                // 변경 사항 저장 로직
+            });
+        });
+    </script>
 </body>
 </html>
