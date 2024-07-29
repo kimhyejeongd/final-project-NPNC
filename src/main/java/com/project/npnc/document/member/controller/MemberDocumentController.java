@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.admin.document.model.service.AdminDocumentService;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
@@ -49,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberDocumentController {
 	private final MemberDocumentService serv;
 	private final OrganizationService orserv;
+	private final AdminDocumentService adminserv;
 	@Value("${file.upload-dir}")
     private String uploadDir;
 	
@@ -146,6 +149,16 @@ public class MemberDocumentController {
 		m.addAttribute("rejectedlist", result);
 	}
 	
+//	참조 문서 목록
+	@GetMapping("/list/referer/reference")
+	public void selectReferenceDocs(Model m){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey()+"번 사원의 참조 문서 조회 -----");
+		List<Document> result = serv.selectReferenceDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("referencelist", result);
+	}
+	
 	
 //	전자문서 상세보기
 	@PostMapping("/view/docDetail")
@@ -240,6 +253,15 @@ public class MemberDocumentController {
 		List<ApproverLineStorage> ap = serv.selectApproverLines(getCurrentUser().getMemberKey());
 		m.addAttribute("aplist", ap);
 		log.debug("{}", ap); 
+	}
+	//보관함 선택 팝업 호출
+	@GetMapping("/write/storage")
+	public void docStorage(Model m) {
+		List<StorageFolder> folders = adminserv.selectAdminDocumentFormAll();
+		m.addAttribute("folders",folders);
+		log.debug("----- 보관함 선택 -----");
+		m.addAttribute("folders", folders);
+		log.debug("{}", folders); 
 	}
 	//결재 승인
 	@PostMapping("/approve")
@@ -404,7 +426,7 @@ public class MemberDocumentController {
 		log.debug("{}", html);
 		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+//		doc.setErDocStorageKey(); //문서보관함 임시세팅
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
@@ -447,7 +469,7 @@ public class MemberDocumentController {
 		log.debug(file.toString());
 		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-		doc.setErDocStorage("보관함명"); //문서보관함 임시세팅
+//		doc.setErDocStorageKey("보관함명"); //문서보관함 임시세팅
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
@@ -515,7 +537,7 @@ public class MemberDocumentController {
 	@PostMapping("/delete")
 	@ResponseBody
 	public ResponseEntity<Map<String,Object>> deleteDraftDoc(int no) {
-		log.debug("------"+no + " 임시 보관 문서 삭제 요청------");
+		log.debug("------"+no + " 보관 문서 삭제 요청------");
 		Map<String,Object> response = new HashMap<>();
 		int result=0;
 		try {
@@ -523,11 +545,11 @@ public class MemberDocumentController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("status", "error");
-			response.put("message", "임시 보관 문서 삭제에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			response.put("message", "문서 삭제에 실패했습니다.");
+			return ResponseEntity.ok(response);
 		}
 		response.put("status", "success");
-		response.put("message", "임시 보관 문서 삭제 완료");
+		response.put("message", "문서 삭제 완료");
 		return ResponseEntity.ok(response);
 	}
 	

@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class StorageFolder {
-	   private Long folderKey;
+	   private int folderKey;
 	    private String folderName;
-	    private Long parentFolderKey;
+	    private int folderGroup;
 	    private int folderLevel;
-	    private char useYn;
+	    private String useYn;
+	    private int folderOrderBy;
 }

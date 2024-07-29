@@ -324,13 +324,14 @@ body{
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
 							<img src="room_icon.jpg" alt="방 아이콘">
-							<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
+								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
 							<!-- 안 읽은 메시지 배지 추가 -->
 							<div class="room-info">
 								<div class="room-title">
 									<c:forEach var="member"
 										items="${myRoomMemberList[room.chatRoomKey]}">
-                                        ${member.memberId}
+
+                                        ${member.memberName}
                                     </c:forEach>
 								</div>
 								<div class="recent-message recent-message-${room.chatRoomKey}"></div>

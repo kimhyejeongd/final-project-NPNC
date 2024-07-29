@@ -69,10 +69,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectWaitingDocs(int no) {
 	    List<Document> result = dao.selectWaitingDocs(session, no);
 	    log.debug("[1] 조회" + result.toString());
-	    //Document 리스트에서 본인이 이미 승인한 결과 제거
+	    //Document 리스트에서 본인이 이미 결재한 결과 제거
 	    result.removeIf(doc -> doc.getApprovers().stream()
 	                        .anyMatch(approver -> 
-                    		approver.getMemberKey() == no && approver.getState().equals("승인")));
+                    		approver.getMemberKey() == no && !(approver.getState().equals("대기"))));
 	    return result;
 	}
 
@@ -361,8 +361,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocById(int docId) {
 		log.debug("-----" + docId + "조회-----");
 		Document d = dao.selectDocById(session, docId);
+		log.debug("{}", d);
 		List<Referer> r = dao.selectReferer(session, d.getErDocSerialKey());
 		if(r != null) {
+			log.debug("참조인 없음");
 			d.setReferers(r);
 		}
 		return dao.selectDocById(session, docId);
@@ -483,8 +485,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocBySerial(String serial) {
 		log.debug("-----" + serial + "조회-----");
 		Document d = dao.selectDocBySerial(session, serial);
+		log.debug("{}", d);
 		List<Referer> r = dao.selectReferer(session, serial);
 		if(r != null) {
+			log.debug("참조인 없음");
 			d.setReferers(r);
 		}
 		return d;
@@ -625,5 +629,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public List<Document> selectRejectedDocs(int no) {
 		return dao.selectRejectedDocs(session, no);
+	}
+	@Override
+	public List<Document> selectReferenceDocs(int no) {
+		return dao.selectReferenceDocs(session, no);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- *  대기중 문서
+ *  대기중 문서, 상세보기
  */
 	
 document.addEventListener('DOMContentLoaded', function() {

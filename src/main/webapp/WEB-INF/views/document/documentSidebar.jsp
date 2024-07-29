@@ -149,7 +149,7 @@
                 <div class="collapse" id="forms">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/referer/reference">
                         <span class="sub-item">참조 문서</span>
                       </a>
                     </li>

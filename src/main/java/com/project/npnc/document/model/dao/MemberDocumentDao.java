@@ -46,6 +46,7 @@ public interface MemberDocumentDao {
 	List<Document> selectMyRejectDocs(SqlSession session, int no);
 	List<Document> selectCompleteDocs(SqlSession session, int no);
 	List<Document> selectRejectedDocs(SqlSession session, int no);
+	List<Document> selectReferenceDocs(SqlSession session, int no);
 	List<DocFile> selectDocFile(SqlSession session, String erDocSerialKey);
 	List<DocumentFormFolder> selectformFolders(SqlSession session);
 	List<DocumentForm> selectForms(SqlSession session, int no);

@@ -108,7 +108,7 @@
 		INSERT INTO CHATTING_IS_READ values(SEQ_CHAT_IS_READ_KEY.nextval,#{seq},#{member.memberKey})
 	</insert>
 	<select id="selectRoomChatList" parameterType="_int" resultMap="chattingMessageResultMap">
-		SELECT 
+		    SELECT 
 			cm.CHAT_MSG_KEY,
 			cm.MEMBER_KEY,
 			cm.CHAT_ROOM_KEY,
@@ -117,11 +117,13 @@
 			cm.CHAT_MSG_NOTICE,
 			cm.CHAT_READ_COUNT,
 			cf.CHAT_MSG_FILE_POST,
-			cf.FILE_CONTENT_TYPE 
+			cf.FILE_CONTENT_TYPE ,
+			m.MEMBER_NAME 
 		FROM chatting_message cm 
 		LEFT JOIN chatting_file cf ON cm.chat_msg_key = cf.chat_msg_key 
+		LEFT JOIN MEMBER m ON cm.MEMBER_KEY  = m.MEMBER_KEY 
 		WHERE CM.chat_room_key = ${roomNo}
-		ORDER BY chat_msg_time asc
+		ORDER BY chat_msg_time ASC
 	</select>
 	<select id="selectMyRoomMembers" parameterType="ChattingMessage" resultMap="chattingGroupResultMap">
 		SELECT DISTINCT MEMBER_KEY FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY=#{chatRoomKey} and MEMBER_KEY != #{memberKey}
@@ -186,6 +188,7 @@
         <result property="chatMsgTime" column="CHAT_MSG_TIME"/>
         <result property="chatMsgNotice" column="CHAT_MSG_NOTICE"/>
         <result property="chatReadCount" column="CHAT_READ_COUNT"/>
+        <result property="memberName" column="MEMBER_NAME"/>
         <association property="file" javaType="com.project.npnc.chatting.model.dto.ChattingFile">
             <id property="chatMsgFilePost" column="CHAT_MSG_FILE_POST" />
             <result property="fileContentType" column="FILE_CONTENT_TYPE" />
@@ -220,6 +223,7 @@
         <result property="memberTell" column="MEMBER_TELL" />
         <result property="memberAddress" column="MEMBER_ADDRESS" />
         <result property="accessKey" column="ACCESS_KEY" />
+        <result property="memberName" column="MEMBER_NAME" />
     </resultMap>
     
     <resultMap id="ChattingFileResultMap" type="chattingFile">
