@@ -386,11 +386,9 @@
 									      });
 													
 										
-									}else if(){
-										
-									}else if(){
-										
-									} 
+									}else if(searchNoteBarText.value!=""&&selectedValue=="name"){
+										console.log(selectedValue);	
+									}
 									
 								}
 								
