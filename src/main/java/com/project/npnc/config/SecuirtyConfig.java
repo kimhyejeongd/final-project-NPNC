@@ -50,6 +50,7 @@ public class SecuirtyConfig{
 					.formLogin(form->form
 							.loginProcessingUrl("/logincheck")
 							.loginPage("/loginpage")
+							.defaultSuccessUrl("/")
 							)
 					.logout(logout->logout
 							.logoutUrl("/logout")
