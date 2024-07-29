@@ -21,6 +21,7 @@
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-body">
+		                  <p>사원 수 : ${totaldata }</p>
 		                  <form action="${path }/admin/member/searchMember">
 		                   <nav
 					        class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
@@ -193,7 +194,7 @@
 			 	function fn_paging(pageNo) {
 			 	    console.log('오긴왔냐?');
 			 	    /* cosnt searchKey= ${searchK}; */
-			 	    location.assign('${path}/admin/member/searchMember?cPage=' + pageNo + '&searchKey=${searchK}');
+			 	    location.assign('${path}/admin/member/searchMember?cPage=' + pageNo + '&searchKey=${searchK}' + '&totaldata=${totaldata}');
 			 	    /* location.assign('${path}/${url}?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchType}&searchStartDate=${searchStartDate}&searchEndDate=${searchEndDate}'); */
 			 	    
 			 	}	

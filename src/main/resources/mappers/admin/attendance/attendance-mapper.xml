@@ -336,9 +336,10 @@
 		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
 	</update>
 
-	<update id="updateAttendanceEditState" parameterType="_int">
+	<update id="updateAttendanceEditState" parameterType="attendanceEdit">
 		UPDATE ATTENDANCE_EDIT
-		SET ATTENDANCE_EDIT_STATE='승인'
+		SET ATTENDANCE_EDIT_STATE='승인',
+			ATTENDANCE_EDIT_OPINION=#{attendanceEditOpinion}
 		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
 	</update>
 	

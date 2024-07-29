@@ -56,7 +56,7 @@ public class AdminMemberController {
 		m.addAttribute("job",job);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("members",members);
-		m.addAttribute("totalContents",totaldata);
+		m.addAttribute("totaldata",totaldata);
 		return "admin/member/memberlist";
 	
 		
@@ -180,13 +180,16 @@ public class AdminMemberController {
 			List<AdminMember> members= service.selectMemeberAll(page);
 			m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 			m.addAttribute("members",members);
+			m.addAttribute("totaldata",totaldata);
 		}else {
 			int totaldata=service.searchMemberCount(searchKey);
 			List<AdminMember> members= service.searchMember(searchKey, page);
 			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,null,null,"searchMember"));
 			m.addAttribute("members",members);
 			m.addAttribute("searchK",searchKey);
+			m.addAttribute("totaldata",totaldata);
 		}
+		
 		List<Department> dept=deptService.selectDeptAll();
 		List<Job> job=jobService.selectJobAll();
 		m.addAttribute("dept",dept);

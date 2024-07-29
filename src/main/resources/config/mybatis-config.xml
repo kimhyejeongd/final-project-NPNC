@@ -56,5 +56,7 @@
 		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>
 		<typeAlias type="com.project.npnc.admin.document.model.dto.AdminDocument" alias="adminDocument"/>
         <typeAlias type="com.project.npnc.external.dto.ExternalDto" alias="ExternalDto"/>
+        
+        <typeAlias type="com.project.npnc.admin.vacation.model.dto.Vacation" alias="adminVacation"/>
 	</typeAliases>
 </configuration> 
