@@ -171,15 +171,15 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public List<NoteReceptionDto> selectNoteAll(Map<String, Integer> page) {
+	public List<NoteReceptionDto> selectNoteAll(Map<String, Object> page) {
 	
 		return dao.selectNoteAll(session, page);
 	}
 
 	@Override
-	public int noteSelectTotalData(int memberKey) {
+	public int noteSelectTotalData(Map<String,Object> param) {
 		
-		return dao.noteSelectTotalData(session, memberKey);
+		return dao.noteSelectTotalData(session, param);
 	}
 
 
@@ -238,9 +238,8 @@ public class NoteServiceImpl implements NoteService{
 //	내게보낸쪽지함
 	@Override
 	public List<NoteReceptionDto> selectNoteMeAll(Map<String, Integer> page) {
-		
-		
-		return dao.selectNoteMeAll(session, page) ;
+		List<NoteReceptionDto> list= dao.selectNoteMeAll(session, page);
+		return  list;
 	}
 
 

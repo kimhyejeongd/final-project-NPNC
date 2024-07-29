@@ -90,10 +90,9 @@ public class NoteController {
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		
 		Member loginMember = getCurrentUser();
-		
+	
 		List<NoteSendDto> notelist=noteService.sendNoteSelectAllPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",loginMember.getMemberKey()));
 		m.addAttribute("notelist",notelist);
-		System.out.println(notelist);
 		notelist.forEach(data -> System.out.print("data" + data));
 		int totalData=noteService.sendNoteSelectTotalData(loginMember.getMemberKey());
 		m.addAttribute("totalData",totalData);
@@ -106,19 +105,19 @@ public class NoteController {
 		
 	}
 	
-//	나에게 보낸 쪽지함
+//	내게 보낸 쪽지함
 	@RequestMapping("/noteSendMe")
 	public String noteSendMe(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		
 		Member loginMember = getCurrentUser();
-		
+
+
 		List<NoteReceptionDto> notelist=noteService.selectNoteMeAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey", loginMember.getMemberKey()));
-		int totalData=noteService.noteSelectTotalData(loginMember.getMemberKey());
+		int totalData=noteService.selectNoteMeTotalData(loginMember.getMemberKey());
 		List<SrMember> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
-		
+
 		List<OrganizationDto> organlist=service.selectOrganAll();
-		System.out.println(organlist);
 		m.addAttribute("organlist",organlist);
 		
 		m.addAttribute("totalData",totalData);
@@ -126,8 +125,7 @@ public class NoteController {
 	
 		
 		m.addAttribute("notelist",notelist);
-		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepaging"));
-		System.out.println(notelist);
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notePagingSendMe"));
 
 		return "note/noteSendMe";
 	}
@@ -140,7 +138,11 @@ public class NoteController {
 		Member loginMember = getCurrentUser();
 		
 		List<NoteReceptionDto> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey", loginMember.getMemberKey()));
-		int totalData=noteService.noteSelectTotalData(loginMember.getMemberKey());
+		
+		Map<String, Object> param = new HashMap<>();
+		  param.put("memberKey", loginMember.getMemberKey());
+
+		int totalData=noteService.noteSelectTotalData(param);
 		List<SrMember> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		
 		List<OrganizationDto> organlist=service.selectOrganAll();
@@ -335,6 +337,7 @@ public class NoteController {
 		return sendDto;
 		
 	}
+	
 //	받은 쪽지함 개별 조회
 	@RequestMapping("/noteSelectOne")
 	@ResponseBody

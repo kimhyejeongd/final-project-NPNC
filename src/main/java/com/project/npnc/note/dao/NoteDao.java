@@ -14,8 +14,8 @@ public interface NoteDao {
 	public int noteOneWrite(SqlSession session, NoteReceptionDto note);
 	public int noteReciver(SqlSession session, Map<String, Object> param);
 	public int noteMsgKey(SqlSession session);
-	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String,Integer> page) ;
-	public int noteSelectTotalData(SqlSession session, int memberKey);
+	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String,Object> page) ;
+	public int noteSelectTotalData(SqlSession session, Map<String,Object> param);
 	public NoteReceptionDto selectNoteOne(SqlSession session, Map<String, Integer> param);
 	public int sendNoteOneWrite(SqlSession session, NoteReceptionDto sendNote);
 	public List<NoteSendDto> sendNoteSelectAll(SqlSession session, Map<String, Integer> page);

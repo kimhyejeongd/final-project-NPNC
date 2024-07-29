@@ -14,8 +14,8 @@ public interface NoteService {
 	
 	public int noteOneWrite(int reMemberKey, NoteReceptionDto note);
 	public int noteWrites(int[] reMemberKey, NoteReceptionDto note);
-	public List<NoteReceptionDto> selectNoteAll(Map<String,Integer> page) ;
-	public int noteSelectTotalData(int memberKey);
+	public List<NoteReceptionDto> selectNoteAll(Map<String,Object> page) ;
+	public int noteSelectTotalData(Map<String,Object> param);
 	public NoteReceptionDto selectNoteOne(Map<String,Integer> page);
 	public int noteAllWrite(NoteReceptionDto note);
 	public int noteAllWriteAndFile(NoteReceptionDto note, List<NoteFileDto> upfiles);

@@ -17,7 +17,10 @@ public class NoteDaoImpl implements NoteDao {
 	//내게 쓴 쪽지함 	
 	@Override
 	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String, Integer> page) {
-		return session.selectList("note.selectNoteMeAll", page);
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		System.out.println(memberKey+"       "+rb);
+		return  session.selectList("note.selectNoteMeAll", memberKey, rb);
 	
 		
 	}
@@ -63,11 +66,11 @@ public class NoteDaoImpl implements NoteDao {
 	
 
 	@Override
-	public int noteSelectTotalData(SqlSession session, int memberKey) {
+	public int noteSelectTotalData(SqlSession session, Map<String,Object> param) {
 		
-		return session.selectOne("note.noteSelectTotalData",memberKey);
+		return session.selectOne("note.noteSelectTotalData",param);
 	}
-
+	
 	
 
 	@Override
@@ -80,9 +83,9 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
-	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
-		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		int memberKey=page.get("memberKey");
+	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Object> page) {
+		RowBounds rb=new RowBounds(((Integer)(page.get("cPage"))-1)*((Integer)page.get("numPerpage")),(Integer)page.get("numPerpage"));
+		int memberKey=(Integer)page.get("memberKey");
 		System.out.println(memberKey+" 여기에 들어 왔냐고");
 		return session.selectList("note.noteSelectAll",memberKey,rb);
 	}

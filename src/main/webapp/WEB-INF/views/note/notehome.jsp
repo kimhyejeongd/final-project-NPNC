@@ -317,7 +317,7 @@
             >
               <div>
                 <h3 class="fw-bold mb-3">받은쪽지함</h3>
-                <h6 class="op-7 mb-2">총 ${totalData}건의 쪽지가 있습니다.</h6>
+                <h6 class="op-7 mb-2" id="noteTotalData">총 ${totalData}건의 쪽지가 있습니다.</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                <button type="button" class="modal_btn btn btn-label-info btn-round me-2">쪽지 발송</button>
@@ -331,19 +331,71 @@
                   <div class="card-header">
 					<div class="noteSearchBar">
 						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
+							<select id="searchCheck" name="searchCheck">
+						           <option value="name">이름</option>
+						           <option value="title">제목</option>
+													           
+							</select>
 					        <div class="input-group">
 					          <div class="input-group-prepend">
-					            <button type="submit" class="btn btn-search pe-1">
+					            <button type="button" class="btn btn-search pe-1" onclick="searchNoteKeyword();">
 					              <i class="fa fa-search search-icon"></i>
 					            </button>
 					          </div>
+							 
 					          <input
 					            type="text"
-					            placeholder="제목으로 검색하여 주세요"
+					            placeholder=""
 					            class="form-control"
 								id="searchNoteBarText"
 					          />
 					        </div>
+							<script>
+								function searchNoteKeyword(){
+									var selectBox = document.getElementById('searchCheck');
+							        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+									var searchNoteBarText = document.getElementById('searchNoteBarText');
+									
+								    if(searchNoteBarText.value==""){
+										var SweetAlert2Demo = (function () {
+									        //== Demos
+									        var initDemos = function () {
+									          
+												swal("검색창이 비어있습니다.", "기본 화면으로 돌아갑니다.", {
+												          icon: "info",
+												          buttons: {
+												            confirm: {
+												              className: "btn btn-info",
+												            },
+												          },
+												        });
+									          
+									        };
+									
+									        return {
+									          //== Init
+									          init: function () {
+									            initDemos();
+									          },
+									        };
+									      })();
+									
+									      //== Class Initialization
+									      jQuery(document).ready(function () {
+									        SweetAlert2Demo.init();
+									      });
+													
+										
+									}else if(){
+										
+									}else if(){
+										
+									} 
+									
+								}
+								
+							</script>
+							
 					    </nav>
 					</div>	
                   </div>
@@ -373,7 +425,7 @@
            	    			<tr >
            	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
            	  					<th>${d.postMsgRecKey}<p>
-           	  					<th>${d.memberKey}<p>
+           	  					<th>${d.memberName} ${d.jobName}<p>
            	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
            	  					<th>${d.postMsgTime}<p>
            	  				</tr>
@@ -723,7 +775,7 @@
            	        }
            	    }
 	            var memberKey = document.getElementById('memberKey').value;
-
+			
 
 				$.ajax({
 					url : '${path}/noteRecDelete',
@@ -1086,8 +1138,8 @@
 						success : function(response){
 							var tbody=$('#pagingtbody');
 							tbody.empty();
-						  	 console.log(response.notepagelist);
-
+						  var noteTotalData=document.getElementById('noteTotalData');
+						  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
 						  $.each(response.notepagelist, function(index, item) {
 				                    var row = `<tr >
 				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>

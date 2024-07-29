@@ -19,6 +19,8 @@ public class NoteReceptionDto {
 	
 	private int postMsgRecKey;
 	private int memberKey;
+	private String memberName;
+	private String jobName;
 	private String postMsgDetail;
 	private Date postMsgTime;
 	private Date postMsgReservation;

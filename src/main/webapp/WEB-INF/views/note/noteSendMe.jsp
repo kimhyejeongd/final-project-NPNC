@@ -157,52 +157,124 @@
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
           <div class="sidebar-content">
 			<ul class="nav nav-secondary">
+			     
+			       <li class="nav-section">
+			         <span class="sidebar-mini-icon">
+			           <i class="fa fa-ellipsis-h"></i>
+			         </span>
+			         <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
+			       </li>
+			       <li class="nav-item">
+			         <a data-bs-toggle="collapse" href="#base">
+			           <i class="fas fa-file-upload"></i>
+			           <p>받은 쪽지함</p>
+			         </a>
+			        
+			       </li>
+			       <li class="nav-item">
+			         <a data-bs-toggle="collapse" href="#sidebarLayouts">
+			           <i class="fas fa-file-download"></i>
+			           <p>보낸 쪽지함</p>
+			         </a>
+			         
+			       </li>
+				 
+				   <li class="nav-item">
+			           <a data-bs-toggle="collapse" href="#sidebarLayouts">
+			             <i class="fas fa-street-view"></i>
+			             <p>내게 쓴 메일함</p>
+			           </a>
 			           
-			             <li class="nav-section">
-			               <span class="sidebar-mini-icon">
-			                 <i class="fa fa-ellipsis-h"></i>
-			               </span>
-			               <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
-			             </li>
-			             <li class="nav-item">
-			               <a data-bs-toggle="collapse" href="${path}/notehome">
-			                 <i class="fas fa-file-upload"></i>
-			                 <p>받은 쪽지함</p>
-			               </a>
-			              
-			             </li>
-			             <li class="nav-item">
-			               <a data-bs-toggle="collapse" href="${path}/sendNoteHome">
-			                 <i class="fas fa-file-download"></i>
-			                 <p>보낸 쪽지함</p>
-			               </a>
-			               
-			             </li>
-					 
-					   <li class="nav-item">
-			                 <a data-bs-toggle="collapse" href="${path}/noteSendMe">
-			                   <i class="fas fa-street-view"></i>
-			                   <p>내게 쓴 메일함</p>
-			                 </a>
-			                 
-			               </li>
-						<li class="nav-item">
-			               <a data-bs-toggle="collapse" href="#sidebarLayouts">
-			                 <i class="fas fa-folder-open"></i>
-			                 <p>보관 메일함</p>
-			               </a>
-			               
-			             </li>             
-						 <li class="nav-item">
-			               <a data-bs-toggle="collapse" href="#sidebarLayouts">
-			                 <i class="fas fa-trash-alt"></i>
-			                 <p>휴지통</p>
-			               </a>
-			               
-			             </li>  
+			         </li>
+					<li class="nav-item">
+			             <a data-bs-toggle="collapse" href="#base">
+						  <i class="fas fa-folder-open"></i>
+			               <p>보관 메일함</p>
+			               <span class="caret"></span>
+			             </a>
+			             <div class="collapse" id="base">
+			               <ul class="nav nav-collapse">
+			            
+			                 <li>
+			                   <a href="components/avatars.html">
+			                     <span class="sub-item">Avatars</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/buttons.html">
+			                     <span class="sub-item">Buttons</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/gridsystem.html">
+			                     <span class="sub-item">Grid System</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/panels.html">
+			                     <span class="sub-item">Panels</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/notifications.html">
+			                     <span class="sub-item">Notifications</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/sweetalert.html">
+			                     <span class="sub-item">Sweet Alert</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/font-awesome-icons.html">
+			                     <span class="sub-item">Font Awesome Icons</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/simple-line-icons.html">
+			                     <span class="sub-item">Simple Line Icons</span>
+			                   </a>
+			                 </li>
+			                 <li>
+			                   <a href="components/typography.html">
+			                     <span class="sub-item">Typography</span>
+			                   </a>
+			                 </li>
+			               </ul>
+			             </div>
+			           </li>       
+					 <li class="nav-item">
+			              <a data-bs-toggle="collapse" href="#trash">
+							<i class="fas fa-trash-alt"></i>
+			                <p>휴지통</p>
+			                <span class="caret"></span>
+			              </a>
+			              <div class="collapse" id="trash">
+			                <ul class="nav nav-collapse">
 			             
-			           
-			           </ul>
+			                  <li>
+			                    <a href="components/avatars.html">
+			                      <span class="sub-item">받은 메일함</span>
+			                    </a>
+			                  </li>
+			                  <li>
+			                    <a href="components/buttons.html">
+			                      <span class="sub-item">보낸 메일함</span>
+			                    </a>
+			                  </li>
+			                  <li>
+			                    <a href="components/gridsystem.html">
+			                      <span class="sub-item">내게 쓴 메일함</span>
+			                    </a>
+			                  </li>
+			                  
+			                  
+			                </ul>
+			              </div>
+			            </li>
+			       
+			     
+			     </ul>
           </div>
         </div>
       </div>
@@ -277,11 +349,11 @@
                       
                         
            	    			<tr>
-           	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgSendKey}"></th>
-           	  					<th>${d.postMsgSendKey}<p>
-           	  					<th>${d.sendMemberKey}<p>
-           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgSendKey},${d.sendMemberKey})">${d.postMsgSendTitle}<p>
-           	  					<th>${d.postMsgSendTime}<p>
+           	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
+           	  					<th>${d.postMsgRecKey}<p>
+           	  					<th>${d.memberKey}<p>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
+           	  					<th>${d.postMsgTime}<p>
            	  				</tr>
 	
           		 	  </c:forEach>
@@ -388,12 +460,16 @@
            	        	checkDeleteValue.push(checkbox.value);
            	        }
            	    }
+				
+				var memberKey = document.getElementById('memberKey').value;
 
+				
 				$.ajax({
-					url : '${path}/noteSendDelete',
+					url : '${path}/noteRecDelete',
 					type : 'POST',
-					data : {checkDeleteValue : checkDeleteValue
-						
+					data : {checkDeleteValue : checkDeleteValue,
+							memberKey : memberKey
+
 							},
 					success : function(response){
 						
@@ -413,14 +489,14 @@
           	});
           	
          /* 보낸 쪽지함 개별 조회 */
-          	function modalDetailGo(postMsgSendKey,sendMemberKey){
+          	function modalDetailGo(postMsgRecKey,memberKey){
           	    event.stopPropagation(); 
-          		console.log(postMsgSendKey,sendMemberKey);
+          		console.log(postMsgRecKey,memberKey);
           		$.ajax({
-					url : '${path}/selectSendOne',
+					url : '${path}/noteSelectOne',
 					type : 'POST',
-					data : {postMsgSendKey : postMsgSendKey,
-							sendMemberKey: sendMemberKey
+					data : {postMsgRecKey : postMsgRecKey,
+							memberKey: memberKey
 							},
 					success : function(response){
 						
@@ -468,7 +544,7 @@
 			            
  						
 
-				        $('#postMsgTitleAll').val(response.postMsgSendTitle);
+				        $('#postMsgTitleAll').val(response.postMsgTitle);
 
 				        $('#postMsgDetailAll').val(response.postMsgSendDetail);
 				     
@@ -491,7 +567,7 @@
     	            var memberKey = document.getElementById('memberKey').value;
 
 					$.ajax({
-						url : '${path}/notepagingsend',
+						url : '${path}/notePagingSendMe',
 						type : 'POST',
 						data : {cPage : pageNo,
 								memberKey: memberKey
@@ -499,17 +575,16 @@
 						success : function(response){
 							var tbody=$('#pagingtbody');
 							tbody.empty();
-						  	 console.log(response.notepagelist);
 	           	    			
 
 						  $.each(response.notepagelist, function(index, item) {
 				                    var row = `<tr>
-		           	    				<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgSendKey}"></th>
+		           	    				<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 
-				                        <th>\${item.postMsgSendKey}</th>
-				                        <th>\${item.sendMemberKey}</th>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgSendKey},\${item.sendMemberKey})">\${item.postMsgSendTitle}</th>
-				                        <th>\${item.postMsgSendTime}</th>
+				                        <th>\${item.postMsgRecKey}</th>
+				                        <th>\${item.memberKey}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.postMsgTime}</th>
 				                    </tr>`;
 				                    tbody.append(row);
 				                }); 
