@@ -57,7 +57,8 @@
 			ER_FOLDER_NAME,
 			ER_FOLDER_GROUP,
 			ER_FOLDER_LEVEL,
-			ER_FOLDER_USE_YN
+			ER_FOLDER_USE_YN,
+			ER_FOLDER_ORDERBY
 		FROM ER_STORAGE_FOLDER
 		WHERE ER_FOLDER_KEY = #{folderKey}
 	</select>
@@ -78,7 +79,8 @@
             WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
                 AND ER_FOLDER_LEVEL = 2
                 AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
-                AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY &lt;= ${targetFolder.folderOrderBy}
         </when>
         <when test="draggedFolder.folderOrderBy &gt; targetFolder.folderOrderBy">
             UPDATE ER_STORAGE_FOLDER
@@ -86,7 +88,8 @@
             WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
                 AND ER_FOLDER_LEVEL = 2
                 AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
-                AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY >= ${targetFolder.folderOrderBy}
         </when>
     </choose>
 </update>
