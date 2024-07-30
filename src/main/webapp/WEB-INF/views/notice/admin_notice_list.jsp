@@ -82,14 +82,17 @@
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
+                      <li class="mb-4 text-center">
+                  <a href="${path }/notice/create" class="btn btn-primary btn-round w-75">공지사항 작성하기</a>
+          		     </li>
                         <li class="nav-item">
-                            <a href="${path}/notice" class="collapsed">
+                            <a href="${path}/notice/admin" class="collapsed">
                                 <i class="fas fa-bell"></i>
                                 <p>공지사항</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="${path}/board" class="collapsed">
+                            <a href="${path}/admin/board/list" class="collapsed">
                                 <i class="fas fa-th-list"></i>
                                 <p>게시판</p>
                             </a>
@@ -106,8 +109,8 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <h1 class="mb-4">공지사항 목록</h1>
-                    <a href="${path}/notice/create" class="btn btn-primary mb-4">공지사항 작성</a>
+                    <h1 class="mb-4">공지사항 목록(관리자)</h1>
+                    
 
                     <table class="table table-bordered">
                         <thead>

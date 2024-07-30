@@ -75,13 +75,13 @@
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
                         <li class="nav-item">
-                            <a href="${path}/notice" class="collapsed">
+                            <a href="${path}/notice/admin" class="collapsed">
                                 <i class="fas fa-bell"></i>
                                 <p>공지사항</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="${path}/board" class="collapsed">
+                            <a href="${path}/admin/board/list" class="collapsed">
                                 <i class="fas fa-th-list"></i>
                                 <p>게시판</p>
                             </a>

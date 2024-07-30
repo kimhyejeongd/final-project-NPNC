@@ -44,13 +44,13 @@ public class AdminBoardController {
         return "board/createBoard"; // 작성 폼 JSP 페이지
     }
     
-    @GetMapping("/edit/boardKey")
-    public String showEditBoardForm(int boardKey, Model model) {
+    @GetMapping("/edit/{boardKey}")
+    public String showEditBoardForm(@PathVariable("boardKey") int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
         model.addAttribute("boardDto", board);
-        return "board/editBoard"; // 수정 폼 JSP 페이지
+        return "board/adminboardedit"; // 수정 폼 JSP 페이지
     }
-
+    
     @PostMapping("/edit")
     public String editBoard(@ModelAttribute BoardDto boardDto) {
         boardService.updateBoard(boardDto);

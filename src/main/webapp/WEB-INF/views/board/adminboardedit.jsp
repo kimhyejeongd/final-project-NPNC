@@ -1,38 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>공지사항 상세</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-
+    <title>게시판 수정</title>
+    
     <!-- Favicon -->
     <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
-
-    <!-- Fonts and icons -->
-    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
-    <script>
-      WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-          families: [
-            "Font Awesome 5 Solid",
-            "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons",
-          ],
-          urls: ["${path}/resources/assets/css/fonts.min.css"],
-        },
-        active: function () {
-          sessionStorage.fonts = true;
-        },
-      });
-    </script>
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
@@ -40,8 +19,37 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
 
-    <!-- SweetAlert2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-control, .btn {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #fff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -75,16 +83,19 @@
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
+                        <li class="mb-4 text-center">
+                            <a href="${path}/admin/board/create" class="btn btn-primary btn-round w-75">게시판 작성하기</a>
+                        </li>
                         <li class="nav-item">
-                            <a href="${path}/notice" class="collapsed">
-                                <i class="fas fa-bell"></i>
-                                <p>공지사항</p>
+                            <a href="${path}/admin/board/list" class="collapsed">
+                                <i class="fas fa-th-list"></i>
+                                <p>게시판 목록</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="${path}/board" class="collapsed">
-                                <i class="fas fa-th-list"></i>
-                                <p>게시판</p>
+                            <a href="${path}/notice/admin" class="collapsed">
+                                <i class="fas fa-bell"></i>
+                                <p>공지사항</p>
                             </a>
                         </li>
                     </ul>
@@ -98,24 +109,29 @@
             <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
 
             <div class="container">
-                <div class="page-inner">
-                    <h1 class="mb-4">공지사항 상세</h1>
+                <h1 class="mb-4">게시판 수정</h1>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">${notice.noticeTitle}</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>${notice.noticeDetail}</p>
-                            <p><strong>작성자:</strong> ${notice.memberKey}</p>
-                            <p><strong>작성일:</strong> <fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
-                        </div>
-                        <div class="card-footer">
- 
-                            <a href="${path}/notice/list" class="btn btn-primary">목록으로 돌아가기</a>
-                        </div>
+                <!-- 수정 폼 -->
+                <form action="${path}/admin/board/update/${board.BOARD_KEY}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="BOARD_TITLE" class="form-control" value="${board.BOARD_TITLE}" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" name="BOARD_CONTENT" class="form-control" rows="5" required>${board.BOARD_CONTENT}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">카테고리</label>
+                        <select id="category" name="BOARD_CATEGORY_KEY" class="form-control" required>
+                            <option value="1" ${board.BOARD_CATEGORY_KEY == 1 ? 'selected' : ''}>게시판</option>
+                            <option value="2" ${board.BOARD_CATEGORY_KEY == 2 ? 'selected' : ''}>공지사항</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">수정 완료</button>
+                    <a href="${path}/admin/board/list" class="btn btn-secondary">취소</a>
+                </form>
             </div>
 
             <!-- Footer -->
@@ -127,9 +143,8 @@
     <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
     <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
-
+    
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </body>
 </html>
