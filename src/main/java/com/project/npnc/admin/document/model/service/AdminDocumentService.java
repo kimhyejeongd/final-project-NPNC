@@ -1,9 +1,13 @@
 package com.project.npnc.admin.document.model.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.admin.document.model.dao.AdminDocumentDao;
@@ -19,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class AdminDocumentService {
 	private final SqlSessionTemplate session;
 	private final AdminDocumentDao dao;
+	@Value("${file.upload-dir}")
+    private String uploadPath;
 	
 	public List<StorageFolder> selectAdminDocumentFormAll (){
 		return dao.selectAdminDocumentFormAll(session);
@@ -47,11 +53,13 @@ public class AdminDocumentService {
 	}
 	public int removeFolder(int draggedFolderKey) {
 		StorageFolder storageFolder = selectStorageFolder(draggedFolderKey);
+		int result = 0;
 		if(storageFolder.getFolderLevel()==1) {
-			dao.removeFolderLv1(session,storageFolder.getFolderGroup());
+			result=dao.removeFolderLv1(session,storageFolder.getFolderGroup());
 			dao.updateFolderLv1Order(session,storageFolder.getFolderGroup());
+		}else {			
+			result =dao.removeFolder(session,draggedFolderKey);
 		}
-		int result = dao.removeFolder(session,draggedFolderKey);
 		return result;	
 	}
 	public int createFolderGroup() {
@@ -85,8 +93,27 @@ public class AdminDocumentService {
 	}
 	public int deleteStorage(List<Integer>deleteKeys) {
 		int result=0;
+		int temp=0;
 	    for(Integer key : deleteKeys) {
-	    	result += dao.deleteStorage(session, key);
+	    	temp = dao.deleteStorage(session, key);
+	    	if(temp>0) {
+	    		int test = key;
+	    		Storage storage = dao.selectStorage(session,key);
+        		String path = dao.selectParentStorageName(session,storage.getStorageFolderKey());
+        		File folder = new File(uploadPath+path);
+        		try {
+        			if (folder.exists()) {
+        				FileUtils.deleteDirectory(folder);//하위 폴더와 파일 모두 삭제
+        				if (folder.isDirectory()) {
+        					folder.delete(); // 대상폴더 삭제
+        				}
+        			}
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+	        	
+	    	}
+	    	result+=temp;
 	    }
 	    return result;
 	}

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -84,23 +84,17 @@ public class AdminDocumentFormController {
 
     @PostMapping("/removeFolder")
     public ResponseEntity<?>removeFolder(@RequestParam int draggedFolderKey){
-    	System.out.println(uploadPath);
     	StorageFolder storageFolder = service.selectStorageFolder(draggedFolderKey);
     	int result = service.removeFolder(draggedFolderKey);
     	if(result>0) {
-    		
     		String path ="/dochtml/"+storageFolder.getFolderName()+"/";;
-    		
     		if(storageFolder.getFolderLevel()==2) {
     			path+=storageFolder.getFolderName()+"/";
     		}
     		File folder = new File(uploadPath+path);
-    		
     		try {
-    			
     			if (folder.exists()) {
-    				FileUtils.cleanDirectory(folder);//하위 폴더와 파일 모두 삭제
-    				
+    				FileUtils.deleteDirectory(folder);//하위 폴더와 파일 모두 삭제
     				if (folder.isDirectory()) {
     					folder.delete(); // 대상폴더 삭제
     				}
@@ -158,11 +152,13 @@ public class AdminDocumentFormController {
     @PostMapping("/deleteStorage")
     public ResponseEntity<?> deleteStorage(@RequestBody List<Integer>deleteKeys) {
     	int result = service.deleteStorage(deleteKeys);
+
     	return ResponseEntity.ok(result);
     }
     @PostMapping("/updateStorage")
     public ResponseEntity<?>updateStorage(@RequestBody Storage storage){
     	int result = service.updateStorage(storage);
+
     	return ResponseEntity.ok(result);
     }
 }

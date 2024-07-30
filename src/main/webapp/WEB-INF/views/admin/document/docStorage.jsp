@@ -706,10 +706,10 @@
                                 // folderGroup이 같은 다른 태그도 제거
                                 $('.folder-item').each(function() {
                                 	if(folderLevel==1){                                		
-		                                    var itemFolderGroup = $(this).data('folder-group');
-		                                    if (itemFolderGroup === draggedFolderGroup) {
-		                                        $(this).remove();
-		                                    }
+	                                    var itemFolderGroup = $(this).data('folder-group');
+	                                    if (itemFolderGroup === draggedFolderGroup) {
+	                                        $(this).remove();
+	                                    }
                                 	}
                                 });
                             },

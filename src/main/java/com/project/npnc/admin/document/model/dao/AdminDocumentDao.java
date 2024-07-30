@@ -72,5 +72,8 @@ public class AdminDocumentDao {
 	public String selectParentFolderName(SqlSessionTemplate session, int folderGroup) {
 		return session.selectOne("admindoc.selectParentFolderName",folderGroup);
 	}
+	public Storage selectStorage(SqlSessionTemplate session, int storageKey) {
+		return session.selectOne("admindoc.selectStorage",storageKey);
+	}
 
 }
