@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.Reservation;
 import com.project.npnc.calendar.model.dto.ReserveItem;
+import com.project.npnc.calendar.model.dto.Vacation;
 
 @Repository
 public class CalendarDaoImpl implements CalendarDao {
@@ -100,6 +101,11 @@ public class CalendarDaoImpl implements CalendarDao {
 	@Override
 	public int updateCalendar(SqlSession session, Calendar calendar) {
 		return session.update("calendar.updateByKey",calendar);
+	}
+
+	@Override
+	public List<Vacation> checkVacation(SqlSession session, Map<String, Object> param) {
+		return session.selectList("calendar.checkVacation",param);
 	}
 
 }

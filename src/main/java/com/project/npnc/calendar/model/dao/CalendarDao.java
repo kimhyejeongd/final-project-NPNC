@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.Reservation;
 import com.project.npnc.calendar.model.dto.ReserveItem;
+import com.project.npnc.calendar.model.dto.Vacation;
 
 public interface CalendarDao {
 	int insertCalendar(SqlSession session,Calendar calendar);
@@ -29,4 +30,6 @@ public interface CalendarDao {
 	List<ReserveItem> selectReserveAll(SqlSession session);
 	List<ReserveItem> selectMyReserve(SqlSession session, int memberKey);
 	int updateReCalendar(SqlSession session,ReserveItem reserveItem);
+	
+	List<Vacation> checkVacation(SqlSession session, Map<String,Object> param);
 }
