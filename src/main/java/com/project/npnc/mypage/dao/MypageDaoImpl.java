@@ -10,6 +10,7 @@ import com.project.npnc.security.dto.Member;
 
 @Repository
 public class MypageDaoImpl implements MemberDao {
+	
     @Override
     public Member findById(SqlSession session, String memberId) {
         return session.selectOne("mypage.findById", memberId);

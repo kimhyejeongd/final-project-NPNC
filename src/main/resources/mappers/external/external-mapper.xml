@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.npnc.external.dao.ExternalDao">
+
+    <resultMap id="contactResultMap" type="com.project.npnc.external.dto.ExternalDto">
+        <id property="AB_EXTERNAL_KEY" column="AB_EXTERNAL_KEY"/>
+        <result property="AB_EXTERNAL_NAME" column="AB_EXTERNAL_NAME"/>
+        <result property="AB_EXTERNAL_TELL" column="AB_EXTERNAL_TELL"/>
+        <result property="AB_EXTERNAL_EMAIL" column="AB_EXTERNAL_EMAIL"/>
+        <result property="AB_EXTERNAL_COMPANY" column="AB_EXTERNAL_COMPANY"/>
+        <result property="AB_EXTERNAL_DEPARTMENT" column="AB_EXTERNAL_DEPARTMENT"/>
+        <result property="AB_EXTERNAL_JOB" column="AB_EXTERNAL_JOB"/>
+        <result property="AB_EXTERNAL_BOOKMARK" column="AB_EXTERNAL_BOOKMARK"/>
+        <result property="AB_EXTERNAL_DELETE" column="AB_EXTERNAL_DELETE"/>
+    </resultMap>
+
+    <select id="getAllContacts" resultMap="contactResultMap">
+        SELECT * FROM AB_EXTERNAL WHERE AB_EXTERNAL_DELETE = 'N'
+    </select>
+
+    <select id="getContactById" parameterType="int" resultMap="contactResultMap">
+        SELECT * FROM AB_EXTERNAL WHERE AB_EXTERNAL_KEY = #{id}
+    </select>
+
+    <insert id="addContact" parameterType="com.project.npnc.external.dto.ExternalDto">
+        INSERT INTO AB_EXTERNAL (
+            AB_EXTERNAL_KEY, MEMBER_KEY, AB_EXTERNAL_NAME, AB_EXTERNAL_TELL, AB_EXTERNAL_EMAIL,
+            AB_EXTERNAL_GENDER, AB_EXTERNAL_DEPARTMENT, AB_EXTERNAL_JOB, AB_EXTERNAL_MEMO,
+            AB_EXTERNAL_BOOKMARK, AB_EXTERNAL_COMPANY, AB_EXTERNAL_DELETE
+        ) VALUES (
+            #{AB_EXTERNAL_KEY}, #{MEMBER_KEY}, #{AB_EXTERNAL_NAME}, #{AB_EXTERNAL_TELL}, #{AB_EXTERNAL_EMAIL},
+            #{AB_EXTERNAL_GENDER}, #{AB_EXTERNAL_DEPARTMENT}, #{AB_EXTERNAL_JOB}, #{AB_EXTERNAL_MEMO},
+            #{AB_EXTERNAL_BOOKMARK}, #{AB_EXTERNAL_COMPANY}, #{AB_EXTERNAL_DELETE}
+        )
+    </insert>
+
+    <update id="updateContact" parameterType="com.project.npnc.external.dto.ExternalDto">
+        UPDATE AB_EXTERNAL
+        SET
+            MEMBER_KEY = #{MEMBER_KEY},
+            AB_EXTERNAL_NAME = #{AB_EXTERNAL_NAME},
+            AB_EXTERNAL_TELL = #{AB_EXTERNAL_TELL},
+            AB_EXTERNAL_EMAIL = #{AB_EXTERNAL_EMAIL},
+            AB_EXTERNAL_GENDER = #{AB_EXTERNAL_GENDER},
+            AB_EXTERNAL_DEPARTMENT = #{AB_EXTERNAL_DEPARTMENT},
+            AB_EXTERNAL_JOB = #{AB_EXTERNAL_JOB},
+            AB_EXTERNAL_MEMO = #{AB_EXTERNAL_MEMO},
+            AB_EXTERNAL_BOOKMARK = #{AB_EXTERNAL_BOOKMARK},
+            AB_EXTERNAL_COMPANY = #{AB_EXTERNAL_COMPANY},
+            AB_EXTERNAL_DELETE = #{AB_EXTERNAL_DELETE}
+        WHERE AB_EXTERNAL_KEY = #{AB_EXTERNAL_KEY}
+    </update>
+
+    <delete id="deleteContact" parameterType="int">
+        DELETE FROM AB_EXTERNAL WHERE AB_EXTERNAL_KEY = #{id}
+    </delete>
+
+</mapper>

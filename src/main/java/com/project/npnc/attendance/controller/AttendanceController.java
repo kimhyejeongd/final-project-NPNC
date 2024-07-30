@@ -23,6 +23,7 @@ import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.common.SearchPageFactory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,17 @@ public class AttendanceController{
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
 	private final PageFactory pageFactory;
+	private final SearchPageFactory searchPageFactory;
+	
+
+	/*
+	 * @GetMapping("/mainAttendance") public String mainAttendance( Authentication
+	 * authentication, Model m) { int memberKey
+	 * =memberService.selectMemberKeyById(authentication.getName()); Attendance
+	 * attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
+	 * m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+	 * m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd()); return "/"; }
+	 */
 	
 	
 	@Scheduled(cron="0 0 23 1 * ?")
@@ -144,7 +156,7 @@ public class AttendanceController{
 	
 	//사원 근태관리 화면
 	
-	@GetMapping("/selectAttendanceAll.do")
+	@GetMapping("/selectAttendanceAll")
 	public String selectAttendanceAll(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,
@@ -155,7 +167,7 @@ public class AttendanceController{
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll.do"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
@@ -190,10 +202,10 @@ public class AttendanceController{
 		String msg,loc;
 		if(result>0) {
 			msg="요청성공";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}else {
 			msg="요청실패";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -208,7 +220,7 @@ public class AttendanceController{
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendanceEdit= attendanceService.selectAttendanceEditById(authentication.getName(),page);
 		int totaldata=attendanceService.selectAttendanceEditCount(authentication.getName());
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "attendanceEditList"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceEditById"));
 		m.addAttribute("attendanceEdit",attendanceEdit);
 		return "attendance/attendanceEditList";
 	}
@@ -238,9 +250,52 @@ public class AttendanceController{
 		
 	}
 	
-	
+	@GetMapping("/searchAttendanceEdit")
+	public String searchAttendanceEdit(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			String searchType,
+			Authentication authentication,
+			Model model) {
+		
+		Map<String,Object> searchMap=Map.of("searchType",searchType,"memberId",authentication.getName());
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<AttendanceEdit> list=attendanceService.searchAttendanceEdit(searchMap,page);
+		int totaldata=attendanceService.searchAttendanceEditCount(searchMap);
+		System.out.println(list);
+		model.addAttribute("attendanceEdit", list);
+		model.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,null,searchType,null,null,"searchAttendanceEdit"));
+		return "attendance/ajax_response/tableresponse";
+	}
+
+	@GetMapping("/searchAttendance")
+	public String searchAttendance(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			String searchType,
+			String searchStartDate,
+			String searchEndDate,
+			Authentication authentication,
+			Model m
+			) {
 
 	
+		if(!searchEndDate.equals("")) {	
+			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
+			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		}
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		Map<String,Object> searchMap=Map.of("searchType",searchType,"searchStartDate",searchStartDate,"searchEndDate",searchEndDate,"memberKey",memberKey);
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<Attendance> attendance=attendanceService.searchAttendance(searchMap,page);
+		int totaldata=attendanceService.searchAttendanceCount(searchMap);
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,null,searchType,searchStartDate,searchEndDate,"searchAttendance"));
+		m.addAttribute("attendances", attendance);
+		m.addAttribute("searchT",searchType);
+		m.addAttribute("searchSD",searchStartDate);
+		m.addAttribute("searchED",searchEndDate);
+		return "attendance/ajax_response/membertableresponse";
+	}
 	
 	
 	

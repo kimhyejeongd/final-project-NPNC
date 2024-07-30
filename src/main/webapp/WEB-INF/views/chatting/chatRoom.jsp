@@ -324,13 +324,14 @@ body{
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
 							<img src="room_icon.jpg" alt="방 아이콘">
-							<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
+								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
 							<!-- 안 읽은 메시지 배지 추가 -->
 							<div class="room-info">
 								<div class="room-title">
 									<c:forEach var="member"
 										items="${myRoomMemberList[room.chatRoomKey]}">
-                                        ${member.memberId}
+
+                                        ${member.memberName}
                                     </c:forEach>
 								</div>
 								<div class="recent-message recent-message-${room.chatRoomKey}"></div>
@@ -552,7 +553,7 @@ body{
         var activeRoomId = null; // 현재 활성화된 채팅방 ID 저장
 
         function subscribeToRoom(roomId, recentMessageElement) {
-            var socket = new SockJS('http://localhost:8080/ws-stomp');
+            var socket = new SockJS('${path}/ws-stomp');
             var stompClient = Stomp.over(socket);
             stompClient.connect({"type":"room","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function(frame) {
                 console.log('Connected to room ' + roomId + ': ' + frame);

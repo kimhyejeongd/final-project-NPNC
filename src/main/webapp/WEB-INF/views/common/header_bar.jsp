@@ -176,7 +176,7 @@
       display: block;
    }
    /* ëª¨ë¬ ì¤íì¼ */
-   .modal {
+   /* .modal {
       display: none;
       position: fixed;
       z-index: 2;
@@ -198,7 +198,7 @@
       width: 80%;
       max-width: 500px;
       border-radius: 10px;
-   }
+   } */
    
    .close {
       color: #aaa;
@@ -223,12 +223,12 @@
       display: block; /* íëë¥¼ ë¸ë¡ ììë¡ ë§ë¤ì´ ì¤ ì ì²´ ì¬ì© */
    }
    
-   .modal-content {
+   /* .modal-content {
       width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-   }
+   } */
    
    .profile-info {
       margin-top: 20px;
@@ -382,6 +382,9 @@
 				       </li>
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/board/list">게시판</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
 				       </li>
 				     </ul>
 				   </div>
@@ -846,7 +849,7 @@
           }
             
             function connect() {
-		        let socket = new SockJS('http://localhost:8080/ws-stomp');
+		        let socket = new SockJS('${path}/ws-stomp');
 		        stompClient = Stomp.over(socket);
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
 		            setConnected(true);

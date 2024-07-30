@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+<%@ page session="true" %>
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -79,27 +82,27 @@
                 <div class="collapse" id="docING">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="${path }/document/list/inprocess">
-                        <span class="sub-item">진행중인 문서</span>
+                      <a href="${path }/document/list/employee/inprocess">
+                        <span class="sub-item">진행 문서</span>
                       </a>
                     </li>
                     <li>
-                      <a href="">
-                        <span class="sub-item">결재 완료 문서</span>
+                      <a href="${path }/document/list/employee/complete">
+                        <span class="sub-item">승인 문서</span>
                       </a>
                     </li>
                     <li>
-                      <a href="${path }/document/list/retrieve">
-                        <span class="sub-item">회수 문서</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="">
+                      <a href="${path }/document/list/employee/rejected">
                         <span class="sub-item">반려 문서</span>
                       </a>
                     </li>
                     <li>
-                      <a href="${path }/document/list/draft">
+                      <a href="${path }/document/list/employee/retrieve">
+                        <span class="sub-item">회수 문서</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/document/list/employee/draft">
                         <span class="sub-item">임시 보관 문서</span>
                       </a>
                     </li>
@@ -115,17 +118,22 @@
                 <div class="collapse" id="sidebarLayouts">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="${path }/document/list/waiting">
+                      <a href="${path }/document/list/approver/waiting">
                         <span class="sub-item">결재 대기 문서</span>
                       </a>
                     </li>
                     <li>
-                      <a href="">
-                        <span class="sub-item">결재 완료 문서</span>
+                      <a href="${path }/document/list/approver/complete">
+                        <span class="sub-item">결재 승인 문서</span>
                       </a>
                     </li>
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/approver/pending">
+                        <span class="sub-item">결재 보류 문서</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/document/list/approver/rejected">
                         <span class="sub-item">결재 반려 문서</span>
                       </a>
                     </li>
@@ -141,7 +149,7 @@
                 <div class="collapse" id="forms">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="">
+                      <a href="${path }/document/list/referer/reference">
                         <span class="sub-item">참조 문서</span>
                       </a>
                     </li>

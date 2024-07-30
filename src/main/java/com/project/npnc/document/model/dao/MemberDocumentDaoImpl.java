@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -77,8 +79,8 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		int result =0;
 		for(int i=0; i<list.size();i++) {
 			Approver ap = list.get(i);
-			log.debug("{}", ap);
 			result = session.insert("document.insertApproval", ap); 
+			log.debug("결재자 등록 -> " + ap.toString());
 		}
 		return result;
 	}
@@ -152,8 +154,23 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.insert("document.insertDocFile", d);
 	}
 	@Override
+	public List<Document> selectCompleteDocs(SqlSession session, int no) {
+		return session.selectList("document.selectCompleteDocs", no);
+	}
+
+	@Override
+	public List<Document> selectRejectedDocs(SqlSession session, int no) {
+		return session.selectList("document.selectRejectedDocs", no);
+	}
+
+	@Override
 	public int insertDraftDocFile(SqlSession session, DocFile d) {
 		return session.insert("document.insertDraftDocFile", d);
+	}
+
+	@Override
+	public int selectRemainingVac(SqlSession session, int memberKey) {
+		return session.selectOne("document.selectRemainingVac", memberKey);
 	}
 
 	@Override
@@ -162,8 +179,59 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public List<Document> selectPendingDocs(SqlSession session, int no) {
+		return session.selectList("document.selectPendingDocs", no);
+	}
+
+	@Override
+	public List<Document> selectReferenceDocs(SqlSession session, int no) {
+		return session.selectList("document.selectReferenceDocs", no);
+	}
+
+	@Override
+	public List<Document> selectMyCompleteDocs(SqlSession session, int no) {
+		return session.selectList("document.selectMyCompleteDocs", no);
+	}
+	
+	@Override
+	public List<Document> selectMyRejectDocs(SqlSession session, int no) {
+		return session.selectList("document.selectMyRejectDocs", no);
+	}
+
+	@Override
 	public List<Referer> selectReferer(SqlSession session, String serial) {
 		return session.selectList("document.selectReferer", serial);
+	}
+
+	@Override
+	public List<Approver> selectDocApprovers(SqlSession session, String serial) {
+		return session.selectList("document.selectDocApprovers", serial);
+	}
+
+	@Override
+	public int updateDocStateReject(SqlSession session, String serial) {
+		return session.update("document.updateDocStateReject", serial);
+	}
+
+	@Override
+	public int updateDocStatefinalize(SqlSession session, String serial) {
+		return session.update("document.updateDocStatefinalize", serial);
+	}
+
+	@Override
+	public int updateApprovalState(SqlSession session, String serial, int memberKey, String msg, String state) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", serial);
+		map.put("memberKey", (Integer) memberKey);
+		map.put("msg", msg);
+		map.put("state", state);
+		log.debug("결재 업데이트 -> " + map.toString());
+		return session.update("document.updateApprovalState", map);
+	}
+
+	@Override
+	public int insertVacationApply(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApply", vac);
 	}
 
 }

@@ -37,6 +37,7 @@ public class MemberController {
         this.memberService = memberService;
         this.mailSender = mailSender;
     }
+    
     @GetMapping("/mypage")
     public String mypage(Model m) {
     	Member loginMember=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

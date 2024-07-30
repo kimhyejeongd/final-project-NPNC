@@ -25,10 +25,10 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="등록성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="등록실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -47,10 +47,10 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="삭제실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -73,10 +73,10 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="수정성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="수정실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

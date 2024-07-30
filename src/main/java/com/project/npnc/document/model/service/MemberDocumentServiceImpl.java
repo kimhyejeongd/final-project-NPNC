@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
+import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.DocFile;
@@ -27,6 +29,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,10 +69,11 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public List<Document> selectWaitingDocs(int no) {
 	    List<Document> result = dao.selectWaitingDocs(session, no);
-//	     Document 리스트에서 본인이 이미 승인한 결과 제거
+	    log.debug("[1] 조회" + result.toString());
+	    //Document 리스트에서 본인이 이미 결재한 결과 제거
 	    result.removeIf(doc -> doc.getApprovers().stream()
 	                        .anyMatch(approver -> 
-                    		approver.getMemberKey() == no && approver.getState().equals("승인")));
+                    		approver.getMemberKey() == no && !(approver.getState().equals("대기"))));
 	    return result;
 	}
 
@@ -106,13 +110,16 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
-			log.debug("첨부파일 있음");
 			int count=0;
 			DocFile docFile = null;
 			List<DocFile> list = new ArrayList<>();
 			
 			for(MultipartFile f : file) {
 				count++;
+				if(f.isEmpty()) {
+					continue;
+				}//debug
+				log.debug("첨부파일 있음");
 				log.debug("파일 이름: " + f.getOriginalFilename());
 	            // 고유한 파일 이름 생성 (UUID 사용)
 	            String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
@@ -182,6 +189,27 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+		int result = insertDoc(d, file, html);
+		vac.setVacationDocSerialKey(d.getErDocSerialKey());
+		
+		log.debug("휴가 신청 등록 -> " + vac.toString());
+		result = dao.insertVacationApply(session, vac);
+		if(result <= 0) {
+			throw new Exception("휴가 신청 등록 실패");
+		}
+		log.debug("휴가 신청 등록 성공");
+		
+		return result;
+	}
+	@Override
+	public int insertVacationApply(VacationApply vac) {
+		return dao.insertVacationApply(session, vac);
+	}
+	
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -355,8 +383,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocById(int docId) {
 		log.debug("-----" + docId + "조회-----");
 		Document d = dao.selectDocById(session, docId);
+		log.debug("{}", d);
 		List<Referer> r = dao.selectReferer(session, d.getErDocSerialKey());
 		if(r != null) {
+			log.debug("참조인 없음");
 			d.setReferers(r);
 		}
 		return dao.selectDocById(session, docId);
@@ -477,10 +507,159 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public Document selectDocBySerial(String serial) {
 		log.debug("-----" + serial + "조회-----");
 		Document d = dao.selectDocBySerial(session, serial);
+		log.debug("{}", d);
 		List<Referer> r = dao.selectReferer(session, serial);
 		if(r != null) {
+			log.debug("참조인 없음");
 			d.setReferers(r);
 		}
 		return d;
+	}
+	
+	//결재 : 승인
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateApproveDoc(int memberKey, String serial, String msg) throws Exception {
+		int result = 0;
+		int lastApCk = 0;
+		
+		try {
+			
+			//결재 상태 변경
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "승인");
+			if(result <= 0) {
+				throw new Exception("결재 상태 승인으로 변경 실패");
+			}
+			log.debug("결재 상태 -> 승인");
+			
+			//마지막 결재자인지 확인
+			lastApCk = lastApproverCk(memberKey, serial);
+			
+			//마지막 결재자 승인일 때 문서 처리 완료 등록
+			if(lastApCk > 0) {
+				result = dao.updateDocStatefinalize(session, serial);
+				if(result <= 0) {
+					throw new Exception("문서 상태 처리완료로 변경 실패");
+				}
+				log.debug("문서 상태 -> 처리 완료");
+			}
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		return result;
+	}
+	@Override
+	public List<Approver> selectDocApprovers(String serial){
+		log.debug("----- "+ serial + " 문서 전체 결재자 조회 -----");
+		return dao.selectDocApprovers(session, serial);
+	}
+	@Transactional(rollbackFor = Exception.class)
+	public int lastApproverCk(int memberKey, String serial) throws Exception {
+		//문서 결재자 정보 조회
+		try {
+			List<Approver> apList = selectDocApprovers(serial);
+			if(apList == null || apList.isEmpty()) {
+				throw new Exception("결재자 조회 실패");
+			}
+			log.debug("결재자 -> " + apList.toString());
+			
+			//마지막 결재자 탐색
+			Optional<Approver> lastAp = apList.stream().max((ap1, ap2) -> 
+											Integer.compare(ap1.getOrderby(), ap2.getOrderby()));
+//										.filter(ap -> ap.getOrderby() == apList.size())
+//										.findFirst();
+			log.debug(lastAp.toString());
+			//체크
+			if(lastAp.isPresent() && lastAp.get().getMemberKey() == memberKey) {
+				log.debug("마지막 결재자입니다.(" + lastAp.toString() + ")");
+				return 1;
+			}else {
+				return 0;
+			}
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		
+	}
+	//결재 : 반려
+	@Override
+	@Transactional
+	public int updateRejectDoc(int memberKey, String serial, String msg) throws Exception {
+		int result = 0;
+		
+		try {
+			
+			//결재 상태 변경
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "반려");
+			if(result <= 0) {
+				throw new Exception("결재 상태 반려로 변경 실패");
+			}
+			log.debug("결재 상태 -> 반려(문서 종결)");
+			
+			result = dao.updateDocStateReject(session, serial);
+			if(result <= 0) {
+				throw new Exception("문서 상태 반려로 변경 실패");
+			}
+			log.debug("문서 상태 -> 반려");
+			
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		return result;
+	}
+	//결재 : 보류
+	@Override
+	@Transactional
+	public int updatePendDoc(int memberKey, String serial, String msg) throws Exception {
+		int result = 0;
+		
+		try {
+			
+			//결재 상태 변경
+			result = dao.updateApprovalState(session, serial, memberKey, msg, "보류");
+			if(result <= 0) {
+				throw new Exception("결재 상태 보류로 변경 실패");
+			}
+			log.debug("결재 상태 -> 보류");
+			
+			
+		}catch(Exception e) {
+			log.error("문서 결재 처리 중 예외 발생: ", e);
+			throw e;
+		}
+		return result;
+	}
+	@Override
+	public List<Document> selectPendingDocs(int no) {
+		return dao.selectPendingDocs(session, no);
+	}
+	@Override
+	public List<Document> selectMyCompleteDocs(int no) {
+		return dao.selectMyCompleteDocs(session, no);
+	}
+	@Override
+	public List<Document> selectMyRejectDocs(int no) {
+		return dao.selectMyRejectDocs(session, no);
+	}
+	@Override
+	public List<Document> selectCompleteDocs(int no) {
+		return dao.selectCompleteDocs(session, no);
+	}
+	@Override
+	public List<Document> selectRejectedDocs(int no) {
+		return dao.selectRejectedDocs(session, no);
+	}
+	@Override
+	public List<Document> selectReferenceDocs(int no) {
+		return dao.selectReferenceDocs(session, no);
+	}
+	
+//	휴가
+	@Override
+	public int selectRemainingVac(int memberKey) {
+		return dao.selectRemainingVac(session, memberKey);
 	}
 }

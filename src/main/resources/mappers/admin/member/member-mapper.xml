@@ -26,7 +26,27 @@
 	</resultMap>
 
 	<select id="selectMemberAll" resultMap="memberMap">
-		SELECT * 
+		SELECT 
+		MEMBER_KEY,
+		DEPARTMENT_KEY,
+		JOB_KEY, 
+		MEMBER_ID, 
+		MEMBER_PW, 
+		MEMBER_PHONE, 
+		MEMBER_EMAIL, 
+		MEMBER_MESSAGE, 
+		MEMBER_ENROLL_DATE, 
+		MEMBER_LEAVE_DATE, 
+		MEMBER_TELL, 
+		MEMBER_ADDRESS, 
+		ACCESS_KEY, 
+		MEMBER_NAME, 
+		MEMBER_GENDER, 
+		MEMBER_STATE, 
+		MEMBER_BIRTHDATE, 
+		MEMBER_PROFILE_IMAGE,
+		DEPARTMENT_NAME,
+		JOB_NAME
 			FROM MEMBER 
 			LEFT JOIN DEPARTMENT USING(DEPARTMENT_KEY) 
 			LEFT JOIN JOB USING(JOB_KEY) 
@@ -34,12 +54,30 @@
 	</select>
 
 	<select id="selectMemberCount" resultType="_int">
-		SELECT COUNT(*) 
+		SELECT COUNT(MEMBER_KEY) 
 			FROM MEMBER
 	</select>
 	
 	<select id="selectMemberByNo" resultMap="memberMap" parameterType="_int">
-		SELECT * 
+		SELECT 		
+		MEMBER_KEY,
+		DEPARTMENT_KEY,
+		JOB_KEY, 
+		MEMBER_ID, 
+		MEMBER_PW, 
+		MEMBER_PHONE, 
+		MEMBER_EMAIL, 
+		MEMBER_MESSAGE, 
+		MEMBER_ENROLL_DATE, 
+		MEMBER_LEAVE_DATE, 
+		MEMBER_TELL, 
+		MEMBER_ADDRESS, 
+		ACCESS_KEY, 
+		MEMBER_NAME, 
+		MEMBER_GENDER, 
+		MEMBER_STATE, 
+		MEMBER_BIRTHDATE, 
+		MEMBER_PROFILE_IMAGE
 			FROM MEMBER 
 			WHERE MEMBER_KEY=#{memberKey}
 	</select>
@@ -94,9 +132,14 @@
 		MEMBER_GENDER, 
 		MEMBER_STATE, 
 		MEMBER_BIRTHDATE, 
-		MEMBER_PROFILE_IMAGE
+		MEMBER_PROFILE_IMAGE,
+		DEPARTMENT_NAME,
+		JOB_NAME
 		FROM MEMBER
+		LEFT JOIN DEPARTMENT USING(DEPARTMENT_KEY) 
+		LEFT JOIN JOB USING(JOB_KEY) 
 		WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+		ORDER BY MEMBER_ENROLL_DATE DESC
 	</select>
 	
 	<select id="searchMemberCount" parameterType="string" resultType="_int">
@@ -104,5 +147,6 @@
 	COUNT(MEMBER_KEY)
 	FROM MEMBER
 	WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	
 	</select>
 </mapper>

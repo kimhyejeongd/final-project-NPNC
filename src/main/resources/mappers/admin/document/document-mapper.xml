@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admindoc">
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
-		  SELECT * FROM ER_STORAGE_FOLDER ORDER BY ER_FOLDER_GROUP DESC, ER_FOLDER_LEVEL ASC
+		  SELECT * 
+		  FROM ER_STORAGE_FOLDER 
+		  ORDER BY ER_FOLDER_GROUP DESC, 
+		  			ER_FOLDER_LEVEL ASC,
+		  			er_folder_orderby asc
 	</select>
 	<select id="selectDocAll" resultMap="adminDocument" parameterType="int">
 			SELECT 
@@ -46,12 +50,97 @@
 
 	</select>
 	
+	
+	<select id="selectStorageFolder" resultMap="StorageFolder" parameterType="int">
+		SELECT
+			ER_FOLDER_KEY,
+			ER_FOLDER_NAME,
+			ER_FOLDER_GROUP,
+			ER_FOLDER_LEVEL,
+			ER_FOLDER_USE_YN,
+			ER_FOLDER_ORDERBY
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_KEY = #{folderKey}
+	</select>
+	
+	<update id="updateStorageGroup" parameterType="map">
+		UPDATE ER_STORAGE_FOLDER 
+		SET ER_FOLDER_GROUP = #{targetFolder.folderGroup},
+			ER_FOLDER_ORDERBY= #{draggedFolder.folderOrderBy}
+		
+		WHERE ER_FOLDER_KEY = #{draggedFolder.folderKey}
+	</update>
+	
+<update id="increaseFolderOrder" parameterType="map">
+    <choose>
+        <when test="draggedFolder.folderOrderBy &lt; targetFolder.folderOrderBy">
+            UPDATE ER_STORAGE_FOLDER
+            SET ER_FOLDER_ORDERBY = ER_FOLDER_ORDERBY-1
+            WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
+                AND ER_FOLDER_LEVEL = 2
+                AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
+                AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY &lt;= ${targetFolder.folderOrderBy}
+        </when>
+        <when test="draggedFolder.folderOrderBy &gt; targetFolder.folderOrderBy">
+            UPDATE ER_STORAGE_FOLDER
+            SET ER_FOLDER_ORDERBY = ER_FOLDER_ORDERBY+1
+            WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
+                AND ER_FOLDER_LEVEL = 2
+                AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
+                AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
+                AND ER_FOLDER_ORDERBY >= ${targetFolder.folderOrderBy}
+        </when>
+    </choose>
+</update>
+
+	
+	<delete id="removeFolder" parameterType="int">
+		DELETE FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_KEY = #{draggedFolderKey} 
+	</delete>
+	
+	<select id="createFolderGroup" resultType="int">
+		SELECT COUNT(*)
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_LEVEL=1
+	</select>
+	<insert id="insertFolder" parameterType="StorageFolder">
+		INSERT INTO ER_STORAGE_FOLDER(
+			ER_FOLDER_KEY,
+			ER_FOLDER_NAME,
+			ER_FOLDER_GROUP,
+			ER_FOLDER_LEVEL,
+			ER_FOLDER_USE_YN,
+			ER_FOLDER_ORDERBY
+		)VALUES(
+			SEQ_ER_STORAGE_FOLDER_KEY.NEXTVAL,
+			#{folderName},
+			#{folderGroup},
+			#{folderLevel},
+			#{useYn},
+			#{folderOrderBy}
+		)
+	</insert>
+	
+	<select id="selectFolderKey" resultType="int">
+		SELECT SEQ_ER_STORAGE_FOLDER_KEY.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<select id="selectFolderOrderBy" resultType="int" parameterType="int">
+		SELECT COUNT(*) 
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_GROUP = #{folderGroup}
+	</select>
+	
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
-        <result property="parentFolderKey" column="ER_FOLDER_REF" />
+        <result property="folderGroup" column="ER_FOLDER_GROUP" />
         <result property="folderLevel" column="ER_FOLDER_LEVEL" />
         <result property="useYn" column="ER_FOLDER_USE_YN" />   
+        <result property="folderOrderBy" column="ER_FOLDER_ORDERBY" />   
 	</resultMap>
     
     <resultMap id="adminDocument" type="adminDocument">

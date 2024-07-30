@@ -540,7 +540,7 @@ $(document).ready(function() {
 
 	 var roomMembers = ${roomMembers}; // JSP EL을 사용하여 서버에서 받은 유저 리스트를 할당
      roomMembers.forEach(function(member) {
-         $('#roomMemberList').append('<li>' + member.memberId + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
+         $('#roomMemberList').append('<li>' + member.memberName + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
      });
     // 메뉴 버튼 클릭 이벤트
     $('#menuButton').click(function() {
@@ -596,7 +596,7 @@ $('.exit-button').click(function() {
     }
 
     function connect() {
-        var socket = new SockJS('http://localhost:8080/ws-stomp');
+        var socket = new SockJS('${path}/ws-stomp');
         stompClient = Stomp.over(socket);
         stompClient.connect({"type":"chat","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function (frame) {
             setConnected(true);
@@ -612,12 +612,11 @@ $('.exit-button').click(function() {
             updateUnreadCounts();
             
             // 구독
-            stompClient.subscribe('${path}/room/' + roomId, function (chatMessage) {
-            	console.log(chatMessage + "1111111111111111***************-------------");
+            stompClient.subscribe('/room/' + roomId, function (chatMessage) {
                 showChat(chatMessage);
             });
 
-            stompClient.subscribe("${path}/room/" + roomId + "/sessionCount", function (message) {
+            stompClient.subscribe("/room/" + roomId + "/sessionCount", function (message) {
                 sessionCount = JSON.parse(message.body);
                 console.log("Current chat session count: " + sessionCount);
                 $("#chatSessionCount").text(sessionCount);
@@ -653,7 +652,8 @@ $('.exit-button').click(function() {
                 'receiverKey': ${roomMembers}.filter(m => m.memberKey != '${loginMember.memberKey}').map(m => m.memberKey),
                 'chatMsgDetail':  message.replace(/\n/g, '<br>'),
                 'chatMsgTime': new Date().toISOString(),
-                'file':fileMetaData
+                'file':fileMetaData,
+                'memberName':'${loginMember.memberName}'
             }));
         $('#message').val('');
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight); // 스크롤 맨 아래로 이동
@@ -729,7 +729,7 @@ $('.exit-button').click(function() {
                     if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
                         var messageElement = $(
                             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                            + '<div class="sender">' + chatList[chat].memberKey + '</div>'
+                            + '<div class="sender">' + chatList[chat].memberName + '</div>'
                             + fileElement
                             + messageDetail
                             + '<div class="sendDate">' + formattedTime + '</div>'
@@ -783,7 +783,7 @@ $('.exit-button').click(function() {
 
         var messageElement = $(
             '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-            + '<div class="sender">' + message.memberKey + '</div>'
+            + '<div class="sender">' + message.memberName + '</div>'
             + fileElement
             + message.chatMsgDetail 
             + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'

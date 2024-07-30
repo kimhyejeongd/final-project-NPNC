@@ -156,16 +156,24 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
 		    <version>1.1.1</version>
 		</dependency>
+				<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
 
     	<dependency>
 		     <groupId>org.springframework.boot</groupId>
 		     <artifactId>spring-boot-starter-mail</artifactId>
       	</dependency>
+
+      	<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+      	
    </dependencies>
    
 
