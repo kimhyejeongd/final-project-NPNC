@@ -32,6 +32,13 @@ public class JobDaoImpl implements JobDao {
 		return session.delete("job.deleteJob",jobKey);
 	}
 
+	@Override
+	public Job selectJobByKey(SqlSession session, String jobKey) {
+		
+		return session.selectOne("job.selectJobByKey",jobKey);
+	}
+
+	
 	
 	
 }

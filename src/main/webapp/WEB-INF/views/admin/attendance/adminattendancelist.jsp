@@ -37,6 +37,8 @@
 					              	<option value="지각" <c:if test="${searchT eq '지각'}">selected</c:if>>지각</option>
 					              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
 					              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
+					              	<option value="휴가" <c:if test="${searchT eq '휴가'}">selected</c:if>>휴가</option>
+					              	<option value="유급휴가" <c:if test="${searchT eq '유급휴가'}">selected</c:if>>유급휴가</option>
 					              </select>
 		                          <div class="input-group">
 				                    <div class="input-group-prepend">

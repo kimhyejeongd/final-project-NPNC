@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.project.npnc.admin.member.model.dao.AdminMemberDao;
 import com.project.npnc.admin.member.model.dto.AdminMember;
+import com.project.npnc.memberVacation.model.dao.MemberVacationDao;
+import com.project.npnc.memberVacation.model.dto.MemberVacation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminMemberServiceImpl implements AdminMemberService {
 	
 	private final AdminMemberDao dao;
+	private final MemberVacationDao memberVacationDao;
 	private final SqlSession session;
 	
 	@Override
@@ -38,8 +41,28 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
 	@Override
 	public int insertMember(AdminMember m) {
-
-		return dao.insertMember(session, m);
+		
+		int result=dao.insertMember(session, m);
+		int result2=0;
+		int memberVacTotal=15;
+		System.out.println("서비스 테스트 : "+m.getMemberKey() );
+		int memberKey=m.getMemberKey();
+		if(result>0) {
+			if(m.getJob().getJobKey().equals("J1")) {
+				memberVacTotal=22;
+			}else if(m.getJob().getJobKey().equals("J2")) {
+				memberVacTotal=19;
+			}else if(m.getJob().getJobKey().equals("J3")) {
+				memberVacTotal=17;
+			}
+		MemberVacation mv=MemberVacation.builder().memberKey(memberKey).memberVacTotal(memberVacTotal).memberVacRemaining(memberVacTotal).build();
+		result2=memberVacationDao.insertMemberVacation(session, mv);
+		}
+		
+		if(result2>0) session.commit();
+		else session.rollback();
+		
+		return result2;
 	}
 
 	@Override
@@ -66,15 +89,15 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	}
 
 	@Override
-	public List<AdminMember> searchMember(String searchKey, Map<String, Integer> page) {
+	public List<AdminMember> searchMember(Map searchMap, Map<String, Integer> page) {
 		
-		return dao.searchMember(session, searchKey, page);
+		return dao.searchMember(session, searchMap, page);
 	}
 
 	@Override
-	public int searchMemberCount(String searchKey) {
+	public int searchMemberCount(Map searchMap) {
 	
-		return dao.searchMemberCount(session, searchKey);
+		return dao.searchMemberCount(session, searchMap);
 	}
 
 	

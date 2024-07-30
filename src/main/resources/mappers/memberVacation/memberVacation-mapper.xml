@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberVacation">
+ 	<resultMap type="memberVacation" id="memberVacationMap">
+ 		<id column="MEMBER_VAC_KEY" property="memberVacKey"/>
+		<result column="MEMBER_KEY" property="memberKey"/>
+		<result column="MEMBER_VAC_TOTAL" property="memberVacTotal"/>
+		<result column="MEMBER_VAC_YEAR" property="memberVacYear"/>
+		<result column="MEMBER_VAC_USED" property="memberVacUsed"/>
+		<result column="MEMBER_VAC_REMAINING" property="memberVacRemaining"/>
+ 	</resultMap>
+ 
+ 	<insert id="insertMemberVacation" parameterType="memberVacation">
+ 		INSERT INTO 
+ 		MEMBER_VACATION(
+ 			MEMBER_VAC_KEY,
+ 			MEMBER_KEY,
+ 			MEMBER_VAC_TOTAL,
+ 			MEMBER_VAC_YEAR,
+ 			MEMBER_VAC_USED,
+ 			MEMBER_VAC_REMAINING)
+ 		VALUES(
+ 			SEQ_MEMBER_VACATION.NEXTVAL,
+ 			#{memberKey},
+ 			#{memberVacTotal},
+ 			TO_CAHR(SYSDATE,'YYYY'),
+ 			0,
+ 			#{memberVacRemaining}
+ 		)
+ 	</insert>	
+ 
+</mapper>

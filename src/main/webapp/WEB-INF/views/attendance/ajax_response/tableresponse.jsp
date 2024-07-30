@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/> 
 <table id="multi-filter-select"
 	class="display table table-striped table-hover">
@@ -23,12 +24,13 @@
 					<td>${a.attendanceEditDate}</td>
 					<td>${a.attendanceEditRequestDate }</td>
 					<td>${a.attendanceEditStartEnd }</td>
-					<td>${a.attendanceEditBeforeTime }</td>
-					<td>${a.attendanceEditAfterTime}</td>
+					<td>${fn:substring(a.attendanceEditBeforeTime, fn:length(a.attendanceEditBeforeTime) - 8, fn:length(a.attendanceEditBeforeTime))}</td>
+          			<td>${fn:substring(a.attendanceEditAfterTime, fn:length(a.attendanceEditAfterTime) - 8, fn:length(a.attendanceEditAfterTime))}</td>
 					<td>${a.attendanceEditState}</td>
 					<td>
-						<button onclick="attendanceEditDetail(${a.attendanceEditKey})"
-							class="btn btn-success">상세</button>
+						<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#editmemModal" data-member-key="${a.attendanceEditKey}">
+							상세
+						</button>
 					</td>
 				</tr>
 			</c:forEach>

@@ -384,7 +384,7 @@
 									      jQuery(document).ready(function () {
 									        SweetAlert2Demo.init();
 									      });
-													
+										fn_paging(1);			
 										
 									}else if(searchNoteBarText.value!=""){
 										fn_paging2(1);
@@ -1142,10 +1142,10 @@
 						  $.each(response.notepagelist, function(index, item) {
 				                    var row = `<tr >
 				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-				                        <td>\${item.postMsgRecKey}</td>
-				                        <td>\${item.memberKey}</td>
-				                        <td class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</td>
-				                        <td>\${item.postMsgTime}</td>
+										<th>\${item.memberKey}<p>
+										<th>\${item.memberName} \${item.jobName}<p>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
+				                        <th>\${item.postMsgTime}<p>
 				                    </tr>`;
 				                    tbody.append(row);
 				                }); 
@@ -1182,11 +1182,11 @@
 										  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
 										  $.each(response.notepagelist, function(index, item) {
 								                    var row = `<tr >
-								                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-								                        <td>\${item.postMsgRecKey}</td>
-								                        <td>\${item.memberKey}</td>
-								                        <td class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</td>
-								                        <td>\${item.postMsgTime}</td>
+														<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+														<th>\${item.memberKey}<p>
+														<th>\${item.memberName} \${item.jobName}<p>
+								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
+								                        <th>\${item.postMsgTime}<p>
 								                    </tr>`;
 								                    tbody.append(row);
 								                }); 
