@@ -1,28 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<c:set var="path" value="${pageContext.request.contextPath }"/>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
-<html>
-	
-  <head>
-  	<meta charset="UTF-8">
-  	
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
-    <meta
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-      name="viewport"
-    />
-    <link
-      rel="icon"
-      href="${path}/resources/assets/img/kaiadmin/favicon.ico"
-      type="image/x-icon"
-    />
-    
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	
+    <title>공지사항</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+
+    <!-- Favicon -->
+    <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -47,95 +38,76 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-  </head>
-  <body>
+
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        #tablerow:hover {
+            cursor: pointer; 
+        }
+    </style>
+</head>
+<body>
     <div class="wrapper">
-      <!-- Sidebar -->
-      <div class="sidebar" data-background-color="dark">
-        <div class="sidebar-logo">
-          <!-- Logo Header -->
-          <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
-              <img
-                src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
-                alt="navbar brand"
-                class="navbar-brand"
-                height="20"
-              />
-            </a>
-            <div class="nav-toggle">
-              <button class="btn btn-toggle toggle-sidebar">
-                <i class="gg-menu-right"></i>
-              </button>
-              <button class="btn btn-toggle sidenav-toggler">
-                <i class="gg-menu-left"></i>
-              </button>
-            </div>
-            <button class="topbar-toggler more">
-              <i class="gg-more-vertical-alt"></i>
-            </button>
-          </div>
-          <!-- End Logo Header -->
-        </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
-          <div class="sidebar-content">
-            <ul class="nav nav-secondary">
-              <li class="nav-item active">
-                <a
-                  data-bs-toggle="collapse"
-                  href="#dashboard"
-                  class="collapsed"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-home"></i>
-                  <p>Dashboard</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="dashboard">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="../demo1/index.html">
-                        <span class="sub-item">Dashboard 1</span>
-                      </a>
-                    </li>
-                  </ul>
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="${path}/index.html" class="logo">
+                        <img
+                            src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
+                            alt="navbar brand"
+                            class="navbar-brand"
+                            height="20"
+                        />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
                 </div>
-              </li>
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">Components</h4>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-layer-group"></i>
-                  <p>공지사항</p>
-                  <span class="caret"></span>
-                </a>
-              
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-th-list"></i>
-                  <p>게시판</p>
-                  <span class="caret"></span>
-                </a>
-          </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="${path}/notice" class="collapsed">
+                                <i class="fas fa-bell"></i>
+                                <p>공지사항</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${path}/board" class="collapsed">
+                                <i class="fas fa-th-list"></i>
+                                <p>게시판</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- End Sidebar -->
+        <!-- End Sidebar -->
 
         <div class="main-panel">
             <!-- Header Bar -->
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
 
             <div class="container">
                 <div class="page-inner">
                     <h1 class="mb-4">공지사항 목록</h1>
-                    
+
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -147,22 +119,22 @@
                         </thead>
                         <tbody>
                             <c:forEach var="notice" items="${noticeList}">
-                                <tr>
-                                    <td>${notice.BOARD_KEY}</td>
-                                    <td><a href="${pageContext.request.contextPath}/board/detail/${notice.BOARD_KEY}">${notice.BOARD_TITLE}</a></td>
-                                    <td>${notice.MEMBER_KEY}</td>
-                                    <td>${notice.BOARD_ENROLL_DATE}</td>
-                                </tr>
-                            </c:forEach>
+                    		<c:if test="${board.BOARD_CATEGORY_KEY == 2}">
+                     	    <tr>
+                            <td>${board.BOARD_KEY}</td>
+                            <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
+                            <td>${board.MEMBER_KEY}</td>
+                            <td>${board.BOARD_ENROLL_DATE}</td>
+                        </tr>
+                    </c:if>
+                </c:forEach>
                         </tbody>
                     </table>
-                    
-
                 </div>
             </div>
 
             <!-- Footer -->
-            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
 
@@ -173,5 +145,11 @@
 
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Script for setting path in session storage -->
+    <script>
+        sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+    </script>
 </body>
 </html>
