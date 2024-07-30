@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+<%@ page session="true" %>
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -26,7 +29,8 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
 
-
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   	<div class="sidebar" data-background-color="dark">
   	<div class="sidebar-logo">
        <!-- Logo Header -->
@@ -53,112 +57,32 @@
   	<div class="sidebar-wrapper scrollbar scrollbar-inner">
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
-              <li class="nav-item">
-                <a
-                  href="${path }/"
-                >
-                  <i class="fas fa-home"></i><p>관리자페이지 Home</p>
-                </a>
-              </li>
-              <!-- 토글리스트 -->
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#docING">
-                  <i class="fas fa-pen-square"></i>
-                  <p>인사관리</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="docING">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="${path }/admin/member/selectmemberall.do">
-                        <span class="sub-item">전체사원관리</span>
-                      </a>
+           		<li class="mb-4 text-center">
+                  <a href="${path }/board/write" class="btn btn-primary btn-round w-75">게시글 작성하기</a>
+               </li>
+        
+     <!-- 토글리스트 -->
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
                     </li>
-                    <li>
-                      <a href="${path }/admin/member/insertmember.do">
-                        <span class="sub-item">사원등록</span>
-                      </a>
+                    <li class="nav-item">
+                        <a href="${path }/board/list">
+                            <i class="fas fa-pen-square"></i>
+                            <p>게시판</p>
+                        </a>
                     </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-th-list"></i>
-                  <p>근태관리</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="sidebarLayouts">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="${path }/admin/attendance/selectAdminAttendanceAll">
-                        <span class="sub-item">전체 사원 근태</span>
-                      </a>
+                    <li class="nav-item">
+                        <a href="${path }/board/notices">
+                            <i class="fas fa-th-list"></i>
+                            <p>공지사항</p>
+                        </a>
                     </li>
-                    <li>
-                      <a href="${path }/admin/attendance/selectAdminAttendanceEditAll">
-                        <span class="sub-item">수정요청관리</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#forms">
-                  <i class="fas fa-pen-square"></i>
-                  <p>부서/직급</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="forms">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="${path }/admin/dept/selectdeptall.do">
-                        <span class="sub-item">부서 관리</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/admin/job/selectjoball.do">
-                        <span class="sub-item">직급 관리</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#123">
-                  <i class="fas fa-pen-square"></i>
-                  <p>전자결재 관리</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="123">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
-                        <span class="sub-item">결재 양식</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/admin/job/selectjoball.do">
-                        <span class="sub-item">결재 보관함</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/admin/job/selectjoball.do">
-                        <span class="sub-item">전체 문서 목록</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </div>
+                </ul>
+            </div>
         </div>
-      </div>
+    </div>
   
   
       <!-- End Sidebar -->
@@ -197,6 +121,9 @@
     <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="${path}/resources/assets/js/setting-demo.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script>
     <script>
       $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
         type: "line",
