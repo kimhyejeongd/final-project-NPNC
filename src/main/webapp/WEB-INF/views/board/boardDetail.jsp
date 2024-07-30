@@ -206,13 +206,14 @@
                 <!-- Comment Section -->
                 <div class="comment-section">
                     <!-- Comment Form -->
-                    <div class="comment-form">
-                        <form action="${path}/board/addComment" method="post">
-                            <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                            <textarea name="commentDetail" placeholder="댓글을 입력하세요..."></textarea>
-                            <button type="submit" class="btn btn-primary">댓글 작성</button>
-                        </form>
-                    </div>
+                   <div class="comment-form">
+				    <form action="${path}/board/addComment" method="post">
+				        <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+				        <textarea name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요..." required></textarea>
+				        <button type="submit" class="btn btn-primary">댓글 작성</button>
+				    </form>
+				</div>
+
 
                     <!-- Comment List -->
                     <div class="comment-list">

@@ -10,12 +10,15 @@
     </select>
 
     <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD WHERE BOARD_KEY = #{boardKey}
+        SELECT * FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
 
     <insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
-        INSERT INTO BOARD (BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE)
-        VALUES (#{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, #{BOARD_ENROLL_DATE}, #{BOARD_UPDATE_DATE}, #{BOARD_DELETE})
+        INSERT INTO BOARD (
+            BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE, BOARD_TITLE
+        ) VALUES (
+            #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, #{BOARD_ENROLL_DATE}, #{BOARD_UPDATE_DATE}, #{BOARD_DELETE}, #{BOARD_TITLE}
+        )
     </insert>
 
     <!-- 공지사항만 조회 -->
@@ -32,41 +35,46 @@
 
     <update id="updateBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
         UPDATE BOARD SET
-        BOARD_CATEGORY_KEY = #{BOARD_CATEGORY_KEY},
-        MEMBER_KEY = #{MEMBER_KEY},
-        BOARD_DETAIL = #{BOARD_DETAIL},
-        BOARD_ENROLL_DATE = #{BOARD_ENROLL_DATE},
-        BOARD_UPDATE_DATE = #{BOARD_UPDATE_DATE},
-        BOARD_DELETE = #{BOARD_DELETE}
+            BOARD_CATEGORY_KEY = #{BOARD_CATEGORY_KEY},
+            MEMBER_KEY = #{MEMBER_KEY},
+            BOARD_DETAIL = #{BOARD_DETAIL},
+            BOARD_ENROLL_DATE = #{BOARD_ENROLL_DATE},
+            BOARD_UPDATE_DATE = #{BOARD_UPDATE_DATE},
+            BOARD_DELETE = #{BOARD_DELETE},
+            BOARD_TITLE = #{BOARD_TITLE}
         WHERE BOARD_KEY = #{BOARD_KEY}
     </update>
 
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM BOARD WHERE BOARD_KEY = #{boardKey}
+        DELETE FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </delete>
 
     <!-- Board Comment Dto CRUD -->
     <select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
-        SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{boardKey}
+        SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
 
     <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
-        INSERT INTO BOARD_COMMENT (BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE)
-        VALUES (#{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL}, #{BOARD_COMMENT_DATE}, #{BOARD_COMMENT_REF}, #{BOARD_COMMENT_DELETE})
-    </insert>
+    INSERT INTO BOARD_COMMENT (
+        BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
+    ) VALUES (
+        #{BOARD_COMMENT_KEY}, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL},DEFAULT, #{BOARD_COMMENT_REF}, DEFAULT
+    )
+</insert>
+
 
     <update id="updateComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
         UPDATE BOARD_COMMENT SET
-        BOARD_COMMENT_LEVEL = #{BOARD_COMMENT_LEVEL},
-        BOARD_COMMENT_DETAIL = #{BOARD_COMMENT_DETAIL},
-        BOARD_COMMENT_DATE = #{BOARD_COMMENT_DATE},
-        BOARD_COMMENT_REF = #{BOARD_COMMENT_REF},
-        BOARD_COMMENT_DELETE = #{BOARD_COMMENT_DELETE}
+            BOARD_COMMENT_LEVEL = #{BOARD_COMMENT_LEVEL},
+            BOARD_COMMENT_DETAIL = #{BOARD_COMMENT_DETAIL},
+            BOARD_COMMENT_DATE = #{BOARD_COMMENT_DATE},
+            BOARD_COMMENT_REF = #{BOARD_COMMENT_REF},
+            BOARD_COMMENT_DELETE = #{BOARD_COMMENT_DELETE}
         WHERE BOARD_COMMENT_KEY = #{BOARD_COMMENT_KEY}
     </update>
 
     <delete id="deleteComment" parameterType="int">
-        DELETE FROM BOARD_COMMENT WHERE BOARD_COMMENT_KEY = #{commentKey}
+        DELETE FROM BOARD_COMMENT WHERE BOARD_COMMENT_KEY = #{BOARD_COMMENT_KEY}
     </delete>
 
     <!-- Board File Dto CRUD -->
@@ -79,5 +87,4 @@
     <select id="selectAllCategories" resultType="com.project.npnc.board.model.dto.BoardCategoryDto">
         SELECT * FROM BOARD_CATEGORY
     </select>
-    
 </mapper>

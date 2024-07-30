@@ -1,22 +1,17 @@
 package com.project.npnc.board.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
-import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
 
 @Controller
@@ -57,6 +52,29 @@ public class BoardController {
         model.addAttribute("board", board);
         return "board/boardDetail";
     }
+    // 댓글 추가
+    @PostMapping("/addComment")
+    public String addComment(BoardCommentDto commentDto) {
+        boardService.createComment(commentDto);
+        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+    }
+
+    // 댓글 수정
+    @PostMapping("/updateComment")
+    public String updateComment(BoardCommentDto commentDto) {
+        boardService.updateComment(commentDto);
+        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+    }
+
+    // 댓글 삭제
+    @PostMapping("/deleteComment")
+    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey) {
+        boardService.deleteComment(commentKey);
+        return "redirect:/board/detail?boardKey=" + boardKey;
+    }
+
+
+
     
     
 }
