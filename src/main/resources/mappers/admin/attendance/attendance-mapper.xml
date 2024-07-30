@@ -146,7 +146,15 @@
 			ORDER BY ATTENDANCE_DATE DESC
 	</select>
 
-
+	<select id="selectAttendanceMonthCount" parameterType="attendance" resultType="_int">
+		SELECT 
+		COUNT(ATTENDANCE_KEY) 
+		FROM ATTENDANCE 
+		WHERE MEMBER_KEY=#{member.memberKey}
+         AND ATTENDANCE_STATE=#{attendanceState}
+         AND ATTENDANCE_DATE BETWEEN TRUNC(SYSDATE, 'MM') 
+                           AND LAST_DAY(SYSDATE)
+	</select>
 
 
 	<!-- attendanceEdit -->

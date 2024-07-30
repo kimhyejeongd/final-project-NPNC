@@ -163,10 +163,21 @@ public class AttendanceController{
 			Authentication authentication,
 			Model m){
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
+		
+		Attendance a=Attendance.builder().member(AdminMember.builder().memberKey(memberKey).build()).build();
+		Map<String,Integer> attendanceCount=attendanceService.selectAttendanceMonthCount(a);
+		
+		m.addAttribute("gotowork",attendanceCount.get("gotowork"));
+		m.addAttribute("absent",attendanceCount.get("absent"));
+		m.addAttribute("vaca",attendanceCount.get("vaca"));
+		m.addAttribute("late",attendanceCount.get("late"));
+		m.addAttribute("ealryLeave",attendanceCount.get("ealryLeave"));
+		
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
