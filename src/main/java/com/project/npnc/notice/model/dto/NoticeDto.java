@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NoticeDto {
     private int noticeKey;
-    private int noticeCategoryKey;
     private int memberKey;
     private String noticeTitle;
     private String noticeDetail;
