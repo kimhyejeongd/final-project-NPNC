@@ -58,5 +58,6 @@
         <typeAlias type="com.project.npnc.external.dto.ExternalDto" alias="ExternalDto"/>
         
         <typeAlias type="com.project.npnc.admin.vacation.model.dto.Vacation" alias="adminVacation"/>
+        <typeAlias type="com.project.npnc.document.model.dto.VacationApply" alias="vacationApply"/>   
 	</typeAliases>
 </configuration> 

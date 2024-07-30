@@ -484,7 +484,7 @@ public class MemberDocumentController {
 		return ResponseEntity.ok(response);
 	}
 	//휴가 신청 문서 임시저장
-	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
+	@PostMapping(path="/savedraft/vacation", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftVacDoc(
 			String msg, Model m, Document doc, String html, VacationApply vac, 
 			@RequestParam(required = false) int form,
@@ -506,7 +506,7 @@ public class MemberDocumentController {
 		//문서 등록
 		try { 
 			log.debug(user.getMemberName()+ "사원의 문서 임시저장");
-			result = serv.insertDraftVacDoc(doc, file, html);
+//			result = serv.insertDraftVacDoc(doc, file, html);
 		} catch (Exception e) {
 			log.debug("문서 임시저장 실패");
 			e.printStackTrace();
