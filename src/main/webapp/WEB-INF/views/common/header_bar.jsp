@@ -261,13 +261,18 @@
    }
    </style>
    <style>
+	
    .list-group-item{
          display: flex;
          flex-direction: row;
-      justify-content: space-between;
+      	 justify-content: space-between;
    }
-</style>
-<!--이성록 모달 팝업 스타일 -->
+   
+   #headerNavLogo {
+       display: none;
+   }
+	</style>
+	<!--이성록 모달 팝업 스타일 -->
 
 	<style>
 			h2{
@@ -346,7 +351,7 @@
             </div>
             <!-- Navbar Header -->
             <nav
-              class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+              class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom "
             >
               <div class="container-fluid">
                 <nav
@@ -361,29 +366,19 @@
 		               height="70"
 		             />
 				   </a>
-				   <button
-				     class="navbar-toggler"
-				     type="button"
-				     data-bs-toggle="collapse"
-				     data-bs-target="#navbarNav"
-				     aria-controls="navbarNav"
-				     aria-expanded="false"
-				     aria-label="Toggle navigation"
-				   >
-				     <span class="navbar-toggler-icon"></span>
-				   </button>
+				  
 				   <div class="collapse navbar-collapse" id="navbarNav">
 				     <ul class="navbar-nav">
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/document/home" 
-				           >전자결제 <span class="sr-only">(current)</span></a
+				           >전자결재</a
 				         >
 				       </li>
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/calendar">캘린더</a>
 				       </li>
 				       <li class="nav-item">
-				         <a class="nav-link" href="${path}/notein">쪽지</a>
+				         <a class="nav-link" href="${path}/notehome">쪽지</a>
 				       </li>
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/board/list">게시판</a>
@@ -403,7 +398,8 @@
 			<script>
 				// 원하는 URL을 설정
 				const targetUrl = "http://localhost:8080/";
-
+				const targetUrl2="http://localhost:8080/?continue";
+				
 				// 현재 URL을 확인
 				const currentUrl = window.location.href;
 				console.log(currentUrl+"들어오나요");
@@ -411,8 +407,8 @@
 				const headerNavLogo = document.getElementById("headerNavLogo");
 
 				// 현재 URL이 targetUrl과 일치하지 않으면 요소 숨기기
-				if (currentUrl !== targetUrl) {
-				    headerNavLogo.style.display = "none";
+				if (currentUrl == targetUrl||currentUrl==targetUrl2) {
+				    headerNavLogo.style.display = "inline";
 				}
 				
 			</script>
@@ -761,12 +757,12 @@
                           </div>
                         </li>
                         <li>
-                          <div class="dropdown-divider"></div>
+                        <!--  <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">My Profile</a>
                           <a class="dropdown-item" href="#">My Balance</a>
                           <a class="dropdown-item" href="#">Inbox</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Account Setting</a>
+                          <a class="dropdown-item" href="#">Account Setting</a>-->
                           <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">Logout</a>
                         </li>
@@ -886,6 +882,8 @@
 				   		 });
 						 
 						 
+					
+						 
 						 // Step 1: Extract the current number from the element
 				           var notificationText = $('.notification').eq(1).text();
 				           var currentCount = parseInt(notificationText, 10);
@@ -899,7 +897,63 @@
 				           var dropdownTitle = $('.dropdown-title').eq(1).text();
 				           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
 				           $('.dropdown-title').eq(1).text(newDropdownTitle);
-						
+						   
+						  	 var a = document.createElement('a');
+					          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+							  a.className='noteDeleteOne';		
+							  a.id =  bodyObject.alarmKey;
+							  
+					          var divIcon = document.createElement('div');
+					          divIcon.className = 'notif-icon notif-success';
+		
+					          var faIcon = document.createElement('i');
+					          faIcon.className = 'fa fa-envelope';
+		
+					          var divContent = document.createElement('div');
+					          divContent.className = 'notif-content';
+		
+					          var spanBlock = document.createElement('span');
+					          spanBlock.className = 'block';
+					          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		
+					          var spanTime = document.createElement('span');
+					          spanTime.className = 'time';
+						   	
+							   	// 예시 ISO 8601 날짜 문자열
+							   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+		
+							   	// ISO 8601 문자열을 Date 객체로 변환
+							   	const date = new Date(isoDateString);
+		
+							   	// Date 객체를 로컬 형식으로 변환하여 출력
+							   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+		
+							   	// 또는 직접 포맷하여 사용할 수 있습니다.
+							   	const year = date.getFullYear();
+							   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+							   	const day = date.getDate().toString().padStart(2, '0');
+							   	const hours = date.getHours().toString().padStart(2, '0');
+							   	const minutes = date.getMinutes().toString().padStart(2, '0');
+							   	const seconds = date.getSeconds().toString().padStart(2, '0');
+							   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+		
+							   	// spanTime에 포맷된 날짜를 설정
+							   	spanTime.textContent = customFormattedDate + " ";
+							   	
+						          // Append the child elements
+						          divIcon.appendChild(faIcon);
+						          divContent.appendChild(spanBlock);
+						          divContent.appendChild(spanTime);
+						          a.appendChild(divIcon);
+						          a.appendChild(divContent);
+		
+						   		
+
+					      // alarmBox의 첫 번째 자식으로 추가
+					      const alarmBox = document.getElementById('alarmBox');
+					      alarmBox.insertBefore(a, alarmBox.firstChild);
+					
 		            });
 					
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
@@ -936,7 +990,63 @@
 					           var dropdownTitle = $('.dropdown-title').eq(1).text();
 					           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
 					           $('.dropdown-title').eq(1).text(newDropdownTitle);
-											 
+							   
+							   var a = document.createElement('a');
+		   			          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+		   					  a.className='noteDeleteOne';		
+		   					  a.id =  bodyObject.alarmKey;
+		   					  
+		   			          var divIcon = document.createElement('div');
+		   			          divIcon.className = 'notif-icon notif-success';
+
+		   			          var faIcon = document.createElement('i');
+		   			          faIcon.className = 'fa fa-envelope';
+
+		   			          var divContent = document.createElement('div');
+		   			          divContent.className = 'notif-content';
+
+		   			          var spanBlock = document.createElement('span');
+		   			          spanBlock.className = 'block';
+		   			          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+
+		   			          var spanTime = document.createElement('span');
+		   			          spanTime.className = 'time';
+		   				   	
+		   					   	// 예시 ISO 8601 날짜 문자열
+		   					   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+
+		   					   	// ISO 8601 문자열을 Date 객체로 변환
+		   					   	const date = new Date(isoDateString);
+
+		   					   	// Date 객체를 로컬 형식으로 변환하여 출력
+		   					   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+
+		   					   	// 또는 직접 포맷하여 사용할 수 있습니다.
+		   					   	const year = date.getFullYear();
+		   					   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+		   					   	const day = date.getDate().toString().padStart(2, '0');
+		   					   	const hours = date.getHours().toString().padStart(2, '0');
+		   					   	const minutes = date.getMinutes().toString().padStart(2, '0');
+		   					   	const seconds = date.getSeconds().toString().padStart(2, '0');
+		   					   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+
+		   					   	// spanTime에 포맷된 날짜를 설정
+		   					   	spanTime.textContent = customFormattedDate + " ";
+		   					   	
+		   				          // Append the child elements
+		   				          divIcon.appendChild(faIcon);
+		   				          divContent.appendChild(spanBlock);
+		   				          divContent.appendChild(spanTime);
+		   				          a.appendChild(divIcon);
+		   				          a.appendChild(divContent);
+
+		   				   		
+
+		   			      // alarmBox의 첫 번째 자식으로 추가
+		   			      const alarmBox = document.getElementById('alarmBox');
+		   			      alarmBox.insertBefore(a, alarmBox.firstChild);
+						 
 		            });
 		            
 		            stompClient.subscribe('/user/queue/users', function (message) {

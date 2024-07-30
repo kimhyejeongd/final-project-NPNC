@@ -5,7 +5,7 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
 	<typeAliases>
-		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
+		<typeAlias type="com.project.npnc.member.model.dto.SrMember" alias="memberSr"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
 		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
@@ -36,7 +36,7 @@
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardDto" alias="BoardDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardFileDto" alias="BoardFileDto"/>
 
-		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
+	
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
    		<typeAlias type="com.project.npnc.security.dto.Member" alias="mypagemember"/>
 		<typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
@@ -48,8 +48,13 @@
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteFileDto" alias="noteFileDto"/>
 
+
+	<!--	<typeAlias type="com.project.npnc.calendar.model.dto.Reservation" alias="reservation"/>
+		<typeAlias type="com.project.npnc.calendar.model.dto.ReserveItem" alias="reserveItem"/>-->
+
 		<typeAlias type="com.project.npnc.calendar.model.dto.Reservation" alias="reservation"/>
 		<typeAlias type="com.project.npnc.calendar.model.dto.ReserveItem" alias="reserveItem"/>
+
 
 		<typeAlias type="com.project.npnc.document.model.dto.Referer" alias="referer"/>   
 		<typeAlias type="com.project.npnc.alarm.dto.AlarmMessage" alias="alarmMessage"/>   

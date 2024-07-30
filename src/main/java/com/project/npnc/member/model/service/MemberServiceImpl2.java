@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.member.model.dao.MemberDao;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class MemberServiceImpl2 implements MemberService {
 	private final SqlSession session;
 	
 	@Override
-	public List<Member> selectMemeberAll(Map<String,Integer> page) {
+	public List<SrMember> selectMemeberAll(Map<String,Integer> page) {
 
 		return dao.selectMemeberAll(session, page);
 	}
@@ -31,19 +31,19 @@ public class MemberServiceImpl2 implements MemberService {
 	}
 
 	@Override
-	public Member selectMemberByNo(int memberkey) {
+	public SrMember selectMemberByNo(int memberkey) {
 		
 		return dao.selectMemberByNo(session, memberkey);
 	}
 
 	@Override
-	public int insertMember(Member m) {
+	public int insertMember(SrMember m) {
 
 		return dao.insertMember(session, m);
 	}
 
 	@Override
-	public int updateMember(Member m) {
+	public int updateMember(SrMember m) {
 
 		return dao.updateMember(session, m);
 	}
