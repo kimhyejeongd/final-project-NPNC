@@ -62,7 +62,7 @@
             padding-left:10px;
         }
 
-        /* Optional styles to help with layout issues */
+     
         .container {
             padding-top: 20px; /* Adjust top padding if needed */
         }
@@ -70,6 +70,7 @@
         h1 {
         padding-left:10px;
         }
+        
     </style>
 </head>
 <body>
@@ -105,7 +106,7 @@
                                             <c:forEach var="board" items="${boardList}">
                                                 <tr>
                                                     <td>${board.BOARD_KEY}</td>
-                                                    <td><a href="${path}/board/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
+                                              		<td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
                                                     <td>${board.MEMBER_KEY}</td>
                                                     <td>
                                                         <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" />

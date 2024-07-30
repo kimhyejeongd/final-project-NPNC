@@ -51,11 +51,11 @@ public class BoardController {
     }
     
 
-    @GetMapping("/detail/{boardKey}")
-    public String getBoardById(@PathVariable("boardKey") int boardKey, Model model) {
+    @GetMapping("/detail/boardKey")
+    public String getBoardById(int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
         model.addAttribute("board", board);
-        return "board/detail";
+        return "board/boardDetail";
     }
     
     
