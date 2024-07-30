@@ -30,6 +30,8 @@ public class Document {
 	private String erDocDeleteYn;
 	private int erDocStorageKey; //보관함 pk
 	private String erDocStorageName; //join용 이름
+	private int erDocStorageTerm; //join용
+	private String erDocStorageFolderName; //join용 이름
 	private String erDocFilename;
 	private String erDocState;
 	private Date erDocStateUpdateDate;

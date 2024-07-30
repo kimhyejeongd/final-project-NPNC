@@ -14,7 +14,7 @@
 	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
 	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
 	    <result column="er_doc_storage_key" property="erDocStorageKey"/>
-	    <result column="er_doc_storage_name" property="erDocStorageName"/>
+	    <result column="ER_STORAGE_NAME" property="erDocStorageName"/>
 	    <result column="er_doc_filename" property="erDocFilename"/>
 	    <result column="er_doc_state" property="erDocState"/>
 	    <result column="er_doc_state_update_date" property="erDocStateUpdateDate"/>
@@ -22,6 +22,10 @@
 	    <result column="er_doc_update_date" property="erDocUpdateDate"/>
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
+	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
+	    <result column="ER_DC_FORM_KEY" property="docFormKey"/>
+	    <result column="er_storage_term" property="erDocStorageTerm"/>
+	    <result column="er_folder_name" property="erDocStorageFolderName"/>
 		<collection property="approvers" resultMap="approverMap" ofType="approver"/>
 		<collection property="referers" resultMap="refererMap" ofType="referer"/>
 		<collection property="files" resultMap="docFileMap" ofType="docFile"/>
@@ -1031,7 +1035,10 @@
 			er.ER_REFERER_JOB_KEY,
 			j2.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
-			er.MEMBER_KEY
+			er.MEMBER_KEY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
 		FROM   
 			er_document d
         LEFT JOIN 
@@ -1048,6 +1055,10 @@
 			DEPARTMENT d3 ON er.ER_REFERER_TEAM_KEY = d3.DEPARTMENT_KEY 
         LEFT JOIN 
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
+        LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
 		WHERE  
 			d.ER_DOC_KEY = #{docId}
 		ORDER BY
@@ -1102,7 +1113,10 @@
 			er.ER_REFERER_JOB_KEY,
 			j.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
-			er.MEMBER_KEY
+			er.MEMBER_KEY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
 		FROM   
 			er_document d
         LEFT JOIN 
@@ -1115,6 +1129,10 @@
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
 		LEFT JOIN
       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+      	LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
 		WHERE  
 			d.ER_DOC_SERIAL_KEY = #{serial} 
 		ORDER BY
@@ -1156,9 +1174,7 @@
 				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
 				ER_DOC_STATE, 
-				ER_DOC_STATE_UPDATE_DATE,
-				ER_DOC_LAST_UPDATER,
-				ER_DOC_LAST_UPDATE_REASON
+				ER_DOC_FORM_KEY
 			)
 		VALUES
             (
@@ -1181,9 +1197,7 @@
                         || To_char(seq_er_doc_serial_key.CURRVAL)
                         || '.html',
               DEFAULT,
-              NULL,
-              NULL,
-              NULL
+              #{docFormKey}
             )
         <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
@@ -1620,9 +1634,9 @@
 			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
 	</select>
 	<!-- 해당 사원 휴가 신청 등록 -->
-	<insert id="insertVacationApply" parameterType="int">
+	<insert id="insertVacationApply" parameterType="vacationApply">
 		<!-- 해당 사원의 휴가 계산 테이블 조회 -->
-		<selectKey keyProperty="memberVacKey" resultType="String" order="BEFORE">
+		<selectKey keyProperty="memberVacKey" resultType="int" order="BEFORE">
 			SELECT 
 				MEMBER_VAC_KEY
 			FROM   
@@ -1644,18 +1658,19 @@
 				VACATION_END_DATE,
 				VACATION_USE_COUNT,
 				VACATION_MEMBER_KEY,
-				VACATION_REASON
+				VACATION_REASON,
+				MEMBER_VAC_KEY
 			)
 		VALUES
             (
 		         SEQ_VACATION_USE_KEY.NEXTVAL,
 		         #{vacationKey},
-		         #{vacationDocSerailKey},
-		         #{vacationApplyDate},
-		         #{vacationStartDate},
-		         #{vacationEndDate},
-		         #{vacationUseCount},
+		         #{vacationDocSerialKey},
 		         default,
+		         default,
+		         #{vacationStartDate, jdbcType=TIMESTAMP},
+		         #{vacationEndDate, jdbcType=TIMESTAMP},
+		         #{vacationUseCount},
 		         #{vacationMemberKey},
 		         #{vacationReason},
 		         #{memberVacKey}

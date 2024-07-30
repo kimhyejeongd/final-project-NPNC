@@ -201,7 +201,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if(result <= 0) {
 			throw new Exception("휴가 신청 등록 실패");
 		}
-		log.debug("휴가 신청 등록 성공");
+		log.debug("휴가 신청 등록 성공 -> " + vac.toString());
 		
 		return result;
 	}

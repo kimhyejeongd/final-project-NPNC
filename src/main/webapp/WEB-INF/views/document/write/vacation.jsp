@@ -305,24 +305,48 @@ $(document).ready(function() {
 				localStorage.removeItem('selectedApprover'); 
 				
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-				console.log(dochtml);
 				if(dochtml != null){
+					//결재 정보
 					let opinion = $('#input-field').val();
-					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
-					let vacName = $("#vacationHalfArea").val();
+					//휴가 정보
+					let vacName = $("#vacationSelectArea").val();
 					let vacKey;
-					$("#vacationHalfArea>option").forEach(index, vac){
+					$("#vacationSelectArea>option").each(function(index, vac){
 						if(vacName === vac.value){
 							vacKey = vac.dataset.key;
 						}
-					}
-					$("<input>").val(vacKey).css('display', 'none').attr('name', 'vacationKey').prependTo($("#docForm"));
-					$("<input>").val($("td#vacationReason").text()).css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
+					});
+					$("<input>").val(vacKey).css('display', 'none')
+						.attr('name', 'vacationKey').prependTo($("#docForm"));
+					$("<input>").val($("td#vacationReason").text())
+						.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
+					var startDate = $("#vacationStartDate").val();
+				    var startTime = $("#vacationStartTime").val();
+					var endDate = $("#vacationEndDate").val();
+				    var endTime = $("#vacationEndTime").val();
+				    $("<input>").val(startDate).css('display', 'none')
+					.attr('name', 'vacationStartDate').prependTo($("#docForm"));
+				    $("<input>").val(startTime).css('display', 'none')
+					.attr('name', 'vacationStartTime').prependTo($("#docForm"));
+				    $("<input>").val(endDate).css('display', 'none')
+					.attr('name', 'vacationEndDate').prependTo($("#docForm"));
+				    $("<input>").val(endTime).css('display', 'none')
+					.attr('name', 'vacationEndTime').prependTo($("#docForm"));
+				    $("<input>").val($("#minusPointArea").val()).css('display', 'none')
+					.attr('name', 'vacationUseCount').prependTo($("#docForm"));
 					
 					
+					//문서 내용 정리
+					$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
+					$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
+					$("#vacationTypeArea").html($("#vacationSelectArea").val());
+					$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
+							" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
+					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
@@ -341,7 +365,7 @@ $(document).ready(function() {
 	            	});
 					
 			     	// AJAX로 폼 데이터를 전송
-			        /* fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
+			        fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
 			            method: 'POST',
 			            body: formData,
 			        })
@@ -350,14 +374,14 @@ $(document).ready(function() {
 			            if (data.status === "success") {
 			                alert(data.message);
 			                // 성공 시 페이지 리다이렉트
-			                //window.location.href = sessionStorage.getItem("path")+"/document/home";
+			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);
 			            }
 			        })
 			        .catch(error => {
 			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-			        });  */
+			        });  
 			    } else{
 			        alert('문서 양식 불러오기 오류');
 			    }
@@ -381,7 +405,8 @@ $(document).ready(function() {
 				// 임시저장 버튼이 클릭되었을 때 처리할 로직
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		     	// AJAX로 폼 데이터를 전송
@@ -406,6 +431,34 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
+	
+	//휴가종류 이벤트
+	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
+		console.log($(e.target).val());
+		let target = $(e.target).val();
+		if(target == '공가' || target == '병가'){
+			$("#vacationStartTime").css('display','none');
+			$("#vacationEndTime").css('display','none');
+			$("#alldayCk").attr('checked',true);
+			$("#minusPointArea").val('0');
+		}else {
+	        $("#vacationStartTime").css('display','inline-block');
+	        $("#vacationEndTime").css('display','inline-block');
+	        $("#alldayCk").prop('checked', false); // 체크박스를 체크 해제 상태로 설정 (필요한 경우)
+	    }
+	});
+	//종일 이벤트
+	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
+		console.log($(e.target).val());
+		let target = $(e.target).val();
+		if(target == '공가' || target == '병가'){
+			$("#vacationStartTime").css('display','none');
+			$("#vacationEndTime").css('display','none');
+		}
+	});
+	
+	
 });
 
 $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', function(e) {
