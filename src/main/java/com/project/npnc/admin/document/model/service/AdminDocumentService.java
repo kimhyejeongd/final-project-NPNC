@@ -46,6 +46,11 @@ public class AdminDocumentService {
 		return dao.increaseFolderOrder(session,folderInfo);
 	}
 	public int removeFolder(int draggedFolderKey) {
+		StorageFolder storageFolder = selectStorageFolder(draggedFolderKey);
+		if(storageFolder.getFolderLevel()==1) {
+			dao.removeFolderLv1(session,storageFolder.getFolderGroup());
+			dao.updateFolderLv1Order(session,storageFolder.getFolderGroup());
+		}
 		int result = dao.removeFolder(session,draggedFolderKey);
 		return result;	
 	}
@@ -88,4 +93,8 @@ public class AdminDocumentService {
 	public int updateStorage(Storage storage) {
 		return dao.updateStorage(session,storage);
 	}
+	public String selectParentFolderName(int folderGroup) {
+		return dao.selectParentFolderName(session,folderGroup);
+	}
+
 }

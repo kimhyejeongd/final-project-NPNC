@@ -63,7 +63,7 @@
                                         <c:set var="folderJson" value="${f}"/>
                                         <div class="accordion-item">
                                             <c:if test="${f.folderLevel==1}">
-                                                <a href="#" class="accordion-header folder-item droppable" data-folder="${folderJson}" data-folder-key="${f.folderKey}">
+                                                <a href="#" class="accordion-header folder-item droppable" data-folder="${folderJson}" data-folder-key="${f.folderKey}" data-folder-group="${f.folderGroup}" data-folder-level="${f.folderLevel}">
                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${f.folderKey}" aria-expanded="true" aria-controls="panelsStayOpen-collapse0">
                                                         <i class="fas fa-bookmark me-2"></i>
                                                         ${f.folderName}
@@ -74,7 +74,7 @@
                                                 <div class="accordion-body" style="padding: 0!important;">
                                                     <div class="list-group" id="memberlist">
                                                         <c:if test="${f.folderLevel==2}">
-                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item accordion-header droppable" data-folder-key="${f.folderKey}" data-folder='${folderJson}' data-folder-level='${f.folderLevel}'> 
+                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item accordion-header droppable" data-folder-key="${f.folderKey}" data-folder='${folderJson}' data-folder-level='${f.folderLevel}' data-folder-group="${f.folderGroup}"> 
                                                                 <i class="fas fa-user me-2"></i>
                                                                 ${f.folderName}
                                                             </a>
@@ -690,25 +690,35 @@
                 if (!window.draggedItem) return; // 드래그된 항목이 없는 경우 종료
 
                 var folderLevel = window.draggedItem.data('folder-level');
-                if (folderLevel == 2) {
-                    var draggedFolderKey = window.draggedItem.data('folder-key');
+				var draggedFolderKey = window.draggedItem.data('folder-key');
+				var draggedFolderGroup = window.draggedItem.data('folder-group');
                     console.log(draggedFolderKey+"----");
 					console.log(typeof draggedFolderKey);
 
                     if (event.originalEvent.clientY > $(window).height() - 100) { // 하단에 드롭한 경우
-                        $.ajax({
+                        console.log(draggedFolderKey);
+                    	$.ajax({
                             url: '${path}/admin/documentForm/removeFolder', // 서버 요청 URL
                             type: 'POST',
                             data: {"draggedFolderKey":draggedFolderKey},
                             success: function(response) {
                                 window.draggedItem.remove(); // 드래그된 요소를 제거
+                                // folderGroup이 같은 다른 태그도 제거
+                                $('.folder-item').each(function() {
+                                	if(folderLevel==1){                                		
+		                                    var itemFolderGroup = $(this).data('folder-group');
+		                                    if (itemFolderGroup === draggedFolderGroup) {
+		                                        $(this).remove();
+		                                    }
+                                	}
+                                });
                             },
                             error: function(response) {
                                 console.error('Error removing folder:', response);
                             }
                         });
                     }
-                }
+                
             });
         });
     </script>

@@ -63,4 +63,14 @@ public class AdminDocumentDao {
 	public int updateFolderGroup(SqlSessionTemplate session,StorageFolder draggedFolderKey) {
 		return session.update("admindoc.updateFolderGroup",draggedFolderKey);
 	}
+	public int removeFolderLv1(SqlSessionTemplate session,int folderGroup) {
+		return session.delete("admindoc.draggedFolderKey",folderGroup);
+	}
+	public int updateFolderLv1Order(SqlSessionTemplate session, int folderGroup) {
+		return session.update("admindoc.updateFolderLv1Order",folderGroup);
+	}
+	public String selectParentFolderName(SqlSessionTemplate session, int folderGroup) {
+		return session.selectOne("admindoc.selectParentFolderName",folderGroup);
+	}
+
 }
