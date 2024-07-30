@@ -29,6 +29,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -188,6 +189,27 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+		int result = insertDoc(d, file, html);
+		vac.setVacationDocSerialKey(d.getErDocSerialKey());
+		
+		log.debug("휴가 신청 등록 -> " + vac.toString());
+		result = dao.insertVacationApply(session, vac);
+		if(result <= 0) {
+			throw new Exception("휴가 신청 등록 실패");
+		}
+		log.debug("휴가 신청 등록 성공");
+		
+		return result;
+	}
+	@Override
+	public int insertVacationApply(VacationApply vac) {
+		return dao.insertVacationApply(session, vac);
+	}
+	
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -634,6 +656,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectReferenceDocs(int no) {
 		return dao.selectReferenceDocs(session, no);
 	}
+	
+//	휴가
 	@Override
 	public int selectRemainingVac(int memberKey) {
 		return dao.selectRemainingVac(session, memberKey);

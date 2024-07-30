@@ -15,6 +15,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -226,6 +227,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		map.put("state", state);
 		log.debug("결재 업데이트 -> " + map.toString());
 		return session.update("document.updateApprovalState", map);
+	}
+
+	@Override
+	public int insertVacationApply(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApply", vac);
 	}
 
 }
