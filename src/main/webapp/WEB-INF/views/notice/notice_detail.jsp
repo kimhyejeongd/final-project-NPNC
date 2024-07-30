@@ -113,7 +113,7 @@
                         <div class="card-footer">
                             <a href="${path}/notice/edit/${notice.noticeKey}" class="btn btn-warning">수정</a>
                             <a href="${path}/notice/delete/${notice.noticeKey}" class="btn btn-danger">삭제</a>
-                            <a href="${path}/notice" class="btn btn-primary">목록으로 돌아가기</a>
+                            <a href="${path}/notice/list" class="btn btn-primary">목록으로 돌아가기</a>
                         </div>
                     </div>
                 </div>
