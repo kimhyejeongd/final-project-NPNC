@@ -5,72 +5,47 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>게시판 목록</title>
-    <!-- Include CSS files -->
-    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
-    <!-- Include JS files -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
-    <script src="${path}/resources/assets/js/script.js"></script>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+   
+    <!-- Favicon -->
+    <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["${path}/resources/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
+
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
     <style>
-        /* General Layout Styles */
-        .wrapper {
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            flex-direction: column;
+        #tablerow:hover {
+            cursor: pointer; 
         }
-
-        .sidebar {
-            width: 250px; /* Adjust width as needed */
-            background-color: #333; /* Sidebar background color */
-            color: white;
-            height: 100%; /* Full height of the viewport */
-            position: fixed;
-            top: 0;
-            left: 0;
-     
-            
-            z-index: 100; /* Ensure sidebar is below header */
-        }
-
-        .main-panel {
-            margin-left: 250px; /* Same as sidebar width */
-            padding: 20px;
-            width: calc(100% - 250px); /* Adjust width based on sidebar */
-            background-color: #f8f9fa; /* Background color for main content */
-        }
-
-        .header {
-           width: calc(100% - 250px); /* Adjust width based on sidebar */
-            background-color: #f8f9fa; /* Light background color for header */
-            border-bottom: 1px solid #ddd;
-            position: fixed;
-            top: -15px;
-            left: 250px; /* Adjust to match sidebar width */
-            height: 60px; /* Header height */
-            line-height: 60px; /* Center content vertically */
-            padding-left: 20px;
-            z-index: 200; /* Ensure header is on top of sidebar */
-        }
-
-        /* Ensure no extra margins or padding cause issues */
-        body, html {
-            margin: 0;
-            padding: 0;
-            padding-left:10px;
-        }
-
-     
-        .container {
-            padding-top: 20px; /* Adjust top padding if needed */
-        }
-        
-        h1 {
-        padding-left:10px;
-        }
-        
     </style>
 </head>
 <body>
@@ -83,9 +58,9 @@
 
         <!-- Main Panel -->
         <div class="main-panel">
-        	<div class="header">
+        
         		    <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-        	</div>
+        
             <div class="container">
                 <h1>게시판 목록</h1>
                 <div class="row mt-4">
