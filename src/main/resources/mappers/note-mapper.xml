@@ -76,19 +76,23 @@
 		
 	</select>
 	<select id="noteSelectAll" resultMap="noteRecMapPagingList">
-		SELECT * 
-		FROM POST_MESSAGE_RECEPTION R 
-		JOIN POST_MESSAGE_RECEIVER V
-		ON R.POST_MSG_REC_KEY=V.POST_MSG_REC_KEY 
-		JOIN "MEMBER" m 
-		ON m.MEMBER_KEY=R.POST_MSG_REC_MEMBER_KEY
-		JOIN JOB J
-		ON J.JOB_KEY =m.JOB_KEY 
-		WHERE MEMBER_REC_KEY=#{memberKey} 
-		AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
-		AND DELETE_STATUS='N' 
-		ORDER BY R.POST_MSG_REC_KEY DESC
+ 	SELECT *
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+    WHERE MEMBER_REC_KEY = #{memberKey}
+    AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+    AND DELETE_STATUS = 'N'
+    <if test="title != null">
+        AND POST_MSG_TITLE LIKE '%' || #{title} || '%'
+    </if>
+    <if test="name != null">
+        AND MEMBER_NAME = #{name}
+    </if>
+    ORDER BY R.POST_MSG_REC_KEY DESC
 	</select>
+	
 	<select id="noteSelectTotalData" resultType="_int" parameterType="map">
 		SELECT COUNT(*) 
 		FROM POST_MESSAGE_RECEPTION 

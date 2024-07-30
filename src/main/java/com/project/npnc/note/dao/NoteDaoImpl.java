@@ -1,5 +1,6 @@
 package com.project.npnc.note.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,8 +87,23 @@ public class NoteDaoImpl implements NoteDao {
 	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Object> page) {
 		RowBounds rb=new RowBounds(((Integer)(page.get("cPage"))-1)*((Integer)page.get("numPerpage")),(Integer)page.get("numPerpage"));
 		int memberKey=(Integer)page.get("memberKey");
-		System.out.println(memberKey+" 여기에 들어 왔냐고");
-		return session.selectList("note.noteSelectAll",memberKey,rb);
+		Map<String, Object> param=new HashMap<>();
+		param.put("memberKey", memberKey);
+		
+		
+		if (page.containsKey("title")) {
+			param.put("title", page.get("title"));
+			
+			System.out.println(page.get("title")+"제목 들어왔냐고");
+		}
+		if(page.containsKey("name")) {
+			param.put("name", page.get("name"));
+			System.out.println(page.get("name")+"네임 들어왔냐고");
+
+		}
+		
+	
+		return session.selectList("note.noteSelectAll",param,rb);
 	}
 
 	@Override

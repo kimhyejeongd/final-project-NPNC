@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.npnc.common.NotePageFactory;
+import com.project.npnc.common.NotePageFactory2;
 import com.project.npnc.note.dto.NoteReceptionDto;
 import com.project.npnc.note.dto.NoteSendDto;
 import com.project.npnc.note.service.NoteService;
@@ -20,18 +21,20 @@ import lombok.RequiredArgsConstructor;
 public class NotePaging {
 	private final NoteService noteService;	
 	private final NotePageFactory paging;
+	private final NotePageFactory2 paging2;
+
 	
-	//받은 쪽지함 페이징
+	//받은 쪽지함 기본 페이징 
 	@RequestMapping("/notepaging")
 	public Map<String,Object> pagingNote(@RequestParam(defaultValue="1") int cPage, 
-			@RequestParam(defaultValue = "6") int numPerpage, int memberKey, @RequestParam(required = false) String name, @RequestParam(required = false) String  title ){
+			@RequestParam(defaultValue = "6") int numPerpage, int memberKey){
 		System.out.println(cPage);
 		System.out.println(numPerpage);
 		  Map<String, Object> response = new HashMap<>();
 		  Map<String, Object> param = new HashMap<>();
 		  param.put("memberKey", memberKey);
 
-		  if(name==null&&title==null) {
+	
 	  	  
 		  
 		  int totalData= noteService.noteSelectTotalData(param);
@@ -40,30 +43,47 @@ public class NotePaging {
 		  response.put("pagebar", paging.getPage(cPage, numPerpage, totalData, "/notepaging"));
 		  response.put("totalData", totalData);
 		  
-		  }else if(name!=null) {
-		  param.put("name", name);
-	  	  
+		
+		  
+		  
+		return response	;
+
+	}
+	
+	//받은 쪽지함 이름, 제목 페이징 
+	@RequestMapping("/notepagingParam")
+	public Map<String,Object> pagingNoteParam(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage, int memberKey, @RequestParam(required = false) String paramKeyword, @RequestParam(required = false) String nameOrTitle ){
+
+		  Map<String, Object> response = new HashMap<>();
+		  Map<String, Object> param = new HashMap<>();
+		  param.put("memberKey", memberKey);
+		  
+		  if(paramKeyword.equals("name")) {
+
+		  param.put("name",nameOrTitle);
 		  int totalData= noteService.noteSelectTotalData(param);
-		  response.put("notepagelist", noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey,"name",name)));
-		  response.put("pagebar", paging.getPage(cPage, numPerpage, totalData, "/notepaging"));
+	  	  
+		  response.put("notepagelist", noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey,"name",nameOrTitle)));
+		  response.put("pagebar", paging2.getPage(cPage, numPerpage, totalData, "/notepagingParam"));
+		  response.put("totalData", totalData);
+		  
+		  }else if(paramKeyword.equals("title")){
+		  param.put("title", nameOrTitle);
+	  	  System.out.println("아니 여기 타이틀이라고 들어왔잖아");
+		  int totalData= noteService.noteSelectTotalData(param);
+		  response.put("notepagelist", noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey,"title",nameOrTitle)));
+		  response.put("pagebar", paging2.getPage(cPage, numPerpage, totalData, "/notepagingParam"));
 		  response.put("totalData", totalData);
 		  	  
 			  
-		  }else if(title!=null) {
-		  param.put("title", title);
-	  
-			  
-		  int totalData= noteService.noteSelectTotalData(param);
-		  response.put("notepagelist", noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey,"title",title)));
-		  response.put("pagebar", paging.getPage(cPage, numPerpage, totalData, "/notepaging"));
-		  response.put("totalData", totalData);
-		  
 		  }
 		  
 		  
 		return response	;
 
 	}
+	
 	
 	//보낸 쪽지함 페이징
 	@RequestMapping("/notepagingsend")

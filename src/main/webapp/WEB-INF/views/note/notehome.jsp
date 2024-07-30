@@ -386,8 +386,8 @@
 									      });
 													
 										
-									}else if(searchNoteBarText.value!=""&&selectedValue=="name"){
-										console.log(selectedValue);	
+									}else if(searchNoteBarText.value!=""){
+										fn_paging2(1);
 									}
 									
 								}
@@ -1124,6 +1124,7 @@
 							
           		}
           		
+				//기본 페이징처리 
           		function fn_paging(pageNo){
     	            var memberKey = document.getElementById('memberKey').value;
 
@@ -1156,6 +1157,47 @@
 					});
           			
           		}	
+				
+				//제목과 이름으로 페이징처리
+				function fn_paging2(pageNo){
+					var memberKey = document.getElementById('memberKey').value;
+					
+					var selectBox = document.getElementById('searchCheck');
+			        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+				
+					var searchNoteBarText = document.getElementById('searchNoteBarText');
+														
+					$.ajax({
+										url : '${path}/notepagingParam',
+										type : 'POST',
+										data : {cPage : pageNo,
+												memberKey: memberKey,
+												paramKeyword : selectedValue, 
+												nameOrTitle : searchNoteBarText.value
+												},
+										success : function(response){
+											var tbody=$('#pagingtbody');
+											tbody.empty();
+										  var noteTotalData=document.getElementById('noteTotalData');
+										  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
+										  $.each(response.notepagelist, function(index, item) {
+								                    var row = `<tr >
+								                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+								                        <td>\${item.postMsgRecKey}</td>
+								                        <td>\${item.memberKey}</td>
+								                        <td class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</td>
+								                        <td>\${item.postMsgTime}</td>
+								                    </tr>`;
+								                    tbody.append(row);
+								                }); 
+										  	var pageBarList=$('#pageBarList');
+										  	pageBarList.empty();
+										  	pageBarList.append(response.pagebar);
+										    
+										}
+									});
+				}
+				
           	
           	</script>
           
