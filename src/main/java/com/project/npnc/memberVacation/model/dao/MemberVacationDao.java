@@ -7,4 +7,6 @@ import com.project.npnc.memberVacation.model.dto.MemberVacation;
 public interface MemberVacationDao {
 
 	int insertMemberVacation(SqlSession session,MemberVacation mv);
+	
+	MemberVacation selectMemberVacationByMemberKey(SqlSession session,int memberKey);
 }

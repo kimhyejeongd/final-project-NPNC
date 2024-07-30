@@ -7,4 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/memberVacation")
 public class MemberVacationController {
 
+	
+	
 }

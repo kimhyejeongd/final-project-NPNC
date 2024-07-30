@@ -15,9 +15,15 @@ public class MemberVacationServiceImpl implements MemberVacationService {
 	private final MemberVacationDao dao;
 	private final SqlSession session;
 	
+	@Override
 	public int insertMemberVacation(MemberVacation mv) {
 		
 		return dao.insertMemberVacation(session, mv);
+	}
+
+	@Override
+	public MemberVacation selectMemberVacationByMemberKey(int memberKey) {
+		return dao.selectMemberVacationByMemberKey(session, memberKey);
 	}
 	
 	

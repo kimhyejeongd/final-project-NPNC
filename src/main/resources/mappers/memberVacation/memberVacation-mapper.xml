@@ -29,4 +29,16 @@
  		)
  	</insert>	
  
+ 	<select id="selectMemberVacationByMemberKey" resultMap="memberVacationMap" parameterType="_int">
+ 		SELECT 
+ 		MEMBER_VAC_KEY,
+		MEMBER_KEY,
+		MEMBER_VAC_TOTAL,
+		MEMBER_VAC_YEAR,
+		MEMBER_VAC_USED,
+		MEMBER_VAC_REMAINING
+		FROM MEMBER_VACATION
+		WHERE MEMBER_KEY=#{memberKey}
+ 	</select>
+ 	
 </mapper>

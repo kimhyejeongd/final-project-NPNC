@@ -24,6 +24,8 @@ import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
+import com.project.npnc.memberVacation.model.dto.MemberVacation;
+import com.project.npnc.memberVacation.model.service.MemberVacationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +36,7 @@ public class AttendanceController{
 
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
+	private final MemberVacationService memberVacationService;
 	private final PageFactory pageFactory;
 	private final SearchPageFactory searchPageFactory;
 	
@@ -169,14 +172,21 @@ public class AttendanceController{
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
 		
+		 // 현재 날짜 가져오기
+        LocalDate currentDate = LocalDate.now();
+        // 현재 달 숫자 가져오기
+        int currentMonth = currentDate.getMonthValue();
+        m.addAttribute("currentMonth",currentMonth);
+		//이번달 휴가
+		MemberVacation mv=memberVacationService.selectMemberVacationByMemberKey(memberKey);
+
+		m.addAttribute("memberVacation",mv);
+		
+		//이번달 근태현황
 		Attendance a=Attendance.builder().member(AdminMember.builder().memberKey(memberKey).build()).build();
 		Map<String,Integer> attendanceCount=attendanceService.selectAttendanceMonthCount(a);
-		
-		m.addAttribute("gotowork",attendanceCount.get("gotowork"));
-		m.addAttribute("absent",attendanceCount.get("absent"));
-		m.addAttribute("vaca",attendanceCount.get("vaca"));
-		m.addAttribute("late",attendanceCount.get("late"));
-		m.addAttribute("ealryLeave",attendanceCount.get("ealryLeave"));
+		m.addAttribute("attendanceCount",attendanceCount);
+
 		
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll"));
 		m.addAttribute("attendances",attendances);

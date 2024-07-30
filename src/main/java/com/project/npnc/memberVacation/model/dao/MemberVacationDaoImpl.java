@@ -14,5 +14,11 @@ public class MemberVacationDaoImpl implements MemberVacationDao {
 		return session.insert("memberVacation.insertMemberVacation",mv);
 	}
 
+	@Override
+	public MemberVacation selectMemberVacationByMemberKey(SqlSession session, int memberKey) {
+		System.out.println("dao : "+memberKey);
+		return session.selectOne("memberVacation.selectMemberVacationByMemberKey",memberKey);
+	}
+
 	
 }
