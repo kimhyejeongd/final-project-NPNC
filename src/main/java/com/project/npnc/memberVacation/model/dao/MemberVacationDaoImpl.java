@@ -1,5 +1,7 @@
 package com.project.npnc.memberVacation.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +18,22 @@ public class MemberVacationDaoImpl implements MemberVacationDao {
 
 	@Override
 	public MemberVacation selectMemberVacationByMemberKey(SqlSession session, int memberKey) {
-		System.out.println("dao : "+memberKey);
 		return session.selectOne("memberVacation.selectMemberVacationByMemberKey",memberKey);
 	}
+
+	@Override
+	public List<MemberVacation> selectMemberVacationEnrollDate(SqlSession session) {
+		
+		return session.selectList("memberVacation.selectMemberVacationEnrollDate");
+	}
+
+	@Override
+	public int updateMemberVacationYear(SqlSession session, MemberVacation mve) {
+		
+		return session.update("memberVacation.updateMemberVacationYear",mve);
+	}
+
+
 
 	
 }

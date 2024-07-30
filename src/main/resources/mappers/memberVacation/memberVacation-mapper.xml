@@ -8,6 +8,7 @@
 		<result column="MEMBER_VAC_YEAR" property="memberVacYear"/>
 		<result column="MEMBER_VAC_USED" property="memberVacUsed"/>
 		<result column="MEMBER_VAC_REMAINING" property="memberVacRemaining"/>
+		<result column="MEMBER_ENROLL_DATE" property="memberEnrollDate"/>
  	</resultMap>
  
  	<insert id="insertMemberVacation" parameterType="memberVacation">
@@ -40,5 +41,27 @@
 		FROM MEMBER_VACATION
 		WHERE MEMBER_KEY=#{memberKey}
  	</select>
+ 	
+ 	<select id="selectMemberVacationEnrollDate" resultMap="memberVacationMap">
+ 		SELECT 
+ 		MEMBER_VAC_KEY,
+		MEMBER_KEY,
+		MEMBER_VAC_TOTAL,
+		MEMBER_VAC_YEAR,
+		MEMBER_VAC_USED,
+		MEMBER_VAC_REMAINING,
+        MEMBER_ENROLL_DATE
+        FROM MEMBER_VACATION JOIN MEMBER USING(MEMBER_KEY)
+ 	</select>
+ 	
+ 	<update id="updateMemberVacationYear" parameterType="memberVacation" >
+ 		UPDATE MEMBER_VACATION 
+        SET
+        MEMBER_VAC_TOTAL=#{memberVacTotal},
+        MEMBER_VAC_USED=0,
+        MEMBER_VAC_YEAR=YO_CHAR(SYSDATE,'YYYY'),
+        MEMBER_VAC_REMAINING=#{memberVacRemaining}
+        WHERE MEMBER_KEY=#{memberKey}
+ 	</update>
  	
 </mapper>
