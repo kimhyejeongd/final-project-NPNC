@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,6 +179,7 @@ public class MemberDocumentController {
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
+		m .addAttribute("approverStr", Arrays.asList(document.getApprovers()).toString());
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		if(html == null || html.equals("")) {
@@ -602,6 +604,7 @@ public class MemberDocumentController {
 			//@RequestParam(required = false) VacationApply vac,
 			@RequestParam(required = false) String vacationUseCount,
 	        @RequestParam(required = false) String vacationReason,
+	        @RequestParam(required = false) String vacationKey,
 			@RequestParam(name="vacationStartDate", required = false) String startDate, 
 			@RequestParam(name = "vacationEndDate", required = false) String endDate,
 	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
@@ -659,6 +662,7 @@ public class MemberDocumentController {
 			log.debug("endTime -> " + endTime);
 		}
 		VacationApply vac = VacationApply.builder()
+								.vacationKey(Integer.parseInt(vacationKey))
 								.vacationStartDate(convertToTimestamp(startDate, startTime))
 								.vacationEndDate(convertToTimestamp(endDate, endTime))
 								.vacationUseCount(Integer.parseInt(vacationUseCount))

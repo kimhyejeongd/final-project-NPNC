@@ -10,7 +10,7 @@
 	</select>
 	<select id="selectDocAll" resultMap="adminDocument" parameterType="int">
 			SELECT 
-				es.ER_STOARGE_KEY,
+				es.ER_STORAGE_KEY,
 				es.ER_STORAGE_FOLDER_KEY,
 				es.ER_STORAGE_NAME,
 				es.ER_STORAGE_TERM,
@@ -144,7 +144,7 @@
 	</resultMap>
     
     <resultMap id="adminDocument" type="adminDocument">
-	    <id property="erStorageKey" column="ER_STOARGE_KEY"/>
+	    <id property="erStorageKey" column="ER_STORAGE_KEY"/>
 	    <result property="erStorageFolderKey" column="ER_STORAGE_FOLDER_KEY"/>
 	    <result property="erStorageName" column="ER_STORAGE_NAME"/>
 	    <result property="erStorageTerm" column="ER_STORAGE_TERM"/>

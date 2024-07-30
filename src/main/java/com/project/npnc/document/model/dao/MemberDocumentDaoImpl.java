@@ -241,7 +241,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("serial", serial);
-		map.put("memberKey", (Integer) memberKey);
+		log.debug("휴가 계산 테이블 업데이트 -> " + map.toString());
 		return session.update("document.updateVacationCalc", map);
 	}
 

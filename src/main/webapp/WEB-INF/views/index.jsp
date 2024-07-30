@@ -196,7 +196,7 @@
                       <div class="card-tools">
                       	<div class="selectgroup selectgroup-secondary selectgroup-pills">
                             <label class="selectgroup-item">
-                              <input type="radio" name="icon-input" value="1" class="selectgroup-input" checked="">
+                              <input type="radio" name="icon-input" value="1" class="selectgroup-input" checked>
                               <span class="selectgroup-button selectgroup-button-icon" id="btnInProgress">진행 문서</span>
                             </label>
                             <label class="selectgroup-item">

@@ -312,17 +312,13 @@ $(document).ready(function() {
 					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
 					//휴가 정보
-					let vacName = $("#vacationSelectArea").val();
-					let vacKey;
-					$("#vacationSelectArea>option").each(function(index, vac){
-						if(vacName === vac.value){
-							vacKey = vac.dataset.key;
-						}
-					});
-					$("<input>").val(vacKey).css('display', 'none')
+			        var dataKey = $("#vacationSelectArea").find('option:selected').data('key');
+					$("<input>").val(dataKey).css('display', 'none')
 						.attr('name', 'vacationKey').prependTo($("#docForm"));
+			        
 					$("<input>").val($("td#vacationReason").text())
 						.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
+					
 					var startDate = $("#vacationStartDate").val();
 				    var startTime = $("#vacationStartTime").val();
 					var endDate = $("#vacationEndDate").val();

@@ -1636,6 +1636,8 @@
 			MEMBER_VACATION
 		WHERE
 			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+		AND
+			MEMBER_KEY = #{memberKey}
 	</select>
 	<!-- 해당 사원 휴가 신청 등록 -->
 	<insert id="insertVacationApply" parameterType="vacationApply">
@@ -1693,9 +1695,10 @@
 	<!-- 휴가신청서 결재 승인 후 차감 -->
 	<update id="updateVacationCalc" parameterType="map">
 		<!-- 해당 사원의 휴가 신청 차감값 가져오기 -->
-		<selectKey keyProperty="vacationUseCount" resultType="int" order="BEFORE">
+		<selectKey keyProperty="vacationUseData" resultType="map" order="BEFORE">
 			SELECT 
-				VACATION_USE_COUNT
+				VACATION_USE_COUNT,
+				VACATION_MEMBER_KEY
 			FROM   
 				VACATION_APPLY
 			WHERE
@@ -1704,9 +1707,11 @@
 		UPDATE
 			MEMBER_VACATION
 		SET
-			MEMBER_VAC_USED = MEMBER_VAC_USED + #{vacationUseCount},
-			MEMBER_VAC_REMAINING = MEMBER_VAC_REMAINING - #{vacationUseCount}
+			MEMBER_VAC_USED = MEMBER_VAC_USED + #{vacationUseData.VACATION_USE_COUNT},
+			MEMBER_VAC_REMAINING = MEMBER_VAC_REMAINING - #{vacationUseData.VACATION_USE_COUNT}
 		WHERE
-			MEMBER_KEY = #{memberKey}
+			MEMBER_KEY = #{vacationUseData.VACATION_MEMBER_KEY}
+		AND
+			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
 	</update>
 </mapper>
