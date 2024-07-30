@@ -83,13 +83,13 @@
                     <ul class="nav nav-secondary">
                         <li class="nav-item">
                         
-                            <a href="${path}/noticeList" class="collapsed">
+                            <a href="${path}/notice/list" class="collapsed">
                                 <i class="fas fa-bell"></i>
                                 <p>공지사항</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="${path}/boardList" class="collapsed">
+                            <a href="${path}/board/list" class="collapsed">
                                 <i class="fas fa-th-list"></i>
                                 <p>게시판</p>
                             </a>
