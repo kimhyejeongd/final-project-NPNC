@@ -61,15 +61,15 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 	}
 
 	@Override
-	public List<AdminMember> searchMember(SqlSession session, String searchKey, Map<String,Integer> page) {
+	public List<AdminMember> searchMember(SqlSession session, Map searchMap, Map<String,Integer> page) {
 		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		return session.selectList("adminmember.searchMember",searchKey,rb);
+		return session.selectList("adminmember.searchMember",searchMap,rb);
 	}
 
 	@Override
-	public int searchMemberCount(SqlSession session, String searchKey) {
+	public int searchMemberCount(SqlSession session, Map searchMap) {
 		
-		return session.selectOne("adminmember.searchMemberCount",searchKey);
+		return session.selectOne("adminmember.searchMemberCount",searchMap);
 	}
 	
 	

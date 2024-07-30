@@ -89,10 +89,46 @@
 	</select>
 	
 	<insert id="insertMember" parameterType="adminmember">
-		INSERT INTO MEMBER 
-			VALUES(SEQ_MEMBER.NEXTVAL,#{department.deptKey},#{job.jobKey},
-			'NPNC'||SEQ_MEMBER.CURRVAL,#{memberPw},#{memberPhone},#{memberEmail},'안녕하세요',#{memberEnrollDate},
-			NULL,#{memberTell},#{memberAddress},#{accessKey},#{memberName},#{memberGender},'재직',#{memberBirthdate},'basicPicture')
+		INSERT INTO 
+			MEMBER(
+	        MEMBER_KEY,
+	        DEPARTMENT_KEY,
+	        JOB_KEY,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_PHONE,
+	        MEMBER_EMAIL,
+	        MEMBER_MESSAGE,
+	        MEMBER_ENROLL_DATE,
+	        MEMBER_LEAVE_DATE,
+	        MEMBER_TELL,
+	        MEMBER_ADDRESS,
+	        ACCESS_KEY,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_STATE,
+	        MEMBER_BIRTHDATE,
+	        MEMBER_PROFILE_IMAGE
+	    	)
+			VALUES(SEQ_MEMBER.NEXTVAL,
+				#{department.deptKey},
+				#{job.jobKey},
+				'NPNC'||SEQ_MEMBER.CURRVAL,
+				#{memberPw},
+				#{memberPhone},
+				#{memberEmail},
+				'안녕하세요',
+				#{memberEnrollDate},
+				NULL,
+				#{memberTell},
+				#{memberAddress},
+				#{accessKey},
+				#{memberName},
+				#{memberGender},
+				'재직',
+				#{memberBirthdate},
+				'basicPicture')
+			RETURNING SEQ_MEMBER.CURRVAL INTO #{currValKey}
 	</insert>
 	
 	<update id="updateMember" parameterType="adminmember">
@@ -113,7 +149,7 @@
 			FROM MEMBER
 	</select>
 	
-	<select id="searchMember" parameterType="string" resultMap="memberMap">
+	<select id="searchMember" parameterType="map" resultMap="memberMap">
 		SELECT 
 		MEMBER_KEY,
 		DEPARTMENT_KEY,
@@ -138,15 +174,25 @@
 		FROM MEMBER
 		LEFT JOIN DEPARTMENT USING(DEPARTMENT_KEY) 
 		LEFT JOIN JOB USING(JOB_KEY) 
-		WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+		<where>
+			MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+			<if test="searchType != null and searchType !='' ">
+				AND MEMBER_STATE=#{searchType}
+			</if>
+		</where>
 		ORDER BY MEMBER_ENROLL_DATE DESC
 	</select>
 	
-	<select id="searchMemberCount" parameterType="string" resultType="_int">
+	<select id="searchMemberCount" parameterType="map" resultType="_int">
 	SELECT 
 	COUNT(MEMBER_KEY)
 	FROM MEMBER
-	WHERE MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+	<where>
+		MEMBER_NAME LIKE '%' || #{searchKey} || '%'
+		<if test="searchType != null and searchType !='' ">
+			AND MEMBER_STATE=#{searchType}
+		</if>
+	</where>
 	
 	</select>
 </mapper>

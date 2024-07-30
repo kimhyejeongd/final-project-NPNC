@@ -170,23 +170,26 @@ public class AdminMemberController {
 	@GetMapping("/searchMember")
 	public String searchMember(
 			String searchKey,
+			String searchType,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,			
 			Model m
 			){
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
-		if(searchKey.equals("")||searchKey==null) {
+		Map searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
+		if((searchKey.equals("")||searchKey==null) &&(searchType.equals("")||searchType==null)) {
 			int totaldata=service.selectMemberCount();
 			List<AdminMember> members= service.selectMemeberAll(page);
 			m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 			m.addAttribute("members",members);
 			m.addAttribute("totaldata",totaldata);
 		}else {
-			int totaldata=service.searchMemberCount(searchKey);
-			List<AdminMember> members= service.searchMember(searchKey, page);
-			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,null,null,null,"searchMember"));
+			int totaldata=service.searchMemberCount(searchMap);
+			List<AdminMember> members= service.searchMember(searchMap, page);
+			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,null,null,"searchMember"));
 			m.addAttribute("members",members);
 			m.addAttribute("searchK",searchKey);
+			m.addAttribute("searchT",searchType);
 			m.addAttribute("totaldata",totaldata);
 		}
 		

@@ -40,6 +40,12 @@ public class JobServiceImpl implements JobService{
 		
 		return dao.deleteJob(session, jobKey);
 	}
+
+	@Override
+	public Job selectJobByKey(String jobKey) {
+		
+		return dao.selectJobByKey(session, jobKey);
+	}
 	
 	
 	

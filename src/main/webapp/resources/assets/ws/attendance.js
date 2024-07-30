@@ -1,4 +1,4 @@
-//근태 출퇴근 버튼
+
 	 $(document).ready(function(){
          $('#endAttendanceBtn').click(function(){
              $.ajax({

@@ -310,7 +310,7 @@ $(document).ready(function() {
 					let opinion = $('#input-field').val();
 					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
@@ -371,7 +371,7 @@ $(document).ready(function() {
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		     	// AJAX로 폼 데이터를 전송

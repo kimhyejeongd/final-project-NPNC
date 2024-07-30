@@ -110,10 +110,11 @@
 						style="background: rgb(221, 221, 221); padding: 5px; border: 1px solid black; height: 25px; text-align: center; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
 						휴가&nbsp;기간
 					</td>
-					<td class="disable-edit" style="padding: 3px; border: 1px solid black; width: 700px; height: 22px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; vertical-align: middle; background: rgb(255, 255, 255);">
+					<td id="vacationTerm"
+						class="disable-edit" style="padding: 3px; border: 1px solid black; width: 700px; height: 22px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; vertical-align: middle; background: rgb(255, 255, 255);">
 						<span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="4" data-dsl="{{calendar:startDate}}" data-wrapper="" style="" data-value="" data-autotype="">
-							<input class="ipt_editor ipt_editor_date form-control-sm border" type="date" id="vacationStartDate">
-							<input class="ipt_editor ipt_editor_time form-control-sm border" type="time" id="vacationStartTime">
+							<input class="ipt_editor ipt_editor_date form-control-sm border" type="date" id="vacationStartDate" name="vacationStartDate">
+							<input class="ipt_editor ipt_editor_time form-control-sm border" type="time" id="vacationStartTime" name="vacationStartTime">
 							<span contenteditable="false" class="comp_active" style="display:none;">
 								<span class="Active_dot1"></span><span class="Active_dot2"></span>
 								<span class="Active_dot3"></span><span class="Active_dot4"></span>
@@ -123,8 +124,8 @@
 							</span>
 						</span>&nbsp;~&nbsp;
 						<span unselectable="on" contenteditable="false" class="comp_wrap" data-cid="5" data-dsl="{{calendar:endDate}}" data-wrapper="" style="" data-value="" data-autotype="">
-							<input class="ipt_editor ipt_editor_date form-control-sm border" type="date" id="vacationEndDate">
-							<input class="ipt_editor ipt_editor_time form-control-sm border" type="time" id="vacationEndTime">
+							<input class="ipt_editor ipt_editor_date form-control-sm border" type="date" id="vacationEndDate" name="vacationEndDate">
+							<input class="ipt_editor ipt_editor_time form-control-sm border" type="time" id="vacationEndTime" name="vacationEndTime">
 							<span contenteditable="false" class="comp_active" style="display:none;">
 								<span class="Active_dot1"></span><span class="Active_dot2"></span>
 								<span class="Active_dot3"></span><span class="Active_dot4"></span>
@@ -135,7 +136,7 @@
 						</span>
 						<span style="display: inline-flex; align-items: center; transform: translateY(3px);">
 							<label class="ms-2 mx-auto d-inline-flex align-items-center">
-								<input type="checkbox" value="종일" class="form-check-input mb-1 me-1 d-inline-flex"> <input id="" value="종일" name="" style="border: none;" readonly>
+								<input id="alldayCk" type="checkbox" value="종일" class="form-check-input mb-1 me-1 d-inline-flex"> <input id="" value="종일" name="" style="border: none;" readonly>
 							</label>
 						</span>
 					</td>					
@@ -164,13 +165,13 @@
 					</td>
 					<td
 						style="padding: 3px; border: 1px solid black; width: 700px; height: 22px; text-align: left; color: rgb(0, 0, 0); font-size: 14px;  vertical-align: middle; background: rgb(255, 255, 255);">
-						<p class="d-flex"
+						<p class="d-flex" id="remainingPointP"
 							style="font-family: malgun gothic, dotum, arial, tahoma; font-size: 14px; line-height: normal; margin-top: 0px; margin-bottom: 0px;">
-							<input id="" value="잔여 연차 : " name="" style="border: none; width: 63px;" readonly> <input id="applyPointArea" value="[잔여 연차]" name="vacationUseCount" style="border: none;" readonly>
+							<input id="" value="잔여 연차 : " name="" style="border: none; width: 63px;" readonly> <input id="remainingPointArea" value="[잔여 연차]" name="" style="border: none;" readonly>
 						</p>
-						<p class="d-flex"
+						<p class="d-flex" id="minusPointP"
 							style="font-family: malgun gothic, dotum, arial, tahoma; font-size: 14px; line-height: normal; margin-top: 0px; margin-bottom: 0px;">
-							<input id="" value="차감 연차 : " name="" style="border: none; width: 63px;" readonly> <input id="restPointArea" value="" style="border: none;" readonly>
+							<input id="" value="차감 연차 : " name="" style="border: none; width: 63px;" readonly> <input id="minusPointArea" name="vacationUseCount" style="border: none;" readonly>
 						</p>
 					</td>
 				</tr>

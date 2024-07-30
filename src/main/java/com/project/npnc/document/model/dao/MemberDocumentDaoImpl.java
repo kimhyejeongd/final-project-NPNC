@@ -233,5 +233,16 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public int insertVacationApply(SqlSession session, VacationApply vac) {
 		return session.insert("document.insertVacationApply", vac);
 	}
+	@Override
+	public int updateVacationAppply(SqlSession session, String docSerial) {
+		return session.update("document.updateVacationAppply", docSerial);
+	}
+	@Override
+	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", serial);
+		map.put("memberKey", (Integer) memberKey);
+		return session.update("document.updateVacationCalc", map);
+	}
 
 }

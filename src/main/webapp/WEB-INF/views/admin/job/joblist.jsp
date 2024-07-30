@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,14 +53,16 @@
 			<th></th>
 			<th></th>
 		</tr>
-		<c:if test="${not empty job}">
-			<c:forEach var="j" items="${job}">
+		<c:if test="${not empty jobs}">
+			<c:forEach var="j" items="${jobs}">
 				<tr>
 					<td>${j.jobKey }</td>
 					<td>${j.jobName }</td>
 					<td></td>
 					<td>
-						<button onclick="updateJob('${j.jobKey }','${j.jobName }');" class="btn btn-dark btn-round">수정</button>
+						<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#jobformModal" data-member-key="${j.jobKey}">
+							수정
+						</button>
 						 &ensp;&ensp;&ensp;
 						<button onclick="deleteJob('${j.jobKey}');" class="btn btn-dark btn-round">삭제</button>
 					</td>
@@ -71,33 +74,39 @@
 	   </div>
 	  </div>
 	 </div>
+	 	<%@ include file="/WEB-INF/views/admin/job/updatejob.jsp" %> 	
 	 	<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 	</div>
 	
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	<script>
-		const updateJob=(key,name)=>{
-            let form = document.createElement("form");
-            form.setAttribute("method", "post");
-            form.setAttribute("action", "${path}/admin/job/updatejob.do");
+	
+	 $('#jobformModal').on('show.bs.modal', function (event) {
+	        var button = $(event.relatedTarget); // 버튼을 클릭한 요소
+	        var jobKey = button.data('member-key'); // `data-member-key` 속성 값
+	        
+	        // AJAX 요청으로 memberKey를 사용해 서버로부터 데이터를 가져오는 경우
+	        // 여기에서는 예를 들어 jQuery AJAX 요청을 사용합니다.
+	        $.ajax({
+	            url: '${path}/admin/job/updatejob', // 서버의 실제 엔드포인트로 대체
+	            type: 'GET',
+	            data: { jobKey: jobKey },
+	            dataType: 'json', // 서버 응답을 JSON으로 처리
+	            success: function(data) {
+	                console.log(data); // 전체 응답을 확인
 
-            let $key = document.createElement("input");
-            $key.setAttribute("type", "hidden");
-            $key.setAttribute("name", "key");
-            $key.setAttribute("value", key);
-            
-            let names= document.createElement("input");
-            names.setAttribute("type", "hidden");
-            names.setAttribute("name", "jobName");
-            names.setAttribute("value",name );
+	                $('#jobNameMo').val(data.job.jobName);
+	                $('#jobKeyMo').val(data.job.jobKey);
 
-           
-            form.appendChild($key);
-            form.appendChild(names);
-
-            document.body.appendChild(form);
-            form.submit();
-		}
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("AJAX Error: ", status, error);
+	            }
+	        });
+	    });
 		
 		
 		const deleteJob=(key)=>{
