@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
         $.ajax({
-            url: "/calendar/checkcalendar",
+            url: path+"/calendar/checkcalendar",
             method: 'POST',
             dataType: 'json',
             traditional: true,

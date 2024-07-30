@@ -28,4 +28,5 @@ public interface CalendarDao {
 	int insertRes(SqlSession session,int calKey, int itemKey);
 	List<ReserveItem> selectReserveAll(SqlSession session);
 	List<ReserveItem> selectMyReserve(SqlSession session, int memberKey);
+	int updateReCalendar(SqlSession session,ReserveItem reserveItem);
 }

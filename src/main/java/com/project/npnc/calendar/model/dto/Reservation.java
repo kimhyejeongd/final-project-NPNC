@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class Reservation {
+	private int reservationKey;
 	private int itemKey;
 	private String itemType;
 	private String itemName;
