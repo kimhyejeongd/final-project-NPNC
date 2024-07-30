@@ -78,9 +78,15 @@
             justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
            /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
         }
+        /* 전자결재 위젯 css */
     	#tablerow:hover{
     		cursor: pointer; 
     	}
+    	.truncate {
+		    overflow: hidden;
+		    white-space: nowrap;
+		    text-overflow: ellipsis;
+		}
 	</style>	
                <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
 
@@ -198,7 +204,7 @@
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <!-- Projects table -->
-                      <table class="table table-hover align-items-center mb-0" id="inproTable">
+                      <table class="table table-hover align-items-center mb-0" id="inproTable" style="width: 65vw;">
 			            <thead class="thead-light">
 			              <tr class="text-center">
 			              	<!-- <th><input type="checkbox"></th> -->
@@ -212,19 +218,19 @@
 			            <tbody>
 			              <c:if test="${empty doclist}">
 			               <tr class="text-center">
-			               	<td colspan="5">진행 중인 문서가 없습니다</td>
+			               	<td class="truncate"  colspan="5">진행 중인 문서가 없습니다</td>
 			              	</tr>
 			              </c:if>
 			              <c:if test="${doclist ne null}">
 			              	<c:forEach items="${doclist }" var="l" varStatus="vs" begin="0" end="4">
 			               <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
-			               	<td>${vs.index+1 }</td>
-			                  <td class="text-muted">${l.erDocSerialKey }</td>
-			                  <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
-			                  <td class="">
+			               	<td class="truncate" >${vs.index+1 }</td>
+			                  <td class="truncate text-muted">${l.erDocSerialKey }</td>
+			                  <td class="truncate"><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
+			                  <td class="truncate">
 			                  	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 			                  </td>
-			                  <td class="approverNow p-3">
+			                  <td class="truncate approverNow p-3">
 			                  	<c:forEach items="${l.approvers }" var="ap">
 			                  		<c:if test="${ap.state eq '승인' }">
 			                  			<div class="badge badge-success" style="min-width: 60px;">
@@ -264,7 +270,7 @@
 			            </tbody>
 			          </table>
 			          <!-- 결재 대기 문서 -->
-			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none;">
+			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 65vw;">
 				           <thead class="thead-light">
 				             <tr class="text-center">
 				             	<!-- <th><input type="checkbox"></th> -->
@@ -279,16 +285,16 @@
 				           <tbody>
 				             <c:if test="${empty waitinglist}">
 				              <tr class="text-center">
-				              	<td colspan="6">결재 대기 중인 문서가 없습니다</td>
+				              	<td class="truncate"  colspan="6">결재 대기 중인 문서가 없습니다</td>
 				             	</tr>
 				             </c:if>
 				             <c:if test="${waitinglist ne null}">
 				             	<c:forEach items="${waitinglist }" var="l" varStatus="vs" begin="0" end="4">
 				              <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
-				              	<td>${vs.index+1 }</td>
-				                 <td class="text-muted">${l.erDocSerialKey }</td>
-				                 <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
-				                	<td>
+				              	<td class="truncate" >${vs.index+1 }</td>
+				                 <td class="truncate text-muted">${l.erDocSerialKey }</td>
+				                 <td class="truncate"><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
+				                	<td class="truncate" >
 				                		<c:forEach items="${l.approvers }" var="ap">
 				                			<c:if test="${ap.orderby eq 0 }">
 				                				<div class="badge badge-count" style="min-width: 60px;">
@@ -298,10 +304,10 @@
 				                			</c:if>
 				                		</c:forEach>
 				                	</td>
-				                 <td class="">
+				                 <td class="truncate">
 				                 	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 				                 </td>
-				                 <td class="approverNow p-3">
+				                 <td class="truncate approverNow p-3">
 				                 	<c:forEach items="${l.approvers }" var="ap">
 				                 		<c:if test="${ap.state eq '승인' }">
 				                   			<div class="badge badge-success" style="min-width: 60px;">
