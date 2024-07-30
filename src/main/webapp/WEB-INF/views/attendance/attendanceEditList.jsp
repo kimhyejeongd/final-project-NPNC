@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>    
 <!DOCTYPE html>
 <html>
@@ -59,14 +60,13 @@
 					                            <td>${a.attendanceEditDate}</td>
 					                            <td>${a.attendanceEditRequestDate }</td>
 					                            <td>${a.attendanceEditStartEnd }</td>
-					                            <td>${a.attendanceEditBeforeTime }</td>
-					                            <td>${a.attendanceEditAfterTime}</td>
+					                            <td>${fn:substring(a.attendanceEditBeforeTime, fn:length(a.attendanceEditBeforeTime) - 8, fn:length(a.attendanceEditBeforeTime))}</td>
+          										<td>${fn:substring(a.attendanceEditAfterTime, fn:length(a.attendanceEditAfterTime) - 8, fn:length(a.attendanceEditAfterTime))}</td>
 					                            <td>${a.attendanceEditState}</td>
 					                            <td>
-					                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editmemModal" data-member-key="${a.attendanceEditKey}">
-											    		상세MO
+					                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#editmemModal" data-member-key="${a.attendanceEditKey}">
+											    		상세
 											  		</button>
-					                            	<button onclick="attendanceEditDetail(${a.attendanceEditKey})" class="btn btn-success">상세</button>
 					                            </td>
 					                          </tr>
 				                        </c:forEach>
@@ -87,7 +87,7 @@
 				</div>
 			</div>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
-			<%-- <%@ include file="/WEB-INF/views/attendance/attendanceEditDetail.jsp" %> --%>
+			<%@ include file="/WEB-INF/views/attendance/attendanceEditDetail.jsp" %>
 	</div>
 	
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -95,7 +95,7 @@
   	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	
 			
-			<script>
+		<script>
 			
 			$(document).ready(function() {
 			    $('#editmemModal').on('show.bs.modal', function (event) {
@@ -143,26 +143,40 @@
 			    });
 			});
 			
-			/* function fn_paging(pageNo) {
-		 	    console.log('오긴왔냐?');
-		 	    location.assign('${path}/admin/attendance/searchAdminAttendanceEdit?cPage=' + pageNo + '&searchKey=${searchK}&searchType=${searchT}'); */
-		 	    /* location.assign('${path}/${url}?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchType}&searchStartDate=${searchStartDate}&searchEndDate=${searchEndDate}'); */    
-		 	/* } */	
-			
-				document.getElementById("searchType").addEventListener("change",e=>{
-					console.log("맞냐");
-					const searchType = e.currentTarget.value;
-					fetch("${path}/attendance/searchAttendanceEdit?searchType=" + searchType)
-					.then(response => response.text())
-					.then(data => {
-						document.querySelector("div[class='table-responsive']").innerHTML = data;
-					})
-					
-				});			
+			document.getElementById("searchType").addEventListener("change",e=>{
+				console.log("맞냐");
+				const searchType = e.currentTarget.value;
+				fetch("${path}/attendance/searchAttendanceEdit?searchType=" + searchType)
+				.then(response => response.text())
+				.then(data => {
+					document.querySelector("div[class='table-responsive']").innerHTML = data;
+				})
 				
+			});		
 			
-			
-				const attendanceEditDetail=(key)=> {
+		 	   /*  location.assign('${path}/attendance/searchAttendanceEdit?cPage=' + pageNo + '&searchType=${searchT}'); */
+			 function fn_paging(pageNo) {
+		 	    console.log('오긴왔냐?');
+		 	    var searchType= document.getElementById("searchType").value;
+			 	   $.ajax({
+			            url: '${path}/attendance/searchAttendanceEdit', // 서버의 실제 엔드포인트로 대체
+			            type: 'GET',
+			            data: { cPage: pageNo ,searchType : searchType},
+			            dataType: 'text', // 서버 응답을 JSON으로 처리
+			            success: function(data) {
+	
+			                document.querySelector("div[class='table-responsive']").innerHTML = data;
+	
+			            },
+			            error: function(xhr, status, error) {
+			                console.error("AJAX Error: ", status, error);
+			            }
+			        });
+			    }
+
+		 	 
+
+/* 				const attendanceEditDetail=(key)=> {
 					 let form = document.createElement("form");
 			            form.setAttribute("method", "post");
 			            form.setAttribute("action", "${path}/attendance/attendanceEditDetail");
@@ -176,7 +190,7 @@
 
 			            document.body.appendChild(form);
 			            form.submit();
-				}
+				} */
 		</script>
 
 </body>

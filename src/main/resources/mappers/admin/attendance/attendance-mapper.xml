@@ -209,6 +209,7 @@
 		ATTENDANCE_EDIT_STATE
 		FROM   ATTENDANCE_EDIT
 		WHERE  ATTENDANCE_EDIT_MEMBER = #{memberId} 
+		ORDER BY ATTENDANCE_EDIT_DATE DESC
 	</select>
 
 	<select id="selectAttendanceEditCount" resultType="_int">
@@ -320,7 +321,7 @@
 		ATTENDANCE_EDIT_OPINION,
 		ATTENDANCE_EDIT_STATE
 		FROM ATTENDANCE_EDIT
-		ORDER BY ATTENDANCE_EDIT_KEY DESC
+		ORDER BY ATTENDANCE_EDIT_DATE DESC
 	</select>
 	
 	<select id="selectAdminAttendanceEditCount" resultType="_int">

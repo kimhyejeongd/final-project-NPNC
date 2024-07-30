@@ -77,8 +77,8 @@
           									<td>${a.attendanceEditAfterTime.substring(11, 19)}</td>
 				                            <td>${a.attendanceEditState}</td>
 				                            <td>     	
-				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
-											    	수정
+				                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
+											    	처리
 											  	</button>
 				                            </td>
 				                          </tr>

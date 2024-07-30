@@ -145,14 +145,27 @@
 		                            class="col-md-3 col-form-label"
 		                            >수정후상태</label>
 		                          <div class="col-md-9 p-0">
-		                            <input
+		                           <%--  <input
 		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterState"
 		                              name="attendanceEditAfterState"
 		                              value="${attendanceEdit.attendanceEditAfterState }"
-		                              readonly
-		                            />
+		                              required
+		                            /> --%>
+		                            <select
+		                            class="form-select"
+		                            id="attendanceEditAfterState"
+		                            name="attendanceEditAfterState"
+		                          	>
+								  		<option value="출근" >출근</option>
+								        <option value="지각" >지각</option>
+								        <option value="조퇴" >조퇴</option>
+								        <option value="결근" >결근</option>
+								        <option value="휴가" >휴가</option>
+								        <option value="유급휴가">유급휴가</option>
+		                          </select>
+		                            
 		                          </div>
 		           	</div>
 		           

@@ -12,7 +12,7 @@
 	          </button>
 	        </div>
         <div class="modal-body">
-			<form action="${path}/attendance/updateAttendance" method="post">
+			<form action="${path}/attendance/deleteAttendanceEdit" method="post">
 				<div class="container">
          		 <div class="page-inner">
 				<div class="form-group">
@@ -34,7 +34,7 @@
 		                          </div>
 		           	</div>
 		           	
-		           	<input type="hidden" id="attendanceEditKeyMo" name="attendanceEditKey" value="${attendanceEdit.attendanceEditKey }">
+		           	<input type="hidden" id="attendanceEditKeyMo" name="attendanceEditKey" >
 		           	
 		           	<div class="form-group form-inline">
 		                          <label
@@ -150,7 +150,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterStateMo"
 		                              name="attendanceEditAfterState"
-		                              value="${attendanceEdit.attendanceEditAfterState }"
+		                           <%--    value="${attendanceEdit.attendanceEditAfterState }" --%>
 		                              readonly
 		                            />
 		                          </div>
@@ -181,10 +181,7 @@
 		                              class="form-control"
 		                              id="attendanceEditOpinionMo"
 		                              name="attendanceEditOpinion"
-		                              required
-<%-- 		                             <c:if test="${not empty attendanceEditOpinion}">
-		                              	readonly
-		                             </c:if> --%>
+		                              readonly
 		                            ></textarea>
 		                          </div>
 		           	</div>
@@ -208,39 +205,3 @@
     </div>
   </div> 
 
-		
-					
-					
- 				<script>
-				const rejectionAttendanceEdit=()=>{
-					   if(confirm("반려 하시겠습니까?")){
-
-				           let form = document.createElement("form");
-				           form.setAttribute("method", "post");
-				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
-				
-				           let key = document.getElementById("attendanceEditKey").value;
-				           let $key = document.createElement("input");
-				           $key.setAttribute("type", "hidden");
-				           $key.setAttribute("name", "attendanceEditKey");
-				           $key.setAttribute("value", key);
-				 
-				           form.appendChild($key);
-							
-				           let opinion = document.getElementById("attendanceEditOpinion").value;
-				           let $opinion = document.createElement("input");
-				           $opinion.setAttribute("type", "hidden");
-				           $opinion.setAttribute("name", "attendanceEditOpinion");
-				           $opinion.setAttribute("value", opinion);
-				           form.appendChild($opinion);
-				           
-				           document.body.appendChild(form);
-				           form.submit();
-					   }else{
-						   alert("반려가 취소되었습니다.");
-						   location.replace("${path}/admin/attendance/selectAdminAttendanceEditAll");
-					   }
-					   
-					}
-
-				</script> 
