@@ -31,13 +31,23 @@ public class AdminDocumentService {
 		return dao.selectStorageFolderAll(session,folderKey);
 	}
 	public int updateStorageGroup(Map<String,Object>folderInfo) {
-		return dao.updateStorageGroup(session,folderInfo);
+		StorageFolder targetFolder = (StorageFolder) folderInfo.get("targetFolder");
+		StorageFolder draggedFolder = (StorageFolder) folderInfo.get("draggedFolder");
+
+		if(targetFolder.getFolderGroup()!=draggedFolder.getFolderGroup()) {
+			dao.updateFolderGroup(session, draggedFolder);
+		}
+		
+		int result =dao.updateStorageGroup(session,folderInfo);
+		
+		return result;
 	}
 	public int increaseFolderOrder(Map<String,Object>folderInfo) {
 		return dao.increaseFolderOrder(session,folderInfo);
 	}
 	public int removeFolder(int draggedFolderKey) {
-		return dao.removeFolder(session,draggedFolderKey);
+		int result = dao.removeFolder(session,draggedFolderKey);
+		return result;	
 	}
 	public int createFolderGroup() {
 		return dao.createFolderGroup(session);

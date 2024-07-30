@@ -67,10 +67,12 @@ public class AdminDocumentFormController {
     	folderInfo.put("targetFolder", targetFolder);
     	System.out.println(draggedFolder+"draggedFolderdraggedFolderdraggedFolder");
     	System.out.println(targetFolder+"targetFoldertargetFoldertargetFolder");
-    	service.increaseFolderOrder(folderInfo);
-    	
+    	service.increaseFolderOrder(folderInfo); // 대상 order의 크기에 따라 남은 order의 크기를 조절함
+
     	int targetOrder = targetFolder.getFolderOrderBy();
-    	if(targetFolder.getFolderLevel()==1) targetOrder+=1;
+    	if(targetFolder.getFolderLevel()==1) {
+    		targetOrder+=1;
+    		} //대상 폴더가 대분류면 순서를 1로 설정
 
     	draggedFolder.setFolderOrderBy(targetOrder);
     	System.out.println(targetOrder);
@@ -90,20 +92,20 @@ public class AdminDocumentFormController {
     	int result = service.insertFolder(storageFolder);
     	
 		
-        if (result > 0) {
-            // 실제 업로드 디렉토리 경로 얻기
-            String realPath = servletContext.getRealPath("/resources/upload");
-            Path path = Paths.get(realPath, storageFolder.getFolderName());
-
-            // 디렉토리가 이미 존재하는지 확인
-            if (!Files.exists(path)) {
-                // 디렉토리 생성
-                Files.createDirectories(path);
-            } else {
-                throw new IOException("Folder already exists");
-            }
-        }
-		 
+//        if (result > 0) {
+//            // 실제 업로드 디렉토리 경로 얻기
+//            String realPath = servletContext.getRealPath("/resources/upload");
+//            Path path = Paths.get(realPath, storageFolder.getFolderName());
+//
+//            // 디렉토리가 이미 존재하는지 확인
+//            if (!Files.exists(path)) {
+//                // 디렉토리 생성
+//                Files.mkdir(path);
+//            } else {
+//                throw new IOException("Folder already exists");
+//            }
+//        }
+//		 
     	
     	return ResponseEntity.ok(storageFolder);
     }

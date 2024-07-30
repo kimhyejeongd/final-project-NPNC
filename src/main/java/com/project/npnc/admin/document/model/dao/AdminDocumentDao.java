@@ -60,4 +60,7 @@ public class AdminDocumentDao {
 	public int updateStorage(SqlSessionTemplate session, Storage storage) {
 		return session.update("admindoc.updateStorage",storage);
 	}
+	public int updateFolderGroup(SqlSessionTemplate session,StorageFolder draggedFolderKey) {
+		return session.update("admindoc.updateFolderGroup",draggedFolderKey);
+	}
 }

@@ -45,7 +45,7 @@
         <div class="container">
             <div class="page-inner" style="display: flex">
                 <div class="col w-45" style="width:20%">
-                    <div class="card card-round" style="height: 500px;">
+                    <div class="card card-round" style="height: 500px;width: 402px;">
                         <div class="card-header">
                             <div class="card-head-row card-tools-still-right">
                                 <div class="card-title" id="formfoldername" style="padding-right: 76px;">전자문서 보관함 폴더 목록</div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="width:67%">
+                <div style="width:60%">
                 
                   
                     <!-- Projects table -->
