@@ -88,6 +88,19 @@
 		FROM ER_STORAGE_FOLDER
 		WHERE ER_FOLDER_KEY = #{folderKey}
 	</select>
+	<select id="selectStorage" resultMap="storage" parameterType="int">
+		SELECT 
+			ER_STORAGE_KEY,
+			ER_STORAGE_FOLDER_KEY,
+			ER_STORAGE_NAME,
+			ER_STORAGE_TERM,
+			ER_STORAGE_MANAGER,
+			ER_STORAGE_ORDERBY
+		FROM
+			ER_STORAGE
+		WHERE 
+			ER_STORAGE_KEY = #{storageKey}
+	</select>
 	
 	<update id="updateStorageGroup" parameterType="map">
 		UPDATE ER_STORAGE_FOLDER 

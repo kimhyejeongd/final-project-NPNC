@@ -95,12 +95,16 @@ public class AdminDocumentService {
 		int result=0;
 		int temp=0;
 	    for(Integer key : deleteKeys) {
+	    	Storage storage = dao.selectStorage(session,key);
 	    	temp = dao.deleteStorage(session, key);
 	    	if(temp>0) {
-	    		int test = key;
-	    		Storage storage = dao.selectStorage(session,key);
-        		String path = dao.selectParentStorageName(session,storage.getStorageFolderKey());
-        		File folder = new File(uploadPath+path);
+        		String path = "/dochtml/";
+        		StorageFolder parentFolder = dao.selectStorageFolderAll(session,storage.getStorageFolderKey());
+        		path+=(dao.selectParentFolderName(session, parentFolder.getFolderGroup())+"/");
+        		path+=parentFolder.getFolderName()+"/";
+        		
+        		
+        		File folder = new File(uploadPath+path+storage.getStorageName());
         		try {
         			if (folder.exists()) {
         				FileUtils.deleteDirectory(folder);//하위 폴더와 파일 모두 삭제
