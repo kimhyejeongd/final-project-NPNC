@@ -27,7 +27,9 @@
 				                            <td>${a.overtimeKey }</td>
 				                            <td>${a.attendanceState}</td>
 				                            <td>
-				                            	<button onclick="updateAttendance('${a.attendanceKey}');" class="btn btn-success">근태수정요청</button>
+				                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">
+											   		수정요청
+												</button>
 				                            </td>
 				                          </tr>
 			                        </c:forEach>

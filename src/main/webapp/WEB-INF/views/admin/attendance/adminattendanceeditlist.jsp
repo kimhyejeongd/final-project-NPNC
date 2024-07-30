@@ -77,8 +77,8 @@
           									<td>${a.attendanceEditAfterTime.substring(11, 19)}</td>
 				                            <td>${a.attendanceEditState}</td>
 				                            <td>     	
-				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
-											    	수정
+				                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
+											    	처리
 											  	</button>
 				                            </td>
 				                          </tr>
@@ -97,13 +97,11 @@
 		              </div>
 			</div>
 			
-			<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>  --%>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 		</div>
 		
 			<!--상세 모달 정의 -->
 
-			<%-- <%@ include file="/WEB-INF/views/admin/member/insertmodal.jsp" %> --%>
 	  		 <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>
 	  		
 	  		

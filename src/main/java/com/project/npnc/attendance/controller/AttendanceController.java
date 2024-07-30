@@ -176,14 +176,15 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/updateAttendance")
-	public String updateAttendance(int attendanceKey,Model m,Authentication authentication) {
+	public ResponseEntity<Map> updateAttendance(int attendanceKey,Authentication authentication) {
 		LocalDate today=LocalDate.now();
 		Attendance a=attendanceService.selectAttendanceByAttendanceKey(attendanceKey);
 		a.setMember(AdminMember.builder().memberId(authentication.getName()).build());
 		System.out.println(a);
-		m.addAttribute("today",today);
-		m.addAttribute("attendance",a);
-		return "attendance/updateattendance";
+		Map response =new HashMap();
+		response.put("today",today);
+		response.put("attendance",a);
+		return ResponseEntity.ok(response);
 		
 	}
 	
@@ -197,6 +198,7 @@ public class AttendanceController{
 		if(ae.getAttendanceEditBeforeTime().equals("")) {
 			
 		}
+
 		int result=attendanceService.insertAttendanceEdit(ae);
 		
 		String msg,loc;
@@ -226,10 +228,11 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/attendanceEditDetail")
-	public String attendanceEditDetail(int attendanceEditKey, Model m) {
+	public ResponseEntity<Map<String,AttendanceEdit>> attendanceEditDetail(int attendanceEditKey) {
 		AttendanceEdit attendanceEdit= attendanceService.selectAttendanceEditByKey(attendanceEditKey);
-		m.addAttribute("attendanceEdit",attendanceEdit);
-		return "attendance/attendanceEditDetail";
+		Map<String,AttendanceEdit> response =new HashMap<>();
+		response.put("attendanceEdit", attendanceEdit);
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/deleteAttendanceEdit")
@@ -238,10 +241,10 @@ public class AttendanceController{
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}else {
 			msg="삭제실패";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

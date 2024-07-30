@@ -121,6 +121,8 @@
 			              	<option value="지각" <c:if test="${searchT eq '지각'}">selected</c:if>>지각</option>
 			              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
 			              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
+			              	<option value="휴가" <c:if test="${searchT eq '휴가'}">selected</c:if>>휴가</option>
+			              	<option value="유급휴가" <c:if test="${searchT eq '유급휴가'}">selected</c:if>>유급휴가</option>
 			              </select>
                   				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
                   				<h3>~</h3>
@@ -154,7 +156,9 @@
 		                            <td>${a.overtimeKey }</td>
 		                            <td>${a.attendanceState}</td>
 		                            <td>
-		                            	<button onclick="updateAttendance('${a.attendanceKey}');" class="btn btn-success">근태수정요청</button>
+		                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">
+											   수정요청
+										</button>
 		                            </td>
 		                          </tr>
 	                        </c:forEach>
@@ -171,14 +175,81 @@
               		<div>${pagebar}</div>
                 </div>
               </div>
-	</div>
-	</div>
-	</div>
-
+	  </div>
+	 </div>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
-		</div>
+	</div>
+			 <%@ include file="/WEB-INF/views/attendance/updateattendance.jsp" %>
+   </div>
+	<!-- Bootstrap JS and dependencies -->
+ 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 	
+		
 	<script>
-				
+		
+	$(document).ready(function() {
+	    $('#updateAttendanceModal').on('show.bs.modal', function (event) {
+	        var button = $(event.relatedTarget); // 버튼을 클릭한 버튼을 참조합니다.
+	        var attendanceKey = button.data('member-key'); // data-attendanceeditkey 속성의 값을 가져옵니다.
+	        // AJAX를 사용하여 서버에서 데이터 가져오기
+	        $.ajax({
+	            url: '${path}/attendance/updateAttendance',
+	            type: 'POST',
+	            data: { attendanceKey: attendanceKey },
+	            /* dataType: 'json', // 서버 응답을 JSON으로 처리 */
+	            success: function(data) {
+	            	console.log(data);
+	            	console.log(data.attendance.attendanceKey);
+	            	
+	            	 function formatDate(timestamp) {
+		                    var date = new Date(timestamp);
+		                    var year = date.getFullYear();
+		                    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+		                    var day = ('0' + date.getDate()).slice(-2);
+		                    return year + '-' + month + '-' + day;
+		                }
+
+	                // 모달에 데이터 설정
+	                $('#attendanceKey').val(data.attendance.attendanceKey );
+	                $('#attendanceEditMember').val(data.attendance.member.memberId);
+	                $('#attendanceEditDate').val(formatDate(data.today));
+	                $('#attendanceEditRequestDate').val(formatDate(data.attendance.attendanceDate));
+	                $('#attendanceEditBeforeState').val(data.attendance.attendanceState);
+	                $('#attendanceEditBeforeTime').val(data.attendance.attendanceStart);
+	             	$('#attendanceEditBeforeTimeEnd').val(data.attendance.attendanceEnd); 
+
+	            },
+	            error: function() {
+	                alert('Failed to fetch data.');
+	            }
+	        });
+	    });
+	});
+	
+	
+	 function fn_paging(pageNo) {
+	 	    console.log('오긴왔냐?');
+	 	    var searchType= document.getElementById("searchType").value;
+	 	    var searchStartDate= document.getElementById("searchStartDate").value;
+	 	    var searchEndDate= document.getElementById("searchEndDate").value;
+		 	   $.ajax({
+		            url: '${path}/attendance/searchAttendance', // 서버의 실제 엔드포인트로 대체
+		            type: 'GET',
+		            data: { cPage: pageNo ,searchType : searchType,searchStartDate : searchStartDate,searchEndDate : searchEndDate},
+		            dataType: 'text', // 서버 응답을 JSON으로 처리
+		            success: function(data) {
+
+		                document.querySelector("div[class='table-responsive']").innerHTML = data;
+
+		            },
+		            error: function(xhr, status, error) {
+		                console.error("AJAX Error: ", status, error);
+		            }
+		        });
+		    }
+	
+	
 	
 		document.getElementById("searchbutton").addEventListener("click",e=>{
 			const searchType=document.getElementById("searchType").value;
@@ -194,21 +265,6 @@
 		});
 	
 
-				const updateAttendance=(a)=>{
-				            let form = document.createElement("form");
-				            form.setAttribute("method", "post");
-				            form.setAttribute("action", "${path}/attendance/updateAttendance");
-
-				            let $key = document.createElement("input");
-				            $key.setAttribute("type", "hidden");
-				            $key.setAttribute("name", "attendanceKey");
-				            $key.setAttribute("value", a);
-
-				            form.appendChild($key);
-
-				            document.body.appendChild(form);
-				            form.submit();
-						}
 
 	</script>
 
