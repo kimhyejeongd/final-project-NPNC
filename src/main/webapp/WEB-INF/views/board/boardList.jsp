@@ -1,15 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>게시물 상세보기</title>
+    <title>게시판 목록</title>
+    <!-- Include CSS files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
+    <!-- Include JS files -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
+    <script src="${path}/resources/assets/js/script.js"></script>
     <style>
+        /* General Layout Styles */
         .wrapper {
             display: flex;
             height: 100vh;
@@ -18,212 +23,104 @@
         }
 
         .sidebar {
-            width: 250px;
-            background-color: #343a40;
+            width: 250px; /* Adjust width as needed */
+            background-color: #333; /* Sidebar background color */
             color: white;
-            height: 100%;
+            height: 100%; /* Full height of the viewport */
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 100;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+     
+            
+            z-index: 100; /* Ensure sidebar is below header */
         }
 
         .main-panel {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            margin-left: 250px; /* Same as sidebar width */
+            padding: 20px;
+            width: calc(100% - 250px); /* Adjust width based on sidebar */
+            background-color: #f8f9fa; /* Background color for main content */
         }
 
         .header {
-            display: flex;
-            width: calc(100% - 250px);
-            background-color: #ffffff;
+           width: calc(100% - 250px); /* Adjust width based on sidebar */
+            background-color: #f8f9fa; /* Light background color for header */
             border-bottom: 1px solid #ddd;
             position: fixed;
-            top: 0;
-            left: 250px;
-            height: 60px;
-            line-height: 60px;
+            top: -15px;
+            left: 250px; /* Adjust to match sidebar width */
+            height: 60px; /* Header height */
+            line-height: 60px; /* Center content vertically */
             padding-left: 20px;
-            z-index: 200;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 200; /* Ensure header is on top of sidebar */
         }
 
+        /* Ensure no extra margins or padding cause issues */
+        body, html {
+            margin: 0;
+            padding: 0;
+            padding-left:10px;
+        }
+
+     
         .container {
-            margin-top: 80px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            overflow: auto;
+            padding-top: 20px; /* Adjust top padding if needed */
         }
-
-        .info-panel {
-            background-color: #ffffff;
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+        
+        h1 {
+        padding-left:10px;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #e9ecef;
-            color: #495057;
-            font-weight: bold;
-        }
-
-        td {
-            background-color: #ffffff;
-            color: #495057;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        tr:nth-child(even) td {
-            background-color: #f8f9fa;
-        }
-
-        .content-area {
-            flex: 1;
-            overflow-y: auto; /* 댓글 영역이 길어질 경우 스크롤 추가 */
-            padding-bottom: 20px; /* 댓글 영역과의 간격을 조정합니다 */
-        }
-
-        .comment-section {
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-        }
-
-        .comment-form {
-            margin-bottom: 20px;
-        }
-
-        .comment-form textarea {
-            width: 100%;
-            height: 60px;
-            resize: none; /* 크기 조절 불가 */
-        }
-
-        .comment-list {
-            max-height: 400px; /* 댓글 목록의 최대 높이 설정 */
-            overflow-y: auto;  /* 댓글 목록이 넘칠 경우 스크롤 추가 */
-            padding-bottom: 20px; /* 댓글 목록과 하단 간격 조정 */
-        }
-
-        .comment {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-        }
-
-        a.btn-primary {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.2s, border-color 0.2s;
-            font-weight: 500;
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        a.btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-            text-decoration: none;
-        }
+        
     </style>
 </head>
 <body>
+    <!-- Header -->
+
+
     <div class="wrapper">
         <!-- Sidebar -->
         <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
 
         <!-- Main Panel -->
         <div class="main-panel">
-            <!-- Header -->
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-
-            <!-- Content -->
+        	<div class="header">
+        		    <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+        	</div>
             <div class="container">
-              
-                <!-- Information Panel -->
-                <div class="info-panel">
-                    <table>
-                        <tr>
-                            <th>번호</th>
-                            <td>${board.BOARD_KEY}</td>
-                        </tr>
-                        <tr>
-                            <th>제목</th>
-                            <td>${board.BOARD_TITLE}</td>
-                        </tr>
-                        <tr>
-                            <th>작성자</th>
-                            <td>${board.MEMBER_KEY}</td>
-                        </tr>
-                        <tr>
-                            <th>작성일</th>
-                            <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" /></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- Content Area -->
-                <div class="content-area">
-                    <p>${board.BOARD_DETAIL}</p>
-                </div>
-                
-                <!-- Comment Section -->
-                <div class="comment-section">
-                    <!-- Comment Form -->
-                    <div class="comment-form">
-                        <form action="${path}/board/addComment" method="post">
-                            <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                            <textarea name="commentDetail" placeholder="댓글을 입력하세요..."></textarea>
-                            <button type="submit" class="btn btn-primary">댓글 작성</button>
-                        </form>
-                    </div>
-
-                    <!-- Comment List -->
-                    <div class="comment-list">
-                        <c:forEach var="comment" items="${comments}">
-                            <div class="comment">
-                                <p><strong>${comment.MEMBER_KEY}</strong> (${comment.BOARD_COMMENT_DATE})</p>
-                                <p>${comment.BOARD_COMMENT_DETAIL}</p>
+                <h1>게시판 목록</h1>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="multi-filter-select" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>번호</th>
+                                                <th>제목</th>
+                                                <th>작성자</th>
+                                                <th>작성일</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="board" items="${boardList}">
+                                                <tr>
+                                                    <td>${board.BOARD_KEY}</td>
+                                              		<td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
+                                                    <td>${board.MEMBER_KEY}</td>
+                                                    <td>
+                                                        <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" />
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </c:forEach>
+                        </div>
                     </div>
                 </div>
-                
-                <a href="${path}/board/list" class="btn btn-primary">목록으로</a>
             </div>
-
             <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
     </div>
