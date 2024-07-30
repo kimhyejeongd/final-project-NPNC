@@ -6,6 +6,7 @@
     <!-- Board Dto CRUD -->
     <select id="selectAllBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
         SELECT * FROM BOARD
+        ORDER BY BOARD_KEY DESC
     </select>
 
     <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
