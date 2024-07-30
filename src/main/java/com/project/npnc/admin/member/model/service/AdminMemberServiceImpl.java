@@ -47,6 +47,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		int memberVacTotal=15;
 		System.out.println("서비스 테스트 : "+m.getMemberKey() );
 		int memberKey=m.getMemberKey();
+
 		if(result>0) {
 			if(m.getJob().getJobKey().equals("J1")) {
 				memberVacTotal=22;
@@ -58,10 +59,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		MemberVacation mv=MemberVacation.builder().memberKey(memberKey).memberVacTotal(memberVacTotal).memberVacRemaining(memberVacTotal).build();
 		result2=memberVacationDao.insertMemberVacation(session, mv);
 		}
-		
-		if(result2>0) session.commit();
-		else session.rollback();
-		
+
 		return result2;
 	}
 

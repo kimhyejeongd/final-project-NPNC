@@ -89,6 +89,9 @@
 	</select>
 	
 	<insert id="insertMember" parameterType="adminmember">
+		<selectKey keyProperty="memberKey" order="BEFORE" resultType="int">
+			SELECT SEQ_MEMBER.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT INTO 
 			MEMBER(
 	        MEMBER_KEY,
@@ -110,7 +113,7 @@
 	        MEMBER_BIRTHDATE,
 	        MEMBER_PROFILE_IMAGE
 	    	)
-			VALUES(SEQ_MEMBER.NEXTVAL,
+			VALUES(#{memberKey},
 				#{department.deptKey},
 				#{job.jobKey},
 				'NPNC'||SEQ_MEMBER.CURRVAL,
@@ -128,7 +131,7 @@
 				'재직',
 				#{memberBirthdate},
 				'basicPicture')
-			RETURNING SEQ_MEMBER.CURRVAL INTO #{currValKey}
+			
 	</insert>
 	
 	<update id="updateMember" parameterType="adminmember">
