@@ -15,6 +15,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -168,6 +169,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int selectRemainingVac(SqlSession session, int memberKey) {
+		return session.selectOne("document.selectRemainingVac", memberKey);
+	}
+
+	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
 	}
@@ -221,6 +227,22 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		map.put("state", state);
 		log.debug("결재 업데이트 -> " + map.toString());
 		return session.update("document.updateApprovalState", map);
+	}
+
+	@Override
+	public int insertVacationApply(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApply", vac);
+	}
+	@Override
+	public int updateVacationAppply(SqlSession session, String docSerial) {
+		return session.update("document.updateVacationAppply", docSerial);
+	}
+	@Override
+	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", serial);
+		map.put("memberKey", (Integer) memberKey);
+		return session.update("document.updateVacationCalc", map);
 	}
 
 }

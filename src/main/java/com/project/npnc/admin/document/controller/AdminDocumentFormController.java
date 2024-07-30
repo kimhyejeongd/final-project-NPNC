@@ -1,5 +1,9 @@
 package com.project.npnc.admin.document.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,22 +50,24 @@ public class AdminDocumentFormController {
     	StorageFolder draggedFolder = service.selectStorageFolder((int)folderKeys.get("draggedFolder"));
     	StorageFolder targetFolder = service.selectStorageFolder((int)folderKeys.get("targetFolder"));
     	
-    	int targetOrder = targetFolder.getFolderOrderBy();
-    	System.out.println(targetOrder);
-    	if(targetFolder.getFolderLevel()==1) targetOrder+=1;
-    	System.out.println(targetOrder);
 
-    	draggedFolder.setFolderOrderBy(targetOrder);
     	
     	Map<String,Object>folderInfo = new HashMap<>();
+    	folderInfo.put("draggedOrder",draggedFolder.getFolderOrderBy());
     	folderInfo.put("draggedFolder", draggedFolder);
     	folderInfo.put("targetFolder", targetFolder);
-    	System.out.println(draggedFolder);
-    	System.out.println(targetFolder);
+    	System.out.println(draggedFolder+"draggedFolderdraggedFolderdraggedFolder");
+    	System.out.println(targetFolder+"targetFoldertargetFoldertargetFolder");
     	service.increaseFolderOrder(folderInfo);
     	
-    	int result = service.updateStorageGroup(folderInfo);
-    	return ResponseEntity.ok(result);
+    	int targetOrder = targetFolder.getFolderOrderBy();
+    	if(targetFolder.getFolderLevel()==1) targetOrder+=1;
+
+    	draggedFolder.setFolderOrderBy(targetOrder);
+    	System.out.println(targetOrder);
+    	
+    	service.updateStorageGroup(folderInfo);
+    	return ResponseEntity.ok(folderInfo);
     }
 
     @PostMapping("/removeFolder")
@@ -73,7 +79,16 @@ public class AdminDocumentFormController {
     @PostMapping("/createFolder")
     public ResponseEntity<?>createFolder(@RequestBody StorageFolder storageFolder ){
     	System.out.println(storageFolder);
-    	service.insertFolder(storageFolder);
+    	int result = service.insertFolder(storageFolder);
+//    	if (result>0) {
+//	        Path path = Paths.get(BASE_PATH, storageFolder.getFolderName());
+//	        if (!Files.exists(path)) {
+//	            Files.createDirectories(path);
+//	        } else {
+//	            throw new IOException("Folder already exists");
+//	        }
+    	
     	return ResponseEntity.ok(storageFolder);
+    	
     }
 }

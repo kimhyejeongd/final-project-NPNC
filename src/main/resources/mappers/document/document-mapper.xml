@@ -14,7 +14,7 @@
 	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
 	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
 	    <result column="er_doc_storage_key" property="erDocStorageKey"/>
-	    <result column="er_doc_storage_name" property="erDocStorageName"/>
+	    <result column="ER_STORAGE_NAME" property="erDocStorageName"/>
 	    <result column="er_doc_filename" property="erDocFilename"/>
 	    <result column="er_doc_state" property="erDocState"/>
 	    <result column="er_doc_state_update_date" property="erDocStateUpdateDate"/>
@@ -22,6 +22,10 @@
 	    <result column="er_doc_update_date" property="erDocUpdateDate"/>
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
+	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
+	    <result column="ER_DOC_FORM_KEY" property="docFormKey"/>
+	    <result column="er_storage_term" property="erDocStorageTerm"/>
+	    <result column="er_folder_name" property="erDocStorageFolderName"/>
 		<collection property="approvers" resultMap="approverMap" ofType="approver"/>
 		<collection property="referers" resultMap="refererMap" ofType="referer"/>
 		<collection property="files" resultMap="docFileMap" ofType="docFile"/>
@@ -85,6 +89,20 @@
 		<result column="OWNER_MEMBER_KEY" property="memberKey"/>
 		<collection property="approvers" resultMap="approverLineMap" ofType="approverLine"/>
 	</resultMap>
+	<resultMap type="vacationApply" id="vacationApplyMap">
+		<id column="VACATION_USE_KEY" property="vacationUseKey"/>
+		<result column="VACATION_KEY" property="vacationKey"/>
+		<result column="ER_DOCUMENT_KEY" property="vacationDocSerialKey"/>
+		<result column="VACATION_APPLY_DATE" property="vacationApplyDate"/>
+		<result column="VACATION_APPLY_STATUS" property="vacationApplyStatus"/>
+		<result column="VACATION_START_DATE" property="vacationStartDate"/>
+		<result column="VACATION_END_DATE" property="vacationEndDate"/>
+		<result column="VACATION_USE_COUNT" property="vacationUseCount"/>
+		<result column="VACATION_MEMBER_KEY" property="vacationMemberKey"/>
+		<result column="VACATION_REASON" property="vacationReason"/>
+		<result column="MEMBER_VAC_KEY" property="memberVacKey"/>
+	</resultMap>
+	
 	<!-- 양식 -->
 	<select id="selectformFolders" resultType="map">
 		SELECT 
@@ -984,6 +1002,8 @@
 			d.ER_DOC_STATE_UPDATE_DATE,
 			d.ER_DOC_LAST_UPDATER,
 			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
 			f.ER_FILE_KEY,
 			f.ER_FILE_ORI_NAME,
 			f.ER_FILE_RENAME,
@@ -1013,11 +1033,14 @@
 			er.ER_REFERER_KEY,
 			er.ER_DOC_SERIAL_KEY,
 			er.ER_REFERER_TEAM_KEY,
-			d2.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
+			d3.DEPARTMENT_NAME as ER_REFERER_TEAM_NAME,
 			er.ER_REFERER_JOB_KEY,
 			j2.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
-			er.MEMBER_KEY
+			er.MEMBER_KEY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
 		FROM   
 			er_document d
         LEFT JOIN 
@@ -1030,8 +1053,14 @@
 			job j2 ON er.ER_REFERER_JOB_KEY = j2.JOB_KEY 
 		LEFT JOIN
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+		LEFT JOIN
+			DEPARTMENT d3 ON er.ER_REFERER_TEAM_KEY = d3.DEPARTMENT_KEY 
         LEFT JOIN 
         	er_file f ON d.ER_DOC_SERIAL_KEY = f.ER_DOC_SERIAL_KEY 
+        LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
 		WHERE  
 			d.ER_DOC_KEY = #{docId}
 		ORDER BY
@@ -1053,6 +1082,8 @@
 			d.ER_DOC_STATE_UPDATE_DATE,
 			d.ER_DOC_LAST_UPDATER,
 			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
 			f.ER_FILE_KEY,
 			f.ER_FILE_ORI_NAME,
 			f.ER_FILE_RENAME,
@@ -1086,7 +1117,10 @@
 			er.ER_REFERER_JOB_KEY,
 			j.JOB_NAME as ER_REFERER_JOB_NAME,
 			er.ER_REFERER_NAME,
-			er.MEMBER_KEY
+			er.MEMBER_KEY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
 		FROM   
 			er_document d
         LEFT JOIN 
@@ -1099,6 +1133,10 @@
 			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
 		LEFT JOIN
       		ER_REFERER er ON d.ER_DOC_SERIAL_KEY = er.ER_DOC_SERIAL_KEY 
+      	LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
 		WHERE  
 			d.ER_DOC_SERIAL_KEY = #{serial} 
 		ORDER BY
@@ -1140,9 +1178,7 @@
 				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
 				ER_DOC_STATE, 
-				ER_DOC_STATE_UPDATE_DATE,
-				ER_DOC_LAST_UPDATER,
-				ER_DOC_LAST_UPDATE_REASON
+				ER_DOC_FORM_KEY
 			)
 		VALUES
             (
@@ -1165,9 +1201,7 @@
                         || To_char(seq_er_doc_serial_key.CURRVAL)
                         || '.html',
               DEFAULT,
-              NULL,
-              NULL,
-              NULL
+              #{docFormKey}
             )
         <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
@@ -1593,4 +1627,86 @@
 	         null
             )
 	</insert>
+	
+	<!-- 휴가 기안시 잔여 연차 확인 -->
+	<select id="selectRemainingVac" resultType="int" parameterType="int">
+		SELECT
+			MEMBER_VAC_REMAINING
+		FROM
+			MEMBER_VACATION
+		WHERE
+			MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+	</select>
+	<!-- 해당 사원 휴가 신청 등록 -->
+	<insert id="insertVacationApply" parameterType="vacationApply">
+		<!-- 해당 사원의 휴가 계산 테이블 조회 -->
+		<selectKey keyProperty="memberVacKey" resultType="int" order="BEFORE">
+			SELECT 
+				MEMBER_VAC_KEY
+			FROM   
+				MEMBER_VACATION
+			WHERE
+				MEMBER_VAC_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+			AND
+				MEMBER_KEY = #{vacationMemberKey}
+		</selectKey>
+		INSERT INTO 
+			VACATION_APPLY
+			(
+				VACATION_USE_KEY,
+				VACATION_KEY,
+				ER_DOCUMENT_KEY,
+				VACATION_APPLY_DATE,
+				VACATION_APPLY_STATUS,
+				VACATION_START_DATE,
+				VACATION_END_DATE,
+				VACATION_USE_COUNT,
+				VACATION_MEMBER_KEY,
+				VACATION_REASON,
+				MEMBER_VAC_KEY
+			)
+		VALUES
+            (
+		         SEQ_VACATION_USE_KEY.NEXTVAL,
+		         #{vacationKey},
+		         #{vacationDocSerialKey},
+		         default,
+		         default,
+		         #{vacationStartDate, jdbcType=TIMESTAMP},
+		         #{vacationEndDate, jdbcType=TIMESTAMP},
+		         #{vacationUseCount},
+		         #{vacationMemberKey},
+		         #{vacationReason},
+		         #{memberVacKey}
+            )
+	</insert>
+	<!-- 휴가신청서 결재 승인 후 신청 상태 변경 -->
+	<update id="updateVacationAppply" parameterType="string">
+		UPDATE
+			VACATION_APPLY
+		SET
+			VACATION_APPLY_STATUS = '승인',
+			VACATION_APPLY_DATE = SYSDATE
+		WHERE
+			ER_DOCUMENT_KEY = #{docSerial}
+	</update>
+	<!-- 휴가신청서 결재 승인 후 차감 -->
+	<update id="updateVacationCalc" parameterType="map">
+		<!-- 해당 사원의 휴가 신청 차감값 가져오기 -->
+		<selectKey keyProperty="vacationUseCount" resultType="int" order="BEFORE">
+			SELECT 
+				VACATION_USE_COUNT
+			FROM   
+				VACATION_APPLY
+			WHERE
+				ER_DOCUMENT_KEY = #{serial}
+		</selectKey>
+		UPDATE
+			MEMBER_VACATION
+		SET
+			MEMBER_VAC_USED = MEMBER_VAC_USED + #{vacationUseCount},
+			MEMBER_VAC_REMAINING = MEMBER_VAC_REMAINING - #{vacationUseCount}
+		WHERE
+			MEMBER_KEY = #{memberKey}
+	</update>
 </mapper>

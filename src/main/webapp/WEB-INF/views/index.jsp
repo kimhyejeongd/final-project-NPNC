@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
             <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--             <c:set var="path" value="${pageContext.request.contextPath }"/> --%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -46,7 +45,7 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
   </head>
   <body>
-		  <style>
+     <style>
 	     .main-header {
 		    background: #fff;
 		    min-height: 60px;
@@ -85,81 +84,31 @@
           
             <div class="firstwidget">
              <div class="col-md-6" style="width: 26%;">
-                <div class="card">
+                <div class="card bg-primary-gradient">
                   <div class="card-header">
-                    <h4 class="card-title">출/퇴근 버튼</h4>
+                    <h4 class="card-title" style="color: white;">출/퇴근 버튼</h4>
                   </div>
                   <div class="card-body">
-                   <!-- clock widget start -->
-
-					<script type="text/javascript"> var css_file=document.createElement("link"); css_file.setAttribute("rel","stylesheet"); css_file.setAttribute("type","text/css"); css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-c22.css?v=0.0.1"); document.getElementsByTagName("head")[0].appendChild(css_file); </script> <div id="tw_22_1059899484"><div style="width:200px; height:px; margin: 0 auto;"><a href="https://booked.kr/time/seoul-18406">서울특별시</a><br/></div></div> <script type="text/javascript"> function setWidgetData_1059899484(data){ if(typeof(data) != 'undefined' && data.results.length > 0) { for(var i = 0; i < data.results.length; ++i) { var objMainBlock = ''; var params = data.results[i]; objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; } } } var clock_timer_1059899484 = -1; widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=593;type=22;id=1059899484;scode=70241;city_id=;wlangid=24;mode=1;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=0;transparent=0"; var widgetUrl = location.href; widgetSrc += '&ref=' + widgetUrl; var wstrackId = ""; if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } var timeBookedScript = document.createElement("script"); timeBookedScript.setAttribute("type", "text/javascript"); timeBookedScript.src = widgetSrc; document.body.appendChild(timeBookedScript); </script>
-
-
-					<!-- clock widget end -->
-					
-					<!-- 출퇴근버튼 js -->
-    				<%-- <script src="${path}/resources/ws/attendance.js"></script> --%>
-    				<script>
-    				//근태 출퇴근 버튼
-    				 $(document).ready(function(){
-    			         $('#endAttendanceBtn').click(function(){
-    			             $.ajax({
-    			                 type: 'POST',
-    			                 url: '${path}/attendance/endattendance',
-    			                 success: function(response) {
-    			                     var message = response.msg;
-    			                     var attendanceEnd = response.attendanceEnd;
-    			                     alert(message);
-    			                     $('#endAttendanceBtn').hide();
-    			                     $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
-    			                 },
-    			                 error: function(xhr, status, error) {
-    			                     alert('퇴근 처리에 실패하였습니다.');
-    			                 }
-    			             });
-    			         });
-    			     }); 
-    				 
-    				 $(document).ready(function(){
-    			         $('#startAttendanceBtn').click(function(){
-    			             $.ajax({
-    			                 type: 'POST',
-    			                 url: '${path}/attendance/startattendance',
-    			                 success: function(response) {
-    			                     var message = response.msg;
-    			                     var attendanceStart = response.attendanceStart;
-    			                     alert(message);
-    			                     $('#startAttendanceBtn').hide();
-    			                     $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
-    			                 },
-    			                 error: function(xhr, status, error) {
-    			                     alert('출근 처리에 실패하였습니다.');
-    			                 }
-    			             });
-    			         });
-    			     }); 
-    				
-    				</script>
-    				
-    				
-    				<!-- 출퇴근 end -->
-    				
-                   	<div id="attendanceResult" style="margin-top:20px;">
-						<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};" class="btn btn-dark btn-round">
+					<div>
+						<div>
+							<!-- clock widget start -->
+							<script type="text/javascript"> var css_file=document.createElement("link"); css_file.setAttribute("rel","stylesheet"); css_file.setAttribute("type","text/css"); css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-180x170r4.css?v=0.0.1"); document.getElementsByTagName("head")[0].appendChild(css_file); </script> <div id="tw_14_2058017150"><div style="width:145px; height:50px; margin: 0 auto;"><a href="https://booked.kr/time/seoul-18406">서울특별시</a><br/></div></div> <script type="text/javascript"> function setWidgetData_2058017150(data){ if(typeof(data) != 'undefined' && data.results.length > 0) { for(var i = 0; i < data.results.length; ++i) { var objMainBlock = ''; var params = data.results[i]; objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; } } } var clock_timer_2058017150 = -1; widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=593;type=14;id=2058017150;scode=;city_id=;wlangid=24;mode=2;details=0;background=ffffff;border_color=ffffff;color=e6e6e6;add_background=ffffff;add_color=e6e6e6;head_color=ffffff;border=0;transparent=0"; var widgetUrl = location.href; widgetSrc += '&ref=' + widgetUrl; var wstrackId = ""; if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } var timeBookedScript = document.createElement("script"); timeBookedScript.setAttribute("type", "text/javascript"); timeBookedScript.src = widgetSrc; document.body.appendChild(timeBookedScript); </script>
+							<!-- clock widget end -->
+						</div>
+						<div>
+							<button onclick="location.assign('${path}/attendance/startattendance.do')">
 								출근
-						</button>
-						<c:if test="${not empty checkStartTime}">
-							출근 시간 : ${checkStartTime.substring(9, 17)}  
-						</c:if>	
+							</button>
+							<button onclick="location.assign('${path}/attendance/endattendance.do')">
+								퇴근
+							</button>
+							<button onclick="location.assign('${path}/attendance/selectAttendanceAll.do')">
+								근태관리
+							</button>
+							
+						</div>
 					</div>
-					<div id="attendanceEndResult" style="margin-top:20px;">
-						<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};"  class="btn btn-dark btn-round">
-							퇴근
-						</button>
-						<c:if test="${not empty checkEndTime}">
-							퇴근 시간 : ${checkEndTime.substring(9, 17)}  
-						</c:if>
-					</div>
+                   
                   </div>
                 </div>
               </div>
@@ -478,7 +427,6 @@
         </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
        
-
 
     
     <!--   Core JS Files   -->

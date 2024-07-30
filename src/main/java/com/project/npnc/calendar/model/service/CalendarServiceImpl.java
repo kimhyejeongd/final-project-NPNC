@@ -86,5 +86,10 @@ public class CalendarServiceImpl implements CalendarService {
 	public List<ReserveItem> selectMyReserve(int memberKey) {
 		return dao.selectMyReserve(session,memberKey);
 	}
+	@Override
+	public int updateReCalendar(ReserveItem reserveItem) {
+		return dao.updateReCalendar(session, reserveItem);
+	}
+
 
 }

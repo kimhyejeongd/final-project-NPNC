@@ -3,7 +3,7 @@ package com.project.npnc.note.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,7 @@ public class NoteSendDto {
 	private String postMsgSendDetail;
 	private Date postMsgSendTime;
 	private Date postMsgSendReservation;
-	private List<Member> recMember;
+	private List<SrMember> recMember;
 	private List<NoteFileDto> files;
 	
 }

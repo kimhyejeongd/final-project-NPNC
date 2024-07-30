@@ -77,7 +77,7 @@
  var stompClient = null;
 
  function connectMainPage() {
-     var socket = new SockJS('/ws-stomp');
+     var socket = new SockJS('${path}/ws-stomp');
      stompClient = Stomp.over(socket);
      stompClient.connect({}, function (frame) {
          console.log('Connected: ' + frame);
@@ -239,40 +239,37 @@
 				  	} 
 				
 				/* 개별발송 파일 추가 로직*/
-		    	const addDelFunctionOrgan=(function(){
-		    		let count=2;
-		    		const addFileformOrgan=()=>{
-		    			if(count<=5){
-		    				const fileForm=$("#basicFileFormOrgan").clone(true);
-		    				fileForm.find("span.input-group-textOrgan").text("첨부파일"+count);
-		    			
-		    				fileForm.find("input[type=file]").attr("id","upFileOrgan"+count).val("");
-		    				/* $("textarea[name=boardContent]").before(fileForm); */
-		    				   fileForm.appendTo("#fileInputsContainerOrgan");
-		    				count++;
-		    			}else{
-		    				alert("첨부파일은 5개까지 가능합니다");
-		    			}
-		    		}
-		    		
-		    		const delFileformOrgan=()=>{
-		    			if(count!=2){
-		    				$("#fileInputsContainerOrgan").children().last().remove();
-		    				count--;
-		    			}
-		    			
-		    		}
-					
-
-				
-
-					
-		    		return {addFileformOrgan, delFileformOrgan};
-		    	})();
-		    	const fn_addFileOrgan=addDelFunctionOrgan.addFileformOrgan;
-		    	const fn_delFileOrgan=addDelFunctionOrgan.delFileformOrgan;
-			
-
+		    	
+				(function() {
+				    let count = 2;
+				    
+				    const addFileformOrgan = () => {
+				        if (count <= 5) {
+				            const fileForm = $("#basicFileFormOrgan").clone(true);
+				            fileForm.find("span.input-group-textOrgan").text("첨부파일" + count);
+				            fileForm.find("input[type=file]").attr("id", "upFileOrgan" + count).val("");
+				            fileForm.appendTo("#fileInputsContainerOrgan");
+				            count++;
+				        } else {
+				            alert("첨부파일은 5개까지 가능합니다");
+				        }
+				    }
+				    
+				    const delFileformOrgan = () => {
+				        if (count != 2) {
+				            $("#fileInputsContainerOrgan").children().last().remove();
+				            count--;
+				        }
+				    }
+				    
+				    // addFileformOrgan과 delFileformOrgan 함수를 전역 객체에 노출하여 다른 곳에서도 호출할 수 있도록 합니다.
+				    window.addFileformOrgan = addFileformOrgan;
+				    window.delFileformOrgan = delFileformOrgan;
+				    
+				    // fn_addFileOrgan과 fn_delFileOrgan 함수를 전역 객체에 노출하여 다른 곳에서도 호출할 수 있도록 합니다.
+				    window.fn_addFileOrgan = addFileformOrgan;
+				    window.fn_delFileOrgan = delFileformOrgan;
+				})();
 				
 		
 		

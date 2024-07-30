@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 
 import com.project.npnc.alarm.dto.AlarmMessage;
 import com.project.npnc.alarm.service.AlarmService;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 import com.project.npnc.note.service.NoteService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class AlarmWebsocketController {
 	public AlarmMessage test2(AlarmMessage message) {
 		
 		System.out.println(message);
-		List<Member> list= noteService.selectMemberAllNoPaging();
+		List<SrMember> list= noteService.selectMemberAllNoPaging();
 		
 		for(int i=0; i<list.size(); i++) {
 			int memberKey= list.get(i).getMemberKey();

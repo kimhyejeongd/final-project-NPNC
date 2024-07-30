@@ -29,6 +29,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -180,6 +181,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    	log.debug("참조인 없음");
 	    }
 	    
+	    //시리얼번호 문서 내 등록
+	    html=html.replace("[문서번호]", d.getErDocSerialKey());
+	    
 	    result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");
@@ -188,6 +192,27 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+		int result = insertDoc(d, file, html);
+		vac.setVacationDocSerialKey(d.getErDocSerialKey());
+		
+		log.debug("휴가 신청 등록 -> " + vac.toString());
+		result = dao.insertVacationApply(session, vac);
+		if(result <= 0) {
+			throw new Exception("휴가 신청 등록 실패");
+		}
+		log.debug("휴가 신청 등록 성공 -> " + vac.toString());
+		
+		return result;
+	}
+	@Override
+	public int insertVacationApply(VacationApply vac) {
+		return dao.insertVacationApply(session, vac);
+	}
+	
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -497,7 +522,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	//결재 : 승인
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveDoc(int memberKey, String serial, String msg) throws Exception {
+	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception {
 		int result = 0;
 		int lastApCk = 0;
 		
@@ -520,6 +545,22 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 					throw new Exception("문서 상태 처리완료로 변경 실패");
 				}
 				log.debug("문서 상태 -> 처리 완료");
+	
+				//휴가 문서라면 계산 진행
+				if(formNo == 3) {
+					result = updateVacationApply(serial);
+					if(result <= 0) {
+						throw new Exception("휴가 신청 상태 처리완료로 변경 실패");
+					}
+					log.debug("휴가 신청 상태 -> 승인");
+					
+					//차감 진행
+					result = dao.updateVacationCalc(session, memberKey, serial);
+					if(result <= 0) {
+						throw new Exception("휴가 차감 실패");
+					}
+					log.debug("휴가 차감 성공");
+				}
 			}
 		}catch(Exception e) {
 			log.error("문서 결재 처리 중 예외 발생: ", e);
@@ -633,5 +674,15 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public List<Document> selectReferenceDocs(int no) {
 		return dao.selectReferenceDocs(session, no);
+	}
+	
+//	휴가
+	@Override
+	public int selectRemainingVac(int memberKey) {
+		return dao.selectRemainingVac(session, memberKey);
+	}
+	@Override
+	public int updateVacationApply(String docSerial) {
+		return dao.updateVacationAppply(session, docSerial);
 	}
 }

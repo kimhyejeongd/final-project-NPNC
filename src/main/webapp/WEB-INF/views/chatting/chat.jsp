@@ -540,7 +540,7 @@ $(document).ready(function() {
 
 	 var roomMembers = ${roomMembers}; // JSP EL을 사용하여 서버에서 받은 유저 리스트를 할당
      roomMembers.forEach(function(member) {
-         $('#roomMemberList').append('<li>' + member.memberId + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
+         $('#roomMemberList').append('<li>' + member.memberName + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
      });
     // 메뉴 버튼 클릭 이벤트
     $('#menuButton').click(function() {
@@ -596,7 +596,7 @@ $('.exit-button').click(function() {
     }
 
     function connect() {
-        var socket = new SockJS('http://localhost:8080/ws-stomp');
+        var socket = new SockJS('${path}/ws-stomp');
         stompClient = Stomp.over(socket);
         stompClient.connect({"type":"chat","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function (frame) {
             setConnected(true);
@@ -612,11 +612,11 @@ $('.exit-button').click(function() {
             updateUnreadCounts();
             
             // 구독
-            stompClient.subscribe('${path}/room/' + roomId, function (chatMessage) {
+            stompClient.subscribe('/room/' + roomId, function (chatMessage) {
                 showChat(chatMessage);
             });
 
-            stompClient.subscribe("${path}/room/" + roomId + "/sessionCount", function (message) {
+            stompClient.subscribe("/room/" + roomId + "/sessionCount", function (message) {
                 sessionCount = JSON.parse(message.body);
                 console.log("Current chat session count: " + sessionCount);
                 $("#chatSessionCount").text(sessionCount);

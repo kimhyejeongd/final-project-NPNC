@@ -3,7 +3,7 @@ package com.project.npnc.organization.dto;
 import java.sql.Date;
 import java.util.List;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 public class OrganizationDto {
 	private String departmentKey;
 	private String departmentName;
-	private List<Member> memberlist;
+	private List<SrMember> memberlist;
 }

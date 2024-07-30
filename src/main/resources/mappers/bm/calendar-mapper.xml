@@ -208,7 +208,7 @@
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
-				cal.CALENDAR_TYPE = '4' AND CALENDAR_DELETE = 'N'
+				cal.CALENDAR_TYPE = '4' AND CALENDAR_DELETE = 'N' AND cal.MEMBER_KEY = ${empNo}
 		</if>
 		
 		
@@ -268,6 +268,17 @@
 		INSERT INTO CAL_REFERENCE VALUES(SEQ_CAL_REFERENCE.NEXTVAL,${empKey},${calendarKey},DEFAULT)
 	</insert>
 	
+	<update id="updateReCalendar" parameterType="reserveItem">
+		UPDATE 
+			CALENDAR
+		SET
+			CALENDAR_START = TO_TIMESTAMP(#{date}||' '||#{start}, 'YYYY-MM-DD HH24:MI'),
+			CALENDAR_END = TO_TIMESTAMP(#{date}||' '||#{end}, 'YYYY-MM-DD HH24:MI'),
+			CALENDAR_UPDATE = SYSDATE
+		WHERE
+			CALENDAR_KEY = #{calendarKey}
+		
+	</update>
 
 	
 	
