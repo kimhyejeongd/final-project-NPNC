@@ -64,4 +64,6 @@ public interface MemberDocumentDao {
 	
 	int selectRemainingVac(SqlSession session, int memberKey);
 	int insertVacationApply(SqlSession session, VacationApply vac);
+	int updateVacationAppply(SqlSession session, String docSerial);
+	int updateVacationCalc(SqlSession session, int memberKey, String serial);
 }

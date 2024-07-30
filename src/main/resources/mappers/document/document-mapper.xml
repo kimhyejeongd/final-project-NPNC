@@ -23,7 +23,7 @@
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
-	    <result column="ER_DC_FORM_KEY" property="docFormKey"/>
+	    <result column="ER_DOC_FORM_KEY" property="docFormKey"/>
 	    <result column="er_storage_term" property="erDocStorageTerm"/>
 	    <result column="er_folder_name" property="erDocStorageFolderName"/>
 		<collection property="approvers" resultMap="approverMap" ofType="approver"/>
@@ -1002,6 +1002,8 @@
 			d.ER_DOC_STATE_UPDATE_DATE,
 			d.ER_DOC_LAST_UPDATER,
 			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
 			f.ER_FILE_KEY,
 			f.ER_FILE_ORI_NAME,
 			f.ER_FILE_RENAME,
@@ -1080,6 +1082,8 @@
 			d.ER_DOC_STATE_UPDATE_DATE,
 			d.ER_DOC_LAST_UPDATER,
 			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
 			f.ER_FILE_KEY,
 			f.ER_FILE_ORI_NAME,
 			f.ER_FILE_RENAME,
@@ -1676,5 +1680,33 @@
 		         #{memberVacKey}
             )
 	</insert>
-	
+	<!-- 휴가신청서 결재 승인 후 신청 상태 변경 -->
+	<update id="updateVacationAppply" parameterType="string">
+		UPDATE
+			VACATION_APPLY
+		SET
+			VACATION_APPLY_STATUS = '승인',
+			VACATION_APPLY_DATE = SYSDATE
+		WHERE
+			ER_DOCUMENT_KEY = #{docSerial}
+	</update>
+	<!-- 휴가신청서 결재 승인 후 차감 -->
+	<update id="updateVacationCalc" parameterType="map">
+		<!-- 해당 사원의 휴가 신청 차감값 가져오기 -->
+		<selectKey keyProperty="vacationUseCount" resultType="int" order="BEFORE">
+			SELECT 
+				VACATION_USE_COUNT
+			FROM   
+				VACATION_APPLY
+			WHERE
+				ER_DOCUMENT_KEY = #{serial}
+		</selectKey>
+		UPDATE
+			MEMBER_VACATION
+		SET
+			MEMBER_VAC_USED = MEMBER_VAC_USED + #{vacationUseCount},
+			MEMBER_VAC_REMAINING = MEMBER_VAC_REMAINING - #{vacationUseCount}
+		WHERE
+			MEMBER_KEY = #{memberKey}
+	</update>
 </mapper>

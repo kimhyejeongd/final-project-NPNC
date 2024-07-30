@@ -234,6 +234,7 @@
       </div>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("formNo", "${l.docFormKey}");
 </script>
 </body>
 </html>

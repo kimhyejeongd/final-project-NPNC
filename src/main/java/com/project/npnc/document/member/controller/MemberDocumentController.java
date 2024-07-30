@@ -310,13 +310,14 @@ public class MemberDocumentController {
 	    String msg = (String) requestBody.get("msg");
 	    String serial = (String) requestBody.get("serial");
 	    int no = Integer.parseInt((String) requestBody.get("no"));
+	    int formNo = Integer.parseInt((String) requestBody.get("formNo"));
 		log.debug("----- " + serial + "문서 결재 : " + msg + " -----");
 		log.debug("html -> " + html);
 		Map<String,Object> response = new HashMap<>();
 		
 		int result=0;
 		try {
-			result = serv.updateApproveDoc(no, serial, msg);
+			result = serv.updateApproveDoc(no, serial, msg, formNo);
 			if(result <=0) {
 				response.put("status", "error");
 				response.put("message", "문서 결재 실패");
