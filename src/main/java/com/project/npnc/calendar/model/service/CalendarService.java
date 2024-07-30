@@ -24,4 +24,6 @@ public interface CalendarService {
 	int insertRes(int calKey, int itemKey);
 	List<ReserveItem> selectReserveAll();
 	List<ReserveItem> selectMyReserve(int memberKey);
+	
+	int updateReCalendar(ReserveItem reserveItem);
 }

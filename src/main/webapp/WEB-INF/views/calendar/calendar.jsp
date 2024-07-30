@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <sec:authentication var="loginMember" property="principal"/>
 
@@ -90,9 +91,46 @@
         </div>
         <!-- End Logo Header -->
       </div>
-      <div class="sidebar-wrapper scrollbar scrollbar-inner">
-        <div class="sidebar-content"></div>
-      </div>
+        	<div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a
+                  href="${path }/calendar"
+                >
+                  <i class="fas fa-home"></i><p>일정 Home</p>
+                </a>
+              </li>
+              <!-- 토글리스트 -->
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#docING">
+                  <i class="fas fa-pen-square"></i>
+                  <p>예약물</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="docING">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/reservation/reservationlist">
+                        <span class="sub-item">예약하기</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/reservation/myreservation">
+                        <span class="sub-item">나의 예약</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
     </div>
     <!-- End Sidebar -->
 
@@ -203,6 +241,9 @@
   	var userDeptCode = "${loginMember.departmentKey}";
   </script>
   
+  <script>
+ 	const path = "${path}";
+  </script>
   
   
   <script src="${path}/resources/bm/js/dropdown-bootstrap-extended.js"></script>

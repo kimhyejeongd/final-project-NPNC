@@ -57,6 +57,11 @@ public class CalendarDaoImpl implements CalendarDao {
 	}
 
 	@Override
+	public int updateReCalendar(SqlSession session, ReserveItem reserveItem) {
+		return session.update("calendar.updateReCalendar",reserveItem);
+	}
+
+	@Override
 	public List<ReserveItem> selectMyReserve(SqlSession session, int memberKey) {
 		return session.selectList("reservation.selectMyReserve",memberKey);
 	}

@@ -71,7 +71,6 @@ public class CalendarController {
 		if(result>0) {
 			response.put("status", "success");
 			response.put("message", "일정이 수정되었습니다.");
-		
 		}else {
 			response.put("status", "error");
 			response.put("message", "일정수정에 실패했습니다.");
