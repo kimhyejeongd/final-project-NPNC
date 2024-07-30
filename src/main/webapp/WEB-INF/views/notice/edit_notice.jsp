@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>공지사항</title>
+    <title>공지사항 수정</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 
     <!-- Favicon -->
@@ -42,13 +42,6 @@
 
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
-
-    <!-- Custom Styles -->
-    <style>
-        #tablerow:hover {
-            cursor: pointer; 
-        }
-    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -106,30 +99,20 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <h1 class="mb-4">공지사항 목록</h1>
+                    <h1 class="mb-4">공지사항 수정</h1>
 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>작성일</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="notice" items="${noticeList}">
-                    		<c:if test="${board.BOARD_CATEGORY_KEY == 2}">
-                     	    <tr>
-                            <td>${board.BOARD_KEY}</td>
-                            <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
-                            <td>${board.MEMBER_KEY}</td>
-                            <td>${board.BOARD_ENROLL_DATE}</td>
-                        </tr>
-                    </c:if>
-                </c:forEach>
-                        </tbody>
-                    </table>
+                    <form action="${path}/notice/edit/${notice.noticeKey}" method="post">
+                        <div class="form-group">
+                            <label for="noticeTitle">제목</label>
+                            <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" value="${notice.noticeTitle}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="noticeDetail">내용</label>
+                            <textarea class="form-control" id="noticeDetail" name="noticeDetail" rows="5" required>${notice.noticeDetail}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">수정 완료</button>
+                        <a href="${path}/notice" class="btn btn-secondary">취소</a>
+                    </form>
                 </div>
             </div>
 
@@ -145,11 +128,5 @@
 
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
-    
-    <!-- Script for setting path in session storage -->
-    <script>
-        sessionStorage.setItem("path", "${pageContext.request.contextPath}");
-    </script>
 </body>
 </html>

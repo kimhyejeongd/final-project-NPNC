@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.npnc.notice.model.dao.NoticeDao">
+
+    <select id="selectAllNotices" resultType="NoticeDto">
+        SELECT * FROM NOTICE
+    </select>
+
+    <select id="selectNoticeById" parameterType="int" resultType="NoticeDto">
+        SELECT * FROM NOTICE WHERE NOTICE_KEY = #{noticeKey}
+    </select>
+
+    <insert id="insertNotice" parameterType="NoticeDto">
+        INSERT INTO NOTICE (NOTICE_TITLE, NOTICE_DETAIL, MEMBER_KEY, NOTICE_ENROLL_DATE, NOTICE_UPDATE_DATE, NOTICE_DELETE)
+        VALUES (#{NOTICE_TITLE}, #{NOTICE_DETAIL}, #{MEMBER_KEY}, #{NOTICE_ENROLL_DATE}, #{NOTICE_UPDATE_DATE}, #{NOTICE_DELETE})
+    </insert>
+
+    <update id="updateNotice" parameterType="NoticeDto">
+        UPDATE NOTICE
+        SET NOTICE_TITLE = #{NOTICE_TITLE},
+            NOTICE_DETAIL = #{NOTICE_DETAIL},
+            MEMBER_KEY = #{MEMBER_KEY},
+            NOTICE_ENROLL_DATE = #{NOTICE_ENROLL_DATE},
+            NOTICE_UPDATE_DATE = #{NOTICE_UPDATE_DATE},
+            NOTICE_DELETE = #{NOTICE_DELETE}
+        WHERE NOTICE_KEY = #{NOTICE_KEY}
+    </update>
+
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM NOTICE WHERE NOTICE_KEY = #{noticeKey}
+    </delete>
+
+</mapper>
