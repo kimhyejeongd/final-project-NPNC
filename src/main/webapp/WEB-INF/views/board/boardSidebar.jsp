@@ -74,7 +74,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="${path }/board/notices">
+                        <a href="${path }/notice/list">
                             <i class="fas fa-th-list"></i>
                             <p>공지사항</p>
                         </a>

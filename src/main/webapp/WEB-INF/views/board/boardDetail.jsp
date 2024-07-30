@@ -2,233 +2,126 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>게시물 상세보기</title>
-    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
-    <style>
-        .wrapper {
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            flex-direction: column;
-        }
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 
-        .sidebar {
-            width: 250px;
-            background-color: #343a40;
-            color: white;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
+    <!-- Favicon -->
+    <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
 
-        .main-panel {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    <!-- Fonts and icons -->
+    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["${path}/resources/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
 
-        .header {
-            display: flex;
-            width: calc(100% - 250px);
-            background-color: #ffffff;
-            border-bottom: 1px solid #ddd;
-            position: fixed;
-            top: 0;
-            left: 250px;
-            height: 60px;
-            line-height: 60px;
-            padding-left: 20px;
-            z-index: 200;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
 
-        .container {
-            margin-top: 80px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .info-panel {
-            background-color: #ffffff;
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #e9ecef;
-            color: #495057;
-            font-weight: bold;
-        }
-
-        td {
-            background-color: #ffffff;
-            color: #495057;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        tr:nth-child(even) td {
-            background-color: #f8f9fa;
-        }
-
-        .content-area {
-            flex: 0 0 auto; /* Contents will not stretch, but will respect set height */
-            max-height: 300px; /* Adjust this value as needed */
-            overflow-y: auto; /* Scroll if content overflows */
-            margin-bottom: 20px;
-        }
-
-        .comment-section {
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-            margin-top: 20px;
-            flex: 1; /* Take the remaining space */
-            display: flex;
-            flex-direction: column;
-        }
-
-        .comment-form {
-            margin-bottom: 20px;
-        }
-
-        .comment-form textarea {
-            width: 100%;
-            height: 60px;
-            resize: none; /* Disable resizing */
-        }
-
-        .comment-list {
-            max-height: 400px; /* Limit height for comments */
-            overflow-y: auto; /* Scroll if comments overflow */
-            padding-bottom: 20px; /* Space between comments and bottom of container */
-        }
-
-        .comment {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-        }
-
-        a.btn-primary {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.2s, border-color 0.2s;
-            font-weight: 500;
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        a.btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-            text-decoration: none;
-        }
-    </style>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <div class="logo-header" data-background-color="dark">
+                    <a href="${path}/index.html" class="logo">
+                        <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20"/>
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="${path}/notice/list" class="collapsed">
+                                <i class="fas fa-bell"></i>
+                                <p>공지사항</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${path}/board/list" class="collapsed">
+                                <i class="fas fa-th-list"></i>
+                                <p>게시판</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
 
-        <!-- Main Panel -->
         <div class="main-panel">
-            <!-- Header -->
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+            <!-- Header Bar -->
+            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
 
-            <!-- Content -->
             <div class="container">
-              
-                <!-- Information Panel -->
-                <div class="info-panel">
-                    <table>
-                        <tr>
-                            <th>번호</th>
-                            <td>${board.BOARD_KEY}</td>
-                        </tr>
-                        <tr>
-                            <th>제목</th>
-                            <td>${board.BOARD_TITLE}</td>
-                        </tr>
-                        <tr>
-                            <th>작성자</th>
-                            <td>${board.MEMBER_KEY}</td>
-                        </tr>
-                        <tr>
-                            <th>작성일</th>
-                            <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" /></td>
-                        </tr>
-                    </table>
-                </div>
+                <div class="page-inner">
+                    <h1 class="mb-4">게시물 상세보기</h1>
 
-                <!-- Content Area -->
-                <div class="content-area">
-                    <p>${board.BOARD_DETAIL}</p>
-                </div>
-                
-                <!-- Comment Section -->
-                <div class="comment-section">
-                    <!-- Comment Form -->
-                   <div class="comment-form">
-				    <form action="${path}/board/addComment" method="post">
-				        <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-				        <textarea name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요..." required></textarea>
-				        <button type="submit" class="btn btn-primary">댓글 작성</button>
-				    </form>
-				</div>
-
-
-                    <!-- Comment List -->
-                    <div class="comment-list">
-                        <c:forEach var="comment" items="${comments}">
-                            <div class="comment">
-                                <p><strong>${comment.MEMBER_KEY}</strong> (${comment.BOARD_COMMENT_DATE})</p>
-                                <p>${comment.BOARD_COMMENT_DETAIL}</p>
-                            </div>
-                        </c:forEach>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">${board.BOARD_TITLE}</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>${board.BOARD_DETAIL}</p>
+                            <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
+                            <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+            <!-- Footer -->
+            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </body>
 </html>
