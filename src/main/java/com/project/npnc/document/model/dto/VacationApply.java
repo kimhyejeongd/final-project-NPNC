@@ -1,6 +1,5 @@
 package com.project.npnc.document.model.dto;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ public class VacationApply {
 	private int vacationUseKey;
 	private int vacationKey;
 	private String vacationDocSerialKey;
-	private Date vacationApplyDate;
+	private Timestamp vacationApplyDate;
 	private String vacationApplyStatus;
 	private Timestamp vacationStartDate;
 	private Timestamp vacationEndDate;

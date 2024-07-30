@@ -51,11 +51,12 @@ public interface MemberDocumentService {
 	int insertDocFile(List<DocFile> list) throws Exception;
 	int deleteDocFile(String docSerial) throws Exception;
 	
-	int updateApproveDoc(int memberKey, String serial, String msg) throws Exception;
+	int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception;
 	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;
 	int updatePendDoc(int memberKey, String serial, String msg) throws Exception;
 	List<Approver> selectDocApprovers(String serial);
 	
 	int selectRemainingVac(int memberKey);
 	int insertVacationApply(VacationApply vac);
+	int updateVacationApply(String docSerial);
 }

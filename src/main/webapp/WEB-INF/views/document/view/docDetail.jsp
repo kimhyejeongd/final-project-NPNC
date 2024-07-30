@@ -151,7 +151,7 @@
 		    	 <div class="form-group d-flex">
 			      <label for="smallInput" class=""><span class="h5 me-5">보관함 </span></label>
 			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
-			      	<span style="font-size: larger;">${l.erDocStorageKey}</span>
+			      	<span style="font-size: larger;">${l.erDocStorageFolderName} > ${l.erDocStorageName} (${l.erDocStorageTerm }년)</span>
 			      </div>
 			    </div>
 			    <div class="form-group d-flex">
@@ -234,6 +234,7 @@
       </div>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("formNo", "${l.docFormKey}");
 </script>
 </body>
 </html>

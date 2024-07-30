@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -216,13 +221,23 @@ public class MemberDocumentController {
 	public String formWrite(int form, Model m) {
 		log.debug("----전자문서 작성시작----");
 		String html = readHtmlFile("docformhtml", form+".html");
+		//기안부서 적용
+		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
+		//기안일 적용
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		html = html.replace("[기안일]", LocalDate.now().format(formatter));
+		//기안자
+		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
+		m.addAttribute("form", form);
+
 		//휴가 신청폼인 경우 휴가 데이터 첨부
 		if(form ==3) {
 			log.debug("----휴가 신청----");
 			html = html.replace("[잔여 연차]", serv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
 			
 			List<Vacation> vacation =vacserv.selectVacationAll();
-			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationHalfArea\">";
+			log.debug("{}", vacation);
+			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationSelectArea\">";
 			vacselect += "<option>---선택---</option>";
 			for(Vacation v : vacation) {
 				vacselect += "<option data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
@@ -230,19 +245,11 @@ public class MemberDocumentController {
 			vacselect += "</select>";
 			html = html.replace("[휴가 종류]", vacselect);
 			
-			m.addAttribute("vacationCategory", html);
+			m.addAttribute("html", html);
 			return "document/write/vacation";
 		}
-		//기안부서 적용
-		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
-		//기안일 적용
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		html = html.replace("[기안일]", LocalDate.now().format(formatter));
-		//기안자
-		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
 		
 		m.addAttribute("html", html);
-		m.addAttribute("form", form);
 		return "document/write/normal";
 	}
 	@PostMapping("/rewrite")
@@ -303,13 +310,14 @@ public class MemberDocumentController {
 	    String msg = (String) requestBody.get("msg");
 	    String serial = (String) requestBody.get("serial");
 	    int no = Integer.parseInt((String) requestBody.get("no"));
+	    int formNo = Integer.parseInt((String) requestBody.get("formNo"));
 		log.debug("----- " + serial + "문서 결재 : " + msg + " -----");
 		log.debug("html -> " + html);
 		Map<String,Object> response = new HashMap<>();
 		
 		int result=0;
 		try {
-			result = serv.updateApproveDoc(no, serial, msg);
+			result = serv.updateApproveDoc(no, serial, msg, formNo);
 			if(result <=0) {
 				response.put("status", "error");
 				response.put("message", "문서 결재 실패");
@@ -525,7 +533,7 @@ public class MemberDocumentController {
 	//일반 전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertDoc(
-			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			String msg, Model m, Document doc, String html,
 			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
 		Member user = getCurrentUser();
 		if(msg.equals(",")) msg=""; //debug
@@ -536,8 +544,7 @@ public class MemberDocumentController {
 		log.debug("{}", html);
 		log.debug(file.toString());
 		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-		doc.setDocFormKey(form);
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
@@ -592,76 +599,98 @@ public class MemberDocumentController {
 	//휴가 신청 기안
 	@PostMapping(path="/writeend/vacation", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertVacationDoc(
-			String msg, Model m, Document doc, String html, @RequestParam(required = false) VacationApply vac,
-			@RequestParam("vacationStartDate") String startDate, @RequestParam("vacationEndDate") String endDate,
-	        @RequestParam("vacationStartTime") String startTime, @RequestParam("vacationEndTime") String endTime,
-			@RequestParam(required = false) int form,
+			String msg, Model m, Document doc, String html, 
+			//@RequestParam(required = false) VacationApply vac,
+			@RequestParam(required = false) String vacationUseCount,
+	        @RequestParam(required = false) String vacationReason,
+			@RequestParam(name="vacationStartDate", required = false) String startDate, 
+			@RequestParam(name = "vacationEndDate", required = false) String endDate,
+	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
+	        @RequestParam(name= "vacationEndTime", required = false) String endTime,
 			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
-		log.debug(vac.toString());
-		log.debug(startDate + "," + startTime);
-		log.debug(endDate + "," + endTime);
-//		Member user = getCurrentUser();
-//		if(msg.equals(",")) msg=""; //debug
-//		if (msg != null && msg.endsWith(",")) {
-//			msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
-//		}//debug
-//		
-//		log.debug("{}", html);
-//		log.debug(file.toString());
-//		log.debug("{}", user);
-//		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-//		doc.setDocFormKey(form);
-//		
-//		//기안자=로그인유저
-//		doc.setErDocWriter(user.getMemberKey()); 
-//		//결재자에 기안자도 추가
-//		Approver me = Approver.builder().memberKey(user.getMemberKey())
-//				.memberTeamKey(user.getDepartmentKey())
-//				.memberJobKey(user.getJobKey())
-//				.memberName(user.getMemberName())
-//				.category("기안")
-//				.opinion(msg)
-//				.state("승인")
-//				.date(Date.valueOf(LocalDate.now()))
-//				.orderby(0)
-//				.build();
-//		List<Approver> ap = doc.getApprovers();
-//		ap.removeIf(a -> {
-//			boolean toRemove = a.getMemberKey() == 0;
-//			if (toRemove) {
-//				log.debug("없는 결재자 삭제");
-//				log.debug("{}", a);
-//			}
-//			return toRemove;
-//		});//debug
-//		ap.add(me);
-//		doc.setApprovers(ap);
-//		log.debug("{}", doc);
-//		
-//		int result=0;
+		Member user = getCurrentUser();
+		log.debug("----- 휴가 신청 기안 -----");
+		log.debug(startDate + " " + startTime);
+		log.debug(endDate + " " + endTime);
+		log.debug("차감 : "+vacationUseCount + " \n사유 : " + vacationReason);
+		if(msg.equals(",")) msg=""; //debug
+		if (msg != null && msg.endsWith(",")) {
+			msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
+		}//debug
+		
+		log.debug("{}", html);
+		log.debug(file.toString());
+		log.debug("{}", user);
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+				.memberTeamKey(user.getDepartmentKey())
+				.memberJobKey(user.getJobKey())
+				.memberName(user.getMemberName())
+				.category("기안")
+				.opinion(msg)
+				.state("승인")
+				.date(Date.valueOf(LocalDate.now()))
+				.orderby(0)
+				.build();
+		List<Approver> ap = doc.getApprovers();
+		ap.removeIf(a -> {
+			boolean toRemove = a.getMemberKey() == 0;
+			if (toRemove) {
+				log.debug("없는 결재자 삭제");
+				log.debug("{}", a);
+			}
+			return toRemove;
+		});//debug
+		ap.add(me);
+		doc.setApprovers(ap);
+		log.debug("{}", doc);
+		
+		
+	    //휴가 신청 dto 구성
+		if(startTime == null || startTime.trim().isEmpty()) {
+			startTime = "00:00:00";
+			log.debug("startTime -> " + startTime);
+		}
+		if(endTime == null || endTime.trim().isEmpty()) {
+			endTime = "23:59:59";
+			log.debug("endTime -> " + endTime);
+		}
+		VacationApply vac = VacationApply.builder()
+								.vacationStartDate(convertToTimestamp(startDate, startTime))
+								.vacationEndDate(convertToTimestamp(endDate, endTime))
+								.vacationUseCount(Integer.parseInt(vacationUseCount))
+								.vacationMemberKey(user.getMemberKey())
+								.vacationReason(vacationReason)
+								.build();
+		
+		int result=0;
 		Map<String,Object> response = new HashMap<>();
-//		
-//		//문서 등록
-//		try { 
-//			log.debug(user.getMemberName()+ "사원의 휴가 신청서 기안 -> " + msg);
-//			result = serv.insertVacDoc(doc, file, html, vac);
-//		} catch (Exception e) {
-//			log.error(e.getMessage());
-//			e.printStackTrace();
-//			response.put("status", "error");
-//			response.put("message", "문서 등록중 에러가 발생했습니다.");
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//		}
-//		//휴가 신청 등록
-//		try { 
-//			vac.setVacationMemberKey(user.getMemberKey());
-//		} catch (Exception e) {
-//			log.error(e.getMessage());
-//			e.printStackTrace();
-//			response.put("status", "error");
-//			response.put("message", "휴가 신청 등록중 에러가 발생했습니다.");
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//		}
+		log.debug("{}", vac);
+		//문서 등록
+		try { 
+			log.debug(user.getMemberName()+ "사원의 휴가 신청서 기안 -> " + msg);
+			result = serv.insertVacDoc(doc, file, html, vac);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 등록중 에러가 발생했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		//휴가 신청 등록
+		try { 
+			vac.setVacationMemberKey(user.getMemberKey());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "휴가 신청 등록중 에러가 발생했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 		
 		//기안, 결재자 등록 성공시
 		response.put("status", "success");
@@ -669,6 +698,50 @@ public class MemberDocumentController {
 		
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
+	}
+	
+	private Timestamp convertToTimestamp(String date, String time) {
+		 // 날짜 및 시간 포맷 정의
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		
+		if (date == null || date.trim().isEmpty()) {
+            return null;
+        }
+		if(time == null || time.trim().isEmpty()) {
+			return null;
+		}
+		
+        try {
+        	Timestamp timestamp = null;
+        	
+        	// 날짜 및 시간 문자열을 LocalDateTime으로 파싱
+            LocalDateTime localDateTime = LocalDateTime.parse(date.trim() + "T" + time.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+            // 시간대 설정
+            ZoneId zoneId = ZoneId.of("Asia/Seoul");
+            ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+
+            // ZonedDateTime을 Timestamp로 변환
+            timestamp = Timestamp.from(zonedDateTime.toInstant());
+
+            // 디버깅 로그
+            System.out.println("DateTime: " + zonedDateTime);
+            System.out.println("Timestamp: " + timestamp);
+            
+            //24시간으로 계산
+//            log.debug(parsedDate.toString());
+//            log.debug(parsedTime.toString());
+//            long combinedMillis = dateInMillis + (timeInMillis % (24 * 60 * 60 * 1000L));
+//            long combinedMillis = dateInMillis + timeInMillis;
+//            timestamp = new Timestamp(combinedMillis);
+            log.debug(timestamp.toString());
+            
+            return timestamp;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return null; // 날짜가 null 또는 빈 문자열일 때 예외 처리
+        } 
 	}
 	
 	@PostMapping("/retrieve")
