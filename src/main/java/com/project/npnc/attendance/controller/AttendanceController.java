@@ -51,13 +51,14 @@ public class AttendanceController{
 	 */
 	
 	
-	@Scheduled(cron="0 0 23 1 * ?")
+	@Scheduled(cron="30 * * 1 * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
 		Attendance a=new Attendance();
 		Map<Integer, Boolean> result = new HashMap<>();
-
+		System.out.println("오늘 : "+todayAttendance);
+		System.out.println("멤버 : "+memberKeys);
 		memberKeys.forEach(memberKey -> {
 		    boolean checkKey = todayAttendance.stream().anyMatch(as -> as.getMember().getMemberKey() == memberKey);
 		    

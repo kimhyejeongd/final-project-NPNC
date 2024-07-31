@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.VacationApply;
 
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
@@ -233,8 +234,23 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
 
+	//vacationApply
+	
+	@Override
+	public List<VacationApply> selectVacationApplyApprove(SqlSession session) {
+		
+		return session.selectList("attendance.selectVacationApplyApprove");
+	}
+
+	@Override
+	public int insertAttendanceVacation(SqlSession session, int memberKey,String status) {
+		Map m=Map.of("memberKey",memberKey,"status",status);
+		return session.insert("attendance.insertAttendanceVacation",m);
+	}
 
 
+	
+	
 
 
 

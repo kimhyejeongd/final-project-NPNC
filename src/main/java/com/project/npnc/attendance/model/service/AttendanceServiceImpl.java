@@ -15,6 +15,7 @@ import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dao.AttendanceDao;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 
@@ -76,49 +77,86 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public void updateAttendanceState(Attendance a,Map<Integer, Boolean> result) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		//승인된 오늘날짜의 휴가시작날짜
+		List<VacationApply> vApply=attendanceDao.selectVacationApplyApprove(session);
+		
 		result.forEach((key, value) -> {
 
+
 		    if (value) {
-			    	int startHour;
-			    	int endHour;
 			    	Attendance at=selectAttendanceByMemberKey(key);
 			    	a.setMember(AdminMember.builder().memberKey(key).build());
-			    	if(at.getAttendanceEnd()==null) {
-			    		a.setAttendanceState("결근");
-			    	}else {
-				    	try {		    			    	
-				    	Date startTime=sdf.parse(at.getAttendanceStart());
-				    	Date endTime=sdf.parse(at.getAttendanceEnd());
-				    	
-				    	Calendar startCal= Calendar.getInstance();
-				    	startCal.setTime(startTime);
-				    	startHour=startCal.get(Calendar.HOUR_OF_DAY);
-				    	
-				    	Calendar endCal= Calendar.getInstance();
-				    	endCal.setTime(endTime);
-				    	endHour=endCal.get(Calendar.HOUR_OF_DAY);
-				    			
-				    	if(startHour<9 && endHour>18) {
-				    		a.setAttendanceState("출근");
-				    	}else if(startHour<9 && endHour<18) {
-				    		a.setAttendanceState("조퇴");
-				    	}else if(startHour>16) {
+			    	
+			    	vApply.forEach(v->{
+						if(v.getVacationMemberKey()==key) {
+							if(v.getVacationKey()==1) {
+								a.setAttendanceState("휴가");
+							}else if(v.getVacationKey()==2) {
+								a.setAttendanceState("병가");
+							}else if(v.getVacationKey()==3) {
+								a.setAttendanceState("공가");
+							}else if(v.getVacationKey()==4) {
+								a.setAttendanceState("오전반차");
+							}else if(v.getVacationKey()==5) {
+								a.setAttendanceState("오후반차");
+							}
+						}else if(at.getAttendanceEnd()==null) {
 				    		a.setAttendanceState("결근");
-				    	}else if(startHour>9 && endHour>18) {
-				    		a.setAttendanceState("지각");
-				    	}else if(startHour>9 && endHour<18) {
-				    		a.setAttendanceState("조퇴");
+				    	}else {
+					    	try {	
+						    	Date startTime=sdf.parse(at.getAttendanceStart());
+						    	Date endTime=sdf.parse(at.getAttendanceEnd());
+						    	
+						    	Calendar startCal= Calendar.getInstance();
+						    	startCal.setTime(startTime);
+						    	int startHour=startCal.get(Calendar.HOUR_OF_DAY);
+						    	
+						    	Calendar endCal= Calendar.getInstance();
+						    	endCal.setTime(endTime);
+						    	int endHour=endCal.get(Calendar.HOUR_OF_DAY);
+						    			
+						    	if(startHour<9 && endHour>18) {
+						    		a.setAttendanceState("출근");
+						    	}else if(startHour<9 && endHour<18) {
+						    		a.setAttendanceState("조퇴");
+						    	}else if(startHour>16) {
+						    		a.setAttendanceState("결근");
+						    	}else if(startHour>9 && endHour>18) {
+						    		a.setAttendanceState("지각");
+						    	}else if(startHour>9 && endHour<18) {
+						    		a.setAttendanceState("조퇴");
+						    	}
+	
+					    	}catch(ParseException e) {
+					    		e.printStackTrace();
+					    	}
 				    	}
-
-				    	}catch(ParseException e) {
-				    		e.printStackTrace();
-				    	}
-			    	}
+			    	
+		    	});
+			    	
 			    	attendanceDao.updateAttendanceState(session, a);
 		    	
-
 		    }else {
-		    	attendanceDao.insertAbsent(session, key);
+		    	vApply.forEach(v->{
+		    		String status="";
+					if(v.getVacationMemberKey()==key) {
+						if(v.getVacationKey()==1) {
+							status="휴가";
+						}else if(v.getVacationKey()==2) {
+							status="병가";
+						}else if(v.getVacationKey()==3) {
+							status="공가";
+						}else if(v.getVacationKey()==4) {
+							status="오전반차";
+						}else if(v.getVacationKey()==5) {
+							status="오후반차";
+						}
+						attendanceDao.insertAttendanceVacation(session,key,status);
+					}else {
+						attendanceDao.insertAbsent(session, key);						
+					}
+				});
+		    	
 //		    	insertAbsent(key);
 		    }
 		    	 

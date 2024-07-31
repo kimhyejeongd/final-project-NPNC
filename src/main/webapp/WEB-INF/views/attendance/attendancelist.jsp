@@ -88,7 +88,7 @@
                           <p class="card-category">${currentMonth}월 휴가</p>
                           <h4 class="card-title"><c:if test="${empty attendanceCount.vaca }">0</c:if>${attendanceCount.vaca}</h4>
                           <p class="card-category">남은 휴가</p>
-                          <h4 class="card-title">${memberVacation.memberVacRemaining}</h4>
+                          <h4 class="card-title"><c:if test="${empty memberVacation.memberVacRemaining }">0</c:if>${memberVacation.memberVacRemaining}</h4>
                         </div>
                       </div>
                     </div>
@@ -128,7 +128,11 @@
 			              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
 			              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
 			              	<option value="휴가" <c:if test="${searchT eq '휴가'}">selected</c:if>>휴가</option>
-			              	<option value="유급휴가" <c:if test="${searchT eq '유급휴가'}">selected</c:if>>유급휴가</option>
+			              	<option value="병가" <c:if test="${searchT eq '병가'}">selected</c:if>>병가</option>
+			              	<option value="공가" <c:if test="${searchT eq '공가'}">selected</c:if>>공가</option>
+			              	<option value="오전반차" <c:if test="${searchT eq '오전반차'}">selected</c:if>>오전반차</option>
+			              	<option value="오후반차" <c:if test="${searchT eq '오후반차'}">selected</c:if>>오후반차</option>
+			              	
 			              </select>
                   				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
                   				<h3>~</h3>

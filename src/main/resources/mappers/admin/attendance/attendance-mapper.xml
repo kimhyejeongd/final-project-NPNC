@@ -112,7 +112,8 @@
 		    ATTENDANCE_START,
 		    ATTENDANCE_END,
 		    ATTENDANCE_STATE,
-		    OVERTIME_KEY
+		    OVERTIME_KEY,
+		    MEMBER_KEY
 			FROM ATTENDANCE 
 			WHERE TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
 	</select>
@@ -506,5 +507,51 @@
 		</where>
 	</select>
 	
+	<!-- vacationApply -->
+	<resultMap type="vacationApply" id="vacationApplyMap">
+		<id column="VACATION_USE_KEY" property="vacationUseKey"/>
+		<result column="VACATION_KEY"  property="vacationKey"/>
+		<result column="ER_DOCUMENT_KEY"  property="vacationDocSerialKey"/>
+		<result column="VACATION_APPLY_DATE"  property="vacationApplyDate"/>
+		<result column="VACATION_APPLY_STATUS"  property="vacationApplyStatus"/>
+		<result column="VACATION_START_DATE"  property="vacationStartDate"/>
+		<result column="VACATION_END_DATE"  property="vacationEndDate"/>
+		<result column="VACATION_USE_COUNT"  property="vacationUseCount"/>
+		<result column="VACATION_MEMBER_KEY"  property="vacationMemberKey"/>
+		<result column="VACATION_REASON"  property="vacationReason"/>
+		<result column="MEMBER_VAC_KEY"  property="memberVacKey"/>
+		<result column="VACATION_UPDATE_DATE"  property="vacationUpdateDate"/>
+	</resultMap>
+	
+	<select id="selectVacationApplyApprove" resultMap="vacationApplyMap">
+		SELECT 
+		VACATION_USE_KEY,
+		VACATION_KEY, 
+		ER_DOCUMENT_KEY, 
+		VACATION_APPLY_DATE, 
+		VACATION_APPLY_STATUS, 
+		VACATION_START_DATE, 
+		VACATION_END_DATE, 
+		VACATION_USE_COUNT, 
+		VACATION_MEMBER_KEY, 
+		VACATION_REASON, 
+		MEMBER_VAC_KEY, 
+		VACATION_UPDATE_DATE
+		FROM VACATION_APPLY 
+		WHERE VACATION_APPLY_STATUS='승인' 
+		AND TO_CHAR(VACATION_START_DATE,'YY/MM/DD')=TO_CHAR(SYSDATE,'YY/MM/DD')
+	</select>
+	
+	<insert id="insertAttendanceVacation" parameterType="map">
+		INSERT INTO ATTENDANCE 
+		VALUES(
+			SEQ_ATTENDANCE.NEXTVAL,
+			#{memberKey},
+			SYSDATE,
+			NULL,
+			NULL,
+			#{status},
+			NULL)
+	</insert>
 	
 </mapper>
