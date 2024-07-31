@@ -37,9 +37,9 @@ public class BoardServiceImpl implements BoardService {
         for (BoardFileDto fileDto : fileList) {
             fileDto.setBOARD_KEY(boardDto.getBOARD_KEY()); // 게시물 키 설정
             boardDao.insertBoardFile(fileDto);
-        }
     }
-
+    
+    }
     @Override
     public void updateBoard(BoardDto boardDto) {
         boardDao.updateBoard(boardDto);
@@ -74,4 +74,10 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardCategoryDto> getAllCategories() {
         return boardDao.selectAllCategories();
     }
+    
+    @Override
+    public List<BoardFileDto> getFilesByBoardId(int boardKey) {
+        return boardDao.selectFilesByBoardId(boardKey);
+    }
+
 }

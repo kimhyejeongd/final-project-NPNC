@@ -24,4 +24,6 @@ public interface BoardDao {
 
     List<BoardCategoryDto> selectAllCategories();
     void insertBoardFile(BoardFileDto boardFileDto);
+    
+    List<BoardFileDto> selectFilesByBoardId(int boardKey);
 }

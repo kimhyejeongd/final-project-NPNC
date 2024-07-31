@@ -35,6 +35,8 @@
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardCommentDto" alias="BoardCommentDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardDto" alias="BoardDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardFileDto" alias="BoardFileDto"/>
+   		<typeAlias type="com.project.npnc.notice.model.dto.NoticeDto" alias="NoticeDto"/>
+   	
 
 	
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>

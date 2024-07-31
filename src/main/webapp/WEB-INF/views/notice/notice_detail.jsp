@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>게시물 상세보기</title>
+    <title>공지사항 상세</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 
     <!-- Favicon -->
@@ -48,9 +48,15 @@
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="dark">
             <div class="sidebar-logo">
+                <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
                     <a href="${path}/index.html" class="logo">
-                        <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20"/>
+                        <img
+                            src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
+                            alt="navbar brand"
+                            class="navbar-brand"
+                            height="20"
+                        />
                     </a>
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
@@ -64,18 +70,19 @@
                         <i class="gg-more-vertical-alt"></i>
                     </button>
                 </div>
+                <!-- End Logo Header -->
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
                         <li class="nav-item">
-                            <a href="${path}/notice/list" class="collapsed">
+                            <a href="${path}/notice" class="collapsed">
                                 <i class="fas fa-bell"></i>
                                 <p>공지사항</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="${path}/board/list" class="collapsed">
+                            <a href="${path}/board" class="collapsed">
                                 <i class="fas fa-th-list"></i>
                                 <p>게시판</p>
                             </a>
@@ -92,26 +99,20 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <h1 class="mb-4">게시물 상세보기</h1>
+                    <h1 class="mb-4">공지사항 상세</h1>
 
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">${board.BOARD_TITLE}</h4>
+                            <h4 class="card-title">${notice.noticeTitle}</h4>
                         </div>
                         <div class="card-body">
-                            <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
-                            <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
-                            <p>${board.BOARD_DETAIL}</p>
-							  <c:forEach var="file" items="${fileList}">
-               				     <c:if test="${not empty file.BOARD_FILE_ORI}">
-                       				 <div class="image-container">
-                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
-                        			</div>
-                   				 </c:if>
-               				 </c:forEach>
+                            <p>${notice.noticeDetail}</p>
+                            <p><strong>작성자:</strong> ${notice.memberKey}</p>
+                            <p><strong>작성일:</strong> <fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                         <div class="card-footer">
-                            <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
+ 
+                            <a href="${path}/notice/list" class="btn btn-primary">목록으로 돌아가기</a>
                         </div>
                     </div>
                 </div>

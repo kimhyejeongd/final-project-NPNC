@@ -1,14 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>게시물 상세보기</title>
+    <title>공지사항</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 
     <!-- Favicon -->
@@ -42,15 +41,28 @@
 
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        #tablerow:hover {
+            cursor: pointer; 
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="dark">
             <div class="sidebar-logo">
+                <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
                     <a href="${path}/index.html" class="logo">
-                        <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20"/>
+                        <img
+                            src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
+                            alt="navbar brand"
+                            class="navbar-brand"
+                            height="20"
+                        />
                     </a>
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
@@ -64,11 +76,13 @@
                         <i class="gg-more-vertical-alt"></i>
                     </button>
                 </div>
+                <!-- End Logo Header -->
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
                         <li class="nav-item">
+                        
                             <a href="${path}/notice/list" class="collapsed">
                                 <i class="fas fa-bell"></i>
                                 <p>공지사항</p>
@@ -92,28 +106,29 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <h1 class="mb-4">게시물 상세보기</h1>
+                    <h1 class="mb-4">공지사항 목록</h1>
+                 
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">${board.BOARD_TITLE}</h4>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
-                            <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
-                            <p>${board.BOARD_DETAIL}</p>
-							  <c:forEach var="file" items="${fileList}">
-               				     <c:if test="${not empty file.BOARD_FILE_ORI}">
-                       				 <div class="image-container">
-                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
-                        			</div>
-                   				 </c:if>
-               				 </c:forEach>
-                        </div>
-                        <div class="card-footer">
-                            <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
-                        </div>
-                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="notice" items="${noticeList}">
+                                <tr>
+                                    <td>${notice.noticeKey}</td>
+                                    <td><a href="${path}/notice/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
+                                    <td>${notice.memberKey}</td>
+                                    <td><fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -130,5 +145,10 @@
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Script for setting path in session storage -->
+    <script>
+        sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+    </script>
 </body>
 </html>

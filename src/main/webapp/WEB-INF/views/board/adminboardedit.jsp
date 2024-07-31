@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-    <title>관리자 게시판 목록</title>
+    <title>게시판 수정</title>
     
     <!-- Favicon -->
     <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
@@ -31,63 +31,23 @@
         h1 {
             color: #333;
         }
-        .table {
-            margin-top: 20px;
-        }
-        .table th, .table td {
-            text-align: center;
+        .form-control, .btn {
+            margin-bottom: 1rem;
         }
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
             color: #fff;
         }
-        .btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
-            color: #212529;
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #fff;
         }
         .btn-danger {
             background-color: #dc3545;
             border-color: #dc3545;
             color: #fff;
-        }
-        .btn, button {
-            padding: 0.375rem 0.75rem;
-            margin: 0;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            border-radius: 0.25rem;
-            cursor: pointer;
-        }
-        .btn-round {
-            border-radius: 50rem;
-        }
-        .btn-toggle {
-            border: none;
-            background: transparent;
-            color: inherit;
-        }
-        .btn-toggle:hover {
-            background-color: #e9ecef;
-        }
-        .btn-toggle i {
-            font-size: 1.25rem;
-        }
-        table {
-            width: 100%;
-            margin-bottom: 1rem;
-            border-collapse: collapse;
-        }
-        table thead th {
-            background-color: #343a40;
-            color: #fff;
-        }
-        table tbody tr:hover {
-            background-color: #e9ecef;
-        }
-        form {
-            display: inline;
         }
     </style>
 </head>
@@ -123,10 +83,13 @@
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
+                        <li class="mb-4 text-center">
+                            <a href="${path}/admin/board/create" class="btn btn-primary btn-round w-75">게시판 작성하기</a>
+                        </li>
                         <li class="nav-item">
                             <a href="${path}/admin/board/list" class="collapsed">
                                 <i class="fas fa-th-list"></i>
-                                <p>게시판</p>
+                                <p>게시판 목록</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -146,41 +109,29 @@
             <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
 
             <div class="container">
-                <h1 class="mb-4">관리자 게시판 목록</h1>
-                
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성일</th>
-                            <th>카테고리</th>
-                            <th>작업</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="board" items="${boardList}">
-                            <c:if test="${board.BOARD_CATEGORY_KEY == 1}">
-                                <tr>
-                                    <td>${board.BOARD_KEY}</td>
-                                    <td>${board.BOARD_TITLE}</td>
-                                    <td>${board.MEMBER_KEY}</td>
-                                    <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                    <td>게시판</td>
-                                    <td>
-                   
+                <h1 class="mb-4">게시판 수정</h1>
 
-                                        <!-- 삭제 버튼 폼 -->
-                                        <form action="${path}/admin/board/delete/${board.BOARD_KEY}" method="post" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger">삭제</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </c:if>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                <!-- 수정 폼 -->
+                <form action="${path}/admin/board/update/${board.BOARD_KEY}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="BOARD_TITLE" class="form-control" value="${board.BOARD_TITLE}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" name="BOARD_CONTENT" class="form-control" rows="5" required>${board.BOARD_CONTENT}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">카테고리</label>
+                        <select id="category" name="BOARD_CATEGORY_KEY" class="form-control" required>
+                            <option value="1" ${board.BOARD_CATEGORY_KEY == 1 ? 'selected' : ''}>게시판</option>
+                            <option value="2" ${board.BOARD_CATEGORY_KEY == 2 ? 'selected' : ''}>공지사항</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">수정 완료</button>
+                    <a href="${path}/admin/board/list" class="btn btn-secondary">취소</a>
+                </form>
             </div>
 
             <!-- Footer -->

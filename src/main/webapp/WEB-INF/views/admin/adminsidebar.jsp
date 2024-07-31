@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
 
+
   	<div class="sidebar" data-background-color="dark">
   	<div class="sidebar-logo">
        <!-- Logo Header -->
