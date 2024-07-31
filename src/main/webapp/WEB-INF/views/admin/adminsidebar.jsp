@@ -155,6 +155,27 @@
                   </ul>
                 </div>
               </li>
+                <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#123">
+                  <i class="fas fa-pen-square"></i>
+                  <p>게시판</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="123">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path}/admin/board/list">
+                        <span class="sub-item">게시판</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/notice/admin">
+                        <span class="sub-item">공지사항</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
