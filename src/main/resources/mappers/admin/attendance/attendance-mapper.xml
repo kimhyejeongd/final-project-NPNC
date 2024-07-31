@@ -11,6 +11,20 @@
 		<result column="OVERTIME_KEY" property="overtimeKey"/>
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
+	
+	<!-- <resultMap type="overtimework" id="overtimeworkMap">
+		<id column="OVERTIME_KEY" property="overtimeKey"/>
+		<result column="ER_DOC_SERIAL_KEY" property="ErDocSerialKey"/>
+		<result column="OVERTIME_APPLY_DATE" property="overtimeApplyDate"/>
+		<result column="OVERTIME_DATE" property="overtimeDate"/>
+		<result column="OVERTIME_REASON" property="overtimeReason"/>
+		<result column="OVERTIME_STATUS" property="overtimeStatus"/>
+		<result column="OVERTIME_START_TIME" property="overtimeStartTime"/>
+		<result column="OVERTIME_END_TIME" property="overtimeEndTime"/>
+		<result column="OVERTIME_MEMBER_KEY" property="overtimeMemberKey"/>
+		<result column="OVERTIME_CATEGORY" property="overtimeCategory"/>
+	</resultMap> -->
+	
 	<insert id="startAttendance" parameterType="attendance">
 		INSERT INTO ATTENDANCE
 			VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE,
