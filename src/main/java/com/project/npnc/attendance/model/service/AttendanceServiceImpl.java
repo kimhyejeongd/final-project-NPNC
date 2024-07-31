@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -169,6 +170,26 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.searchAttendanceCount(session,searchMap);
 	}
 	
+	@Override
+	public Map<String,Integer> selectAttendanceMonthCount(Attendance a) {
+		Map<String,Integer> attendanceCount=new HashMap<>();
+		a.setAttendanceState("출근");
+		attendanceCount.put("gotowork",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("결근");
+		attendanceCount.put("absent",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("휴가");
+		attendanceCount.put("vaca",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("지각");
+		attendanceCount.put("late",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("조퇴");
+		attendanceCount.put("ealryLeave",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		return attendanceCount;
+	}
 	
 	
 	//attendanceEdit
@@ -294,6 +315,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
 	}
+
+
 
 
 

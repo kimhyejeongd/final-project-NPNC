@@ -34,5 +34,4 @@ public class AdminMember {
 	private String memberState;
 	private Date memberBirthdate;
 	private String memberProfileImage;
-	private int currValKey;
 }

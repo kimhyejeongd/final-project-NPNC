@@ -31,16 +31,18 @@
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
-                        <div
+                      <div
                           class="icon-big text-center icon-primary bubble-shadow-small"
                         >
-                          <i class="fas fa-users"></i>
+                          <i class="fas fa-users"></i>          
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 출근</p>
-                          <h4 class="card-title">12</h4>
+                          <p class="card-category">${currentMonth}월 출근</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.gotowork }">0</c:if>${attendanceCount.gotowork }</h4>
+                          <p class="card-category">${currentMonth}월 결근</p>
+						  <h4 class="card-title"><c:if test="${empty attendanceCount.absent }">0</c:if>${attendanceCount.absent }</h4>
                         </div>
                       </div>
                     </div>
@@ -60,8 +62,10 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 지각</p>
-                          <h4 class="card-title">1</h4>
+                          <p class="card-category">${currentMonth}월 지각</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.late }">0</c:if>${attendanceCount.late }</h4>
+                          <p class="card-category">${currentMonth}월 조퇴</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.ealryLeave }">0</c:if>${attendanceCount.ealryLeave}</h4>
                         </div>
                       </div>
                     </div>
@@ -81,8 +85,10 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 휴가</p>
-                          <h4 class="card-title">2</h4>
+                          <p class="card-category">${currentMonth}월 휴가</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.vaca }">0</c:if>${attendanceCount.vaca}</h4>
+                          <p class="card-category">남은 휴가</p>
+                          <h4 class="card-title">${memberVacation.memberVacRemaining}</h4>
                         </div>
                       </div>
                     </div>
@@ -102,8 +108,8 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 초과근무 시간</p>
-                          <h4 class="card-title">15</h4>
+                          <p class="card-category">${currentMonth}월 초과근무</p>
+                          <h4 class="card-title">0</h4>
                         </div>
                       </div>
                     </div>
@@ -263,8 +269,7 @@
 				document.querySelector("div[class='table-responsive']").innerHTML = data;
 			})
 		});
-	
-
+		
 
 	</script>
 

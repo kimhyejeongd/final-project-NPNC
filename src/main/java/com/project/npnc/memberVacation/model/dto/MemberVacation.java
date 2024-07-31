@@ -1,5 +1,7 @@
 package com.project.npnc.memberVacation.model.dto;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +18,5 @@ public class MemberVacation {
 	private String memberVacYear;
 	private int memberVacUsed;
 	private int memberVacRemaining;
+	private Date memberEnrollDate;
 }

@@ -97,6 +97,11 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.searchAttendanceCount",searchMap);
 	}
 	
+	@Override
+	public int selectAttendanceMonthCount(SqlSession session, Attendance a) {
+		
+		return session.selectOne("attendance.selectAttendanceMonthCount",a);
+	}
 	
 	//attendanceEdit
 	
@@ -227,6 +232,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
+
 
 
 
