@@ -425,7 +425,7 @@
 					<!-- 조직도 내용 함수-->
 					 $(document).ready(
 			            function(){
-			               $("#organ").on('show.bs.dropdown', function(){
+			               $("#organ").on('click', function(){
 			            	     event.stopPropagation();
 			            	     $.ajax({
 			            	    	url : '${path}/organ',
@@ -442,7 +442,7 @@
 					<!-- 알람 내용 드랍다운 함수 -->
 					$(document).ready(
 			            function(){
-			               $("#notifDropdown").on('show.bs.dropdown', function(){
+			               $("#notifDropdown").on('click', function(){
 								
 								$.ajax({
 									url:'${path}/alarmSelectAll',
