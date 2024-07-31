@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
 
 @Repository
@@ -246,6 +247,15 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	public int insertAttendanceVacation(SqlSession session, int memberKey,String status) {
 		Map m=Map.of("memberKey",memberKey,"status",status);
 		return session.insert("attendance.insertAttendanceVacation",m);
+	}
+
+	
+	//overtime
+	
+	@Override
+	public List<OvertimeApply> selectoverworkByMemberKey(SqlSession session, int memberKey) {
+		
+		return session.selectList("attendance.selectoverworkByMemberKey",memberKey);
 	}
 
 

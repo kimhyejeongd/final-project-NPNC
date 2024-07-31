@@ -554,4 +554,26 @@
 			NULL)
 	</insert>
 	
+	
+	<!-- overtimework -->
+	<select id="selectoverworkByMemberKey" parameterType="_int" resultMap="overtimeworkMap">
+		SELECT 
+		OVERTIME_KEY,
+		ER_DOC_SERIAL_KEY, 
+		OVERTIME_APPLY_DATE, 
+		OVERTIME_DATE, 
+		OVERTIME_REASON, 
+		OVERTIME_STATUS, 
+		OVERTIME_START_TIME, 
+		OVERTIME_END_TIME, 
+		OVERTIME_MEMBER_KEY, 
+		OVERTIME_CATEGORY, 
+		OVERTIME_UPDATE_DATE
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+	</select>
+	
+	
+	
+	
 </mapper>

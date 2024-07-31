@@ -16,6 +16,7 @@ import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dao.AttendanceDao;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
@@ -260,6 +261,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		a.setAttendanceState("조퇴");
 		attendanceCount.put("ealryLeave",attendanceDao.selectAttendanceMonthCount(session, a));
 		
+		a.setAttendanceState("병가");
+		attendanceCount.put("sick",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("공가");
+		attendanceCount.put("gongga",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+//		a.setAttendanceState("오전반차");
+//		attendanceCount.put("morning",attendanceDao.selectAttendanceMonthCount(session, a));
+//		
+//		a.setAttendanceState("오후반차");
+//		attendanceCount.put("afternoon",attendanceDao.selectAttendanceMonthCount(session, a));
+		
 		return attendanceCount;
 	}
 	
@@ -386,6 +399,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public int searchAdminAttendanceCount(Map<String, Object> searchMap) {
 		
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
+	}
+
+	
+	//overtime
+	
+	@Override
+	public List<OvertimeApply> selectoverworkByMemberKey(int memberKey) {
+		
+		return attendanceDao.selectoverworkByMemberKey(session, memberKey);
 	}
 
 

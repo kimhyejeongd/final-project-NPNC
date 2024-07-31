@@ -51,7 +51,7 @@ public class AttendanceController{
 	 */
 	
 	
-	@Scheduled(cron="30 * * 1 * ?")
+	@Scheduled(cron="30 * * 10 * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
@@ -322,7 +322,7 @@ public class AttendanceController{
 		return "attendance/ajax_response/membertableresponse";
 	}
 	
-	
+
 	
 	
 }

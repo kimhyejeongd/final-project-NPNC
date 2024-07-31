@@ -109,9 +109,9 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">${currentMonth}월 병가</p>
-                          <h4 class="card-title">0</h4>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.sick }">0</c:if>${attendanceCount.sick}</h4>
                           <p class="card-category">${currentMonth}월 공가</p>
-                          <h4 class="card-title">0</h4>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.gongga }">0</c:if>${attendanceCount.gongga}</h4>
                         </div>
                       </div>
                     </div>

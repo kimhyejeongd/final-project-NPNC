@@ -3,10 +3,9 @@ package com.project.npnc.attendance.model.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
-
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
 
 public interface AttendanceService {
 	
@@ -55,5 +54,8 @@ public interface AttendanceService {
 	
 	List<Attendance> searchAdminAttendance(Map<String,Object> searchMap, Map<String,Integer> page);
 	int searchAdminAttendanceCount(Map<String,Object> searchMap);
+	
+	//overtime
+	List<OvertimeApply> selectoverworkByMemberKey(int memberKey);
 	
 }

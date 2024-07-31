@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
 
 
@@ -64,6 +65,9 @@ public interface AttendanceDao {
 	//vacation Apply
 	List<VacationApply> selectVacationApplyApprove(SqlSession session);
 	int insertAttendanceVacation(SqlSession session,int memberKey,String status);
+	
+	//overtime
+	List<OvertimeApply> selectoverworkByMemberKey(SqlSession session,int memberKey);
 	
 	
 }
