@@ -105,7 +105,7 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("completelist", result);
 	}
-	@GetMapping("/list/employee/reject")
+	@GetMapping("/list/employee/rejected")
 	public void selectMyRejectDocs(Model m) {
 		log.debug("----반려 문서 조회----");
 		Member user = getCurrentUser();
@@ -184,18 +184,19 @@ public class MemberDocumentController {
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
-		m .addAttribute("approverStr", Arrays.asList(document.getApprovers()).toString());
+		List<Approver> aps = document.getApprovers();
+		aps.removeIf(e-> e.getCategory().equals("기안"));
+		log.debug(aps.toString());
+		m .addAttribute("approverStr", Arrays.asList(aps).toString());
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		if(html == null || html.equals("")) {
-			log.debug("문서 내용 -> " + html);
 			throw new Exception("문서 불러오기 실패");
 		}
 		
 		if(history != null) {
 			m.addAttribute("history", history);
 		}
-		log.debug("문서 내용 -> " + html);
 		m.addAttribute("html", html);
 	}
 	

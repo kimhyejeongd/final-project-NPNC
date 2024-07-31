@@ -506,6 +506,7 @@
 		    fd.ER_DOC_STATE_UPDATE_DATE,
 		    fd.ER_DOC_LAST_UPDATER,
 		    fd.ER_DOC_LAST_UPDATE_REASON,
+		    fd.ER_DOC_COMPLETE_DATE,
 		    ea.ER_APPROVER_KEY,
 		    ea.MEMBER_KEY,
 		    ea.ER_APPROVER_NAME,
@@ -558,7 +559,8 @@
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
 			        ed.ER_DOC_LAST_UPDATER,
-			        ed.ER_DOC_LAST_UPDATE_REASON
+			        ed.ER_DOC_LAST_UPDATE_REASON,
+			        ed.ER_DOC_COMPLETE_DATE
 			    FROM 
 			        ER_DOCUMENT ed 
 			    JOIN
@@ -711,6 +713,7 @@
 		    fd.ER_DOC_STATE_UPDATE_DATE,
 		    fd.ER_DOC_LAST_UPDATER,
 		    fd.ER_DOC_LAST_UPDATE_REASON,
+		    fd.ER_DOC_COMPLETE_DATE,
 		    ea.ER_APPROVER_KEY,
 		    ea.MEMBER_KEY,
 		    ea.ER_APPROVER_NAME,
@@ -763,7 +766,8 @@
 			        ed.ER_DOC_STATE,
 			        ed.ER_DOC_STATE_UPDATE_DATE,
 			        ed.ER_DOC_LAST_UPDATER,
-			        ed.ER_DOC_LAST_UPDATE_REASON
+			        ed.ER_DOC_LAST_UPDATE_REASON,
+			        ed.ER_DOC_COMPLETE_DATE
 			    FROM 
 			        ER_DOCUMENT ed 
 			    JOIN
@@ -1749,6 +1753,13 @@
 		WHERE
 			ER_DOCUMENT_KEY = #{docSerial}
 	</update>
+	<!-- 휴가신청서 삭제 -->
+	<delete id="deleteVacationApply" parameterType="string">
+		DELETE 
+			VACATION_APPLY
+		WHERE  
+			ER_DOCUMENT_KEY = #{serial}
+	</delete>
 	<!-- 휴가신청서 결재 승인 후 차감 -->
 	<update id="updateVacationCalc" parameterType="map">
 		<!-- 해당 사원의 휴가 신청 차감값 가져오기 -->
@@ -1773,7 +1784,6 @@
 	</update>
 	
 	<!-- 추가근무 신청 등록 -->
-	<!-- 해당 사원 휴가 신청 등록 -->
 	<insert id="insertOvertimeApply" parameterType="overtimeApply">
 		INSERT INTO 
 			OVERTIMEWORK
@@ -1803,8 +1813,8 @@
 		         #{overtimeCategory}
             )
 	</insert>
-	<!-- 휴가신청서 신청 상태 변경 -->
-	<update id="updateOvertiemApply" parameterType="map">
+	<!-- 추가근무 신청 상태 변경 -->
+	<update id="updateOvertiApply" parameterType="map">
 		UPDATE
 			OVERTIMEWORK
 		SET
@@ -1813,4 +1823,11 @@
 		WHERE
 			ER_DOC_SERIAL_KEY = #{docSerial}
 	</update>
+	<!-- 추가근무 신청 삭제 -->
+	<delete id="deleteOvertimeApply" parameterType="string">
+		DELETE 
+			OVERTIMEWORK
+		WHERE  
+			ER_DOC_SERIAL_KEY = #{serial}
+	</delete>
 </mapper>
