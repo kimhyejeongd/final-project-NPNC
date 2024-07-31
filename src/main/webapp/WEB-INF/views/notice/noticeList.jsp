@@ -107,6 +107,10 @@
             <div class="container">
                 <div class="page-inner">
                     <h1 class="mb-4">공지사항 목록</h1>
+                 <form action="${pageContext.request.contextPath}/notice/list" method="get">
+			        <input type="text" name="searchKeyword" value="${searchKeyword}" placeholder="제목으로 검색"/>
+			        <button type="submit">검색</button>
+			    </form>
                  
 
                     <table class="table table-bordered">

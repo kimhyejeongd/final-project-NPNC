@@ -13,4 +13,6 @@ public interface NoticeDao {
     void insertNotice(NoticeDto notice);
     void updateNotice(NoticeDto notice);
     void deleteNotice(@Param("id") int id);
+    
+    List<NoticeDto> searchNoticesByTitle(@Param("title") String title);
 }
