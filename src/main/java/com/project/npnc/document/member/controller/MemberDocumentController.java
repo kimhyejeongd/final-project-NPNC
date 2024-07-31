@@ -9,11 +9,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +40,14 @@ import com.project.npnc.admin.document.model.dto.StorageFolder;
 import com.project.npnc.admin.document.model.service.AdminDocumentService;
 import com.project.npnc.admin.vacation.model.dto.Vacation;
 import com.project.npnc.admin.vacation.model.service.VacationService;
+import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
 import com.project.npnc.document.model.service.MemberDocumentService;
 import com.project.npnc.organization.dto.OrganizationDto;
@@ -59,6 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberDocumentController {
 	private final MemberDocumentService serv;
 	private final OrganizationService orserv;
+	private final AttendanceService attendserv;
 	private final AdminDocumentService adminserv;
 	private final VacationService vacserv;
 	@Value("${file.upload-dir}")
@@ -178,6 +184,7 @@ public class MemberDocumentController {
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
+		m .addAttribute("approverStr", Arrays.asList(document.getApprovers()).toString());
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		if(html == null || html.equals("")) {
@@ -228,6 +235,14 @@ public class MemberDocumentController {
 		//기안자
 		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
 		m.addAttribute("form", form);
+		
+		//추가근무 신청폼인 경우 근무 현황 데이터 첨부
+		if(form == 2) {
+			log.debug("----추가근무 신청----");
+//			html = html.replace("[주 근무 현황]", attendserv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
+			m.addAttribute("html", html);
+			return "document/write/overwork";
+		}
 
 		//휴가 신청폼인 경우 휴가 데이터 첨부
 		if(form ==3) {
@@ -456,13 +471,14 @@ public class MemberDocumentController {
 	//문서 임시저장
 	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftDoc(
-			String msg, Model m, Document doc, String html, @RequestParam(required = false) int form,
+			String msg, Model m, Document doc, String html, 
+			//@RequestParam(required = false) int form,
 			@RequestParam(value="upfile")MultipartFile[] file
 			){
 		Member user = getCurrentUser();
 		log.debug("{}", html);
 		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 //		doc.setErDocStorageKey(); //문서보관함 임시세팅
 		
 		//기안자=로그인유저
@@ -493,27 +509,54 @@ public class MemberDocumentController {
 	//휴가 신청 문서 임시저장
 	@PostMapping(path="/savedraft/vacation", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftVacDoc(
-			String msg, Model m, Document doc, String html, VacationApply vac, 
-			@RequestParam(required = false) int form,
+			Model m, Document doc, String html, 
+			@RequestParam(required = false) String vacationUseCount,
+	        @RequestParam(required = false) String vacationReason,
+	        @RequestParam(required = false) String vacationKey,
+			@RequestParam(name="vacationStartDate", required = false) String startDate, 
+			@RequestParam(name = "vacationEndDate", required = false) String endDate,
+	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
+	        @RequestParam(name= "vacationEndTime", required = false) String endTime,
 			@RequestParam(value="upfile")MultipartFile[] file
 			){
+		log.debug(startDate + " " + startTime);
+		log.debug(endDate + " " + endTime);
+		log.debug("차감 : "+vacationUseCount + " \n사유 : " + vacationReason);
+
 		Member user = getCurrentUser();
 		log.debug("{}", html);
 		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+form + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-//		doc.setErDocStorageKey(); //문서보관함 임시세팅
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
 		log.debug("{}", doc);
 		
+		//휴가 신청 dto 구성
+		if(startTime == null || startTime.trim().isEmpty()) {
+			startTime = "00:00:00";
+			log.debug("startTime -> " + startTime);
+		}
+		if(endTime == null || endTime.trim().isEmpty()) {
+			endTime = "23:59:59";
+			log.debug("endTime -> " + endTime);
+		}
+		VacationApply vac = VacationApply.builder()
+								.vacationKey(Integer.parseInt(vacationKey))
+								.vacationStartDate(convertToTimestamp(startDate, startTime))
+								.vacationEndDate(convertToTimestamp(endDate, endTime))
+								.vacationUseCount(Integer.parseInt(vacationUseCount))
+								.vacationMemberKey(user.getMemberKey())
+								.vacationReason(vacationReason)
+								.build();
+		
 		int result=0;
 		Map<String,Object> response = new HashMap<>();
-		
+		log.debug("{}", vac);
 		//문서 등록
 		try { 
-			log.debug(user.getMemberName()+ "사원의 문서 임시저장");
-//			result = serv.insertDraftVacDoc(doc, file, html);
+			log.debug(user.getMemberName()+ "사원의 휴가 신청서 임시저장");
+			result = serv.insertDraftVacDoc(doc, file, html, vac);
 		} catch (Exception e) {
 			log.debug("문서 임시저장 실패");
 			e.printStackTrace();
@@ -602,6 +645,7 @@ public class MemberDocumentController {
 			//@RequestParam(required = false) VacationApply vac,
 			@RequestParam(required = false) String vacationUseCount,
 	        @RequestParam(required = false) String vacationReason,
+	        @RequestParam(required = false) String vacationKey,
 			@RequestParam(name="vacationStartDate", required = false) String startDate, 
 			@RequestParam(name = "vacationEndDate", required = false) String endDate,
 	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
@@ -617,9 +661,7 @@ public class MemberDocumentController {
 			msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
 		}//debug
 		
-		log.debug("{}", html);
 		log.debug(file.toString());
-		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
 		//기안자=로그인유저
@@ -659,6 +701,7 @@ public class MemberDocumentController {
 			log.debug("endTime -> " + endTime);
 		}
 		VacationApply vac = VacationApply.builder()
+								.vacationKey(Integer.parseInt(vacationKey))
 								.vacationStartDate(convertToTimestamp(startDate, startTime))
 								.vacationEndDate(convertToTimestamp(endDate, endTime))
 								.vacationUseCount(Integer.parseInt(vacationUseCount))
@@ -698,6 +741,126 @@ public class MemberDocumentController {
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
 	}
+	//추가근무 신청 기안
+	@PostMapping(path="/writeend/overtimework", consumes = {"multipart/form-data"}) 
+	public ResponseEntity<Map<String,Object>> insertOvertimeDoc(
+			String msg, Model m, Document doc, String html, 
+			@RequestParam(required = false) String overtimeReason,
+			@RequestParam(required = false) String overtimeCategory,
+			@RequestParam(required = false) String overtimeDate, 
+			@RequestParam(required = false) String overtimeStartHH, 
+			@RequestParam(required = false) String overtimeEndHH, 
+			@RequestParam(required = false) String overtimeStartMM, 
+			@RequestParam(required = false) String overtimeEndMM, 
+			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
+		Member user = getCurrentUser();
+		log.debug("----- 추가근무 신청 기안 -----");
+		log.debug(overtimeStartHH + " : " + overtimeStartMM);
+		log.debug(overtimeEndHH + " : " + overtimeEndMM);
+		log.debug(overtimeCategory + " 사유 : " + overtimeReason);
+		
+		if(msg.equals(",")) msg=""; //debug
+		if (msg != null && msg.endsWith(",")) {
+			msg = msg.substring(0, msg.length() - 1); // 마지막 문자를 제거
+		}//debug
+		
+		log.debug(file.toString());
+		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
+		
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+				.memberTeamKey(user.getDepartmentKey())
+				.memberJobKey(user.getJobKey())
+				.memberName(user.getMemberName())
+				.category("기안")
+				.opinion(msg)
+				.state("승인")
+				.date(Date.valueOf(LocalDate.now()))
+				.orderby(0)
+				.build();
+		List<Approver> ap = doc.getApprovers();
+		ap.removeIf(a -> {
+			boolean toRemove = a.getMemberKey() == 0;
+			if (toRemove) {
+				log.debug("없는 결재자 삭제");
+				log.debug("{}", a);
+			}
+			return toRemove;
+		});//debug
+		ap.add(me);
+		doc.setApprovers(ap);
+		log.debug("{}", doc);
+		
+		String startTime = overtimeStartHH+":"+overtimeStartMM+":00";
+		String endTime = overtimeEndHH+":"+overtimeEndMM+":00";
+		//휴가 신청 dto 구성
+		if(startTime == null || startTime.trim().isEmpty()) {
+			startTime = "00:00:00";
+			log.debug("startTime -> " + startTime);
+		}
+		if(endTime == null || endTime.trim().isEmpty()) {
+			endTime = "23:59:59";
+			log.debug("endTime -> " + endTime);
+		}
+		Date sqlDate = null;
+		try {
+            // 1. SimpleDateFormat을 사용하여 문자열을 java.util.Date로 파싱
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date parsedDate = dateFormat.parse(overtimeDate);
+
+            // 2. java.util.Date를 java.sql.Date로 변환
+            sqlDate = new Date(parsedDate.getTime());
+
+            // 변환된 java.sql.Date 출력
+            System.out.println("Converted java.sql.Date: " + sqlDate);
+        } catch (ParseException e) {
+            // 파싱 에러 처리
+            System.err.println("Date parsing error: " + e.getMessage());
+        }
+		
+		OvertimeApply ot = OvertimeApply.builder()
+				.overtimeReason(overtimeReason)
+				.overtimeDate(sqlDate)
+				.overtimeStartTime(convertToTimestamp(overtimeDate, startTime))
+				.overtimeEndTime(convertToTimestamp(overtimeDate, endTime))
+				.overtimeStatus("대기")
+				.overtimeMemberKey(user.getMemberKey())
+				.overtimeCategory(overtimeCategory)
+				.build();
+		
+		int result=0;
+		Map<String,Object> response = new HashMap<>();
+		//문서 등록
+		try { 
+			log.debug(user.getMemberName()+ "사원의 추가근무 신청서 기안 -> " + msg);
+			result = serv.insertOvertimeDoc(doc, file, html, ot);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "문서 등록중 에러가 발생했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+//		//휴가 신청 등록
+//		try { 
+//			vac.setVacationMemberKey(user.getMemberKey());
+//		} catch (Exception e) {
+//			log.error(e.getMessage());
+//			e.printStackTrace();
+//			response.put("status", "error");
+//			response.put("message", "휴가 신청 등록중 에러가 발생했습니다.");
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//		}
+		
+		//기안, 결재자 등록 성공시
+		response.put("status", "success");
+		response.put("message", "문서 등록 완료");
+		
+		//모두 성공시 전자결재홈으로
+		return ResponseEntity.ok(response);
+	}
 	
 	private Timestamp convertToTimestamp(String date, String time) {
 		 // 날짜 및 시간 포맷 정의
@@ -728,12 +891,6 @@ public class MemberDocumentController {
             System.out.println("DateTime: " + zonedDateTime);
             System.out.println("Timestamp: " + timestamp);
             
-            //24시간으로 계산
-//            log.debug(parsedDate.toString());
-//            log.debug(parsedTime.toString());
-//            long combinedMillis = dateInMillis + (timeInMillis % (24 * 60 * 60 * 1000L));
-//            long combinedMillis = dateInMillis + timeInMillis;
-//            timestamp = new Timestamp(combinedMillis);
             log.debug(timestamp.toString());
             
             return timestamp;

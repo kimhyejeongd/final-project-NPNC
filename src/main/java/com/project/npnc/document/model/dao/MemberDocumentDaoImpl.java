@@ -14,6 +14,7 @@ import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.Referer;
 import com.project.npnc.document.model.dto.VacationApply;
 
@@ -234,14 +235,34 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.insert("document.insertVacationApply", vac);
 	}
 	@Override
-	public int updateVacationAppply(SqlSession session, String docSerial) {
-		return session.update("document.updateVacationAppply", docSerial);
+	public int insertOvertimeApply(SqlSession session, OvertimeApply ot) {
+		return session.insert("document.insertOvertimeApply", ot);
+	}
+	@Override
+	public int insertVacationApplyDraft(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApplyDraft", vac);
+	}
+	@Override
+	public int updateVacationApply(SqlSession session, String docSerial, String status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", docSerial);
+		map.put("status", status);
+		log.debug("휴가 신청 임시저장 -> " + map.toString());
+		return session.update("document.updateVacationApply", map);
+	}
+	@Override
+	public int updateOvertiemApply(SqlSession session, String docSerial, String status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", docSerial);
+		map.put("status", status);
+		log.debug("추가근무 신청 임시저장 -> " + map.toString());
+		return session.update("document.updateOvertiemApply", map);
 	}
 	@Override
 	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("serial", serial);
-		map.put("memberKey", (Integer) memberKey);
+		log.debug("휴가 계산 테이블 업데이트 -> " + map.toString());
 		return session.update("document.updateVacationCalc", map);
 	}
 
