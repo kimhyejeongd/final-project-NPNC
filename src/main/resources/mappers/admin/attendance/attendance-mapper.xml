@@ -12,9 +12,9 @@
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
 	
-	<!-- <resultMap type="overtimework" id="overtimeworkMap">
+	<resultMap type="overtimeApply" id="overtimeworkMap">
 		<id column="OVERTIME_KEY" property="overtimeKey"/>
-		<result column="ER_DOC_SERIAL_KEY" property="ErDocSerialKey"/>
+		<result column="ER_DOC_SERIAL_KEY" property="erDocSerialKey"/>
 		<result column="OVERTIME_APPLY_DATE" property="overtimeApplyDate"/>
 		<result column="OVERTIME_DATE" property="overtimeDate"/>
 		<result column="OVERTIME_REASON" property="overtimeReason"/>
@@ -23,7 +23,7 @@
 		<result column="OVERTIME_END_TIME" property="overtimeEndTime"/>
 		<result column="OVERTIME_MEMBER_KEY" property="overtimeMemberKey"/>
 		<result column="OVERTIME_CATEGORY" property="overtimeCategory"/>
-	</resultMap> -->
+	</resultMap>
 	
 	<insert id="startAttendance" parameterType="attendance">
 		INSERT INTO ATTENDANCE
