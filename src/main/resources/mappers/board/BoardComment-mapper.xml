@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.npnc.board.repository.BoardCommentMapper">
+
+    <resultMap id="commentResultMap" type="com.project.npnc.board.model.dto.BoardCommentDto">
+        <id column="BOARD_COMMENT_KEY" property="boardCommentKey" />
+        <result column="BOARD_KEY" property="boardKey" />
+        <result column="MEMBER_KEY" property="memberKey" />
+        <result column="BOARD_COMMENT_LEVEL" property="boardCommentLevel" />
+        <result column="BOARD_COMMNET_DETAIL" property="boardCommentDetail" />
+        <result column="BOARD_COMMENT_DATE" property="boardCommentDate" />
+        <result column="BOARD_COMMENT_REF" property="boardCommentRef" />
+        <result column="BOARD_COMMENT_DELETE" property="boardCommentDelete" />
+    </resultMap>
+
+    <select id="selectAllCommentsByBoardKey" parameterType="int" resultMap="commentResultMap">
+        SELECT BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMNET_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
+        FROM BOARD_COMMENT
+        WHERE BOARD_KEY = #{boardKey}
+    </select>
+
+    <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        INSERT INTO BOARD_COMMENT (BOARD_COMMENT_KEY,BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMNET_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF)
+        VALUES (SEQ_BOARD_COMMENT.NE#{boardKey}, #{memberKey}, #{boardCommentLevel}, #{boardCommentDetail}, #{boardCommentDate}, #{boardCommentRef})
+    </insert>
+
+    <update id="updateComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        UPDATE BOARD_COMMENT
+        SET MEMBER_KEY = #{memberKey}, BOARD_COMMENT_LEVEL = #{boardCommentLevel},
+            BOARD_COMMNET_DETAIL = #{boardCommentDetail}, BOARD_COMMENT_DATE = #{boardCommentDate},
+            BOARD_COMMENT_REF = #{boardCommentRef}, BOARD_COMMENT_DELETE = #{boardCommentDelete}
+        WHERE BOARD_COMMENT_KEY = #{boardCommentKey}
+    </update>
+
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM BOARD_COMMENT
+        WHERE BOARD_COMMENT_KEY = #{boardCommentKey}
+    </delete>
+
+</mapper>

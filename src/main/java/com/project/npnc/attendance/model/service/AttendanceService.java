@@ -24,6 +24,11 @@ public interface AttendanceService {
 	int insertAbsent(int memberKey);
 	int startAttendance(Attendance a);
 	int endAttendance(Attendance a);
+	
+	List<Attendance> searchAttendance(Map searchMap,Map page);
+	int searchAttendanceCount(Map searchMap);
+	
+	Map selectAttendanceMonthCount(Attendance a);
 
 	//attendanceEdit
 	int insertAttendanceEdit(AttendanceEdit ae);
@@ -31,6 +36,9 @@ public interface AttendanceService {
  	int selectAttendanceEditCount(String memberId);
 	AttendanceEdit selectAttendanceEditByKey(int attendanceEditKey);
 	int deleteAttendanceEdit(int attendanceEditKey);
+	
+	List<AttendanceEdit> searchAttendanceEdit(Map<String,Object> searchMap,Map<String,Integer> page);
+	int searchAttendanceEditCount(Map<String,Object> searchMap);
 	
 	//admin attendance
 	List<Attendance> selectAdminAttendanceAll(Map page);
@@ -42,11 +50,10 @@ public interface AttendanceService {
 	List<Attendance> selectAdminAttendanceBymemberKey(int memberKey,Map page);
 	int selectAdminAttendanceBymemberKeyCount(int memberKey);
 	
-	List<AttendanceEdit> searchAdminAttendanceEdit(Map<String,String> searchMap,Map<String,Integer> page);
-	int searchAdminAttendanceEditCount(Map<String,String> searchMap);
+	List<AttendanceEdit> searchAdminAttendanceEdit(Map<String,Object> searchMap,Map<String,Integer> page);
+	int searchAdminAttendanceEditCount(Map<String,Object> searchMap);
 	
-	
-	
-	
+	List<Attendance> searchAdminAttendance(Map<String,Object> searchMap, Map<String,Integer> page);
+	int searchAdminAttendanceCount(Map<String,Object> searchMap);
 	
 }

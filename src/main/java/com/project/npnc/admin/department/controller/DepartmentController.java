@@ -1,7 +1,10 @@
 package com.project.npnc.admin.department.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.project.npnc.admin.department.model.dto.Department;
 import com.project.npnc.admin.department.model.service.DepartmentService;
+import com.project.npnc.admin.job.model.dto.Job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +46,7 @@ public class DepartmentController {
 	@GetMapping("/selectdeptall.do")
 	public String selectDeptAll(Model m) {
 		List<Department> d=service.selectDeptAll();
-		m.addAttribute("dept",d);
+		m.addAttribute("depts",d);
 		return "admin/dept/deptlist";
 	}
 	
@@ -62,17 +66,16 @@ public class DepartmentController {
 		return "common/msg";
 	}
 	
-	@PostMapping("/updatedept.do")
-	public String updateDept(String key,String deptName,Model m) {
-		m.addAttribute("key",key);
-		m.addAttribute("deptName",deptName);
-		
-		return "admin/dept/updatedept";
+	@GetMapping("/updatedept")
+	public ResponseEntity<Map<String,Department>> updateDept(String deptKey) {
+		Map<String,Department> response =new HashMap<>();
+		response.put("dept", service.selectDeptByKey(deptKey));
+		return ResponseEntity.ok(response);
+
 	}
+
 	
-	
-	
-	@PostMapping("/updatedeptend.do")
+	@PostMapping("/updatedeptend")
 	public String updateDept(Department d,Model m) {
 		int result=service.updateDept(d);
 		String msg,loc;

@@ -176,7 +176,7 @@
       display: block;
    }
    /* ëª¨ë¬ ì¤íì¼ */
-   .modal {
+   /* .modal {
       display: none;
       position: fixed;
       z-index: 2;
@@ -198,7 +198,7 @@
       width: 80%;
       max-width: 500px;
       border-radius: 10px;
-   }
+   } */
    
    .close {
       color: #aaa;
@@ -223,12 +223,12 @@
       display: block; /* íëë¥¼ ë¸ë¡ ììë¡ ë§ë¤ì´ ì¤ ì ì²´ ì¬ì© */
    }
    
-   .modal-content {
+   /* .modal-content {
       width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-   }
+   } */
    
    .profile-info {
       margin-top: 20px;
@@ -246,6 +246,13 @@
       color: #333;
    }
    
+   .proContentImg{
+   	
+	margin-top: 20px;
+    
+}
+    
+   
    .start-chat-btn {
       padding: 10px 20px;
       background-color: #4CAF50;
@@ -261,13 +268,18 @@
    }
    </style>
    <style>
+	
    .list-group-item{
          display: flex;
          flex-direction: row;
-      justify-content: space-between;
+      	 justify-content: space-between;
    }
-</style>
-<!--이성록 모달 팝업 스타일 -->
+   
+   #headerNavLogo {
+       display: none;
+   }
+	</style>
+	<!--이성록 모달 팝업 스타일 -->
 
 	<style>
 			h2{
@@ -346,54 +358,70 @@
             </div>
             <!-- Navbar Header -->
             <nav
-              class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+              class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom "
             >
               <div class="container-fluid">
                 <nav
                   class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
                 >
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <button type="submit" class="btn btn-search pe-1">
-                        <i class="fa fa-search search-icon"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search ..."
-                      class="form-control"
-                    />
-                  </div>
+				<div class="container-fluid">
+				   <a class="navbar-brand" href="#" id="headerNavLogo">
+					<img
+		               src="${path}/resources/assets/img/KakaoTalk_Photo_2024-06-28-10-37-54.png"
+		               alt="navbar brand"
+		               class="navbar-brand"
+		               height="70"
+		             />
+				   </a>
+				  
+				   <div class="collapse navbar-collapse" id="navbarNav">
+				     <ul class="navbar-nav">
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/document/home" 
+				           >전자결재</a
+				         >
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/calendar">캘린더</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/notehome">쪽지</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/board/list">게시판</a>
+				       </li>
+				       <li class="nav-item">
+				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
+				       </li>
+				     </ul>
+				   </div>
+				 </div>
+				
                 </nav>
-      <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+      		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+			
+			<!-- 로고 메인화면 아닐 시 숨기는 로직 -->
+		
+			<script>
+				// 원하는 URL을 설정
+				const targetUrl = "http://localhost:8080/";
+				const targetUrl2="http://localhost:8080/?continue";
+				
+				// 현재 URL을 확인
+				const currentUrl = window.location.href;
+				console.log(currentUrl+"들어오나요");
+				// navbar-brand 요소 선택
+				const headerNavLogo = document.getElementById("headerNavLogo");
 
+				// 현재 URL이 targetUrl과 일치하지 않으면 요소 숨기기
+				if (currentUrl == targetUrl||currentUrl==targetUrl2) {
+				    headerNavLogo.style.display = "inline";
+				}
+				
+			</script>
+			
              <script type="text/javascript">
-             var myChatRoomList;
-                $(document).ready(function() {
-   
-                         headerUnread();
 
-                   
-                       $('#messageDropdown').on('show.bs.dropdown', function() {
-                         event.stopPropagation(); 
-                           $.ajax({
-                               url: '${path}/chatRoom', 
-                               data: {
-                                   inputValue: '1' 
-                               },
-                               success: function(response) {
-
-                                   $('.notif-center').eq(0).html(response);
-
-
-					                },
-					                error: function(xhr, status, error) {
-					                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
-					                    $("#messageContent").html(errorMessage);
-					                }
-					            });
-					        });
-					    });
 					<!-- 조직도 내용 함수-->
 					 $(document).ready(
 			            function(){
@@ -463,16 +491,16 @@
 												   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
 		
 												   	// 또는 직접 포맷하여 사용할 수 있습니다.
-												   	const year = date.getFullYear();
-												   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
-												   	const day = date.getDate().toString().padStart(2, '0');
-												   	const hours = date.getHours().toString().padStart(2, '0');
-												   	const minutes = date.getMinutes().toString().padStart(2, '0');
-												   	const seconds = date.getSeconds().toString().padStart(2, '0');
-												   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
-		
-												   	// spanTime에 포맷된 날짜를 설정
-												   	spanTime.textContent = customFormattedDate + " ";
+													//const year = date.getFullYear();
+												   	//const month = (date.getMonth() + 1).toString().padStart(2, '0');
+												   	//const day = date.getDate().toString().padStart(2, '0');
+												   	//const hours = date.getHours().toString().padStart(2, '0');
+												   	//const minutes = date.getMinutes().toString().padStart(2, '0');
+												   	//const seconds = date.getSeconds().toString().padStart(2, '0');
+												   	//const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;		
+												   	
+													//spanTime에 포맷된 날짜를 설정
+												   	spanTime.textContent = formattedDate + " ";
 												   	
 											          // Append the child elements
 											          divIcon.appendChild(faIcon);
@@ -493,6 +521,33 @@
 			               });   
 			            }
 			         );
+					
+		             var myChatRoomList;
+		                $(document).ready(function() {
+		   
+		                         headerUnread();
+
+		                   
+		                       $('#messageDropdown').on('show.bs.dropdown', function() {
+		                         event.stopPropagation(); 
+		                           $.ajax({
+		                               url: '${path}/chatRoom', 
+		                               data: {
+		                                   inputValue: '1' 
+		                               },
+		                               success: function(response) {
+
+		                                   $('.notif-center').eq(0).html(response);
+
+
+							                },
+							                error: function(xhr, status, error) {
+							                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+							                    $("#messageContent").html(errorMessage);
+							                }
+							            });
+							        });
+							    });
 							 		 
 					 var headerUnread = ()=>{						 
 						$.ajax({
@@ -677,15 +732,29 @@
                       aria-expanded="false"
                     >
                       <div class="avatar-sm">
-                        <img
-                          src="assets/img/profile.jpg"
-                          alt="..."
-                          class="avatar-img rounded-circle"
-                        />
+						<c:choose>
+							<c:when test="${loginMember.memberProfileImage==null || loginMember.memberProfileImage=='basicPicture'}">
+								<img
+		                          src="${path}/resources/assets/img/unname.png"
+		                          alt="..."
+		                          class="avatar-img rounded-circle"
+	
+		                        />
+						 	</c:when>
+							<c:otherwise>
+								<img
+		                          src="assets/img/${loginMember.memberProfileImage}.jpg"
+		                          alt="..."
+		                          class="avatar-img rounded-circle"
+		                        />
+	
+							</c:otherwise>	
+						</c:choose>	
+
                       </div>
                       <span class="profile-username">
-                        <span class="op-7">Hi,</span>
-                        <span class="fw-bold">Hizrian</span>
+                        <span class="op-7">안녕하세요,</span>
+                        <span class="fw-bold">${loginMember.memberName}님</span>
                       </span>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -693,32 +762,44 @@
                         <li>
                           <div class="user-box">
                             <div class="avatar-lg">
-                              <img
-                                src="assets/img/profile.jpg"
-                                alt="image profile"
-                                class="avatar-img rounded"
-                              />
+								<c:choose>
+									<c:when test="${loginMember.memberProfileImage==null || loginMember.memberProfileImage=='basicPicture'}">
+										<img
+				                          src="${path}/resources/assets/img/unname.png"
+				                          alt="..."
+				                          class="avatar-img rounded-circle proContentImg"
+				                        />
+								 	</c:when>
+									<c:otherwise>
+										<img
+				                          src="assets/img/${loginMember.memberProfileImage}.jpg"
+				                          alt="..."
+				                          class="avatar-img rounded-circle proContentImg"
+				                        />
+
+									</c:otherwise>	
+								</c:choose>
                             </div>
                             <div class="u-text">
-                              <h4>Hizrian</h4>
-                              <p class="text-muted">hello@example.com</p>
+                              <h4>${loginMember.memberName} ${loginMember.jobName}</h4>
+                              <p class="text-muted">${loginMember.departmentName}</p>
                               <a
-                                href="profile.html"
-                                class="btn btn-xs btn-secondary btn-sm"
-                                >View Profile</a
+                                href="${path}/member/mypage"
+                                class="btn btn-info"
+                                >My Page</a
                               >
                             </div>
                           </div>
                         </li>
                         <li>
-                          <div class="dropdown-divider"></div>
+                        <!--  <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">My Profile</a>
                           <a class="dropdown-item" href="#">My Balance</a>
                           <a class="dropdown-item" href="#">Inbox</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Account Setting</a>
+                          <a class="dropdown-item" href="#">Account Setting</a>-->
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Logout</a>
+						  <a class="dropdown-item" href="${path}/logout">Logout</a>
                         </li>
                       </div>
                     </ul>
@@ -803,7 +884,7 @@
           }
             
             function connect() {
-		        let socket = new SockJS('http://localhost:8080/ws-stomp');
+		        let socket = new SockJS('${path}/ws-stomp');
 		        stompClient = Stomp.over(socket);
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
 		            setConnected(true);
@@ -836,6 +917,8 @@
 				   		 });
 						 
 						 
+					
+						 
 						 // Step 1: Extract the current number from the element
 				           var notificationText = $('.notification').eq(1).text();
 				           var currentCount = parseInt(notificationText, 10);
@@ -849,7 +932,63 @@
 				           var dropdownTitle = $('.dropdown-title').eq(1).text();
 				           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
 				           $('.dropdown-title').eq(1).text(newDropdownTitle);
-						
+						   
+						  	 var a = document.createElement('a');
+					          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+							  a.className='noteDeleteOne';		
+							  a.id =  bodyObject.alarmKey;
+							  
+					          var divIcon = document.createElement('div');
+					          divIcon.className = 'notif-icon notif-success';
+		
+					          var faIcon = document.createElement('i');
+					          faIcon.className = 'fa fa-envelope';
+		
+					          var divContent = document.createElement('div');
+					          divContent.className = 'notif-content';
+		
+					          var spanBlock = document.createElement('span');
+					          spanBlock.className = 'block';
+					          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		
+					          var spanTime = document.createElement('span');
+					          spanTime.className = 'time';
+						   	
+							   	// 예시 ISO 8601 날짜 문자열
+							   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+		
+							   	// ISO 8601 문자열을 Date 객체로 변환
+							   	const date = new Date(isoDateString);
+		
+							   	// Date 객체를 로컬 형식으로 변환하여 출력
+							   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+		
+							   	// 또는 직접 포맷하여 사용할 수 있습니다.
+							   	const year = date.getFullYear();
+							   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+							   	const day = date.getDate().toString().padStart(2, '0');
+							   	const hours = date.getHours().toString().padStart(2, '0');
+							   	const minutes = date.getMinutes().toString().padStart(2, '0');
+							   	const seconds = date.getSeconds().toString().padStart(2, '0');
+							   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+		
+							   	// spanTime에 포맷된 날짜를 설정
+							   	spanTime.textContent = customFormattedDate + " ";
+							   	
+						          // Append the child elements
+						          divIcon.appendChild(faIcon);
+						          divContent.appendChild(spanBlock);
+						          divContent.appendChild(spanTime);
+						          a.appendChild(divIcon);
+						          a.appendChild(divContent);
+		
+						   		
+
+					      // alarmBox의 첫 번째 자식으로 추가
+					      const alarmBox = document.getElementById('alarmBox');
+					      alarmBox.insertBefore(a, alarmBox.firstChild);
+					
 		            });
 					
 		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
@@ -886,7 +1025,63 @@
 					           var dropdownTitle = $('.dropdown-title').eq(1).text();
 					           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
 					           $('.dropdown-title').eq(1).text(newDropdownTitle);
-											 
+							   
+							   var a = document.createElement('a');
+		   			          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+		   					  a.className='noteDeleteOne';		
+		   					  a.id =  bodyObject.alarmKey;
+		   					  
+		   			          var divIcon = document.createElement('div');
+		   			          divIcon.className = 'notif-icon notif-success';
+
+		   			          var faIcon = document.createElement('i');
+		   			          faIcon.className = 'fa fa-envelope';
+
+		   			          var divContent = document.createElement('div');
+		   			          divContent.className = 'notif-content';
+
+		   			          var spanBlock = document.createElement('span');
+		   			          spanBlock.className = 'block';
+		   			          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+
+		   			          var spanTime = document.createElement('span');
+		   			          spanTime.className = 'time';
+		   				   	
+		   					   	// 예시 ISO 8601 날짜 문자열
+		   					   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+
+		   					   	// ISO 8601 문자열을 Date 객체로 변환
+		   					   	const date = new Date(isoDateString);
+
+		   					   	// Date 객체를 로컬 형식으로 변환하여 출력
+		   					   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+
+		   					   	// 또는 직접 포맷하여 사용할 수 있습니다.
+		   					   	const year = date.getFullYear();
+		   					   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+		   					   	const day = date.getDate().toString().padStart(2, '0');
+		   					   	const hours = date.getHours().toString().padStart(2, '0');
+		   					   	const minutes = date.getMinutes().toString().padStart(2, '0');
+		   					   	const seconds = date.getSeconds().toString().padStart(2, '0');
+		   					   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+
+		   					   	// spanTime에 포맷된 날짜를 설정
+		   					   	spanTime.textContent = customFormattedDate + " ";
+		   					   	
+		   				          // Append the child elements
+		   				          divIcon.appendChild(faIcon);
+		   				          divContent.appendChild(spanBlock);
+		   				          divContent.appendChild(spanTime);
+		   				          a.appendChild(divIcon);
+		   				          a.appendChild(divContent);
+
+		   				   		
+
+		   			      // alarmBox의 첫 번째 자식으로 추가
+		   			      const alarmBox = document.getElementById('alarmBox');
+		   			      alarmBox.insertBefore(a, alarmBox.firstChild);
+						 
 		            });
 		            
 		            stompClient.subscribe('/user/queue/users', function (message) {
@@ -894,7 +1089,7 @@
 
 
                       for (var username in users) {
-                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberId}') { // 본인의 상태는 업데이트하지 않음
                               userStatusMap[username] = users[username];
                               updateUserStatus(username, users[username]);
                           }
@@ -906,10 +1101,10 @@
                 var statusDot = document.getElementById('status-dot-' + username);
                 
                 console.log(statusDot);
-                if (!statusDot) {
-                    console.error('status-dot element not found for user: ' + username);
+                 if (!statusDot) {
+                    console.log('status-dot element not found for user: ' + username);
                     return;
-                }
+                } 
 
                 statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
             }

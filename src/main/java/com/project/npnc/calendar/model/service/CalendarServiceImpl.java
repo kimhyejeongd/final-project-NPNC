@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.project.npnc.calendar.model.dao.CalendarDao;
 import com.project.npnc.calendar.model.dto.Calendar;
+import com.project.npnc.calendar.model.dto.Reservation;
+import com.project.npnc.calendar.model.dto.ReserveItem;
+import com.project.npnc.calendar.model.dto.Vacation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,5 +55,46 @@ public class CalendarServiceImpl implements CalendarService {
 	public List<Calendar> checkCalendar(Map<String, Object> param) {
 		return dao.checkCalendar(session, param);
 	}
+	@Override
+	public List<Reservation> selectReservationAll() {
+		return dao.selectReservationAll(session);
+	}
+	@Override
+	public int insertReservation(Reservation reservation) {
+		return dao.insertReservation(session,reservation);
+	}
+	@Override
+	public int deleteReservation(int itemKey) {
+		return dao.deleteReservation(session,itemKey);
+	}
+	@Override
+	public int updateReservation(Reservation reservation) {
+		return dao.updateReservation(session,reservation);
+	}
+	@Override
+	public int insertReCalendar(ReserveItem reserveItem) {
+		return dao.insertReCalendar(session,reserveItem);
+	}
+	@Override
+	public int insertRes(int calKey, int itemKey) {
+		return dao.insertRes(session,calKey,itemKey);
+	}
+	@Override
+	public List<ReserveItem> selectReserveAll() {
+		return dao.selectReserveAll(session);
+	}
+	@Override
+	public List<ReserveItem> selectMyReserve(int memberKey) {
+		return dao.selectMyReserve(session,memberKey);
+	}
+	@Override
+	public int updateReCalendar(ReserveItem reserveItem) {
+		return dao.updateReCalendar(session, reserveItem);
+	}
+	@Override
+	public List<Vacation> checkVacation(Map<String, Object> param) {
+		return dao.checkVacation(session, param);
+	}
+
 
 }

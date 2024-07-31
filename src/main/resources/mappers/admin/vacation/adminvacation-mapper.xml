@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="adminVacation">
+ 	<resultMap type="adminVacation" id="vacationMap">
+		<id column="VACATION_KEY" property="vacationKey"/>
+		<result column="VACATION_NAME" property="vacationName"/>
+		<result column="VACATION_CALC_YN" property="vacationCalcYN"/>
+	</resultMap>
+  	<select id="selectVacationAll" resultMap="vacationMap">
+ 		SELECT 
+ 			VACATION_KEY,
+ 			VACATION_NAME,
+ 			VACATION_CALC_YN
+ 			FROM VACATION
+ 	</select>
+ 	
+ 	<select id="selectVacationByKey" parameterType="_int" resultMap="vacationMap">
+ 		SELECT 
+ 			VACATION_KEY,
+ 			VACATION_NAME,
+ 			VACATION_CALC_YN
+ 			FROM VACATION
+ 			WHERE VACATION_KEY=#{vacationKey}
+ 	</select>
+ 	
+ 	<insert id="insertVacation" parameterType="adminVacation">
+  		INSERT 
+  		INTO VACATION 
+  		VALUES(SEQ_VACATION.NEXTVAL,
+  				#{vacationName},
+  				#{vacationCalcYN})
+  	</insert>
+  	
+  	<update id="updateVacation" parameterType="adminVacation">
+  		UPDATE VACATION 
+  			SET 
+  			VACATION_NAME=#{vacationName},
+  			VACATION_CALC_YN=#{vacationCalcYN}	
+  			WHERE VACATION_KEY=#{vacationKey}
+  	</update>
+  	
+  	<delete id="deleteVacation" parameterType="_int">
+  		DELETE 
+  			FROM VACATION 
+  			WHERE VACATION_KEY=#{vacationKey}
+  	</delete>
+	
+</mapper>

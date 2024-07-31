@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="reservation">
+	
+	<resultMap id="reMap" type="reservation">
+		<id property="itemKey" column="ITEM_KEY"/>
+		<result property="itemType" column="ITEM_TYPE"/>
+		<result property="itemName" column="ITEM_NAME"/>
+		<result property="itemMax" column="ITEM_MAX"/>
+		<result property="itemUse" column="ITEM_USE"/>
+		<result property="itemCreator" column="ITEM_CREATOR"/>
+		<result property="itemCreateDate" column="ITEM_CREATE_DATE"/>
+	
+	</resultMap>
+	
+	<resultMap id = "reItemMap" type="reserveItem">
+		<id property="calendarKey" column="CALENDAR_KEY"/>
+		<result property="reservationKey" column="RESERVATION_KEY"/>
+		<result property="memberKey" column="MEMBER_KEY"/>
+		<result property="itemKey" column="ITEM_KEY"/>
+		<result property="itemType" column="ITEM_TYPE"/>
+		<result property="itemMax" column="ITEM_MAX"/>
+		<result property="itemName" column="ITEM_NAME"/>
+		<result property="start" column="CALENDAR_START"/>
+		<result property="end" column="CALENDAR_END"/>
+	</resultMap>
+	
+	
+	<select id="selectReserveAll" resultMap = "reItemMap">
+		SELECT
+			re.CALENDAR_KEY,
+			re.ITEM_KEY,
+			cal.MEMBER_KEY,
+			it.ITEM_NAME,
+			cal.CALENDAR_START,
+			cal.CALENDAR_END
+		FROM
+			RESERVATION re
+		LEFT JOIN
+			CALENDAR cal on cal.CALENDAR_KEY = re.CALENDAR_KEY
+		LEFT JOIN
+			RESERVATION_ITEM it on re.ITEM_KEY = it.ITEM_KEY
+		WHERE
+			cal.CALENDAR_DELETE = 'N'
+	</select>
+	<select id="selectMyReserve" resultMap = "reItemMap" parameterType = "_int">
+		SELECT
+			re.CALENDAR_KEY,
+			re.ITEM_KEY,
+			re.RESERVATION_KEY,
+			it.ITEM_NAME,
+			it.ITEM_TYPE,
+			it.ITEM_MAX,
+			cal.CALENDAR_START,
+			cal.CALENDAR_END
+		FROM
+			RESERVATION re
+		LEFT JOIN
+			CALENDAR cal on cal.CALENDAR_KEY = re.CALENDAR_KEY
+		LEFT JOIN
+			RESERVATION_ITEM it on re.ITEM_KEY = it.ITEM_KEY
+		WHERE
+			cal.CALENDAR_DELETE = 'N' AND cal.MEMBER_KEY = #{memberKey} 	
+	</select>
+	<select id="selectReservationAll" resultMap ="reMap">
+		SELECT
+			ITEM_KEY,
+			ITEM_TYPE,
+			ITEM_NAME,
+			ITEM_MAX,
+			ITEM_USE,
+			ITEM_CREATOR,
+			ITEM_CREATE_DATE
+		FROM
+			RESERVATION_ITEM
+		WHERE
+			ITEM_DELETE = 'N'
+	
+	</select>
+	
+	
+	<insert id="insertReservation" parameterType="reservation">
+		INSERT INTO RESERVATION_ITEM VALUES(
+			SEQ_RESERVATION_ITEM.NEXTVAL,
+			#{itemType},
+			#{itemName},
+			#{itemMax},
+			DEFAULT,
+			#{itemCreator},
+			DEFAULT,
+			DEFAULT
+		)
+	</insert>
+	
+	<update id="deleteReservation" parameterType="_int">
+		UPDATE
+			RESERVATION_ITEM
+		SET
+			ITEM_DELETE ='Y'
+		WHERE
+			ITEM_KEY = #{itemKey}
+	
+	</update>
+	
+	<update id="updateReservation" parameterType="reservation">
+		UPDATE
+			RESERVATION_ITEM
+		SET
+			ITEM_TYPE = #{itemType},
+			ITEM_NAME = #{itemName},
+			ITEM_MAX = #{itemMax}
+		WHERE
+			ITEM_KEY = #{itemKey}
+	</update>
+	<insert id="insertRes" parameterType ="map">
+		INSERT INTO RESERVATION VALUES(
+			SEQ_RESERVATION.NEXTVAL,
+			#{itemKey},
+			#{calKey}
+		)
+
+	</insert>
+	
+	
+
+</mapper>

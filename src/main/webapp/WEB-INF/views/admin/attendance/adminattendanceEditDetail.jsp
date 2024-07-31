@@ -1,18 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<c:set var="path" value="${pageContext.request.contextPath }"/>	    
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-	<%@ include file="/WEB-INF/views/common/script_gather.jsp" %> 
-				
-				<form action="${path}/admin/attendance/updateAttendance" method="post">
+<c:set var="path" value="${pageContext.request.contextPath }"/>	
+<div class="modal fade" id="editformModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-lg">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="formModalLabel">사원 수정</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+        <div class="modal-body">
+			<form action="${path}/admin/attendance/updateAttendance" method="post">
+				<div class="container">
+         		 <div class="page-inner">
 				<div class="form-group">
 					<div class="form-group form-inline">
 		                          <label
@@ -25,7 +27,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditMember"
 		                              name="attendanceEditMember"
-									  value="${attendanceEdit.attendanceEditMember}"
+									<%--   value="${attendanceEdit.attendanceEditMember}" --%>
 		                              placeholder="작성자"
 		                              readonly
 		                            />
@@ -45,7 +47,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditDate"
 		                              name="attendanceEditDate"
-									  value="${attendanceEdit.attendanceEditDate }"
+									 <%--  value="${attendanceEdit.attendanceEditDate }" --%>
 		                              placeholder="작성일"
 		                              readonly
 		                            />
@@ -63,7 +65,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditRequestDate"
 		                              name="attendanceEditRequestDate"
-									  value="${attendanceEdit.attendanceEditRequestDate }"
+									 <%--  value="${attendanceEdit.attendanceEditRequestDate }" --%>
 		                              placeholder="수정요청일"
 		                              readonly
 		                            />
@@ -81,7 +83,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditBeforeState"
 		                              name="attendanceEditBeforeState"
-		                              value="${attendanceEdit.attendanceEditBeforeState }"
+		                              <%-- value="${attendanceEdit.attendanceEditBeforeState }" --%>
 		                              readonly
 		                            />
 		                          </div>
@@ -98,7 +100,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditBeforeTime"
 		                              name="attendanceEditBeforeTime"
-		                              value="${attendanceEdit.attendanceEditBeforeTime }"
+		                             <%--  value="${attendanceEdit.attendanceEditBeforeTime }" --%>
 		                              readonly
 		                            />
 		                          </div>
@@ -114,7 +116,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditStartEnd"
 		                              name="attendanceEditStartEnd"
-		                              value="${attendanceEdit.attendanceEditStartEnd }"
+		                            <%--   value="${attendanceEdit.attendanceEditStartEnd }" --%>
 		                              readonly
 		                            />
 		                          </div>
@@ -131,7 +133,7 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterTime"
 		                              name="attendanceEditAfterTime"
-		                              value="${attendanceEdit.attendanceEditAfterTime }"
+		                             <%--  value="${attendanceEdit.attendanceEditAfterTime }" --%>
 		                              readonly
 		                            />
 		                          </div>
@@ -143,14 +145,27 @@
 		                            class="col-md-3 col-form-label"
 		                            >수정후상태</label>
 		                          <div class="col-md-9 p-0">
-		                            <input
+		                           <%--  <input
 		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterState"
 		                              name="attendanceEditAfterState"
 		                              value="${attendanceEdit.attendanceEditAfterState }"
-		                              readonly
-		                            />
+		                              required
+		                            /> --%>
+		                            <select
+		                            class="form-select"
+		                            id="attendanceEditAfterState"
+		                            name="attendanceEditAfterState"
+		                          	>
+								  		<option value="출근" >출근</option>
+								        <option value="지각" >지각</option>
+								        <option value="조퇴" >조퇴</option>
+								        <option value="결근" >결근</option>
+								        <option value="휴가" >휴가</option>
+								        <option value="유급휴가">유급휴가</option>
+		                          </select>
+		                            
 		                          </div>
 		           	</div>
 		           
@@ -165,7 +180,7 @@
 		                              id="attendanceEditRequest"
 		                              name="attendanceEditRequest"
 		                             readonly
-		                            >${attendanceEdit.attendanceEditRequest }</textarea>
+		                            ><%-- ${attendanceEdit.attendanceEditRequest } --%></textarea>
 		                          </div>
 		           	</div>
 		           	
@@ -180,42 +195,50 @@
 		                              id="attendanceEditOpinion"
 		                              name="attendanceEditOpinion"
 		                              required
-		                              <c:if test="${not empty attendanceEdit.attendanceEditOpinion}">
+<%-- 		                             <c:if test="${not empty attendanceEditOpinion}">
 		                              	readonly
-		                              </c:if>
-		                            >${attendanceEdit.attendanceEditOpinion}</textarea>
+		                             </c:if> --%>
+		                            ></textarea>
 		                          </div>
 		           	</div>
 		           		
 		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
-		           		<input type="hidden" id="attendanceKey" name="attendanceKey" value="${attendanceEdit.attendance.attendanceKey }">
+		           		<input type="hidden" id="attendanceKey" name="attendanceKey">
 		           		
-		          	<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
+		          	
 			           	<button
+			           		id="approveButton"
 						  	type="submit"
 						 	class="btn btn-success"
 			 				data-color="dark"
 						>승인</button>
-					</c:if>
 			</div>
-
-		</form>		
-					<c:if test="${empty attendanceEdit.attendanceEditOpinion}">
-					<div>
-	         		<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
+			</div>
+		   </div>
+		</form>
+	         		<button id="rejectButton"  onclick="rejectionAttendanceEdit();" class="btn btn-dark">
 					반려</button>
-					</div>
-					</c:if>
-					<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
-					닫기</button>
+
+		</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+		
 					
-				<script>
-				const rejectionAttendanceEdit=(key)=>{
+					
+ 				<script>
+				const rejectionAttendanceEdit=()=>{
 					   if(confirm("반려 하시겠습니까?")){
+
 				           let form = document.createElement("form");
 				           form.setAttribute("method", "post");
 				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
 				
+				           let key = document.getElementById("attendanceEditKey").value;
 				           let $key = document.createElement("input");
 				           $key.setAttribute("type", "hidden");
 				           $key.setAttribute("name", "attendanceEditKey");
@@ -239,7 +262,4 @@
 					   
 					}
 
-				</script>
-
-</body>
-</html>
+				</script> 

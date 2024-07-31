@@ -25,7 +25,7 @@ public class OrganizationController {
 		System.out.println(list);
 		m.addAttribute("list",list);
 		
-		return "organ/organOrigin";
+		return "organ/organ";
 	}
 	
 }

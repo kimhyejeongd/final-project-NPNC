@@ -16,7 +16,7 @@
 	
 	
 	<select id="alarmSelectAll" resultMap="alarmMap" parameterType="_int">
-		SELECT * FROM ALARM WHERE ALARM_READ='N' AND ALARM_RE_MEMBER=#{memberKey}
+		SELECT * FROM ALARM WHERE ALARM_READ='N' AND ALARM_RE_MEMBER=#{memberKey} ORDER BY ALARM_KEY DESC
 	</select>
 	<insert id="alarmInsert"  parameterType="alarmMessage">
  		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N')

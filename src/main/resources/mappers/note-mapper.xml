@@ -24,12 +24,25 @@
 	<resultMap id="noteRecMap" type="noteRec">
 		<result column="POST_MSG_REC_KEY" property="postMsgRecKey"></result>
 		<result column="POST_MSG_REC_MEMBER_KEY" property="memberKey"></result>
+
 		<result column="POST_MSG_DETAIL" property="postMsgDetail"></result>
 		<result column="POST_MSG_TIME" property="postMsgTime"></result>
 		<result column="POST_MSG_RESERVATION" property="postMsgReservation"></result>
 		<result column="POST_MSG_TITLE" property="postMsgTitle"></result>
 		<collection property="recMember" resultMap="memberMap"></collection>
 		<collection property="files" resultMap="noteFileMap"></collection>
+	</resultMap> 
+	<resultMap id="noteRecMapPagingList" type="noteRec">
+		<result column="POST_MSG_REC_KEY" property="postMsgRecKey"></result>
+		<result column="POST_MSG_REC_MEMBER_KEY" property="memberKey"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="JOB_NAME" property="jobName"></result>
+		<result column="POST_MSG_DETAIL" property="postMsgDetail"></result>
+		<result column="POST_MSG_TIME" property="postMsgTime"></result>
+		<result column="POST_MSG_RESERVATION" property="postMsgReservation"></result>
+		<result column="POST_MSG_TITLE" property="postMsgTitle"></result>
+		<result column="BOOKMARK_STATUS" property="bookMarkStatus"></result>
+		
 	</resultMap> 
 	<resultMap id="noteSendMap" type="noteSend">
 
@@ -60,16 +73,41 @@
 	
 	
 	<select id="noteMsgKey" resultType="_int">
-		      select SEQ_PM.NEXTVAL from dual
+	    select SEQ_PM.NEXTVAL from dual
 		
 	</select>
-	<select id="noteSelectAll" resultMap="noteRecMap">
-		SELECT * FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER USING (POST_MSG_REC_KEY) 
-		WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N' ORDER BY POST_MSG_REC_KEY DESC
+	<select id="noteSelectAll" resultMap="noteRecMapPagingList">
+ 	SELECT *
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+    WHERE MEMBER_REC_KEY = #{memberKey}
+    AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+    AND DELETE_STATUS = 'N'
+    <if test="title != null">
+        AND LOWER(POST_MSG_TITLE) LIKE '%' || LOWER(#{title}) || '%'
+    </if>
+    <if test="name != null">
+        AND LOWER(MEMBER_NAME) LIKE '%' || LOWER(#{name}) || '%'
+    </if>
+    ORDER BY R.POST_MSG_REC_KEY DESC
 	</select>
-	<select id="noteSelectTotalData" resultType="_int" parameterType="_int">
-		SELECT COUNT(*) FROM POST_MESSAGE_RECEPTION JOIN POST_MESSAGE_RECEIVER 
-		USING (POST_MSG_REC_KEY)WHERE MEMBER_REC_KEY=#{memberKey} AND DELETE_STATUS='N'
+	
+	<select id="noteSelectTotalData" resultType="_int" parameterType="map">
+		SELECT count(*)
+		FROM POST_MESSAGE_RECEPTION R
+		JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+		JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+		WHERE MEMBER_REC_KEY = #{memberKey}
+		AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+	    <if test="title != null">
+	        AND LOWER(POST_MSG_TITLE) LIKE '%' || LOWER(#{title}) || '%'
+	    </if>
+	    <if test="name != null">
+	        AND LOWER(MEMBER_NAME) LIKE '%' || LOWER(#{name}) || '%'
+	    </if>
+		AND DELETE_STATUS='N'
 
 	</select>
 	<select id="noteSelectOne" resultMap="noteRecMap" parameterType="map" >
@@ -147,4 +185,64 @@
 	AND MEMBER_REC_KEY =#{memberKey}
 	</update>
 	
+	<!-- 내게 쓴 쪽지함 매퍼-->
+	<select id="selectNoteMeAll"  resultMap="noteRecMap">
+	SELECT * 
+	FROM POST_MESSAGE_RECEPTION 
+	JOIN POST_MESSAGE_RECEIVER 
+	USING (POST_MSG_REC_KEY) 
+	WHERE MEMBER_REC_KEY=#{memberKey} 
+	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND DELETE_STATUS='N' 
+	ORDER BY POST_MSG_REC_KEY DESC
+	</select>
+	
+	<select id="selectNoteMeTotalData" parameterType="_int" resultType="_int">
+	SELECT COUNT(*) 	
+	FROM POST_MESSAGE_RECEPTION 
+	JOIN POST_MESSAGE_RECEIVER 
+	USING (POST_MSG_REC_KEY) 
+	WHERE MEMBER_REC_KEY=#{memberKey} 
+	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND DELETE_STATUS='N' 
+	</select>
+	
+	<update id="noteBookMarkInsert" parameterType="map" >
+	UPDATE POST_MESSAGE_RECEIVER 
+	SET BOOKMARK_STATUS ='Y' 
+	WHERE POST_MSG_REC_KEY =#{postMsgRecKey} 
+	AND MEMBER_REC_KEY=#{memberKey}
+
+	</update>
+	<update id="noteBookMarkDelete" parameterType="map" >
+	UPDATE POST_MESSAGE_RECEIVER 
+	SET BOOKMARK_STATUS ='N' 
+	WHERE POST_MSG_REC_KEY =#{postMsgRecKey} 
+	AND MEMBER_REC_KEY=#{memberKey}
+
+	</update>
+	<select id="noteBookMarkPaging" parameterType="_int" resultMap="noteRecMapPagingList">
+	SELECT *
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+    WHERE MEMBER_REC_KEY = #{memberKey}
+    AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+    AND DELETE_STATUS = 'N'
+  	AND BOOKMARK_STATUS='Y'
+    ORDER BY R.POST_MSG_REC_KEY DESC
+	</select>
+	<select id="noteBookMarkTotalData" resultType="_int">
+	SELECT COUNT(*)
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+    WHERE MEMBER_REC_KEY = #{memberKey}
+    AND POST_MSG_REC_MEMBER_KEY != #{memberKey}
+    AND DELETE_STATUS = 'N'
+  	AND BOOKMARK_STATUS='Y'
+    ORDER BY R.POST_MSG_REC_KEY DESC
+	</select>
 </mapper>

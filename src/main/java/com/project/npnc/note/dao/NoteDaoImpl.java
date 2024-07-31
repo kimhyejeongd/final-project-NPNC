@@ -1,5 +1,6 @@
 package com.project.npnc.note.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,14 +14,66 @@ import com.project.npnc.note.dto.NoteSendDto;
 
 @Repository
 public class NoteDaoImpl implements NoteDao {
+	
+//  즐겨찾기 화면
 
-//	보낸 쪽지 삭제, 업데이트 구문
+	@Override
+	public List<NoteReceptionDto> noteBookMarkPaging(SqlSession session, Map<String, Object> page) {
+		// TODO Auto-generated method stub
+		RowBounds rb=new RowBounds(((Integer)(page.get("cPage"))-1)*((Integer)page.get("numPerpage")),(Integer)page.get("numPerpage"));
+		int memberKey=(Integer)page.get("memberKey");
+
+		return session.selectList("note.noteBookMarkPaging",memberKey ,rb);
+	}
+
+	@Override
+	public int noteBookMarkTotalData(SqlSession session, int memberKey) {
+		// TODO Auto-generated method stub
+		return session.selectOne("noteBookMarkTotalData", memberKey);
+	}
+
+
+//	즐겨찾기 삭제
+	@Override
+	public int noteBookMarkDelete(SqlSession session, Map<String, Object> param) {
+
+		return session.update("note.noteBookMarkDelete", param);
+	}
+
+
+	//	즐겨찾기 추가
+	@Override
+	public int noteBookMarkInsert(SqlSession session, Map<String, Object> param) {
+
+		return session.update("note.noteBookMarkInsert", param);
+	}
+
+	
+	//내게 쓴 쪽지함 	
+	@Override
+	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		int memberKey=page.get("memberKey");
+		System.out.println(memberKey+"       "+rb);
+		return  session.selectList("note.selectNoteMeAll", memberKey, rb);
+	
+		
+	}
+
+	@Override
+	public int selectNoteMeTotalData(SqlSession session, int memberKey) {
+		// TODO Auto-generated method stub
+		return session.selectOne("note.selectNoteMeTotalData",memberKey);
+	}
+
+	//	보낸 쪽지 삭제, 업데이트 구문
 	@Override
 	public int noteSendDelete(SqlSession session, int checkDeleteValue) {
 		
 		return session.update("note.noteSendDelete", checkDeleteValue);
 	}
-// 받은 쪽지 삭제, 업데이트 구문
+	
+	// 받은 쪽지 삭제, 업데이트 구문
 	@Override
 	public int noteRecDelete(SqlSession session, Map<String, Integer> param) {
 		
@@ -48,11 +101,11 @@ public class NoteDaoImpl implements NoteDao {
 	
 
 	@Override
-	public int noteSelectTotalData(SqlSession session, int memberKey) {
+	public int noteSelectTotalData(SqlSession session, Map<String,Object> param) {
 		
-		return session.selectOne("note.noteSelectTotalData",memberKey);
+		return session.selectOne("note.noteSelectTotalData",param);
 	}
-
+	
 	
 
 	@Override
@@ -65,11 +118,26 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
-	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Integer> page) {
-		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
-		int memberKey=page.get("memberKey");
-		System.out.println(memberKey+" 여기에 들어 왔냐고");
-		return session.selectList("note.noteSelectAll",memberKey,rb);
+	public List<NoteReceptionDto> selectNoteAll(SqlSession session, Map<String, Object> page) {
+		RowBounds rb=new RowBounds(((Integer)(page.get("cPage"))-1)*((Integer)page.get("numPerpage")),(Integer)page.get("numPerpage"));
+		int memberKey=(Integer)page.get("memberKey");
+		Map<String, Object> param=new HashMap<>();
+		param.put("memberKey", memberKey);
+		
+		
+		if (page.containsKey("title")) {
+			param.put("title", page.get("title"));
+			
+			System.out.println(page.get("title")+"제목 들어왔냐고");
+		}
+		if(page.containsKey("name")) {
+			param.put("name", page.get("name"));
+			System.out.println(page.get("name")+"네임 들어왔냐고");
+
+		}
+		
+	
+		return session.selectList("note.noteSelectAll",param,rb);
 	}
 
 	@Override

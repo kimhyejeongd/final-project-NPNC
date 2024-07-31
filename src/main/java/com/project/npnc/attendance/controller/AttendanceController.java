@@ -23,6 +23,9 @@ import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
+import com.project.npnc.common.SearchPageFactory;
+import com.project.npnc.memberVacation.model.dto.MemberVacation;
+import com.project.npnc.memberVacation.model.service.MemberVacationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +36,19 @@ public class AttendanceController{
 
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
+	private final MemberVacationService memberVacationService;
 	private final PageFactory pageFactory;
+	private final SearchPageFactory searchPageFactory;
+	
+
+	/*
+	 * @GetMapping("/mainAttendance") public String mainAttendance( Authentication
+	 * authentication, Model m) { int memberKey
+	 * =memberService.selectMemberKeyById(authentication.getName()); Attendance
+	 * attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
+	 * m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
+	 * m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd()); return "/"; }
+	 */
 	
 	
 	@Scheduled(cron="0 0 23 1 * ?")
@@ -144,18 +159,36 @@ public class AttendanceController{
 	
 	//사원 근태관리 화면
 	
-	@GetMapping("/selectAttendanceAll.do")
+	@GetMapping("/selectAttendanceAll")
 	public String selectAttendanceAll(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,
 			Authentication authentication,
 			Model m){
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll.do"));
+		
+		 // 현재 날짜 가져오기
+        LocalDate currentDate = LocalDate.now();
+        // 현재 달 숫자 가져오기
+        int currentMonth = currentDate.getMonthValue();
+        m.addAttribute("currentMonth",currentMonth);
+		//이번달 휴가
+		MemberVacation mv=memberVacationService.selectMemberVacationByMemberKey(memberKey);
+
+		m.addAttribute("memberVacation",mv);
+		
+		//이번달 근태현황
+		Attendance a=Attendance.builder().member(AdminMember.builder().memberKey(memberKey).build()).build();
+		Map<String,Integer> attendanceCount=attendanceService.selectAttendanceMonthCount(a);
+		m.addAttribute("attendanceCount",attendanceCount);
+
+		
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		m.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
@@ -164,14 +197,15 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/updateAttendance")
-	public String updateAttendance(int attendanceKey,Model m,Authentication authentication) {
+	public ResponseEntity<Map> updateAttendance(int attendanceKey,Authentication authentication) {
 		LocalDate today=LocalDate.now();
 		Attendance a=attendanceService.selectAttendanceByAttendanceKey(attendanceKey);
 		a.setMember(AdminMember.builder().memberId(authentication.getName()).build());
 		System.out.println(a);
-		m.addAttribute("today",today);
-		m.addAttribute("attendance",a);
-		return "attendance/updateattendance";
+		Map response =new HashMap();
+		response.put("today",today);
+		response.put("attendance",a);
+		return ResponseEntity.ok(response);
 		
 	}
 	
@@ -185,15 +219,16 @@ public class AttendanceController{
 		if(ae.getAttendanceEditBeforeTime().equals("")) {
 			
 		}
+
 		int result=attendanceService.insertAttendanceEdit(ae);
 		
 		String msg,loc;
 		if(result>0) {
 			msg="요청성공";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}else {
 			msg="요청실패";
-			loc="/attendance/selectAttendanceAll.do";
+			loc="/attendance/selectAttendanceAll";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -208,16 +243,17 @@ public class AttendanceController{
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendanceEdit= attendanceService.selectAttendanceEditById(authentication.getName(),page);
 		int totaldata=attendanceService.selectAttendanceEditCount(authentication.getName());
-		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "attendanceEditList"));
+		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceEditById"));
 		m.addAttribute("attendanceEdit",attendanceEdit);
 		return "attendance/attendanceEditList";
 	}
 	
 	@PostMapping("/attendanceEditDetail")
-	public String attendanceEditDetail(int attendanceEditKey, Model m) {
+	public ResponseEntity<Map<String,AttendanceEdit>> attendanceEditDetail(int attendanceEditKey) {
 		AttendanceEdit attendanceEdit= attendanceService.selectAttendanceEditByKey(attendanceEditKey);
-		m.addAttribute("attendanceEdit",attendanceEdit);
-		return "attendance/attendanceEditDetail";
+		Map<String,AttendanceEdit> response =new HashMap<>();
+		response.put("attendanceEdit", attendanceEdit);
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/deleteAttendanceEdit")
@@ -226,10 +262,10 @@ public class AttendanceController{
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}else {
 			msg="삭제실패";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -238,9 +274,52 @@ public class AttendanceController{
 		
 	}
 	
-	
+	@GetMapping("/searchAttendanceEdit")
+	public String searchAttendanceEdit(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			String searchType,
+			Authentication authentication,
+			Model model) {
+		
+		Map<String,Object> searchMap=Map.of("searchType",searchType,"memberId",authentication.getName());
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<AttendanceEdit> list=attendanceService.searchAttendanceEdit(searchMap,page);
+		int totaldata=attendanceService.searchAttendanceEditCount(searchMap);
+		System.out.println(list);
+		model.addAttribute("attendanceEdit", list);
+		model.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,null,searchType,null,null,"searchAttendanceEdit"));
+		return "attendance/ajax_response/tableresponse";
+	}
+
+	@GetMapping("/searchAttendance")
+	public String searchAttendance(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "5") int numPerpage,
+			String searchType,
+			String searchStartDate,
+			String searchEndDate,
+			Authentication authentication,
+			Model m
+			) {
 
 	
+		if(!searchEndDate.equals("")) {	
+			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
+			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		}
+		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		Map<String,Object> searchMap=Map.of("searchType",searchType,"searchStartDate",searchStartDate,"searchEndDate",searchEndDate,"memberKey",memberKey);
+		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
+		List<Attendance> attendance=attendanceService.searchAttendance(searchMap,page);
+		int totaldata=attendanceService.searchAttendanceCount(searchMap);
+		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,null,searchType,searchStartDate,searchEndDate,"searchAttendance"));
+		m.addAttribute("attendances", attendance);
+		m.addAttribute("searchT",searchType);
+		m.addAttribute("searchSD",searchStartDate);
+		m.addAttribute("searchED",searchEndDate);
+		return "attendance/ajax_response/membertableresponse";
+	}
 	
 	
 	

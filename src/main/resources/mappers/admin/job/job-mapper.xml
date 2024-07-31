@@ -6,9 +6,18 @@
 		<result column="JOB_NAME" property="jobName"/>
 	</resultMap>
   <select id="selectJobAll" resultMap="jobMap">
-  		SELECT * 
+  		SELECT 
+  			JOB_KEY,
+  			JOB_NAME
   			FROM JOB
   </select>
+    <select id="selectJobByKey" parameterType="string" resultMap="jobMap">
+  		SELECT 
+  			JOB_KEY,
+  			JOB_NAME 
+  			FROM JOB
+  			WHERE JOB_KEY=#{jobKey}
+  	</select>
   <insert id="insertJob" parameterType="job">
   		INSERT INTO JOB 
   			VALUES('J'||SEQ_JOB.NEXTVAL,#{jobName})

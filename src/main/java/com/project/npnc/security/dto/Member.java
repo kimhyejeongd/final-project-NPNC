@@ -22,13 +22,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Member implements UserDetails {
-    private static final long serialVersionUID = 2753929692689331304L;
+
+
+  private static final long serialVersionUID = 2753929692689331304L;
+
 
 	private int memberKey;
 	private String departmentKey;
 	private String jobKey;
+	private String departmentName;
+	private String jobName;
 
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
 	private String memberId;
@@ -49,7 +53,7 @@ public class Member implements UserDetails {
 	private String memberGender;
 	private String memberState;
 	private Date memberBirthdate;
-	private String departmentName;
+	private String memberProfileImage;
 
 
 	/* 권한 설정 */
@@ -66,29 +70,26 @@ public class Member implements UserDetails {
 		return this.memberId;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() { // 계정 만료 여부 반환
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() { // 계정 잠금 여부 반환
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() { // 패스워드 만료 여부 반환
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isEnabled() { // 계정 사용 가능 여부 반환
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 
 
 	@Override
@@ -96,6 +97,5 @@ public class Member implements UserDetails {
 		// TODO Auto-generated method stub
 		return this.memberPw;
 	}
-
 
 }

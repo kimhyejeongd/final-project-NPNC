@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.npnc.alarm.dto.AlarmMessage;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 public interface AlarmDao {
 	public List<AlarmMessage> alarmSelectAll(SqlSession session, int memberKey);

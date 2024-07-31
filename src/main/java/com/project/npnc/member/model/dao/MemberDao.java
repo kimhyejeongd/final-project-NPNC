@@ -5,16 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 public interface MemberDao {
 
-	List<Member> selectMemeberAll(SqlSession session, Map<String,Integer> page);
+	List<SrMember> selectMemeberAll(SqlSession session, Map<String,Integer> page);
 	int selectMemberCount(SqlSession session);
-	Member selectMemberByNo(SqlSession session,int memberKey);
+	SrMember selectMemberByNo(SqlSession session,int memberKey);
 	
-	int insertMember(SqlSession session,Member m);
-	int updateMember(SqlSession session,Member m);
+	int insertMember(SqlSession session,SrMember m);
+	int updateMember(SqlSession session,SrMember m);
 	int deleteMember(SqlSession session,int memberKey);
-	public List<Member> selectMemberAllNoPaging(SqlSession session);
+	public List<SrMember> selectMemberAllNoPaging(SqlSession session);
 }

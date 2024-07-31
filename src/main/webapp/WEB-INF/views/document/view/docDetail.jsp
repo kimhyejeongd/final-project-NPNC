@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="org.springframework.ui.Model" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
+<c:set var="aptarget" value="'memberKey=' + ${loginMember.memberKey}"/>
+<%
+	String lastPage = (String) session.getAttribute("lastPage");
+%>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="ko">
@@ -11,6 +18,10 @@
     content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
     name="viewport"
   />
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   <link
     rel="icon"
     type="image/x-icon"
@@ -31,6 +42,8 @@
      } */
  </style>
  <script src="${path}/resources/jh/js/docDetail.js"></script>
+ <script src="${path}/resources/jh/js/draft.js"></script>
+ <script src="${path}/resources/jh/js/inprocess.js"></script>
 <body>
 
 	<div class="wrapper">
@@ -50,16 +63,83 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
-                <h3 class="fw-bold">문서 보기</h3>
+              	<c:choose>
+              		<c:when test="${fn:contains(lastPage, 'inprocess') or (fn:contains(lastPage, 'home') and fn:contains(history, 'inprocess'))}">
+		              	<h3 class="fw-bold text-center">진행 중 문서</h3>
+		            </c:when>
+              		<c:when test="${fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
+		              	<h3 class="fw-bold text-center">회수 문서</h3>
+		            </c:when>
+		            <c:when test="${fn:contains(lastPage, 'waiting') or (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting'))}">
+		              	<h3 class="fw-bold text-center">결재 대기 문서</h3>
+		            </c:when>
+              	</c:choose>
               </div>
             </div>
             <div class="row">
               <div class=""> <!-- 컨테이너박스 -->
                 <div class="card card-round p-3">
+                <div class="card-header">
+					<div class="card-head-row justify-content-between">
+						<div class="card-title">
+							상세보기
+						</div>
+						<div class="card-tools">
+							<!-- 기안자 -->
+							<!-- 재기안, 삭제 -->
+							<div class="d-flex">
+							<c:choose>
+								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')}">
+									<button class="btn btn-label-success btn-round btn-sm me-2">
+										<span class="btn-label">
+											<i class="fas fa-edit"></i>
+										</span>
+										내용 수정
+									</button>
+									<button class="btn btn-label-info btn-round btn-sm" onclick="modal('${l.erDocSerialKey}');">
+										<span class="btn-label">
+											<i class="fas fa-redo-alt"></i>
+										</span>
+										회수
+									</button>
+								</c:when>
+								<c:when test="${fn:contains(lastPage, 'draft') or fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
+									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocKey}')">
+										<span class="btn-label">
+											<i class="fa fa-pencil"></i>
+										</span>
+										다시 쓰기
+									</button>
+									<button class="btn btn-label-warning btn-round" onclick="deleteModal('${l.erDocKey}')">
+										<span class="btn-label">
+											<i class="fas fa-trash-alt"></i>
+										</span>
+										삭제
+									</button>
+								</c:when>
+								<c:when test="${fn:contains(lastPage, 'waiting') or 
+							                  (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting')) or 
+							                  fn:contains(approverStr, aptarget)}">
+									<a href="#" class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
+										<span class="btn-label">
+											<i class="fa fa-pencil"></i>
+										</span>
+										결재
+									</a>
+								</c:when>
+							</c:choose>
+									<div class="d-flex align-items-center">
+										<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
+		           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button>
+	           						</div>
+							</div>
+						</div>
+					</div>
+				</div>
                   <div class="card-body">
                	<div class="form-group d-flex">
 			      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
-			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
 			      	<span style="font-size: larger;">${l.erDocTitle }</span>
 			      </div>
 			    </div>
@@ -73,9 +153,9 @@
 			      		</c:if>
 			    </div>
 		    	 <div class="form-group d-flex">
-			      <label for="smallInput" class="me-3"><span class="h5 me-5">보관 </span></label>
-			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 90%;" id="">
-			      	<span style="font-size: larger;">${l.erDocStorage}</span>
+			      <label for="smallInput" class=""><span class="h5 me-5">보관함 </span></label>
+			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
+			      	<span style="font-size: larger;">${l.erDocStorageFolderName} > ${l.erDocStorageName} (${l.erDocStorageTerm }년)</span>
 			      </div>
 			    </div>
 			    <div class="form-group d-flex">
@@ -115,7 +195,7 @@
 			    </div>
 			    <div class="form-group d-flex align-items-center gap-3">
 			      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;">참조문서</span></label>
-			      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
+			      <div class="border d-block" style="height: auto; min-height: 30px; width: 100%;" id="">
 			      </div>
 			    </div>
 	          	<c:if test="${l.files[0].fileKey ne 0}">
@@ -130,7 +210,7 @@
 					  	</div>
 					  	<div class="d-flex">
 						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileOriName }">다운로드</button>
 					  	</div>
 					  </div>
 					</c:forEach>
@@ -158,6 +238,7 @@
       </div>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("formNo", "${l.docFormKey}");
 </script>
 </body>
 </html>

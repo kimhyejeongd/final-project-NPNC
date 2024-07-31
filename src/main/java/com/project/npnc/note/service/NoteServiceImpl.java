@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.npnc.member.model.dao.MemberDao;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 import com.project.npnc.note.dao.NoteDao;
 import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
@@ -29,9 +29,34 @@ public class NoteServiceImpl implements NoteService{
 	private final MemberDao memberDao;
 	
 	@Override
-	public List<Member> selectMemberAllNoPaging() {
+	public int noteBookMarkDelete(Map<String, Object> param) {
+
+		return dao.noteBookMarkDelete(session,param);
+	}
+
+	@Override
+	public int noteBookMarkInsert(Map<String, Object> param) {
+
+		return dao.noteBookMarkInsert(session,param);
+	}
+
+	//	즐겨찾기 화면
+	@Override
+	public List<NoteReceptionDto> noteBookMarkPaging(Map<String, Object> page) {
+		// TODO Auto-generated method stub
+		return dao.noteBookMarkPaging(session,page);
+	}
+
+	@Override
+	public int noteBookMarkTotalData(int memberKey) {
+		// TODO Auto-generated method stub
+		return dao.noteBookMarkTotalData(session, memberKey);
+	}
+	
+	@Override
+	public List<SrMember> selectMemberAllNoPaging() {
 		
-		List<Member> result =memberDao.selectMemberAllNoPaging(session);
+		List<SrMember> result =memberDao.selectMemberAllNoPaging(session);
 		
 		return result;
 	}
@@ -76,7 +101,7 @@ public class NoteServiceImpl implements NoteService{
 		Map<String,Object> param=new HashMap();
 		param.put("noteMsgKey", noteMsgKey);
 
-		List<Member> members=memberDao.selectMemberAllNoPaging(session);
+		List<SrMember> members=memberDao.selectMemberAllNoPaging(session);
 		
 		for (int i=0; i<members.size(); i++) {
 			
@@ -99,7 +124,7 @@ public class NoteServiceImpl implements NoteService{
 		Map<String,Object> param=new HashMap();
 		param.put("noteMsgKey", noteMsgKey);
 
-		List<Member> members=memberDao.selectMemberAllNoPaging(session);
+		List<SrMember> members=memberDao.selectMemberAllNoPaging(session);
 		
 		for (int i=0; i<members.size(); i++) {
 			
@@ -171,15 +196,15 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public List<NoteReceptionDto> selectNoteAll(Map<String, Integer> page) {
+	public List<NoteReceptionDto> selectNoteAll(Map<String, Object> page) {
 	
 		return dao.selectNoteAll(session, page);
 	}
 
 	@Override
-	public int noteSelectTotalData(int memberKey) {
+	public int noteSelectTotalData(Map<String,Object> param) {
 		
-		return dao.noteSelectTotalData(session, memberKey);
+		return dao.noteSelectTotalData(session, param);
 	}
 
 
@@ -233,6 +258,20 @@ public class NoteServiceImpl implements NoteService{
 		
 		
 		return result1;
+	}
+
+//	내게보낸쪽지함
+	@Override
+	public List<NoteReceptionDto> selectNoteMeAll(Map<String, Integer> page) {
+		List<NoteReceptionDto> list= dao.selectNoteMeAll(session, page);
+		return  list;
+	}
+
+
+	@Override
+	public int selectNoteMeTotalData(int memberKey) {
+		
+		return dao.selectNoteMeTotalData(session, memberKey);
 	}
 
 

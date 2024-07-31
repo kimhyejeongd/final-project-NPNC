@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +102,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 				    		a.setAttendanceState("출근");
 				    	}else if(startHour<9 && endHour<18) {
 				    		a.setAttendanceState("조퇴");
+				    	}else if(startHour>16) {
+				    		a.setAttendanceState("결근");
 				    	}else if(startHour>9 && endHour>18) {
 				    		a.setAttendanceState("지각");
 				    	}else if(startHour>9 && endHour<18) {
@@ -155,6 +158,38 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.selectAttendanceByAttendanceKey(session, attendanceKey);
 	}
 
+	@Override
+	public List<Attendance> searchAttendance(Map searchMap, Map page) {
+		
+		return attendanceDao.searchAttendance(session,searchMap, page);
+	}
+
+	@Override
+	public int searchAttendanceCount(Map searchMap) {
+		
+		return attendanceDao.searchAttendanceCount(session,searchMap);
+	}
+	
+	@Override
+	public Map<String,Integer> selectAttendanceMonthCount(Attendance a) {
+		Map<String,Integer> attendanceCount=new HashMap<>();
+		a.setAttendanceState("출근");
+		attendanceCount.put("gotowork",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("결근");
+		attendanceCount.put("absent",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("휴가");
+		attendanceCount.put("vaca",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("지각");
+		attendanceCount.put("late",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("조퇴");
+		attendanceCount.put("ealryLeave",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		return attendanceCount;
+	}
 	
 	
 	//attendanceEdit
@@ -189,6 +224,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.deleteAttendanceEdit(session, attendanceEditKey);
 	}
 
+	@Override
+	public List<AttendanceEdit> searchAttendanceEdit(Map<String,Object> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchAttendanceEdit(session, searchMap, page);
+	}
+
+	@Override
+	public int searchAttendanceEditCount(Map<String,Object> searchMap) {
+		// TODO Auto-generated method stub
+		return attendanceDao.searchAttendanceEditCount(session, searchMap);
+	}
+	
 	
 	//admin attendance
 	
@@ -226,7 +273,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public int updateAttendance(AttendanceEdit attendanceEdit) {
 		int result=attendanceDao.updateAttendance(session,attendanceEdit);
 		if(result>0) {
-			return attendanceDao.updateAttendanceEditState(session,attendanceEdit.getAttendanceEditKey());
+			return attendanceDao.updateAttendanceEditState(session,attendanceEdit);
 		}else {
 			session.rollback();
 			return 0;
@@ -246,17 +293,33 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public List<AttendanceEdit> searchAdminAttendanceEdit(Map<String, String> searchMap, Map<String, Integer> page) {
+	public List<AttendanceEdit> searchAdminAttendanceEdit(Map<String, Object> searchMap, Map<String, Integer> page) {
 		
 		return attendanceDao.searchAdminAttendanceEdit(session, searchMap, page);
 	}
 
 	@Override
-	public int searchAdminAttendanceEditCount(Map<String, String> searchMap) {
+	public int searchAdminAttendanceEditCount(Map<String, Object> searchMap) {
 		// TODO Auto-generated method stub
 		return attendanceDao.searchAdminAttendanceEditCount(session, searchMap);
 	}
-	
+
+	@Override
+	public List<Attendance> searchAdminAttendance(Map<String, Object> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchAdminAttendance(session, searchMap, page);
+	}
+
+	@Override
+	public int searchAdminAttendanceCount(Map<String, Object> searchMap) {
+		
+		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
+	}
+
+
+
+
+
 	
 	
 	

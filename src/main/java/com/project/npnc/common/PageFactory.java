@@ -20,7 +20,7 @@ public class PageFactory {
 			sb.append("</li>");
 		}else {
 			sb.append("<li class='page-item'>");
-			sb.append("<a class='page-link' href='javascript:fn_paging("+(pageNo-1)+")'>이전</a>");
+			sb.append("<a class='page-link' href='javascript:fnl_paging("+(pageNo-1)+")'>이전</a>");
 			sb.append("</li>");
 		}
 		
@@ -31,7 +31,7 @@ public class PageFactory {
 				sb.append("</li>");
 			}else {
 				sb.append("<li class='page-item'>");
-				sb.append("<a class='page-link' href='javascript:fn_paging("+pageNo+")'>"+pageNo+"</a>");
+				sb.append("<a class='page-link' href='javascript:fnl_paging("+pageNo+")'>"+pageNo+"</a>");
 				sb.append("</li>");
 			}
 			pageNo++;
@@ -42,12 +42,12 @@ public class PageFactory {
 			sb.append("</li>");
 		}else {
 			sb.append("<li class='page-item'>");
-			sb.append("<a class='page-link' href='javascript:fn_paging("+(pageNo)+")'>다음</a>");
+			sb.append("<a class='page-link' href='javascript:fnl_paging("+(pageNo)+")'>다음</a>");
 			sb.append("</li>");
 		}
 		sb.append("<ul>");
 		sb.append("<script>");
-		sb.append("function fn_paging(pageNo){");
+		sb.append("function fnl_paging(pageNo){");
 		sb.append("location.assign('"+url+"?cPage='+pageNo+'&numPerpage="+numPerpage+"');");
 		sb.append("}");
 		sb.append("</script>");

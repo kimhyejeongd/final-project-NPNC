@@ -16,7 +16,8 @@ public class Calendar {
 	private int calendarKey;
 	//memberKey
 	private int _id;
-	private String name;
+	private int empNo;
+	private String empName;
 	private String deptCode;
 	private int type;
 	private String title;
