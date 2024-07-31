@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -22,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -931,6 +937,24 @@ public class MemberDocumentController {
 		response.put("message", "문서 삭제 완료");
 		return ResponseEntity.ok(response);
 	}
+	//파일 다운로드
+	 @GetMapping("/download/{filename:.+}")
+	    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
+	        try {
+	            Path filePath = Paths.get(uploadDir + "/docfile").resolve(filename).normalize();
+	            Resource resource = new UrlResource(filePath.toUri());
+
+	            if (resource.exists() || resource.isReadable()) {
+	                return ResponseEntity.ok()
+	                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+	                        .body(resource);
+	            } else {
+	                throw new RuntimeException("Could not read the file!");
+	            }
+	        } catch (Exception e) {
+	            throw new RuntimeException("Error: " + e.getMessage());
+	        }
+	    }
 	
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {

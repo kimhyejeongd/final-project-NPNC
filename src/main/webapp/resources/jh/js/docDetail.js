@@ -16,10 +16,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	        }
 	    });
 	}
-	function downloadFile(fileUrl) {
-	    // 파일을 다운로드하기 위한 링크를 생성하고 클릭합니다.
-	    window.location.href = fileUrl;
-	}
+	//파일 다운로드
+	$(document).on('click', '#fileDownBtn', function() {
+	    let fileName = $(this).data('filename');
+	    window.location.href = sessionStorage.getItem("path") + `/files/download/${fileName}`;
+	});
 	$("#closeBtn").click(function(){
 		window.history.back();
 	});

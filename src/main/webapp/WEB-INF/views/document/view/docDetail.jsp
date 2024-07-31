@@ -210,7 +210,7 @@
 					  	</div>
 					  	<div class="d-flex">
 						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileOriName }">다운로드</button>
 					  	</div>
 					  </div>
 					</c:forEach>
