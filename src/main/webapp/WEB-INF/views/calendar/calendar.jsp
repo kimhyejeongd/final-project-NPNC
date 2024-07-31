@@ -48,6 +48,16 @@
 </head>
 <style>
 	/* 레이아웃 조정 */
+	/* 각 이벤트 요소 */
+/* #calendar .fc-event {
+  cursor: pointer;
+  padding: 5px 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+} */
+	
   #content {
     position: absolute;
     display: none;
@@ -64,7 +74,7 @@
 	}
 	
 	/* 체크박스 컨테이너 스타일 */
-	.checkbox-container {
+	#checkbox {
 	  border: 1px solid #ddd; /* 박스 테두리 */
 	  border-radius: 4px; /* 박스 테두리 모서리 둥글게 */
 	  padding: 15px; /* 박스 내부 여백 */
@@ -83,7 +93,34 @@
   .selected-member {
         background-color: #d3f9d8; /* 선택된 멤버의 배경색을 변경 */
   }
+.tooltip-content {
+  background-color: #fff;
+  color: #000;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.popover-title {
+  background-color: #f5fffa;
+  color: #000;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.popover-info {
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.popover-description {
+  margin-top: 5px;
+}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
 <body>
   <div class="wrapper">
     <!-- Sidebar -->

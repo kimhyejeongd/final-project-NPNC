@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navLinks: true,
         selectable: true,
         droppable: true,
-        editable: true,
+        editable: false,
         locale: 'ko',
         timezone: "local",
         select: function(info) {
@@ -71,22 +71,22 @@ document.addEventListener('DOMContentLoaded', function() {
             fetchCalendarEvents(successCallback, failureCallback);
         },
         eventDidMount: function(info) {
-			console.log(info.event);
-          var tooltip = new bootstrap.Tooltip(info.el, {
-            title: `
-              <div class="popoverTitleCalendar" style="background: ${info.event.backgroundColor}; color: ${info.event.textColor};">${info.event.title}</div>
-              <div class="popoverInfoCalendar">
-                <p><strong>등록자:</strong> ${info.event.extendedProps.empName}</p>
-                <p><strong>시간:</strong> ${getDisplayEventDate(info.event)}</p>
-                <div class="popoverDescCalendar"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
-              </div>
-            `,
-            html: true,
-            placement: 'top',
-            trigger: 'hover',
-            container: 'body'
-          });
-        }
+		  var tooltip = new bootstrap.Tooltip(info.el, {
+		    title: `
+		      <div class="tooltip-content">
+		        <div class="popover-title">${info.event.title}</div>
+		        <div class="popover-info">등록자 : ${info.event.extendedProps.empName}</div>
+		        <div class="popover-info">시간 : ${getDisplayEventDate(info.event)}</div>
+		          <div class="popover-description"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
+		        </div>
+		      </div>
+		    `,
+		    html: true,
+		    placement: 'top',
+		    trigger: 'hover',
+		    container: 'body'
+		  });
+		}
     });
 
     calendar.render();

@@ -140,8 +140,16 @@ var editEvent = function(event) {
                             calendarEvent.setExtendedProp('allDay', updatedEvent.allDay);
                             selectedMembers = [];
                             updateSelectedMembers();
-                            alert(response.message);
                         }
+                        Swal.fire({
+					        icon: 'success',  // 성공을 나타내는 아이콘
+					        title: '완료',
+					        text: response.message,
+					        confirmButtonText: '확인'
+				        });
+				        setTimeout(() => {
+			                window.location.reload();
+			            }, 3000); // 3초 후 새로고침
                     } else {
                         alert(response.message);
                     }
