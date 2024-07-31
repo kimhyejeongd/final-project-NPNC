@@ -12,6 +12,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+
 	<c:set var="path" value="${pageContext.request.contextPath}"/>
 	
 	<meta charset="UTF-8">
@@ -152,7 +154,6 @@
     }
     .container {
         width: 100%;
-        max-width: 600px;
         background-color: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         overflow: hidden;
@@ -216,7 +217,6 @@
         justify-content: flex-start;
     }
     .bubble {
-        max-width: 70%;
         padding: 10px 15px;
         border-radius: 20px;
         position: relative;
@@ -245,8 +245,8 @@
         top: 10px;
     }
     .sender {
-        font-weight: bold;
         margin-bottom: 5px;
+  		font-size: 14px;
     }
     .sendDate {
         font-size: 0.75em;
@@ -324,17 +324,24 @@
     </div>
     <div class="chat-input">
         <form id="chatForm">
+        <div style="display:flex;     justify-content: space-between;">
+
+	            	<i class="bi bi-file-earmark-arrow-up" id="fileButton" style="margin-right:0;"></i>					
+		
             <div id="charCount">0/1000</div> <!-- 글자 수 표시 요소 추가 -->
+        </div>
             <div style="display: flex">
-	            <button type="button" id="fileButton">&#128206;</button>
+
+			
+
 	            <input type="file" id="fileInput">
-	            <div style="diaplay:flex; flex-direction: column">
+	            <div style="diaplay:flex; flex-direction: column; width: 100vw;">
 	                <div id="fileInfo" style="display: none; margin-left: 10px;">
 	                	    <span id="fileName"></span>
     						<span class="remove-file" onclick="removeFile()">X</span>
 	                </div> <!-- 파일 정보 표시 요소 추가 -->	  
-	                <div style=display:flex;>
-			            <textarea type="text" id="message" maxlength="1000" placeholder="메시지를 입력하세요" ></textarea>
+	                <div style="display:flex;">
+			            <textarea type="text" id="message" maxlength="1000" placeholder="메시지를 입력하세요"></textarea>
 			            <button id="send">보내기</button>
 	                </div>          
 	            </div>
@@ -562,7 +569,7 @@ $('.exit-button').click(function() {
             type: 'POST',
             data: {
                 roomId: roomId,
-                memberId: '${loginMember.memberId}'
+                memberKey: '${loginMember.memberKey}'
             },
             success: function(response) {
             	if (window.opener) {
@@ -732,22 +739,22 @@ $('.exit-button').click(function() {
                     console.log(messageClass);
                     var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
 					var sender = messageClass === 'received' ? '<div class="sender">' + chatList[chat].memberName + '</div>' : '';
+					var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
+					var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse;     margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
                     if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
                     	var messageElement = $(
                     		    '<div class="message ' + messageClass + '">'
                     		    + imgTag
-                    		    + '<div style="display:flex; flex-direction:column">'
+                    		    + unreadSent
+                    		    + '<div style="display:flex; flex-direction:column; max-width: 57%;">'
                     		    + sender
                     		    + '<div class="bubble ' + messageClass + '">'
                     		    + fileElement
                     		    + messageDetail
-                    		    + '</div>'
-                    		    + '</div>'
-                    		    + '<div style="display:flex; flex-direction: column-reverse;">'
-                    		    + '<div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div>'
-                    		    + '<div class="unreadCount">' + unreadCount + '</div>'
-                    		    + '</div>'
+                    		   
                     		    +'</div>'
+                    		    +'</div>'
+                    		    + unreadReceived
                     		);
                         chatPromises.push($("#chatting").append(messageElement).promise());
                     }
@@ -790,26 +797,36 @@ $('.exit-button').click(function() {
                 fileElement = '<a href="' + filePath + '" download>' + message.file.chatMsgFileOri + '</a>';
             }
         }
+
+        var messageDetail = message.chatMsgDetail !== undefined ? message.chatMsgDetail : '';
+        console.log(messageClass);
+        var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>' : '';
+        var sender = messageClass === 'received' ? '<div class="sender">' + message.memberName + '</div>' : '';
+        var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
+        var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse; margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
         
+        if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
+            var messageElement = $(
+                '<div class="message ' + messageClass + '">'
+                + imgTag
+                + unreadSent
+                + '<div style="display:flex; flex-direction:column; max-width: 57%;">'
+                + sender
+                + '<div class="bubble ' + messageClass + '">'
+                + fileElement
+                + messageDetail
+                + '</div>'
+                + '</div>'
+                + unreadReceived
+            );
+            $("#chatting").append(messageElement);
+        }
 
-
-        var messageElement = $(
-            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-            + '<div class="sender">' + message.memberName + '</div>'
-            + fileElement
-            + message.chatMsgDetail 
-            + '<div class="sendDate">' + formatDateTime(message.chatMsgTime) + '</div>'
-            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
-            + '</div></div>'
-        );
-
-        $("#chatting").append(messageElement);
         $("#conversation").scrollTop($("#conversation")[0].scrollHeight);
-        
         updateUnreadCounts();
         addMediaClickEvent();
-
     }
+
 
     
     window.addEventListener('focus', function() {
@@ -900,7 +917,7 @@ $('.exit-button').click(function() {
 
 <!--   <div>
     현재 채팅 세션 수: <span id="chatSessionCount"></span>
-</div>    -->
+</div>  -->
 
 
 

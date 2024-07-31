@@ -296,10 +296,10 @@ body{
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
- 		<div class="tabs">
+<!--  		<div class="tabs">
 			<div class="tab" data-tab="contacts">연락처</div>
 			<div class="tab active" data-tab="chat">채팅</div>
-		</div> 
+		</div>  -->
 		<div id="contacts" class="content">
 			<input type="text" id="searchFriend" class="search-bar"
 				placeholder="친구 검색...">
@@ -323,7 +323,7 @@ body{
 					<li class="room-item" id="room-${room.chatRoomKey}">
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
- 							<img src="room_icon.jpg" alt="방 아이콘">
+		                    <div class="room-icon" id="room-icon-${room.chatRoomKey}"></div> <!-- 프로필 사진을 위한 div 추가 -->					
  								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
 							<!-- 안 읽은 메시지 배지 추가 -->
 							<div class="room-info">
@@ -385,6 +385,7 @@ body{
 
         var selectedMembers = [];
 
+        
         // 모달 열기
         $('#newChatButton').click(function() {
           	 event.stopPropagation(); 
