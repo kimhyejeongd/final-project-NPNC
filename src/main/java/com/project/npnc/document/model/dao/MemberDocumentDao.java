@@ -33,6 +33,7 @@ public interface MemberDocumentDao {
 	
 	int retrieveDoc(SqlSession session, String erDocSerialKey);
 	int retrieveDocFile(SqlSession session, String erDocSerialKey);
+	String selecetDocFileOriname(SqlSession session, String filename);
 	
 	int updateDocFilename(SqlSession session, String erDocFilename);
 	int updateDocStatefinalize(SqlSession session, String serial);

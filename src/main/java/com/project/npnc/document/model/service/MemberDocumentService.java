@@ -2,6 +2,7 @@ package com.project.npnc.document.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
@@ -53,6 +54,7 @@ public interface MemberDocumentService {
 	
 	int insertDocFile(List<DocFile> list) throws Exception;
 	int deleteDocFile(String docSerial) throws Exception;
+	String selecetDocFileOriname(String filename);
 	
 	int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception;
 	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;

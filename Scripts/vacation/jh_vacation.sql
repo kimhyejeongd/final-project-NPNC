@@ -1,3 +1,12 @@
+UPDATE
+			VACATION_APPLY
+		SET
+			VACATION_APPLY_STATUS = '승인',
+			VACATION_UPDATE_DATE = SYSDATE
+		WHERE
+			ER_DOCUMENT_KEY = '240731-D1F3-261'
+
+
 --전체 생성된 테이블 조회
 SELECT table_name 
 FROM user_tables;

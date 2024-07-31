@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -60,6 +62,7 @@ import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +77,7 @@ public class MemberDocumentController {
 	private final AdminDocumentService adminserv;
 	private final VacationService vacserv;
 	@Value("${file.upload-dir}")
-    private String uploadDir;
+    private String uploadDir; // src/main/resources/upload/
 	
 	
 	@GetMapping("/home")
@@ -938,23 +941,34 @@ public class MemberDocumentController {
 		return ResponseEntity.ok(response);
 	}
 	//파일 다운로드
-	 @GetMapping("/download/{filename:.+}")
-	    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
-	        try {
-	            Path filePath = Paths.get(uploadDir + "/docfile").resolve(filename).normalize();
-	            Resource resource = new UrlResource(filePath.toUri());
+	@GetMapping("/files/download/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(
+    		@PathVariable String filename,
+    		HttpServletRequest request) {
+		log.debug("----- 파일 다운로드 -----");
+		String oriname = serv.selecetDocFileOriname(filename);
+		
+        try {
+            Path filePath = Paths.get(uploadDir + "docfile/").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
 
-	            if (resource.exists() || resource.isReadable()) {
-	                return ResponseEntity.ok()
-	                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-	                        .body(resource);
-	            } else {
-	                throw new RuntimeException("Could not read the file!");
-	            }
-	        } catch (Exception e) {
-	            throw new RuntimeException("Error: " + e.getMessage());
-	        }
-	    }
+            // 파일이 존재 확인
+            if (resource.exists() && resource.isReadable()) {
+            	//인코딩
+            	String encodedFilename = URLEncoder.encode(oriname, "UTF-8").replaceAll("\\+", "%20");
+
+            	return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+	 }
 	
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {

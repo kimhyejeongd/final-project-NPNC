@@ -255,7 +255,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		Map<String, Object> map = new HashMap<>();
 		map.put("serial", docSerial);
 		map.put("status", status);
-		log.debug("휴가 신청 임시저장 -> " + map.toString());
+		log.debug("휴가 신청 업데이트 -> " + map.toString());
 		return session.update("document.updateVacationApply", map);
 	}
 	@Override
@@ -274,4 +274,9 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.update("document.updateVacationCalc", map);
 	}
 
+	@Override
+	public String selecetDocFileOriname(SqlSession session, String filename) {
+		return session.selectOne("document.selecetDocFileOriname", filename);
+	}
+	
 }

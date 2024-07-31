@@ -1377,7 +1377,15 @@
 		WHERE 
 			er_doc_serial_key = #{erDocSerialKey}
 	</delete>
-	
+	<!-- 첨부파일 원본 이름 확인 -->
+	<select id="selecetDocFileOriname" parameterType="string" resultType="string">
+		SELECT
+			ER_FILE_ORI_NAME
+		FROM
+			ER_FILE
+		WHERE
+			ER_FILE_RENAME = #{rename}
+	</select>
 	<!-- 결재자 -->
 	<!-- 문서 기안시 등록 -->
 	<insert id="insertApproval" parameterType="approver">
@@ -1751,7 +1759,7 @@
 			VACATION_APPLY_STATUS = #{status},
 			VACATION_UPDATE_DATE = SYSDATE
 		WHERE
-			ER_DOCUMENT_KEY = #{docSerial}
+			ER_DOCUMENT_KEY = #{serial}
 	</update>
 	<!-- 휴가신청서 삭제 -->
 	<delete id="deleteVacationApply" parameterType="string">

@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	//파일 다운로드
 	$(document).on('click', '#fileDownBtn', function() {
 	    let fileName = $(this).data('filename');
-	    window.location.href = sessionStorage.getItem("path") + `/files/download/${fileName}`;
+	    console.log(sessionStorage.getItem("path"));
+	    window.location.href = sessionStorage.getItem("path") + `/document/files/download/${fileName}`;
 	});
 	$("#closeBtn").click(function(){
 		window.history.back();
