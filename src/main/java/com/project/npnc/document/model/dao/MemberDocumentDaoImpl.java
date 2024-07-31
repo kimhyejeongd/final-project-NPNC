@@ -196,7 +196,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	
 	@Override
 	public List<Document> selectMyRejectDocs(SqlSession session, int no) {
-		return session.selectList("document.selectMyRejectDocs", no);
+		return session.selectList("document.selectMyRejectedDocs", no);
 	}
 
 	@Override
@@ -235,6 +235,14 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.insert("document.insertVacationApply", vac);
 	}
 	@Override
+	public int deleteVacationApply(SqlSession session, String serial) {
+		return session.delete("document.deleteVacationApply", serial);
+	}
+	@Override
+	public int deleteOvertimeApply(SqlSession session, String serial) {
+		return session.delete("document.deleteOvertimeApply", serial);
+	}
+	@Override
 	public int insertOvertimeApply(SqlSession session, OvertimeApply ot) {
 		return session.insert("document.insertOvertimeApply", ot);
 	}
@@ -251,12 +259,12 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		return session.update("document.updateVacationApply", map);
 	}
 	@Override
-	public int updateOvertiemApply(SqlSession session, String docSerial, String status) {
+	public int updateOvertimeApply(SqlSession session, String docSerial, String status) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("serial", docSerial);
 		map.put("status", status);
 		log.debug("추가근무 신청 임시저장 -> " + map.toString());
-		return session.update("document.updateOvertiemApply", map);
+		return session.update("document.updateOvertimeApply", map);
 	}
 	@Override
 	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {

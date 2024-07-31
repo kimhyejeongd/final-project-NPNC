@@ -318,14 +318,13 @@ $(document).ready(function() {
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
 			        formData.delete("files");
-					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-			        formData.append('html', dochtml);
 					
 					//문서 내용 정리
 					$("#workType").text($("#overworkTypeSpan").text());
 					let time = $("#totalTimeSpan").text().replace('부터', ' ~').replace('까지', '');
 					$("#selectArea").text($("#overworkDateSpan").text() + " " + time);
 					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+			        formData.append('html', dochtml);
 
 					let files = fileInput.files;
 
