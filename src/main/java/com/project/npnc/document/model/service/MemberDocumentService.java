@@ -11,6 +11,7 @@ import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
 
 public interface MemberDocumentService {
@@ -22,7 +23,9 @@ public interface MemberDocumentService {
 	
 	int insertDoc(Document d, MultipartFile[] file, String html) throws Exception;
 	int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception;
+	int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot) throws Exception;
 	int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception;
+	int insertDraftVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception;
 //	int deleteDoc(Document d) throws Exception;
 //	int insertDoc(Document d, ApproversList request, RefererList referers) throws Exception;
 	int insertApprovers(Document d) throws Exception;
@@ -58,5 +61,6 @@ public interface MemberDocumentService {
 	
 	int selectRemainingVac(int memberKey);
 	int insertVacationApply(VacationApply vac);
-	int updateVacationApply(String docSerial);
+	int updateVacationApply(String docSerial, String status);
+	int updateOvertiemApply(String docSerial, String status);
 }

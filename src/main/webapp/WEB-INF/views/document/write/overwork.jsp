@@ -15,7 +15,7 @@
 <html lang="ko">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>휴가 신청</title>
+  <title>추가근무 신청</title>
   <meta
     content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
     name="viewport"
@@ -100,7 +100,7 @@
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 14px !important" id="smallInput" name="erDocTitle">
 				      </div>
 				    </div>
 				    <div class="form-group">
@@ -311,44 +311,23 @@ $(document).ready(function() {
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
 					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
-					//휴가 정보
-			        var dataKey = $("#vacationSelectArea").find('option:selected').data('key');
-					$("<input>").val(dataKey).css('display', 'none')
-						.attr('name', 'vacationKey').prependTo($("#docForm"));
-			        
-					$("<input>").val($("td#vacationReason").text())
-						.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
-					
-					var startDate = $("#vacationStartDate").val();
-				    var startTime = $("#vacationStartTime").val();
-					var endDate = $("#vacationEndDate").val();
-				    var endTime = $("#vacationEndTime").val();
-				    $("<input>").val(startDate).css('display', 'none')
-					.attr('name', 'vacationStartDate').prependTo($("#docForm"));
-				    $("<input>").val(startTime).css('display', 'none')
-					.attr('name', 'vacationStartTime').prependTo($("#docForm"));
-				    $("<input>").val(endDate).css('display', 'none')
-					.attr('name', 'vacationEndDate').prependTo($("#docForm"));
-				    $("<input>").val(endTime).css('display', 'none')
-					.attr('name', 'vacationEndTime').prependTo($("#docForm"));
-				    $("<input>").val($("#minusPointArea").val()).css('display', 'none')
-					.attr('name', 'vacationUseCount').prependTo($("#docForm"));
-					
-					
-					//문서 내용 정리
-					$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
-					$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
-					$("#vacationTypeArea").html($("#vacationSelectArea").val());
-					$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
-							" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
-					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+					//추가근무 정보
+					$("<input>").val($("#overtimeReason").text()).css('display', 'none')
+						.attr('name', 'overtimeReason').prependTo($("#docForm"));
 					
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
 			        formData.delete("files");
-			        
-		            let files = fileInput.files;
+					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+			        formData.append('html', dochtml);
+					
+					//문서 내용 정리
+					$("#workType").text($("#overworkTypeSpan").text());
+					let time = $("#totalTimeSpan").text().replace('부터', ' ~').replace('까지', '');
+					$("#selectArea").text($("#overworkDateSpan").text() + " " + time);
+					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+
+					let files = fileInput.files;
 
 		            // 다중 파일 추가
 		            for (let i = 0; i < files.length; i++) {
@@ -361,7 +340,7 @@ $(document).ready(function() {
 	            	});
 					
 			     	// AJAX로 폼 데이터를 전송
-			        fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
+					fetch(sessionStorage.getItem("path")+'/document/writeend/overtimework', {
 			            method: 'POST',
 			            body: formData,
 			        })
@@ -377,7 +356,7 @@ $(document).ready(function() {
 			        })
 			        .catch(error => {
 			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-			        });  
+			        }); 
 			    } else{
 			        alert('문서 양식 불러오기 오류');
 			    }
@@ -403,41 +382,6 @@ $(document).ready(function() {
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
-				
-				//휴가 정보
-		        var dataKey = $("#vacationSelectArea").find('option:selected').data('key');
-				$("<input>").val(dataKey).css('display', 'none')
-					.attr('name', 'vacationKey').prependTo($("#docForm"));
-		        
-				$("<input>").val($("td#vacationReason").text())
-					.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
-				
-				var startDate = $("#vacationStartDate").val();
-			    var startTime = $("#vacationStartTime").val();
-				var endDate = $("#vacationEndDate").val();
-			    var endTime = $("#vacationEndTime").val();
-			    $("<input>").val(startDate).css('display', 'none')
-				.attr('name', 'vacationStartDate').prependTo($("#docForm"));
-			    $("<input>").val(startTime).css('display', 'none')
-				.attr('name', 'vacationStartTime').prependTo($("#docForm"));
-			    $("<input>").val(endDate).css('display', 'none')
-				.attr('name', 'vacationEndDate').prependTo($("#docForm"));
-			    $("<input>").val(endTime).css('display', 'none')
-				.attr('name', 'vacationEndTime').prependTo($("#docForm"));
-			    $("<input>").val($("#minusPointArea").val()).css('display', 'none')
-				.attr('name', 'vacationUseCount').prependTo($("#docForm"));
-				
-				
-				//문서 내용 정리
-				$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
-				$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
-				$("#vacationTypeArea").html($("#vacationSelectArea").val());
-				$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
-						" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
-				dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				
-				
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		     	// AJAX로 폼 데이터를 전송
@@ -450,6 +394,7 @@ $(document).ready(function() {
 		            if (data.status === "success") {
 		                alert(data.message);
 		                // 성공 시 페이지 리다이렉트
+		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
 		                window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
 		            } else {
 		                alert(data.message);
@@ -462,30 +407,40 @@ $(document).ready(function() {
 		});
 	});
 	
+	$("#htmlDiv").on("")
 	
-	//휴가종류 이벤트
-	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
-		console.log($(e.target).val());
-		let target = $(e.target).val();
-		if(target == '공가' || target == '병가'){
-			$("#vacationStartTime").css('display','none');
-			$("#vacationEndTime").css('display','none');
-			$("#alldayCk").attr('checked',true);
-			$("#minusPointArea").val('0');
-		}else {
-	        $("#vacationStartTime").css('display','inline-block');
-	        $("#vacationEndTime").css('display','inline-block');
-	        $("#alldayCk").prop('checked', false); // 체크박스를 체크 해제 상태로 설정 (필요한 경우)
-	    }
+	//날자 선택 이벤트
+	$("#htmlDiv").on("change", "input[type='date']", function(e){
+		let target = $(e.target).val().replace(/-/g, '/');
+		console.log(target);
+		$("#overworkDateSpan").text(target);
 	});
-	//종일 이벤트
-	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
+	//추가근무 종류 이벤트
+	$("#htmlDiv").on("change", "td#workType input[type='radio']", function(e){
 		console.log($(e.target).val());
 		let target = $(e.target).val();
-		if(target == '공가' || target == '병가'){
-			$("#vacationStartTime").css('display','none');
-			$("#vacationEndTime").css('display','none');
-		}
+		$("#overworkTypeSpan").text(target);
+	});
+	//시간 계산 이벤트
+	$("#htmlDiv").on("change", "#selectArea select", function(e){
+		//시작시간
+		var startHH = $("#overtimeStartHH").val();
+	    var startMM = $("#overtimeStartMM").val();
+		var endHH = $("#overtimeEndHH").val();
+	    var endMM = $("#overtimeEndMM").val();
+	    
+	    if (startHH != '' && startMM != '' && endHH != '' && endMM != '') {
+	        var hour = endHH - startHH;
+	        var min = endMM - startMM;
+
+	        if (min < 0) {
+	            hour -= 1;
+	            min += 60;
+	        }
+
+	        $("#totalTime").text(hour + '시간 '+ min + '분');
+	        $("#totalTimeSpan").text(startHH + '시 ' + startMM + '분부터 ' + endHH + '시 ' + endMM + '분까지');
+	    }
 	});
 	
 	

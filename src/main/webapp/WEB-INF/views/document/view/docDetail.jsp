@@ -90,13 +90,13 @@
 								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')}">
 									<a href="#" class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
-											<i class="fa fa-pencil"></i>
+											<i class="fas fa-edit"></i>
 										</span>
 										내용 수정
 									</a>
 									<a href="#" class="btn btn-label-info btn-round btn-sm">
 										<span class="btn-label">
-											<i class="fa fa-print"></i>
+											<i class="fas fa-redo-alt"></i>
 										</span>
 										회수
 									</a>

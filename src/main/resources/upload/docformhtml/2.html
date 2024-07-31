@@ -16,7 +16,7 @@
 						colspan="2"
 						class="dext_table_border_t dext_table_border_r dext_table_border_b dext_table_border_l">
 
-						연장근무 신청서
+						추가근무 신청서
 					</td>
 				</tr>
 				<tr>
@@ -92,7 +92,7 @@
 		<table id="timelineApprovalForm" class="__se_tbl"
 			style="width: 800px; margin-top : 0px; margin-bottom:20px; border-collapse: collapse !important; color: black; background: white; font-size: 12px; font-family: malgun gothic,dotum,arial,tahoma;">
 			<tbody>
-				<tr>
+				<!-- <tr>
 					<td colspan="4"
 						style="width:800px; background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
 						연장근무 현황
@@ -105,7 +105,7 @@
 				</td>
 				<td
 				style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle;">
-					fff
+					[주 근무 현황]
 				</td>
 				<td
 				style="width:200px;background: rgb(221, 221, 221); padding: 5px; border: 1px solid black; height: 25px; text-align: center; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
@@ -113,16 +113,16 @@
 				</td>
 				<td
 				style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle;">
-					fff
+					[월 근무 현황]
 				</td>
-				</tr>
+				</tr> -->
 				<tr>
 					<td colspan="4"
-						style="width:800px; background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
+						style="width:800px; background: #ddd; padding: 10px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 15px; font-weight: bold; vertical-align: middle;">
 						신청&nbsp;내용
 					</td>
 				</tr>
-				<tr>
+				<tr style="caret-color: transparent; cursor:default;">
 					<td
 						style="width:200px;background: rgb(221, 221, 221); padding: 5px; border: 1px solid black; height: 25px; text-align: center; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
 						<b style="color: rgb(255, 0, 0);">*</b>근무구분
@@ -132,36 +132,37 @@
 						<div class="d-flex align-items-center" style="transform: translateY(3px);">
                             <div class="d-flex me-2">
 							  <label class="d-flex ms-2 mx-auto">
-                              <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                              <input class="form-check-input me-2" type="radio" value="조기출근" name="overtimeCategory" id="">
 								 조기출근
 							  </label>
                             </div>
                             <div class="d-flex me-2">
 							  <label class="d-flex ms-2 mx-auto">
-                              <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked="">
-                                 연장근무  
+                              <input class="form-check-input me-2" type="radio" value="연장근무" name="overtimeCategory" id="" checked="">
+                                 연장근무&nbsp;&nbsp;
                               </label>
                             </div>
 							<div class="d-flex me-2">
 								<label class="d-flex me-2 mx-auto">
-								<input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked="">
+								<input class="form-check-input me-2" type="radio" value="휴일근무" name="overtimeCategory" id="">
 								 휴일근무 
 								</label>
 							  </div>
                           </div>
 					</td>
 				</tr>
-				<tr>
+				<tr style="caret-color: transparent; cursor:default;">
 					<td
 						style="width:200px;background: rgb(221, 221, 221); padding: 5px; border: 1px solid black; height: 25px; text-align: center; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
 						<b style="color: rgb(255, 0, 0);">*</b>근무일시
 					</td>
-					<td colspan="3"
+					<td colspan="3" id="selectArea"
 						style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; height: 25px; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle;">
 						<span style="display: inline-flex; align-items: center; transform: translateY(3px); width: 90%; margin-bottom: 5px;">
 							<input class="ipt_editor ipt_editor_date form-control-sm border me-2" style="width: 230px;" type="date" id="overtimeDate" name="overtimeDate">
-								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeStartHH">
-									<option value="06" selected="selected">06</option>
+								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeStartHH" id="overtimeStartHH">
+									<option value=""  selected="selected">선택</option>
+									<option value="06">06</option>
 									<option value="07" >07</option>
 									<option value="08" >08</option>
 									<option value="09" >09</option>
@@ -179,8 +180,9 @@
 									<option value="21" >21</option>
 									<option value="22" >22</option>
 								</select>시&nbsp;
-								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeStartMM">
-									<option value="00" selected="selected">00</option>
+								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeStartMM" id="overtimeStartMM">
+									<option value="" selected="selected">선택</option>
+									<option value="00">00</option>
 									<option value="00" >15</option>
 									<option value="00" >30</option>
 									<option value="00" >45</option>
@@ -188,8 +190,9 @@
 								<span>
 									&nbsp;&nbsp;~&nbsp;&nbsp;
 								</span>
-								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeEndHH">
-									<option value="06" selected="selected">06</option>
+								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeEndHH" id="overtimeEndHH">
+									<option value="" selected="selected">선택</option>
+									<option value="06">06</option>
 									<option value="07">07</option>
 									<option value="08" >08</option>
 									<option value="09" >09</option>
@@ -207,8 +210,9 @@
 									<option value="21" >21</option>
 									<option value="22" >22</option>
 								</select>&nbsp;시&nbsp;
-								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeEndMM">
-									<option value="00" selected="selected">00</option>
+								<select class="form-select form-control-sm" style="width: 30%;" name="overtimeEndMM" id="overtimeEndMM">
+									<option value="" selected="selected">선택</option>
+									<option value="00">00</option>
 									<option value="00" >15</option>
 									<option value="00" >30</option>
 									<option value="00" >45</option>
@@ -222,15 +226,16 @@
 							</span>
 					</td>
 				</tr>
-				<tr>
+				<tr style="caret-color: transparent; cursor:default;">
 					<td
 						style="width:200px;background: rgb(221, 221, 221); padding: 5px; border: 1px solid black; height: 25px; text-align: center; color: rgb(0, 0, 0); font-size: 14px; font-weight: bold; vertical-align: middle;">
 						<b style="color: rgb(255, 0, 0);">*</b>근무시간
 					</td>
 					<td colspan="3"
-						style="padding: 3px; border: 1px solid black; width: 700px; height: 22px; text-align: left; color: rgb(0, 0, 0); font-size: 12px; vertical-align: middle; background: rgb(255, 255, 255);">
-						<span id="totalTime"
-							style="font-family: malgun gothic, dotum, arial, tahoma; font-size: 9pt; line-height: normal; margin-top: 0px; margin-bottom: 0px; width: 100%;"></span>
+						style="padding: 5px; border: 1px solid black; width: 700px; height: 22px; text-align: left; color: rgb(0, 0, 0); font-size: 12px; vertical-align: middle; background: rgb(255, 255, 255);">
+						<p id="totalTime"
+							style="font-style: italic; font-family: malgun gothic, dotum, arial, tahoma; font-size: 10pt; line-height: normal; margin-top: 0px; margin-bottom: 0px; width: 100%;">
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -239,14 +244,14 @@
 						<b style="color: rgb(255, 0, 0);">*</b>신청&nbsp;사유
 					</td>
 					<td colspan="3" id="overtimeReason"
-						style="padding: 3px; border: 1px solid black; width: 450px; height: 100px; text-align: left; color: rgb(0, 0, 0); font-size: 12px;  vertical-align: top; background: rgb(255, 255, 255);">
+						style="padding: 5px; border: 1px solid black; width: 450px; height: 100px; text-align: left; color: rgb(0, 0, 0); font-size: 14px;  vertical-align: top; background: rgb(255, 255, 255);">
 						
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4"
 						style="width:800px; padding: 20px !important; height: 22px; vertical-align: middle; border: 1px solid black; text-align: left; background: rgb(255, 255, 255);">
-						<p style="text-align: center;"> 상기 본인은 위와 같이 연장근무를 신청합니다.</p>
+						<p style="text-align: center;" id="lastTd"> 상기 본인은 위와 같이 <span id="overworkDateSpan"></span> <span id="totalTimeSpan"></span> <span id="overworkTypeSpan">연장근무</span>(을)를 신청합니다.</p>
 					</td>
 				</tr>
 			</tbody>

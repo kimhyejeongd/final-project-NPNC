@@ -65,6 +65,7 @@
         <typeAlias type="com.project.npnc.admin.vacation.model.dto.Vacation" alias="adminVacation"/>
         <typeAlias type="com.project.npnc.memberVacation.model.dto.MemberVacation" alias="memberVacation"/>
         <typeAlias type="com.project.npnc.document.model.dto.VacationApply" alias="vacationApply"/>   
+        <typeAlias type="com.project.npnc.document.model.dto.OvertimeApply" alias="OvertimeApply"/>   
 
 	</typeAliases>
 </configuration> 
