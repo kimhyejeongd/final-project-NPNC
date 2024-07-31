@@ -255,6 +255,7 @@
                   </div>
                 </div>
               </div>
+              			
 	                    <div style="display: flex; justify-content: center;">
 	                        <button type="submit" class="btn btn-primary">저장</button>
 	                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
@@ -324,15 +325,19 @@
         	var selectedFolderKey = null;
         	
         	 var selectedStorageId = null;
+        	 var oriName=null;
         	
             // 수정 버튼 클릭 이벤트
             $(document).on('click', '.btn-primary[data-bs-target="#updateStorage"]', function() {
                 var row = $(this).closest('tr');
                 var storageId = row.data('id');
-
+                oriName = row.find('td').eq(1).text().trim(); // 보관함 이름 가져오기
+            
+                
                 // 선택된 보관함 ID 저장
                 selectedStorageId = storageId;
                 $('#updateStorage').modal('show');
+				console.log($('#oriName').val());
             });
 
             // 수정 폼 제출 이벤트
@@ -349,9 +354,11 @@
 
                 var requestData = {
                 	storageKey: selectedStorageId,
+                	storageFolderKey:selectedFolderKey,
                     storageName: storageName,
                     storageTerm: folderType,
-                    storageManager: selectedMember
+                    storageManager: selectedMember,
+                    oriName:oriName
                 };
 
                 $.ajax({
@@ -445,6 +452,9 @@
                                     '<td class="approverNow p-3">' + storage.department.deptName + " " + storage.member.memberName + " " + storage.job.jobName + '</td>' +
                                     '<td class="approverNow p-3">' + storage.erStorageTerm + '년</td>' +
                                     '<td class="approverNow p-3">' + storage.storageFolder.useYn + '</td>' +
+                                    '<td class="approverNow p-3">' +
+                                    '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage">수정</button>'+
+                                    '</td>'
                                 '</tr>';
                             $("#docTableBody").append(row);
                         });
@@ -583,7 +593,8 @@
                                     '<td class="approverNow p-3">' + doc.erStorageTerm + '년</td>' +
                                     '<td class="approverNow p-3">' + doc.storageFolder.useYn + '</td>' +
                                     '<td class="approverNow p-3">' + 
-                                    '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage">수정</button>'
+                                    '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage">수정</button>'+
+                          			'<input type="hidden" id="oriName" name="oriName" value="'+doc.erStorageName+'">'
                                     + '</td>' +
                                 '</tr>';
                             tableBody.append(row);

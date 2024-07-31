@@ -418,32 +418,7 @@
 			</script>
 			
              <script type="text/javascript">
-             var myChatRoomList;
-                $(document).ready(function() {
-   
-                         headerUnread();
 
-                   
-                       $('#messageDropdown').on('show.bs.dropdown', function() {
-                         event.stopPropagation(); 
-                           $.ajax({
-                               url: '${path}/chatRoom', 
-                               data: {
-                                   inputValue: '1' 
-                               },
-                               success: function(response) {
-
-                                   $('.notif-center').eq(0).html(response);
-
-
-					                },
-					                error: function(xhr, status, error) {
-					                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
-					                    $("#messageContent").html(errorMessage);
-					                }
-					            });
-					        });
-					    });
 					<!-- 조직도 내용 함수-->
 					 $(document).ready(
 			            function(){
@@ -543,6 +518,33 @@
 			               });   
 			            }
 			         );
+					
+		             var myChatRoomList;
+		                $(document).ready(function() {
+		   
+		                         headerUnread();
+
+		                   
+		                       $('#messageDropdown').on('show.bs.dropdown', function() {
+		                         event.stopPropagation(); 
+		                           $.ajax({
+		                               url: '${path}/chatRoom', 
+		                               data: {
+		                                   inputValue: '1' 
+		                               },
+		                               success: function(response) {
+
+		                                   $('.notif-center').eq(0).html(response);
+
+
+							                },
+							                error: function(xhr, status, error) {
+							                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+							                    $("#messageContent").html(errorMessage);
+							                }
+							            });
+							        });
+							    });
 							 		 
 					 var headerUnread = ()=>{						 
 						$.ajax({
@@ -944,7 +946,7 @@
 
 
                       for (var username in users) {
-                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberId}') { // 본인의 상태는 업데이트하지 않음
                               userStatusMap[username] = users[username];
                               updateUserStatus(username, users[username]);
                           }
@@ -956,10 +958,10 @@
                 var statusDot = document.getElementById('status-dot-' + username);
                 
                 console.log(statusDot);
-                if (!statusDot) {
-                    console.error('status-dot element not found for user: ' + username);
+                 if (!statusDot) {
+                    console.log('status-dot element not found for user: ' + username);
                     return;
-                }
+                } 
 
                 statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
             }

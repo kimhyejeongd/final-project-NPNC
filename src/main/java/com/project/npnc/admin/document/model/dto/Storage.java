@@ -16,4 +16,5 @@ public class Storage {
 	private int storageTerm;
 	private int storageManager;
 	private int storageOrderBy;
+	private String oriName;
 }

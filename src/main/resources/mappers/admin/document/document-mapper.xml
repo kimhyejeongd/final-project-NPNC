@@ -187,7 +187,7 @@
 		
 	</update>
 	
-	<update id="updateFolderGroup" parameterType="int">
+	<update id="updateFolderGroup" parameterType="storageFolder">
 		UPDATE ER_STORAGE_FOLDER
 		SET ER_FOLDER_ORDERBY=ER_FOLDER_ORDERBY-1
 		WHERE ER_FOLDER_ORDERBY > 

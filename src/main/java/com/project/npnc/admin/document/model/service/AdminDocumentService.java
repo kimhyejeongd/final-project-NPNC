@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,27 @@ public class AdminDocumentService {
 		StorageFolder draggedFolder = (StorageFolder) folderInfo.get("draggedFolder");
 
 		if(targetFolder.getFolderGroup()!=draggedFolder.getFolderGroup()) {
-			dao.updateFolderGroup(session, draggedFolder);
+			int result1 = dao.updateFolderGroup(session, draggedFolder);
+			System.out.println(draggedFolder.getFolderLevel());
+			System.out.println(result1);
+			if(draggedFolder.getFolderLevel()==2) {	
+					String targetParentName= dao.selectParentFolderName(session, targetFolder.getFolderGroup());
+					String draggedParentName = dao.selectParentFolderName(session, draggedFolder.getFolderGroup());
+					String path = uploadPath+"dochtml/";
+					File from = new File(path+draggedParentName+"/"+draggedFolder.getFolderName());
+					File to = new File(path+targetParentName+"/"+draggedFolder.getFolderName());
+					System.out.println("===========result=======");
+					try {
+						FileUtils.moveDirectory(from, to);
+						System.out.println("Directory moved successfully.");
+					}
+					catch (FileExistsException ex) {
+						ex.printStackTrace();
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+				
+			}
 		}
 		
 		int result =dao.updateStorageGroup(session,folderInfo);

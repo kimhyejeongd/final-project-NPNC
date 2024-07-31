@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,8 +67,6 @@ public class AdminDocumentFormController {
     	folderInfo.put("draggedOrder",draggedFolder.getFolderOrderBy());
     	folderInfo.put("draggedFolder", draggedFolder);
     	folderInfo.put("targetFolder", targetFolder);
-    	System.out.println(draggedFolder+"draggedFolderdraggedFolderdraggedFolder");
-    	System.out.println(targetFolder+"targetFoldertargetFoldertargetFolder");
     	service.increaseFolderOrder(folderInfo); // 대상 order의 크기에 따라 남은 order의 크기를 조절함
 
     	int targetOrder = targetFolder.getFolderOrderBy();
@@ -76,7 +75,6 @@ public class AdminDocumentFormController {
     		} //대상 폴더가 대분류면 순서를 1로 설정
 
     	draggedFolder.setFolderOrderBy(targetOrder);
-    	System.out.println(targetOrder);
     	
     	service.updateStorageGroup(folderInfo);
     	return ResponseEntity.ok(folderInfo);
@@ -157,8 +155,21 @@ public class AdminDocumentFormController {
     }
     @PostMapping("/updateStorage")
     public ResponseEntity<?>updateStorage(@RequestBody Storage storage){
+    	System.out.println(storage);
     	int result = service.updateStorage(storage);
-
+    	if(result>0) {
+    		String docPath = "/dochtml/";
+    		StorageFolder storageFolder = service.selectStorageFolder(storage.getStorageFolderKey());
+    		String storagePath = service.selectParentFolderName(storageFolder.getFolderGroup())+"/"+storageFolder.getFolderName()+"/";
+    		File file = new File(uploadPath+docPath+storagePath+storage.getOriName());
+    		File newFile = new File(uploadPath+docPath+storagePath+storage.getStorageName());
+    		
+    		try {
+				FileUtils.moveDirectory(file, newFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
     	return ResponseEntity.ok(result);
     }
 }
