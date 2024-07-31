@@ -108,7 +108,9 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">${currentMonth}월 초과근무</p>
+                          <p class="card-category">${currentMonth}월 병가</p>
+                          <h4 class="card-title">0</h4>
+                          <p class="card-category">${currentMonth}월 공가</p>
                           <h4 class="card-title">0</h4>
                         </div>
                       </div>
@@ -152,7 +154,6 @@
                             <th>근무날짜</th>
                             <th>출근시간</th>
                             <th>퇴근시간</th>
-                            <th>초과근무시간</th>
                             <th>상태</th>
                           </tr>
                         </thead>
@@ -163,7 +164,6 @@
 		                            <td>${a.attendanceDate}</td>
 		                            <td>${fn:substring(a.attendanceStart, fn:length(a.attendanceStart) - 8, fn:length(a.attendanceStart))}</td>
           							<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
-		                            <td>${a.overtimeKey }</td>
 		                            <td>${a.attendanceState}</td>
 		                            <td>
 		                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">

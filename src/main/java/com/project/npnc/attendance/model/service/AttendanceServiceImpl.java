@@ -1,5 +1,6 @@
 package com.project.npnc.attendance.model.service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -80,15 +81,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 		//승인된 오늘날짜의 휴가시작날짜
 		List<VacationApply> vApply=attendanceDao.selectVacationApplyApprove(session);
 		
-		result.forEach((key, value) -> {
 
+		result.forEach((key, value) -> {
+			
 
 		    if (value) {
 			    	Attendance at=selectAttendanceByMemberKey(key);
 			    	a.setMember(AdminMember.builder().memberKey(key).build());
 			    	
 			    	vApply.forEach(v->{
-						if(v.getVacationMemberKey()==key) {
+			    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+			   	     	Timestamp start = v.getVacationStartDate();
+			   	     	Timestamp end = v.getVacationEndDate();
+			   	     
+		    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+		    	        System.out.println("Is date in range? " + isInRange);
+			    
+			    		
+//		    	        if(v.getVacationMemberKey()==key) {
+		    	        if(isInRange) {
 							if(v.getVacationKey()==1) {
 								a.setAttendanceState("휴가");
 							}else if(v.getVacationKey()==2) {
@@ -138,8 +149,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 		    	
 		    }else {
 		    	vApply.forEach(v->{
+		    		
+		    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+		   	     	Timestamp start = v.getVacationStartDate();
+		   	     	Timestamp end = v.getVacationEndDate();
+		   	     
+	    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+	    	        System.out.println("Is date in range? " + isInRange);
+		    		
 		    		String status="";
-					if(v.getVacationMemberKey()==key) {
+		    		if(isInRange) {
+//					if(v.getVacationMemberKey()==key) {
 						if(v.getVacationKey()==1) {
 							status="휴가";
 						}else if(v.getVacationKey()==2) {
@@ -174,6 +194,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return a;
 	}
 
+	public static boolean isDateInRange(Timestamp timestampToCheck, Timestamp startTimestamp, Timestamp endTimestamp) {
+        if (timestampToCheck == null || startTimestamp == null || endTimestamp == null) {
+            throw new IllegalArgumentException("Timestamps cannot be null");
+        }
+
+        // 시작 시간과 종료 시간이 올바른지 확인
+        if (startTimestamp.after(endTimestamp)) {
+            throw new IllegalArgumentException("Start timestamp cannot be after end timestamp");
+        }
+
+        // timestampToCheck가 시작 시간과 종료 시간 사이에 있는지 확인
+        return !timestampToCheck.before(startTimestamp) && !timestampToCheck.after(endTimestamp);
+    }
+	
 	
 	// 사원 근태관리 화면
 	
