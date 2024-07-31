@@ -709,6 +709,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.selectPendingDocs(session, no);
 	}
 	@Override
+	public List<Document> selectMyPendingDocs(int no) {
+		return dao.selectMyPendingDocs(session, no);
+	}
+	@Override
 	public List<Document> selectMyCompleteDocs(int no) {
 		return dao.selectMyCompleteDocs(session, no);
 	}
@@ -748,5 +752,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public String selecetDocFileOriname(String filename) {
 		return dao.selecetDocFileOriname(session, filename);
 	}
+	@Override
+	public DocFile getFileDetailByRename(String filename) {
+		return dao.getFileDetailByRename(session, filename);
+	}
+	
 	
 }

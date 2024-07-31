@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -52,6 +54,7 @@ import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -137,6 +140,14 @@ public class MemberDocumentController {
 		List<Document> result = serv.selectDraftDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/pending")
+	public void selectMyPendingDocs(Model m){
+		log.debug("---- 보류된 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectMyPendingDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("pendinglist", result);
 	}
 	
 //	결재자 문서 목록 조회
@@ -969,6 +980,27 @@ public class MemberDocumentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 	 }
+	
+	//파일 자세히보기
+	@GetMapping("/files/detail/{filename:.+}")
+	@ResponseBody
+    public ResponseEntity<DocFile> getFileDetail(
+    		@PathVariable String filename) {
+		log.debug("파일 자세히보기 요청 -> " + filename);
+		try {
+	        String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
+	        DocFile fileDetail = serv.getFileDetailByRename(decodedFilename);
+	        log.debug("{}", fileDetail);
+	        if (fileDetail != null) {
+	            return ResponseEntity.ok(fileDetail);
+	        } else {
+	            return ResponseEntity.status(404).build();
+	        }
+	    } catch (UnsupportedEncodingException e) {
+	        log.error("Error decoding filename: ", e);
+	        return ResponseEntity.status(500).build();
+	    }
+    }
 	
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {

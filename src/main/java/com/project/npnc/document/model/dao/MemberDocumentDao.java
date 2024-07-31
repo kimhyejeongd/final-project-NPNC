@@ -74,4 +74,6 @@ public interface MemberDocumentDao {
 	int insertOvertimeApply(SqlSession session, OvertimeApply ot);
 	int updateOvertimeApply(SqlSession session, String docSerial, String status);
 	int deleteOvertimeApply(SqlSession session, String serial);
+	DocFile getFileDetailByRename(SqlSession session, String filename);
+	List<Document> selectMyPendingDocs(SqlSession session, int no);
 }

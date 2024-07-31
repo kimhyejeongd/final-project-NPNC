@@ -2,7 +2,6 @@ package com.project.npnc.document.model.service;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.document.model.dto.Approver;
@@ -38,6 +37,7 @@ public interface MemberDocumentService {
 	List<Document> selectPendingDocs(int no);
 	List<Document> selectMyRejectDocs(int no);
 	List<Document> selectMyCompleteDocs(int no);
+	List<Document> selectMyPendingDocs(int no);
 	List<Document> selectCompleteDocs(int no);
 	List<Document> selectRejectedDocs(int no);
 	List<Document> selectReferenceDocs(int no);
@@ -65,4 +65,5 @@ public interface MemberDocumentService {
 	int insertVacationApply(VacationApply vac);
 	int updateVacationApply(String docSerial, String status);
 	int updateOvertiemApply(String docSerial, String status);
+	DocFile getFileDetailByRename(String filename);
 }

@@ -278,5 +278,13 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public String selecetDocFileOriname(SqlSession session, String filename) {
 		return session.selectOne("document.selecetDocFileOriname", filename);
 	}
+	@Override
+	public DocFile getFileDetailByRename(SqlSession session, String filename) {
+		return session.selectOne("document.getFileDetailByRename", filename);
+	}
+	@Override
+	public List<Document> selectMyPendingDocs(SqlSession session, int no) {
+		return session.selectList("document.selectMyPendingDocs", no);
+	}
 	
 }
