@@ -31,6 +31,8 @@ public class Member implements UserDetails {
 	private int memberKey;
 	private String departmentKey;
 	private String jobKey;
+	private String departmentName;
+	private String jobName;
 
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
 	private String memberId;
@@ -51,7 +53,6 @@ public class Member implements UserDetails {
 	private String memberGender;
 	private String memberState;
 	private Date memberBirthdate;
-	private String departmentName;
 	private String memberProfileImage;
 
 

@@ -12,7 +12,7 @@
 
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
-<%-- 	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 --%>
+	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
@@ -65,8 +65,8 @@
 		                          </tr>
 		                        </thead>
 		                        <tbody>	
-		                        <c:if test="${not empty attendanceEdit }">
-		                        	<c:forEach var="a" items="${attendanceEdit }">
+		                        <c:if test="${not empty attendanceEdited }">
+		                        	<c:forEach var="a" items="${attendanceEdited }">
 				                          <tr>
 				                            <td>${a.attendanceEditKey}</td>
 				                            <td>${a.attendanceEditMember}</td>
@@ -76,16 +76,15 @@
 				                            <td>${a.attendanceEditBeforeTime.substring(11, 19)}</td>
           									<td>${a.attendanceEditAfterTime.substring(11, 19)}</td>
 				                            <td>${a.attendanceEditState}</td>
-				                            <td>
-				                            	<button onclick="adminAttendanceEditDetail(${a.attendanceEditKey})" class="btn btn-success">상세</button>
-				                            	<button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
-											    	상세화면
+				                            <td>     	
+				                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#editformModal" data-member-key="${a.attendanceEditKey}">
+											    	처리
 											  	</button>
 				                            </td>
 				                          </tr>
 			                        </c:forEach>
 		                         </c:if>
-		                         <c:if test="${empty attendanceEdit }">
+		                         <c:if test="${empty attendanceEdited }">
 		                         	<tr>
 		                         		<td><h3>등록된 수정요청이 없습니다.</h3></td>
 		                         	</tr>
@@ -98,13 +97,11 @@
 		              </div>
 			</div>
 			
-			<%-- <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>  --%>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 		</div>
 		
 			<!--상세 모달 정의 -->
 
-			<%-- <%@ include file="/WEB-INF/views/admin/member/insertmodal.jsp" %> --%>
 	  		 <%@ include file="/WEB-INF/views/admin/attendance/adminattendanceEditDetail.jsp" %>
 	  		
 	  		
@@ -131,22 +128,48 @@
 			            url: '${path}/admin/attendance/adminAttendanceEditDetail',
 			            type: 'POST',
 			            data: { attendanceEditKey: attendanceEditKey },
-			            dataType: 'json', // 서버 응답을 JSON으로 처리
+			            /* dataType: 'json', // 서버 응답을 JSON으로 처리 */
 			            success: function(data) {
 			            	console.log(data);
+			            	console.log(data.attendanceEdit.attendanceEditKey);
+			            	
+			            	 function formatDate(timestamp) {
+				                    var date = new Date(timestamp);
+				                    var year = date.getFullYear();
+				                    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+				                    var day = ('0' + date.getDate()).slice(-2);
+				                    return year + '-' + month + '-' + day;
+				                }
+
 			                // 모달에 데이터 설정
-			                $('#attendanceEditKey').val(data.attendanceEditKey);
-			                $('#attendanceEditMember').val(data.attendanceEditMember);
-			                $('#attendanceEditDate').val(data.attendanceEditDate);
-			                $('#attendanceEditRequestDate').val(data.attendanceEditRequestDate);
-			                $('#attendanceEditBeforeState').val(data.attendanceEditBeforeState);
-			             /*    $('#attendanceEditBeforeTime').val(data.attendanceEditBeforeTime); */
-			                $('#attendanceEditStartEnd').val(data.attendanceEditStartEnd);
-			               /*  $('#attendanceEditAfterTime').val(data.attendanceEditAfterTime); */
-			                $('#attendanceEditAfterState').val(data.attendanceEditAfterState);
-			                $('#attendanceEditRequest').val(data.attendanceEditRequest);
-			                $('#attendanceEditOpinion').val(data.attendanceEditOpinion);
-			                $('#attendanceKey').val(data.attendance.attendanceKey);
+			                $('#attendanceEditKey').val(data.attendanceEdit.attendanceEditKey);
+			                $('#attendanceEditMember').val(data.attendanceEdit.attendanceEditMember); 
+			                $('#attendanceEditDate').val(formatDate(data.attendanceEdit.attendanceEditDate));
+			                $('#attendanceEditRequestDate').val(formatDate(data.attendanceEdit.attendanceEditRequestDate));
+			                $('#attendanceEditBeforeState').val(data.attendanceEdit.attendanceEditBeforeState);
+			             	$('#attendanceEditBeforeTime').val(data.attendanceEdit.attendanceEditBeforeTime); 
+			                $('#attendanceEditStartEnd').val(data.attendanceEdit.attendanceEditStartEnd);
+			                $('#attendanceEditAfterTime').val(data.attendanceEdit.attendanceEditAfterTime);
+			                $('#attendanceEditAfterState').val(data.attendanceEdit.attendanceEditAfterState);
+			                $('#attendanceEditRequest').val(data.attendanceEdit.attendanceEditRequest);
+			                $('#attendanceEditOpinion').val(data.attendanceEdit.attendanceEditOpinion);
+			                $('#attendanceKey').val(data.attendanceEdit.attendance.attendanceKey); 
+			                
+			             // `readonly` 속성 설정
+			                if (data.attendanceEdit.attendanceEditOpinion) {
+			                    $('#attendanceEditOpinion').attr('readonly', true);
+			                } else {
+			                    $('#attendanceEditOpinion').removeAttr('readonly');
+			                }
+
+			                // 버튼 표시/숨기기
+			                if (data.attendanceEdit.attendanceEditOpinion) {
+			                    $('#approveButton').hide();
+			                    $('#rejectButton').hide();
+			                } else {
+			                    $('#approveButton').show();
+			                    $('#rejectButton').show();
+			                }
 			            },
 			            error: function() {
 			                alert('Failed to fetch data.');

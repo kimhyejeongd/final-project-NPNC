@@ -96,6 +96,7 @@
                 <div class="card card-round p-3">
                   <div class="card-body">
                 <form method="post" action="${path}/document/writeend" id="docForm" enctype="multipart/form-data">
+		      		<input type="hidden" class="form-control form-control-sm" name="erDocFormKey" value="${form }">
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
@@ -192,6 +193,7 @@
 
 <script>
 $(document).ready(function() {
+	
 	// 파일 선택 버튼과 파일 입력 필드
     const fileBtn = document.getElementById('fileBtn');
     const fileInput = document.getElementById('formFile');
@@ -246,7 +248,6 @@ $(document).ready(function() {
 	
 	 var ui = $.summernote.ui;
 	//기안 작성
-	<%-- var table = '<%= request.getAttribute("html") != null ? request.getAttribute("html") : "" %>'; --%>
 	var table = `<c:out value="${html}" escapeXml="false"/>`;
 
 	// Initialize Summernote
@@ -275,7 +276,8 @@ $(document).ready(function() {
 		  ],
 		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
 		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
-		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0']
+		lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+		defaultFontSize: '14px' // 기본 폰트 크기 설정
 		/* buttons:{
 			undobtn: undo,
 			redobtn: redo
@@ -308,7 +310,7 @@ $(document).ready(function() {
 					let opinion = $('#input-field').val();
 					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
@@ -351,6 +353,7 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
 	$("#savedraftbtn").click(function() {
 		Swal.fire({
 			title: '임시저장',
@@ -368,7 +371,7 @@ $(document).ready(function() {
 				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'form').prependTo($("#docForm"));
+				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		     	// AJAX로 폼 데이터를 전송

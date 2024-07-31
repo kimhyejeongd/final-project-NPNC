@@ -553,7 +553,7 @@ body{
         var activeRoomId = null; // 현재 활성화된 채팅방 ID 저장
 
         function subscribeToRoom(roomId, recentMessageElement) {
-            var socket = new SockJS('http://localhost:8080/ws-stomp');
+            var socket = new SockJS('${path}/ws-stomp');
             var stompClient = Stomp.over(socket);
             stompClient.connect({"type":"room","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function(frame) {
                 console.log('Connected to room ' + roomId + ': ' + frame);

@@ -96,11 +96,7 @@
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
 		                            </td>
 		                            <td class="">
-		                            	<c:forEach items="${l.approvers }" var="ap">
-		                            		<c:if test="${ap.memberKey eq loginMember.memberKey }">
-		                            			<fmt:formatDate value="${ap.date}" type="date" pattern="yyyy/MM/dd HH:mm"/>
-		                            		</c:if>
-		                            	</c:forEach>
+		                            	<fmt:formatDate value="${l.erDocCompleteDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
 		                            </td>
 		                            <td class="approverNow p-3">
 				                 	<c:forEach items="${l.approvers }" var="ap">

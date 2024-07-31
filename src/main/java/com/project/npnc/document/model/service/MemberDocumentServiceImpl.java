@@ -28,7 +28,9 @@ import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -180,6 +182,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    	log.debug("참조인 없음");
 	    }
 	    
+	    //시리얼번호 문서 내 등록
+	    html=html.replace("[문서번호]", d.getErDocSerialKey());
+	    
 	    result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");
@@ -188,6 +193,43 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+		int result = insertDoc(d, file, html);
+		vac.setVacationDocSerialKey(d.getErDocSerialKey());
+		
+		log.debug("휴가 신청 등록 -> " + vac.toString());
+		result = dao.insertVacationApply(session, vac);
+		if(result <= 0) {
+			throw new Exception("휴가 신청 등록 실패");
+		}
+		log.debug("휴가 신청 등록 성공 -> " + vac.toString());
+		
+		return result;
+	}
+	@Override
+	@Transactional
+	public int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot) throws Exception {
+		//문서 등록
+		int result = insertDoc(d, file, html);
+		ot.setErDocSerialKey(d.getErDocSerialKey());
+		
+		log.debug("추가근무 신청 등록 -> " + ot.toString());
+		result = dao.insertOvertimeApply(session, ot);
+		if(result <= 0) {
+			throw new Exception("추가근무 신청 등록 실패");
+		}
+		log.debug("추가근무 신청 등록 성공 -> " + ot.toString());
+		
+		return result;
+	}
+	@Override
+	public int insertVacationApply(VacationApply vac) {
+		return dao.insertVacationApply(session, vac);
+	}
+	
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -276,6 +318,20 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	@Transactional	
+	public int insertDraftVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+		int result = insertDraftDoc(d, file, html);
+		vac.setVacationDocSerialKey(d.getErDocSerialKey());
+		
+		result = dao.insertVacationApplyDraft(session, vac);
+		if(result <= 0) {
+			throw new Exception("휴가 신청 상태 임시저장으로 등록");
+		}
+		log.debug("휴가 신청 -> 임시저장");
+		
+		return result;
+	}
+	@Override
+	@Transactional	
 	public int retrieveDoc(String docKey) throws Exception {
 		//전자문서 테이블 상태변경 (처리중 -> 회수)
 		int result = dao.retrieveDoc(session, docKey); 
@@ -285,28 +341,21 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		}
 		log.debug("[1]문서 회수 완료");
 		
-//		//첨부파일 있는지 확인 -> 삭제 안하기
-//		List<DocFile> files = dao.selectDocFile(session, docKey);
-//		if(files.size() > 0) {
-//			log.debug("첨부파일 있음");
-//			int count =0;
-//			
-//			//db 삭제
-//			result = dao.deleteDocFile(session, docKey);
-//			if(result<=0) {
-//				throw new Exception("[2]첨부파일 삭제 실패");
-//			}
-//			log.debug("[2]첨부파일 삭제 완료");
-//			
-//			//서버에서 삭제
-//			for(DocFile f : files) {
-//				count++;
-//				result=fileRemove("docfile", f.getFileRename());
-//				if(result<=0) {
-//					throw new Exception("[2]첨부파일 삭제 실패" + count + "/" + files.size());
-//				}
-//			}
-//		}
+		//추가근무 신청서인 경우
+		if(docKey.contains("F2")) {
+			log.debug("추가근무 신청 문서입니다");
+			result = dao.deleteOvertimeApply(session, docKey);
+			if(result <= 0) throw new Exception("[2]추가근무 신청 삭제 실패");
+			log.debug("[2]추가근무 신청 삭제 완료");
+		}
+		//휴가 신청서인 경우
+		if(docKey.contains("F3")) {
+			log.debug("휴가 신청 문서입니다");
+			result = dao.deleteVacationApply(session, docKey);
+			if(result <= 0) throw new Exception("[2]휴가 신청 삭제 실패");
+			log.debug("[2]휴가 신청 삭제 완료");
+		}
+		
 		return result;
 	}
 	@Override
@@ -441,8 +490,32 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		};
 		return result;
 	}
+	//문서 파일 삭제
 	@Override
 	public int deleteDocFile(String docSerial) throws Exception {
+//		//첨부파일 있는지 확인 -> 삭제 안하기
+//		List<DocFile> files = dao.selectDocFile(session, docKey);
+//		if(files.size() > 0) {
+//			log.debug("첨부파일 있음");
+//			int count =0;
+//			
+//			//db 삭제
+//			result = dao.deleteDocFile(session, docKey);
+//			if(result<=0) {
+//				throw new Exception("[2]첨부파일 삭제 실패");
+//			}
+//			log.debug("[2]첨부파일 삭제 완료");
+//			
+//			//서버에서 삭제
+//			for(DocFile f : files) {
+//				count++;
+//				result=fileRemove("docfile", f.getFileRename());
+//				if(result<=0) {
+//					throw new Exception("[2]첨부파일 삭제 실패" + count + "/" + files.size());
+//				}
+//			}
+//		}
+
 		return dao.deleteDocFile(session, docSerial);
 	}
 	//html파일로 문서 저장 메소드
@@ -497,7 +570,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	//결재 : 승인
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveDoc(int memberKey, String serial, String msg) throws Exception {
+	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception {
 		int result = 0;
 		int lastApCk = 0;
 		
@@ -520,6 +593,27 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 					throw new Exception("문서 상태 처리완료로 변경 실패");
 				}
 				log.debug("문서 상태 -> 처리 완료");
+				
+				switch(formNo) {
+				case 2:
+					//추가근무 문서라면 승인상태 적용
+					result = updateOvertiemApply(serial, "승인");
+					if(result <= 0) throw new Exception("추가근무 신청 상태 승인으로 변경 실패");
+					log.debug("추가근무 신청 상태 -> 승인");
+					break;
+				case 3:
+					//휴가 문서라면 계산 진행
+					result = updateVacationApply(serial, "승인");
+					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
+					log.debug("휴가 신청 상태 -> 승인");
+					
+					//차감 진행
+					result = dao.updateVacationCalc(session, memberKey, serial);
+					if(result <= 0) throw new Exception("휴가 차감 실패");
+					log.debug("휴가 차감 성공");
+					break;
+				}
+	
 			}
 		}catch(Exception e) {
 			log.error("문서 결재 처리 중 예외 발생: ", e);
@@ -634,4 +728,21 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public List<Document> selectReferenceDocs(int no) {
 		return dao.selectReferenceDocs(session, no);
 	}
+	
+//	휴가
+	@Override
+	public int selectRemainingVac(int memberKey) {
+		return dao.selectRemainingVac(session, memberKey);
+	}
+	@Override
+	public int updateVacationApply(String docSerial, String status) {
+		return dao.updateVacationApply(session, docSerial, status);
+	}
+	
+// 추가근무
+	@Override
+	public int updateOvertiemApply(String docSerial, String status) {
+		return dao.updateOvertimeApply(session, docSerial, status);
+	}
+	
 }

@@ -57,7 +57,7 @@ public class AdminAttendanceController {
 		int totaldata=service.selectAdminAttendanceEditCount();
 		List<AttendanceEdit> attendanceEdit=service.selectAdminAttendanceEditAll(page);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAdminAttendanceEditAll"));
-		m.addAttribute("attendanceEdit",attendanceEdit);
+		m.addAttribute("attendanceEdited",attendanceEdit);
 		return "admin/attendance/adminattendanceeditlist";
 	}
 	
@@ -136,7 +136,7 @@ public class AdminAttendanceController {
 		List<AttendanceEdit> attendanceEdit=service.searchAdminAttendanceEdit(searchMap,page);
 		int totaldata=service.searchAdminAttendanceEditCount(searchMap);
 		m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,null,null, "searchAdminAttendanceEdit"));
-		m.addAttribute("attendanceEdit",attendanceEdit);
+		m.addAttribute("attendanceEdited",attendanceEdit);
 		m.addAttribute("searchK",searchKey);
 		m.addAttribute("searchT",searchType);
 		return "admin/attendance/adminattendanceeditlist";

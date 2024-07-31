@@ -27,6 +27,8 @@ public interface AttendanceService {
 	
 	List<Attendance> searchAttendance(Map searchMap,Map page);
 	int searchAttendanceCount(Map searchMap);
+	
+	Map selectAttendanceMonthCount(Attendance a);
 
 	//attendanceEdit
 	int insertAttendanceEdit(AttendanceEdit ae);

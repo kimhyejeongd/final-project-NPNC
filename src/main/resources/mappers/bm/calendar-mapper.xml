@@ -23,7 +23,18 @@
 			<result property="refJobName" column="CAL_REFERENCE_JOB"/>
 		</collection> 
 	</resultMap>
-
+	
+	<resultMap id="vacMap" type="calendarVacation">
+		<id property="vacationKey" column="vacation_use_key"/>
+		<result property="memberKey" column="vacation_member_key"/>
+		<result property="deptName" column="department_name"/>
+		<result property="title" column="vacation_name"/>
+		<result property="start" column="vacation_start_date"/>
+		<result property="end" column="vacation_end_date"/>
+		<result property="empName" column="member_name"/>
+	</resultMap>
+	
+	
 
 	<insert id="insertCalendar" parameterType="calendar">
 		INSERT INTO CALENDAR VALUES(SEQ_CALENDAR.NEXTVAL,#{empNo},#{type},#{title},TO_TIMESTAMP(#{start},'YYYY-MM-DD HH24:MI'),TO_TIMESTAMP(#{end},'YYYY-MM-DD HH24:MI'),#{description},#{backgroundColor},#{allDay},DEFAULT,DEFAULT,DEFAULT)
@@ -56,6 +67,86 @@
 			cal.MEMBER_KEY = ${memberKey} AND cal.CALENDAR_DELETE ='N'  
 			 <!--  select * from calendar where member_key = ${memberKey} AND calendar_delete ='N' -->
 	</select>
+	
+	<select id="checkVacation" resultMap = "vacMap" parameterType="map">
+		SELECT
+			vac.VACATION_USE_KEY,
+			vac.VACATION_MEMBER_KEY,
+			dept.DEPARTMENT_NAME,
+			v.VACATION_NAME,
+			vac.VACATION_START_DATE,
+			vac.VACATION_END_DATE,
+			mem.MEMBER_NAME
+		FROM
+			VACATION_APPLY vac
+		LEFT JOIN
+		 	VACATION v on v.VACATION_KEY = vac.VACATION_KEY
+		LEFT JOIN
+			MEMBER mem on mem.MEMBER_KEY = vac.VACATION_MEMBER_KEY
+		LEFT JOIN
+			DEPARTMENT dept on mem.DEPARTMENT_KEY = dept.DEPARTMENT_KEY
+		where
+			1=2
+		<if test="searchA !=null or searchB != null">
+			union
+		</if>
+		<if test="searchA != null">
+			SELECT
+				vac.VACATION_USE_KEY,
+				vac.VACATION_MEMBER_KEY,
+				dept.DEPARTMENT_NAME,
+				v.VACATION_NAME,
+				vac.VACATION_START_DATE,
+				vac.VACATION_END_DATE,
+				mem.MEMBER_NAME
+			FROM
+				VACATION_APPLY vac
+			LEFT JOIN
+			 	VACATION v on v.VACATION_KEY = vac.VACATION_KEY
+			LEFT JOIN
+				MEMBER mem on mem.MEMBER_KEY = vac.VACATION_MEMBER_KEY
+			LEFT JOIN
+				DEPARTMENT dept on mem.DEPARTMENT_KEY = dept.DEPARTMENT_KEY
+			WHERE
+				vac.VACATION_MEMBER_KEY = #{empNo}
+				AND
+				vac.VACATION_APPLY_STATUS = '승인'
+		</if>
+		<if test="searchB != null">
+			<if test="searchA != null">
+				union
+			</if>
+			SELECT
+				vac.VACATION_USE_KEY,
+				vac.VACATION_MEMBER_KEY,
+				dept.DEPARTMENT_NAME,
+				v.VACATION_NAME,
+				vac.VACATION_START_DATE,
+				vac.VACATION_END_DATE,
+				mem.MEMBER_NAME
+			FROM
+				VACATION_APPLY vac
+			LEFT JOIN
+			 	VACATION v on v.VACATION_KEY = vac.VACATION_KEY
+			LEFT JOIN
+				MEMBER mem on mem.MEMBER_KEY = vac.VACATION_MEMBER_KEY
+			LEFT JOIN
+				DEPARTMENT dept on mem.DEPARTMENT_KEY = dept.DEPARTMENT_KEY
+			WHERE
+				dept.DEPARTMENT_KEY = (
+			        SELECT
+			            mem.DEPARTMENT_KEY
+			        FROM
+			            MEMBER mem
+			        WHERE
+			            mem.MEMBER_KEY = #{empNo}
+			    )
+			    AND
+			    vac.VACATION_APPLY_STATUS = '승인'
+		</if>
+	
+	</select>
+	
 	<select id="checkcalendar" resultMap = "calMap" parameterType="map">
 		SELECT
 			cal.CALENDAR_KEY,
@@ -208,8 +299,9 @@
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
-				cal.CALENDAR_TYPE = '4' AND CALENDAR_DELETE = 'N'
+				cal.CALENDAR_TYPE = '4' AND CALENDAR_DELETE = 'N' AND cal.MEMBER_KEY = ${empNo}
 		</if>
+
 		
 		
 	</select>
@@ -268,6 +360,17 @@
 		INSERT INTO CAL_REFERENCE VALUES(SEQ_CAL_REFERENCE.NEXTVAL,${empKey},${calendarKey},DEFAULT)
 	</insert>
 	
+	<update id="updateReCalendar" parameterType="reserveItem">
+		UPDATE 
+			CALENDAR
+		SET
+			CALENDAR_START = TO_TIMESTAMP(#{date}||' '||#{start}, 'YYYY-MM-DD HH24:MI'),
+			CALENDAR_END = TO_TIMESTAMP(#{date}||' '||#{end}, 'YYYY-MM-DD HH24:MI'),
+			CALENDAR_UPDATE = SYSDATE
+		WHERE
+			CALENDAR_KEY = #{calendarKey}
+		
+	</update>
 
 	
 	

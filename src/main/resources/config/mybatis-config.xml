@@ -5,7 +5,7 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
 	<typeAliases>
-		<typeAlias type="com.project.npnc.member.model.dto.Member" alias="memberSr"/>
+		<typeAlias type="com.project.npnc.member.model.dto.SrMember" alias="memberSr"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
 		<typeAlias type="com.project.npnc.organization.dto.OrganizationDto" alias="OrganizationDto"></typeAlias>
 		<typeAlias type="com.project.npnc.admin.job.model.dto.Job" alias="job"/>
@@ -38,7 +38,7 @@
    		<typeAlias type="com.project.npnc.notice.model.dto.NoticeDto" alias="NoticeDto"/>
    	
 
-		<typeAlias type="com.project.npnc.note.dto.NoteReceptionDto" alias="noteRec"></typeAlias>
+	
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
    		<typeAlias type="com.project.npnc.security.dto.Member" alias="mypagemember"/>
 		<typeAlias type="com.project.npnc.attendance.model.dto.Attendance" alias="attendance"/>
@@ -50,13 +50,31 @@
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
 		<typeAlias type="com.project.npnc.note.dto.NoteFileDto" alias="noteFileDto"/>
 
+
+	<!--	<typeAlias type="com.project.npnc.calendar.model.dto.Reservation" alias="reservation"/>
+		<typeAlias type="com.project.npnc.calendar.model.dto.ReserveItem" alias="reserveItem"/>-->
+
 		<typeAlias type="com.project.npnc.calendar.model.dto.Reservation" alias="reservation"/>
 		<typeAlias type="com.project.npnc.calendar.model.dto.ReserveItem" alias="reserveItem"/>
+
 
 		<typeAlias type="com.project.npnc.document.model.dto.Referer" alias="referer"/>   
 		<typeAlias type="com.project.npnc.alarm.dto.AlarmMessage" alias="alarmMessage"/>   
 		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>
 		<typeAlias type="com.project.npnc.admin.document.model.dto.AdminDocument" alias="adminDocument"/>
+		<typeAlias type="com.project.npnc.admin.document.model.dto.Storage" alias="storage"/>
         <typeAlias type="com.project.npnc.external.dto.ExternalDto" alias="ExternalDto"/>
+        
+        <typeAlias type="com.project.npnc.admin.vacation.model.dto.Vacation" alias="adminVacation"/>
+
+        <typeAlias type="com.project.npnc.document.model.dto.VacationApply" alias="vacationApply"/>
+       
+         
+
+        <typeAlias type="com.project.npnc.memberVacation.model.dto.MemberVacation" alias="memberVacation"/>
+        <typeAlias type="com.project.npnc.document.model.dto.VacationApply" alias="vacationApply"/>   
+        <typeAlias type="com.project.npnc.document.model.dto.OvertimeApply" alias="OvertimeApply"/>   
+          <typeAlias type="com.project.npnc.calendar.model.dto.Vacation" alias="calendarVacation"/>
+
 	</typeAliases>
 </configuration> 

@@ -31,16 +31,18 @@
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
-                        <div
+                      <div
                           class="icon-big text-center icon-primary bubble-shadow-small"
                         >
-                          <i class="fas fa-users"></i>
+                          <i class="fas fa-users"></i>          
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 출근</p>
-                          <h4 class="card-title">12</h4>
+                          <p class="card-category">${currentMonth}월 출근</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.gotowork }">0</c:if>${attendanceCount.gotowork }</h4>
+                          <p class="card-category">${currentMonth}월 결근</p>
+						  <h4 class="card-title"><c:if test="${empty attendanceCount.absent }">0</c:if>${attendanceCount.absent }</h4>
                         </div>
                       </div>
                     </div>
@@ -60,8 +62,10 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 지각</p>
-                          <h4 class="card-title">1</h4>
+                          <p class="card-category">${currentMonth}월 지각</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.late }">0</c:if>${attendanceCount.late }</h4>
+                          <p class="card-category">${currentMonth}월 조퇴</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.ealryLeave }">0</c:if>${attendanceCount.ealryLeave}</h4>
                         </div>
                       </div>
                     </div>
@@ -81,8 +85,10 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 휴가</p>
-                          <h4 class="card-title">2</h4>
+                          <p class="card-category">${currentMonth}월 휴가</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.vaca }">0</c:if>${attendanceCount.vaca}</h4>
+                          <p class="card-category">남은 휴가</p>
+                          <h4 class="card-title">${memberVacation.memberVacRemaining}</h4>
                         </div>
                       </div>
                     </div>
@@ -102,8 +108,8 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">이번달 초과근무 시간</p>
-                          <h4 class="card-title">15</h4>
+                          <p class="card-category">${currentMonth}월 초과근무</p>
+                          <h4 class="card-title">0</h4>
                         </div>
                       </div>
                     </div>
@@ -121,6 +127,8 @@
 			              	<option value="지각" <c:if test="${searchT eq '지각'}">selected</c:if>>지각</option>
 			              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
 			              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
+			              	<option value="휴가" <c:if test="${searchT eq '휴가'}">selected</c:if>>휴가</option>
+			              	<option value="유급휴가" <c:if test="${searchT eq '유급휴가'}">selected</c:if>>유급휴가</option>
 			              </select>
                   				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
                   				<h3>~</h3>
@@ -154,7 +162,9 @@
 		                            <td>${a.overtimeKey }</td>
 		                            <td>${a.attendanceState}</td>
 		                            <td>
-		                            	<button onclick="updateAttendance('${a.attendanceKey}');" class="btn btn-success">근태수정요청</button>
+		                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">
+											   수정요청
+										</button>
 		                            </td>
 		                          </tr>
 	                        </c:forEach>
@@ -171,31 +181,81 @@
               		<div>${pagebar}</div>
                 </div>
               </div>
-	</div>
-	</div>
-	</div>
-			<div id="attendanceResult" style="margin-top:20px;">
-				<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};">
-						출근
-				</button>
-				<c:if test="${not empty checkStartTime}">
-					출근 시간 : ${checkStartTime.substring(9, 17)}  
-				</c:if>
-				
-			</div>
-			<div id="attendanceEndResult" style="margin-top:20px;">
-				<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};">
-					퇴근
-				</button>
-				<c:if test="${not empty checkEndTime}">
-					퇴근 시간 : ${checkEndTime.substring(9, 17)}  
-				</c:if>
-			</div>
-			
+	  </div>
+	 </div>
 			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
-		</div>
+	</div>
+			 <%@ include file="/WEB-INF/views/attendance/updateattendance.jsp" %>
+   </div>
+	<!-- Bootstrap JS and dependencies -->
+ 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 	
+		
 	<script>
-				
+		
+	$(document).ready(function() {
+	    $('#updateAttendanceModal').on('show.bs.modal', function (event) {
+	        var button = $(event.relatedTarget); // 버튼을 클릭한 버튼을 참조합니다.
+	        var attendanceKey = button.data('member-key'); // data-attendanceeditkey 속성의 값을 가져옵니다.
+	        // AJAX를 사용하여 서버에서 데이터 가져오기
+	        $.ajax({
+	            url: '${path}/attendance/updateAttendance',
+	            type: 'POST',
+	            data: { attendanceKey: attendanceKey },
+	            /* dataType: 'json', // 서버 응답을 JSON으로 처리 */
+	            success: function(data) {
+	            	console.log(data);
+	            	console.log(data.attendance.attendanceKey);
+	            	
+	            	 function formatDate(timestamp) {
+		                    var date = new Date(timestamp);
+		                    var year = date.getFullYear();
+		                    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+		                    var day = ('0' + date.getDate()).slice(-2);
+		                    return year + '-' + month + '-' + day;
+		                }
+
+	                // 모달에 데이터 설정
+	                $('#attendanceKey').val(data.attendance.attendanceKey );
+	                $('#attendanceEditMember').val(data.attendance.member.memberId);
+	                $('#attendanceEditDate').val(formatDate(data.today));
+	                $('#attendanceEditRequestDate').val(formatDate(data.attendance.attendanceDate));
+	                $('#attendanceEditBeforeState').val(data.attendance.attendanceState);
+	                $('#attendanceEditBeforeTime').val(data.attendance.attendanceStart);
+	             	$('#attendanceEditBeforeTimeEnd').val(data.attendance.attendanceEnd); 
+
+	            },
+	            error: function() {
+	                alert('Failed to fetch data.');
+	            }
+	        });
+	    });
+	});
+	
+	
+	 function fn_paging(pageNo) {
+	 	    console.log('오긴왔냐?');
+	 	    var searchType= document.getElementById("searchType").value;
+	 	    var searchStartDate= document.getElementById("searchStartDate").value;
+	 	    var searchEndDate= document.getElementById("searchEndDate").value;
+		 	   $.ajax({
+		            url: '${path}/attendance/searchAttendance', // 서버의 실제 엔드포인트로 대체
+		            type: 'GET',
+		            data: { cPage: pageNo ,searchType : searchType,searchStartDate : searchStartDate,searchEndDate : searchEndDate},
+		            dataType: 'text', // 서버 응답을 JSON으로 처리
+		            success: function(data) {
+
+		                document.querySelector("div[class='table-responsive']").innerHTML = data;
+
+		            },
+		            error: function(xhr, status, error) {
+		                console.error("AJAX Error: ", status, error);
+		            }
+		        });
+		    }
+	
+	
 	
 		document.getElementById("searchbutton").addEventListener("click",e=>{
 			const searchType=document.getElementById("searchType").value;
@@ -209,71 +269,7 @@
 				document.querySelector("div[class='table-responsive']").innerHTML = data;
 			})
 		});
-	
-	
-	
-	
-		//근태 출퇴근 버튼
- 		 $(document).ready(function(){
-	         $('#endAttendanceBtn').click(function(){
-	             $.ajax({
-	                 type: 'POST',
-	                 url: '${path}/attendance/endattendance',
-	                 success: function(response) {
-	                     var message = response.msg;
-	                     var attendanceEnd = response.attendanceEnd;
-	                     alert(message);
- 	                     $('#endAttendanceBtn').hide();
-	                     $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
-	                 },
-	                 error: function(xhr, status, error) {
-	                     alert('퇴근 처리에 실패하였습니다.');
-	                 }
-	             });
-	         });
-	     }); 
- 		 
- 		 $(document).ready(function(){
-	         $('#startAttendanceBtn').click(function(){
-	             $.ajax({
-	                 type: 'POST',
-	                 url: '${path}/attendance/startattendance',
-	                 success: function(response) {
-	                     var message = response.msg;
-	                     var attendanceStart = response.attendanceStart;
-	                     alert(message);
- 	                     $('#startAttendanceBtn').hide();
-	                     $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
-	                 },
-	                 error: function(xhr, status, error) {
-	                     alert('출근 처리에 실패하였습니다.');
-	                 }
-	             });
-	         });
-	     }); 
-	
-
- 		 
- 		 
- 		 
- 		 
- 		 
- 		 
-				const updateAttendance=(a)=>{
-				            let form = document.createElement("form");
-				            form.setAttribute("method", "post");
-				            form.setAttribute("action", "${path}/attendance/updateAttendance");
-
-				            let $key = document.createElement("input");
-				            $key.setAttribute("type", "hidden");
-				            $key.setAttribute("name", "attendanceKey");
-				            $key.setAttribute("value", a);
-
-				            form.appendChild($key);
-
-				            document.body.appendChild(form);
-				            form.submit();
-						}
+		
 
 	</script>
 

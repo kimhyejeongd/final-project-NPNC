@@ -18,7 +18,7 @@ public interface AdminMemberService {
 	int insertMember(AdminMember m);
 	int updateMember(AdminMember m);
 	int deleteMember(int memberKey);
-	List<AdminMember> searchMember(String searchKey, Map<String,Integer> page);
-	int searchMemberCount(String searchKey);
+	List<AdminMember> searchMember(Map searchMap, Map<String,Integer> page);
+	int searchMemberCount(Map searchMap);
 	
 }

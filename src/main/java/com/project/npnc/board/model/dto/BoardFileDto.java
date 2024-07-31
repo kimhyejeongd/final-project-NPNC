@@ -2,7 +2,7 @@ package com.project.npnc.board.model.dto;
 
 import java.sql.Date;
 
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.member.model.dto.SrMember;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

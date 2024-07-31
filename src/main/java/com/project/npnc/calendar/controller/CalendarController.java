@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.npnc.calendar.model.dto.Calendar;
+import com.project.npnc.calendar.model.dto.Vacation;
 import com.project.npnc.calendar.model.service.CalendarService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
@@ -66,12 +67,12 @@ public class CalendarController {
 	 */
 	@PostMapping("/calendar/updatecalendar.do")
 	public ResponseEntity<Map<String,Object>> updateCalendar(@RequestBody Calendar calendar){
+		System.out.println(calendar.getEnd());
 		int result =service.updateCalendar(calendar);
 		Map<String,Object> response = new HashMap<>();
 		if(result>0) {
 			response.put("status", "success");
 			response.put("message", "일정이 수정되었습니다.");
-		
 		}else {
 			response.put("status", "error");
 			response.put("message", "일정수정에 실패했습니다.");
@@ -108,6 +109,18 @@ public class CalendarController {
 		List<Calendar> calendarList = service.checkCalendar(param);
 		
 		return calendarList;
+	}
+	@PostMapping("/calendar/checkvacation")
+	@ResponseBody
+	public List<Vacation> checkVacation(@RequestBody Map<String,Object> param){
+		String deptCode = (String) param.get("deptCode");
+		String searchType = (String) param.get("searchType");
+		if(searchType.indexOf('A')> -1) {param.put("searchA","A");}
+		if(searchType.indexOf('B')> -1) {param.put("searchB","B");}
+		
+		List<Vacation> vacationList = service.checkVacation(param);
+		
+		return vacationList;
 	}
 	
 	

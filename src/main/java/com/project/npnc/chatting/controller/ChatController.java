@@ -104,14 +104,12 @@ public class ChatController {
     @GetMapping("/room/{roomId}/users")
     @ResponseBody
     public Set<String> getUsersInRoom(@PathVariable String roomId) {
-    	System.out.println("gerUsersInRoom");
         return webSocketEventListener.getSessionsForRoom(roomId);
     }
 
     @GetMapping("/room/{roomId}/sessionCount")
     @ResponseBody
     public int getChatSessionCount(@PathVariable String roomId) {
-    	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
 

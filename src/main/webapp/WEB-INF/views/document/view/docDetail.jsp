@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="org.springframework.ui.Model" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <sec:authentication var="loginMember" property="principal"/>
+<c:set var="aptarget" value="'memberKey=' + ${loginMember.memberKey}"/>
 <%
 	String lastPage = (String) session.getAttribute("lastPage");
 %>
@@ -42,6 +43,7 @@
  </style>
  <script src="${path}/resources/jh/js/docDetail.js"></script>
  <script src="${path}/resources/jh/js/draft.js"></script>
+ <script src="${path}/resources/jh/js/inprocess.js"></script>
 <body>
 
 	<div class="wrapper">
@@ -87,19 +89,19 @@
 							<!-- 재기안, 삭제 -->
 							<div class="d-flex">
 							<c:choose>
-								<c:when test="${loginMember.memberKey == l.erDocWriter && fn:contains(lastPage, 'inprocess')}">
-									<a href="#" class="btn btn-label-success btn-round btn-sm me-2">
+								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')}">
+									<button class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
-											<i class="fa fa-pencil"></i>
+											<i class="fas fa-edit"></i>
 										</span>
 										내용 수정
-									</a>
-									<a href="#" class="btn btn-label-info btn-round btn-sm">
+									</button>
+									<button class="btn btn-label-info btn-round btn-sm" onclick="modal('${l.erDocSerialKey}');">
 										<span class="btn-label">
-											<i class="fa fa-print"></i>
+											<i class="fas fa-redo-alt"></i>
 										</span>
 										회수
-									</a>
+									</button>
 								</c:when>
 								<c:when test="${fn:contains(lastPage, 'draft') or fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
 									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocKey}')">
@@ -115,7 +117,9 @@
 										삭제
 									</button>
 								</c:when>
-								<c:when test="${fn:contains(lastPage, 'waiting') or (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting'))}">
+								<c:when test="${fn:contains(lastPage, 'waiting') or 
+							                  (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting')) or 
+							                  fn:contains(approverStr, aptarget)}">
 									<a href="#" class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
@@ -151,7 +155,7 @@
 		    	 <div class="form-group d-flex">
 			      <label for="smallInput" class=""><span class="h5 me-5">보관함 </span></label>
 			      <div class="border d-block form-control form-control-sm d-flex align-items-center" style="height: auto; min-height: 30px; width: 100%;" id="">
-			      	<span style="font-size: larger;">${l.erDocStorageKey}</span>
+			      	<span style="font-size: larger;">${l.erDocStorageFolderName} > ${l.erDocStorageName} (${l.erDocStorageTerm }년)</span>
 			      </div>
 			    </div>
 			    <div class="form-group d-flex">
@@ -206,7 +210,7 @@
 					  	</div>
 					  	<div class="d-flex">
 						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileOriName }">다운로드</button>
 					  	</div>
 					  </div>
 					</c:forEach>
@@ -234,6 +238,7 @@
       </div>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("formNo", "${l.docFormKey}");
 </script>
 </body>
 </html>

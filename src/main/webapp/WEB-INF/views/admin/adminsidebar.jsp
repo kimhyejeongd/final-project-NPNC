@@ -130,6 +130,22 @@
                 </div>
               </li>
               <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#vaca">
+                  <i class="fas fa-pen-square"></i>
+                  <p>휴가관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="vaca">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/vacation/selectVacationAll">
+                        <span class="sub-item">휴가 관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#123">
                   <i class="fas fa-pen-square"></i>
                   <p>전자결재 관리</p>
@@ -171,6 +187,19 @@
                     <li>
                       <a href="${path }/notice/admin">
                         <span class="sub-item">공지사항</span>
+
+               <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#vaca">
+                  <i class="fas fa-pen-square"></i>
+                  <p>예약물</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="vaca">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/reservation/reservationlist">
+                        <span class="sub-item">예약물 관리</span>
+
                       </a>
                     </li>
                   </ul>

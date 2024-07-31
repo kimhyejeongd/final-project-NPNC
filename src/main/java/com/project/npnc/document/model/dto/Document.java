@@ -4,9 +4,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Transient;
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,13 +27,16 @@ public class Document {
 	private String erDocDeleteYn;
 	private int erDocStorageKey; //보관함 pk
 	private String erDocStorageName; //join용 이름
+	private int erDocStorageTerm; //join용
+	private String erDocStorageFolderName; //join용 이름
 	private String erDocFilename;
 	private String erDocState;
 	private Date erDocStateUpdateDate;
 	private int erDocLastUpdater;
 	private Date erDocUpdateDate;
-	private Date erDocCompleteDate;
 	private String erDocUpdateReason;
+	private Date erDocCompleteDate;
+	private int docFormKey;
 	private List<Approver> approvers = new ArrayList<Approver>();
 	private List<DocFile> files = new ArrayList<DocFile>();
 //	private List<MultipartFile> multifiles = new ArrayList<MultipartFile>();

@@ -1,5 +1,4 @@
 var currentEvent;
-
 // 사용자 정보 (로그인한 사용자 정보)
 var currentUser = {
     empNo: userKey, // 현재 사용자의 고유 식별자
@@ -124,7 +123,7 @@ var editEvent = function(event) {
             // 여기서 Ajax 요청을 통해 서버에 수정된 이벤트 정보 전송
             $.ajax({
                 type: "POST",
-                url: "/calendar/updatecalendar.do",
+                url: path+"/calendar/updatecalendar.do",
                 data: JSON.stringify(updatedEvent),
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -141,8 +140,16 @@ var editEvent = function(event) {
                             calendarEvent.setExtendedProp('allDay', updatedEvent.allDay);
                             selectedMembers = [];
                             updateSelectedMembers();
-                            alert(response.message);
                         }
+                        Swal.fire({
+					        icon: 'success',  // 성공을 나타내는 아이콘
+					        title: '완료',
+					        text: response.message,
+					        confirmButtonText: '확인'
+				        });
+				        setTimeout(() => {
+			                window.location.reload();
+			            }, 3000); // 3초 후 새로고침
                     } else {
                         alert(response.message);
                     }
@@ -180,7 +187,7 @@ var deleteEvent = function() {
             var calKey = currentEvent.extendedProps.calendarKey;
             $.ajax({
                 type: "POST",
-                url: "/calendar/deletecalendar",
+                url: path+"/calendar/deletecalendar",
                 data: JSON.stringify(calKey),
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',

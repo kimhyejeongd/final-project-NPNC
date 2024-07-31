@@ -3,12 +3,13 @@ package com.project.npnc.admin.document.model.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.project.npnc.admin.document.model.dto.AdminDocument;
+import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.security.dto.Member;
 
 @Repository
 public class AdminDocumentDao {
@@ -44,4 +45,35 @@ public class AdminDocumentDao {
 	public int selectFolderOrderBy(SqlSessionTemplate session,int folderGroup) {
 		return session.selectOne("admindoc.selectFolderOrderBy",folderGroup);
 	}
+	public List<Member>selectAllMembers(SqlSessionTemplate session){
+		return session.selectList("admindoc.selectAllMembers");
+	}
+	public int insertStorage(SqlSessionTemplate session, Storage storage) {
+		return session.insert("admindoc.insertStorage",storage);
+	}
+	public int selectStorageOrder(SqlSessionTemplate session, int storageFolderKey) {
+		return session.selectOne("admindoc.selectStorageOrder",storageFolderKey);
+	}
+	public int deleteStorage(SqlSessionTemplate session,int deleteKey) {
+		return session.delete("admindoc.deleteStorage",deleteKey);
+	}
+	public int updateStorage(SqlSessionTemplate session, Storage storage) {
+		return session.update("admindoc.updateStorage",storage);
+	}
+	public int updateFolderGroup(SqlSessionTemplate session,StorageFolder draggedFolderKey) {
+		return session.update("admindoc.updateFolderGroup",draggedFolderKey);
+	}
+	public int removeFolderLv1(SqlSessionTemplate session,int folderGroup) {
+		return session.delete("admindoc.draggedFolderKey",folderGroup);
+	}
+	public int updateFolderLv1Order(SqlSessionTemplate session, int folderGroup) {
+		return session.update("admindoc.updateFolderLv1Order",folderGroup);
+	}
+	public String selectParentFolderName(SqlSessionTemplate session, int folderGroup) {
+		return session.selectOne("admindoc.selectParentFolderName",folderGroup);
+	}
+	public Storage selectStorage(SqlSessionTemplate session, int storageKey) {
+		return session.selectOne("admindoc.selectStorage",storageKey);
+	}
+
 }

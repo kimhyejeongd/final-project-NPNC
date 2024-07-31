@@ -2,8 +2,8 @@
  *  진행중 문서
  */
 	
-function modal(no){
-	console.log(no);
+function modal(serial){
+	console.log(serial);
 	Swal.fire({
 		title: '회수 확인',
 		html: '<h4>정말 회수하시겠습니까? <br>진행 중인 결재가 취소됩니다</h4>',
@@ -20,7 +20,7 @@ function modal(no){
 			console.log('회수하기');
 			$.ajax({
 				url: sessionStorage.getItem("path") + `/document/retrieve`,
-				data: {no : no},
+				data: {no : serial},
 				dataType: "text",
 				method: "post",
 				success: data=>{

@@ -16,10 +16,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	        }
 	    });
 	}
-	function downloadFile(fileUrl) {
-	    // 파일을 다운로드하기 위한 링크를 생성하고 클릭합니다.
-	    window.location.href = fileUrl;
-	}
+	//파일 다운로드
+	$(document).on('click', '#fileDownBtn', function() {
+	    let fileName = $(this).data('filename');
+	    window.location.href = sessionStorage.getItem("path") + `/files/download/${fileName}`;
+	});
 	$("#closeBtn").click(function(){
 		window.history.back();
 	});
@@ -71,7 +72,8 @@ function approveModal(no, serial){
 						'no' : no,						
 						'html' : dochtml,
 						'msg' : opinion,
-						'serial' : serial
+						'serial' : serial,
+						'formNo' : sessionStorage.getItem("formNo")
 						}),
 					dataType : "json",
 					contentType : "application/json; charset=utf-8",
@@ -81,6 +83,7 @@ function approveModal(no, serial){
 			            if (data.status === "success") {
 			                alert(data.message);
 							// 로컬 스토리지에서 데이터를 삭제
+							sessionStorage.removeItem("formNo");
 							 
 			                // 성공 시 페이지 리다이렉트
 			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
