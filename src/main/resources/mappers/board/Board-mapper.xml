@@ -16,6 +16,12 @@
     <select id="selectFilesByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardFileDto">
         SELECT * FROM BOARD_FILE WHERE BOARD_KEY = #{boardKey}
     </select>
+    
+	<select id="searchBoardsByTitle" parameterType="string" resultType="com.project.npnc.board.model.dto.BoardDto">
+	    SELECT * FROM BOARD WHERE BOARD_TITLE LIKE '%' || #{title} || '%'
+	</select>
+
+    
 
     <!-- 공지사항만 조회 -->
     <select id="selectNotices" resultType="com.project.npnc.board.model.dto.BoardDto">

@@ -1,8 +1,10 @@
 package com.project.npnc.board.model.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.project.npnc.board.model.dao.BoardDao;
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
@@ -79,5 +81,10 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardFileDto> getFilesByBoardId(int boardKey) {
         return boardDao.selectFilesByBoardId(boardKey);
     }
+    @Override
+    public List<BoardDto> searchBoardsByTitle(String title) {
+        return boardDao.searchBoardsByTitle(title);
+    }
+
 
 }

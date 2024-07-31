@@ -26,4 +26,6 @@ public interface BoardDao {
     void insertBoardFile(BoardFileDto boardFileDto);
     
     List<BoardFileDto> selectFilesByBoardId(int boardKey);
+    List<BoardDto> searchBoardsByTitle(String title);
+
 }

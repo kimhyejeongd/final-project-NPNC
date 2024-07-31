@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>게시판 목록</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-   
+
     <!-- Favicon -->
     <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
 
@@ -51,18 +51,27 @@
 <body>
     <!-- Header -->
 
-
     <div class="wrapper">
         <!-- Sidebar -->
         <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
 
         <!-- Main Panel -->
         <div class="main-panel">
-        
-        		    <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         
             <div class="container">
                 <h1>게시판 목록</h1>
+                <!-- Search Form -->
+                <form method="get" action="${path}/board/list">
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <input type="text" name="searchKeyword" class="form-control" placeholder="제목 검색" value="${param.searchKeyword}">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary">검색</button>
+                        </div>
+                    </div>
+                </form>
                 <div class="row mt-4">
                     <div class="col-md-12">
                         <div class="card">
@@ -81,7 +90,7 @@
                                             <c:forEach var="board" items="${boardList}">
                                                 <tr>
                                                     <td>${board.BOARD_KEY}</td>
-                                              		<td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
+                                                    <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
                                                     <td>${board.MEMBER_KEY}</td>
                                                     <td>
                                                         <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" />

@@ -34,8 +34,13 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public String getAllBoards(Model model) {
-        List<BoardDto> boards = boardService.getAllBoards();
+    public String getAllBoards(@RequestParam(value = "searchKeyword", required = false) String searchKeyword, Model model) {
+        List<BoardDto> boards;
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            boards = boardService.searchBoardsByTitle(searchKeyword);
+        } else {
+            boards = boardService.getAllBoards();
+        }
         model.addAttribute("boardList", boards);
         return "board/boardList";
     }

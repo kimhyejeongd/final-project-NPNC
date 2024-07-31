@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.service.BoardService;
@@ -26,11 +27,17 @@ public class AdminBoardController {
     }
 
     @GetMapping("/list")
-    public String getAllBoards(Model model) {
-        List<BoardDto> boards = boardService.getAllBoards();
+    public String getAllBoards(@RequestParam(value = "searchKeyword", required = false) String searchKeyword, Model model) {
+        List<BoardDto> boards;
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            boards = boardService.searchBoardsByTitle(searchKeyword);
+        } else {
+            boards = boardService.getAllBoards();
+        }
         model.addAttribute("boardList", boards);
-        return "board/adminBoardList";
+        return "board/boardList";
     }
+
     
     @PostMapping("/create")
     public String createBoard(BoardDto boardDto) {

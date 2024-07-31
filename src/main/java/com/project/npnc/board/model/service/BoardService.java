@@ -22,6 +22,8 @@ public interface BoardService {
     List<BoardCategoryDto> getAllCategories();
     
     List<BoardFileDto> getFilesByBoardId(int boardKey);
+    List<BoardDto> searchBoardsByTitle(String title);
+
 }
 
 

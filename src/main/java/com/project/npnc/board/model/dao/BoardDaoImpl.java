@@ -86,5 +86,11 @@ public class BoardDaoImpl implements BoardDao {
     public List<BoardFileDto> selectFilesByBoardId(int boardKey) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectFilesByBoardId", boardKey);
     }
+    
+    @Override
+    public List<BoardDto> searchBoardsByTitle(String title) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.searchBoardsByTitle", title);
+    }
+
 
 }
