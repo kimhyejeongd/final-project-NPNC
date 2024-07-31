@@ -67,6 +67,7 @@ public class CalendarController {
 	 */
 	@PostMapping("/calendar/updatecalendar.do")
 	public ResponseEntity<Map<String,Object>> updateCalendar(@RequestBody Calendar calendar){
+		System.out.println(calendar.getEnd());
 		int result =service.updateCalendar(calendar);
 		Map<String,Object> response = new HashMap<>();
 		if(result>0) {
