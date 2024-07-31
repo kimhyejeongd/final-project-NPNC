@@ -52,7 +52,7 @@ public class ExternalController {
 
     @PostMapping("/toggleFavorite")
     @ResponseBody
-    public String toggleFavorite(@RequestBody ExternalDto externalDto) {
+    public String toggleFavorite(ExternalDto externalDto) {
         try {
             //externalService.updateContact(externalDto);
             return "success";

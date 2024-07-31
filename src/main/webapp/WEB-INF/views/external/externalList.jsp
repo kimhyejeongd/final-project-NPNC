@@ -209,11 +209,10 @@
                 method: 'POST',
                 dataType:'JSON',
                 headers: {
-                	'Accept': 'aplication/json',
-                    'Content-Type': 'application/json; charset=UTF-8'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: JSON.stringify({
-                    'AB_EXTERNAL_BOOKMARK': newFavoriteStatus,
+                   'AB_EXTERNAL_BOOKMARK': newFavoriteStatus,
                     'MEMBER_KEY': id
            
                 })
