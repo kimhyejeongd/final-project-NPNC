@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.common.NotePageFactory;
+import com.project.npnc.common.NotePageFactory2;
 import com.project.npnc.member.model.dto.SrMember;
 import com.project.npnc.member.model.service.MemberService;
 import com.project.npnc.note.dto.NoteFileDto;
@@ -46,8 +47,58 @@ public class NoteController {
 	private final NoteService noteService;
 	private final MemberService memberService;
 	private final NotePageFactory pageBar;
+	private final NotePageFactory2 pageBar2;
 	
+	//	즐겨찾기 화면 
+	@RequestMapping("/noteBookMark")
+	public String noteBookMark(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
+
+		Member loginMember = getCurrentUser();
+
+		List<NoteReceptionDto> notelist=noteService.noteBookMarkPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",loginMember.getMemberKey()));
+		m.addAttribute("notelist",notelist);
+		notelist.forEach(data -> System.out.print("data" + data));
+		int totalData=noteService.noteBookMarkTotalData(loginMember.getMemberKey());
+		m.addAttribute("totalData",totalData);
+
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/noteBookMarkPaging"));
+
+
+
+		return"note/noteBookMark";
+
+	}
+
+	//	즐겨찾기 삭제
+	@RequestMapping("/noteBookMarkDelete")
+	@ResponseBody
+	public String noteBookMarkDelete(int memberKey, int postMsgRecKey) {
+		Map<String, Object> param=new HashMap();
+
+		param.put("memberKey", memberKey);
+		param.put("postMsgRecKey", postMsgRecKey);
+
+		int result=noteService.noteBookMarkDelete(param);
+
+
+		return "";
+	}
 	
+	//  즐겨찾기 추가
+	@RequestMapping("/noteBookMarkInsert")
+	@ResponseBody
+	public String noteBookMarkInsert(int memberKey, int postMsgRecKey) {
+		Map<String, Object> param=new HashMap();
+
+		param.put("memberKey", memberKey);
+		param.put("postMsgRecKey", postMsgRecKey);
+
+		int result=noteService.noteBookMarkInsert(param);
+
+
+		return "";
+	}
 	
 	private Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
