@@ -246,11 +246,6 @@
       color: #333;
    }
    
-   .proContentImg{
-		margin-top: 20px;
-   }
-   
-   
    .start-chat-btn {
       padding: 10px 20px;
       background-color: #4CAF50;
@@ -514,16 +509,16 @@
 												   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
 		
 												   	// 또는 직접 포맷하여 사용할 수 있습니다.
-												   	//const year = date.getFullYear();
-												   	//const month = (date.getMonth() + 1).toString().padStart(2, '0');
-												   	//const day = date.getDate().toString().padStart(2, '0');
-												   	//const hours = date.getHours().toString().padStart(2, '0');
-												   	//const minutes = date.getMinutes().toString().padStart(2, '0');
-												   	//const seconds = date.getSeconds().toString().padStart(2, '0');
-												   	//const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+												   	const year = date.getFullYear();
+												   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+												   	const day = date.getDate().toString().padStart(2, '0');
+												   	const hours = date.getHours().toString().padStart(2, '0');
+												   	const minutes = date.getMinutes().toString().padStart(2, '0');
+												   	const seconds = date.getSeconds().toString().padStart(2, '0');
+												   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
 		
 												   	// spanTime에 포맷된 날짜를 설정
-												   	spanTime.textContent = formattedDate + " ";
+												   	spanTime.textContent = customFormattedDate + " ";
 												   	
 											          // Append the child elements
 											          divIcon.appendChild(faIcon);
@@ -728,29 +723,15 @@
                       aria-expanded="false"
                     >
                       <div class="avatar-sm">
-						<c:choose>
-							<c:when test="${loginMember.memberProfileImage==null || loginMember.memberProfileImage=='basicPicture'}">
-								<img
-		                          src="${path}/resources/assets/img/unname.png"
-		                          alt="..."
-		                          class="avatar-img rounded-circle"
-	
-		                        />
-						 	</c:when>
-							<c:otherwise>
-								<img
-		                          src="assets/img/loginMember.memberProfileImage.jpg"
-		                          alt="..."
-		                          class="avatar-img rounded-circle"
-		                        />
-								
-							</c:otherwise>	
-						</c:choose>	
-                        
+                        <img
+                          src="assets/img/profile.jpg"
+                          alt="..."
+                          class="avatar-img rounded-circle"
+                        />
                       </div>
                       <span class="profile-username">
-                        <span class="op-7">안녕하세요,</span>
-                        <span class="fw-bold">${loginMember.memberName}님</span>
+                        <span class="op-7">Hi,</span>
+                        <span class="fw-bold">Hizrian</span>
                       </span>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -758,31 +739,19 @@
                         <li>
                           <div class="user-box">
                             <div class="avatar-lg">
-								<c:choose>
-									<c:when test="${loginMember.memberProfileImage==null || loginMember.memberProfileImage=='basicPicture'}">
-										<img
-				                          src="${path}/resources/assets/img/unname.png"
-				                          alt="..."
-				                          class="avatar-img rounded-circle proContentImg"
-				                        />
-								 	</c:when>
-									<c:otherwise>
-										<img
-				                          src="assets/img/loginMember.memberProfileImage.jpg"
-				                          alt="..."
-				                          class="avatar-img rounded-circle proContentImg"
-				                        />
-										
-									</c:otherwise>	
-								</c:choose>	
+                              <img
+                                src="assets/img/profile.jpg"
+                                alt="image profile"
+                                class="avatar-img rounded"
+                              />
                             </div>
                             <div class="u-text">
-                              <h4>${loginMember.memberName} ${loginMember.jobName}</h4>
-                              <p class="text-muted">${loginMember.departmentName}</p>
+                              <h4>Hizrian</h4>
+                              <p class="text-muted">hello@example.com</p>
                               <a
-                                href="${path}/member/mypage"
-                                class="btn btn-info"
-                                >My Page</a
+                                href="profile.html"
+                                class="btn btn-xs btn-secondary btn-sm"
+                                >View Profile</a
                               >
                             </div>
                           </div>
@@ -795,7 +764,7 @@
                           <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">Account Setting</a>-->
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="${path}/logout">Logout</a>
+                          <a class="dropdown-item" href="#">Logout</a>
                         </li>
                       </div>
                     </ul>
