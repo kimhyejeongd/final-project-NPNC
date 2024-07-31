@@ -169,8 +169,7 @@
                                     <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                                     <td>게시판</td>
                                     <td>
-                                        <!-- 수정 버튼 링크 -->
-                                       <a href="${path}/admin/board/edit/${board.BOARD_KEY}" class="btn btn-warning">수정</a>
+                   
 
                                         <!-- 삭제 버튼 폼 -->
                                         <form action="${path}/admin/board/delete/${board.BOARD_KEY}" method="post" style="display:inline;">
