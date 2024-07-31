@@ -192,15 +192,16 @@
                 </span>
                 <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
               </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
+			  
+              <li class="nav-item" >
+                <a data-bs-toggle="collapse" href="${path}/notehome">
                   <i class="fas fa-file-upload"></i>
                   <p>받은 쪽지함</p>
                 </a>
                
               </li>
               <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                <a data-bs-toggle="collapse" href="${path}/sendNoteHome">
                   <i class="fas fa-file-download"></i>
                   <p>보낸 쪽지함</p>
                 </a>
@@ -208,16 +209,16 @@
               </li>
 			 
 			   <li class="nav-item">
-                  <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                  <a data-bs-toggle="collapse" href="${path}/noteSendMe">
                     <i class="fas fa-street-view"></i>
                     <p>내게 쓴 메일함</p>
                   </a>
                   
                 </li>
 				<li class="nav-item">
-	                <a data-bs-toggle="collapse" href="#base">
+	                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
 					  <i class="fas fa-folder-open"></i>
-	                  <p>보관 메일함</p>
+	                  <p>즐겨찾기</p>
 	                  <span class="caret"></span>
 	                </a>
 	                <div class="collapse" id="base">
@@ -306,6 +307,18 @@
           </div>
         </div>
       </div>
+	  <script>
+         document.addEventListener("DOMContentLoaded", function() {
+             document.querySelectorAll('.nav-item').forEach(function(li) {
+                 li.addEventListener('click', function() {
+                     var anchor = li.querySelector('a');
+                     if (anchor) {
+                         window.location.href = anchor.href;
+                     }
+                 });
+             });
+         });
+	     </script>
       <!-- End Sidebar -->
 
       <div class="main-panel">
