@@ -15,6 +15,40 @@ import com.project.npnc.note.dto.NoteSendDto;
 @Repository
 public class NoteDaoImpl implements NoteDao {
 	
+//  즐겨찾기 화면
+
+	@Override
+	public List<NoteReceptionDto> noteBookMarkPaging(SqlSession session, Map<String, Object> page) {
+		// TODO Auto-generated method stub
+		RowBounds rb=new RowBounds(((Integer)(page.get("cPage"))-1)*((Integer)page.get("numPerpage")),(Integer)page.get("numPerpage"));
+		int memberKey=(Integer)page.get("memberKey");
+
+		return session.selectList("note.noteBookMarkPaging",memberKey ,rb);
+	}
+
+	@Override
+	public int noteBookMarkTotalData(SqlSession session, int memberKey) {
+		// TODO Auto-generated method stub
+		return session.selectOne("noteBookMarkTotalData", memberKey);
+	}
+
+
+//	즐겨찾기 삭제
+	@Override
+	public int noteBookMarkDelete(SqlSession session, Map<String, Object> param) {
+
+		return session.update("note.noteBookMarkDelete", param);
+	}
+
+
+	//	즐겨찾기 추가
+	@Override
+	public int noteBookMarkInsert(SqlSession session, Map<String, Object> param) {
+
+		return session.update("note.noteBookMarkInsert", param);
+	}
+
+	
 	//내게 쓴 쪽지함 	
 	@Override
 	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String, Integer> page) {

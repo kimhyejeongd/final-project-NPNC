@@ -27,4 +27,8 @@ public interface NoteDao {
 	public int noteRecDelete(SqlSession session, Map<String, Integer> param);
 	public List<NoteReceptionDto> selectNoteMeAll(SqlSession session, Map<String,Integer> page) ;
 	public int selectNoteMeTotalData(SqlSession session, int memberKey);
+	public int noteBookMarkInsert(SqlSession session, Map<String,Object> param);
+	public int noteBookMarkDelete(SqlSession session, Map<String,Object> param);
+	public List<NoteReceptionDto> noteBookMarkPaging(SqlSession session, Map<String,Object> param);
+	public int noteBookMarkTotalData(SqlSession session, int memberKey);
 }
