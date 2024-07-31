@@ -35,7 +35,7 @@ public class AdminBoardController {
             boards = boardService.getAllBoards();
         }
         model.addAttribute("boardList", boards);
-        return "board/boardList";
+        return "board/adminBoardList";
     }
 
     
