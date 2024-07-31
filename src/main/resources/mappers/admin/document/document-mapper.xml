@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admindoc">
+	<delete id="deleteStorage" parameterType="int">
+		DELETE FROM ER_STORAGE
+		WHERE ER_STORAGE_KEY = #{deleteKey}
+	</delete>
+	<select id="selectStorageOrder" resultType="int">
+		SELECT COUNT(*)
+		FROM ER_STORAGE
+		WHERE ER_STORAGE_FOLDER_KEY = #{storageFolderKey}
+	</select>
+	<insert id="insertStorage" parameterType="storage">
+		INSERT INTO ER_STORAGE (
+				ER_STORAGE_KEY,
+				ER_STORAGE_FOLDER_KEY,
+				ER_STORAGE_NAME,
+				ER_STORAGE_TERM,
+				ER_STORAGE_MANAGER,
+				ER_STORAGE_ORDERBY
+				)VALUES(
+					SEQ_ER_STORAGE_KEY.NEXTVAL,
+					#{storageFolderKey},
+					#{storageName},
+					#{storageTerm},
+					#{storageManager},
+					#{storageOrderBy}
+				)
+	</insert>
 	<select id="selectAdminDocumentFormAll" resultMap="StorageFolder">
 		  SELECT * 
 		  FROM ER_STORAGE_FOLDER 
@@ -62,6 +88,19 @@
 		FROM ER_STORAGE_FOLDER
 		WHERE ER_FOLDER_KEY = #{folderKey}
 	</select>
+	<select id="selectStorage" resultMap="storage" parameterType="int">
+		SELECT 
+			ER_STORAGE_KEY,
+			ER_STORAGE_FOLDER_KEY,
+			ER_STORAGE_NAME,
+			ER_STORAGE_TERM,
+			ER_STORAGE_MANAGER,
+			ER_STORAGE_ORDERBY
+		FROM
+			ER_STORAGE
+		WHERE 
+			ER_STORAGE_KEY = #{storageKey}
+	</select>
 	
 	<update id="updateStorageGroup" parameterType="map">
 		UPDATE ER_STORAGE_FOLDER 
@@ -79,8 +118,8 @@
             WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
                 AND ER_FOLDER_LEVEL = 2
                 AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
-                AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
-                AND ER_FOLDER_ORDERBY &lt;= ${targetFolder.folderOrderBy}
+<!--                 AND ER_FOLDER_ORDERBY >= ${draggedFolder.folderOrderBy}
+ -->                 AND ER_FOLDER_ORDERBY &lt;= ${targetFolder.folderOrderBy}
         </when>
         <when test="draggedFolder.folderOrderBy &gt; targetFolder.folderOrderBy">
             UPDATE ER_STORAGE_FOLDER
@@ -88,8 +127,8 @@
             WHERE ER_FOLDER_GROUP = ${targetFolder.folderGroup} 
                 AND ER_FOLDER_LEVEL = 2
                 AND ER_FOLDER_KEY != ${draggedFolder.folderKey}
-                AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
-                AND ER_FOLDER_ORDERBY >= ${targetFolder.folderOrderBy}
+<!--                 AND ER_FOLDER_ORDERBY &lt;= ${draggedFolder.folderOrderBy}
+ -->                 AND ER_FOLDER_ORDERBY >= ${targetFolder.folderOrderBy} 
         </when>
     </choose>
 </update>
@@ -134,6 +173,50 @@
 		WHERE ER_FOLDER_GROUP = #{folderGroup}
 	</select>
 	
+	<select id="selectAllMembers" resultType="member">
+		SELECT * FROM MEMBER
+	</select>
+	
+	<update id="updateStorage" parameterType="storage">
+		UPDATE ER_STORAGE 
+		SET ER_STORAGE_NAME = #{storageName},
+			ER_STORAGE_TERM = #{storageTerm},
+			ER_STORAGE_MANAGER = #{storageManager}
+		WHERE ER_STORAGE_KEY = #{storageKey}
+		
+		
+	</update>
+	
+	<update id="updateFolderGroup" parameterType="storageFolder">
+		UPDATE ER_STORAGE_FOLDER
+		SET ER_FOLDER_ORDERBY=ER_FOLDER_ORDERBY-1
+		WHERE ER_FOLDER_ORDERBY > 
+		(SELECT ER_FOLDER_ORDERBY
+			FROM ER_STORAGE_FOLDER
+			WHERE ER_FOLDER_KEY = #{folderKey} 
+		)
+		AND ER_FOLDER_GROUP = #{folderGroup}
+	</update>
+	<delete id="draggedFolderKey" parameterType="int">
+		DELETE FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_GROUP = #{folderGroup}
+	</delete>
+	<update id="updateFolderLv1Order" parameterType="int">
+		UPDATE ER_STORAGE_FOLDER
+		SET ER_FOLDER_GROUP = ER_FOLDER_GROUP-1
+		WHERE ER_FOLDER_GROUP > #{folderGorup}
+	</update>
+	<select id="selectParentFolderName" parameterType="int" resultType="string">
+		SELECT ER_FOLDER_NAME
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_GROUP = #{folderGroup}
+		AND ER_FOLDER_LEVEL = 1
+	</select>
+	<select id="selectParentFolderGroup" parameterType="int" resultType="int">
+		SELECT ER_FOLDER_GROUP
+		FROM ER_STORAGE_FOLDER
+		WHERE ER_FOLDER_KEY = #{folderKey}
+	</select>
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />
@@ -210,4 +293,12 @@
         <result property="memberBirthdate" column="MEMBER_BIRTHDATE" />
     </resultMap>
 	
+	<resultMap type="storage" id="storage">
+		<result property="storageKey" column="ER_STORAGE_KEY"/>
+		<result property="storageFolderKey" column="ER_STORAGE_FOLDER_KEY"/>
+		<result property="storageName" column="ER_STORAGE_NAME"/>
+		<result property="storageTerm" column="ER_STORAGE_TERM"/>
+		<result property="storageManager" column="ER_STORAGE_MANAGER"/>
+		<result property="storageOrderBy" column="ER_STORAGE_ORDERBY"/>
+	</resultMap>
 </mapper>
