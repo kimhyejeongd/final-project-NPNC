@@ -172,12 +172,12 @@
                 </div>
               </li>
                <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#vaca">
+                <a data-bs-toggle="collapse" href="#reserve">
                   <i class="fas fa-pen-square"></i>
                   <p>예약물</p>
                   <span class="caret"></span>
                 </a>
-                <div class="collapse" id="vaca">
+                <div class="collapse" id="reserve">
                   <ul class="nav nav-collapse">
                     <li>
                       <a href="${path }/admin/reservation/reservationlist">

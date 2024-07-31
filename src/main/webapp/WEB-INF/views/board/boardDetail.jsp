@@ -105,7 +105,7 @@
 							  <c:forEach var="file" items="${fileList}">
                				     <c:if test="${not empty file.BOARD_FILE_ORI}">
                        				 <div class="image-container">
-                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
+                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_POST}" alt="게시물 이미지" class="img-fluid"/>
                         			</div>
                    				 </c:if>
                				 </c:forEach>
