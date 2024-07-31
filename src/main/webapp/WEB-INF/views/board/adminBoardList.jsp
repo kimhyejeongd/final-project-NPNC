@@ -114,7 +114,6 @@
                     </thead>
                     <tbody>
                         <c:forEach var="board" items="${boardList}">
-                            <c:if test="${board.BOARD_CATEGORY_KEY == 1}">
                                 <tr>
                                     <td>${board.BOARD_KEY}</td>
                                     <td>${board.BOARD_TITLE}</td>
@@ -130,7 +129,7 @@
                                         </form>
                                     </td>
                                 </tr>
-                            </c:if>
+                            
                         </c:forEach>
                     </tbody>
                 </table>
