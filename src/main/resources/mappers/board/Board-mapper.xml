@@ -12,6 +12,10 @@
     <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
         SELECT * FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
+    
+    <select id="selectFilesByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardFileDto">
+        SELECT * FROM BOARD_FILE WHERE BOARD_KEY = #{boardKey}
+    </select>
 
     <!-- 공지사항만 조회 -->
     <select id="selectNotices" resultType="com.project.npnc.board.model.dto.BoardDto">

@@ -75,5 +75,9 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.selectAllCategories();
     }
     
+    @Override
+    public List<BoardFileDto> getFilesByBoardId(int boardKey) {
+        return boardDao.selectFilesByBoardId(boardKey);
+    }
 
 }

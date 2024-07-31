@@ -3,6 +3,7 @@ package com.project.npnc.board.model.dto;
 
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,5 @@ public class BoardDto {
 	private Date BOARD_UPDATE_DATE;
 	private String BOARD_DELETE;
 	private String BOARD_TITLE;
+//	private List<BoardFileDto> files;
 }

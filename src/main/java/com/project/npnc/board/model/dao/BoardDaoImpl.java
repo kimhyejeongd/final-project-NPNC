@@ -81,5 +81,10 @@ public class BoardDaoImpl implements BoardDao {
     public void insertBoardFile(BoardFileDto boardFileDto) {
         sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertBoardFile", boardFileDto);
     }
+    
+    @Override
+    public List<BoardFileDto> selectFilesByBoardId(int boardKey) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectFilesByBoardId", boardKey);
+    }
 
 }

@@ -20,6 +20,8 @@ public interface BoardService {
     void deleteComment(int commentKey);
 
     List<BoardCategoryDto> getAllCategories();
+    
+    List<BoardFileDto> getFilesByBoardId(int boardKey);
 }
 
 

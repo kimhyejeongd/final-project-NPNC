@@ -1,5 +1,7 @@
 package com.project.npnc.board.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +19,8 @@ import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/board")
@@ -50,7 +54,8 @@ public class BoardController {
     }
     
     @PostMapping("/new")
-    public String createBoard(BoardDto boardDto, @RequestParam("upFile") MultipartFile[] files, @RequestParam("MEMBER_KEY") String memberKeyStr) {
+    public String createBoard(BoardDto boardDto, @RequestParam("upFile") MultipartFile[] files,
+    		HttpSession session, @RequestParam("MEMBER_KEY") String memberKeyStr) {
         // boardDto의 MEMBER_KEY가 숫자인지 확인
         try {
             int memberKey = Integer.parseInt(memberKeyStr);
@@ -58,15 +63,25 @@ public class BoardController {
         } catch (NumberFormatException e) {
             return "error"; // 또는 다른 오류 페이지로 리다이렉트
         }
-
+        String path=session.getServletContext().getRealPath("/resources/hj/");
+        File dir=new File(path);
+        if(!dir.exists()) dir.mkdirs();
+        
         List<BoardFileDto> fileList = new ArrayList<>();
         for (MultipartFile file : files) {
             if (!file.isEmpty()) {
-                BoardFileDto fileDto = BoardFileDto.builder()
-                    .BOARD_FILE_FILE_ORI(file.getOriginalFilename())
-                    .BOARD_FILE_FILE_POST(UUID.randomUUID().toString() + "_" + file.getOriginalFilename())
-                    .build();
-                fileList.add(fileDto);
+            	String renameFile=UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            	try {
+            		file.transferTo(new File(path,renameFile));
+            		BoardFileDto fileDto = BoardFileDto.builder()
+            				.BOARD_FILE_ORI(file.getOriginalFilename())
+            				.BOARD_FILE_POST(renameFile)
+            				.build();
+            		
+            		fileList.add(fileDto);
+            	}catch(IOException e) {
+            		e.printStackTrace();
+            	}
             }
         }
         System.out.println(fileList);
@@ -77,10 +92,13 @@ public class BoardController {
     @GetMapping("/detail/boardKey")
     public String getBoardById(int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
+        List<BoardFileDto> fileList = boardService.getFilesByBoardId(boardKey);
+        
         model.addAttribute("board", board);
+        model.addAttribute("fileList", fileList); // 첨부파일 목록 추가
+        
         return "board/boardDetail";
     }
-
     // 댓글 추가
     @PostMapping("/addComment")
     public String addComment(BoardCommentDto commentDto) {

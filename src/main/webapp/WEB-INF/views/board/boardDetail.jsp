@@ -103,9 +103,9 @@
                             <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p>${board.BOARD_DETAIL}</p>
 							  <c:forEach var="file" items="${fileList}">
-               				     <c:if test="${not empty file.BOARD_FILE_FILE_ORI}">
+               				     <c:if test="${not empty file.BOARD_FILE_ORI}">
                        				 <div class="image-container">
-                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
+                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
                         			</div>
                    				 </c:if>
                				 </c:forEach>
