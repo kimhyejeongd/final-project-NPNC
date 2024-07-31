@@ -308,7 +308,7 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="profile1.jpg" alt="프로필 사진">
+							src="/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">${m.departmentName }</div>
@@ -323,8 +323,8 @@ body{
 					<li class="room-item" id="room-${room.chatRoomKey}">
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
-							<img src="room_icon.jpg" alt="방 아이콘">
-								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
+ 							<img src="room_icon.jpg" alt="방 아이콘">
+ 								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
 							<!-- 안 읽은 메시지 배지 추가 -->
 							<div class="room-info">
 								<div class="room-title">
@@ -355,8 +355,8 @@ body{
 			<ul class="friend-list" id="modalFriendList">
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
-						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="profile1.jpg" alt="프로필 사진">
+						<li class="friend-item" data-member-no="${m.memberKey}">
+						<img src="profile1.jpg" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">부서이름</div>

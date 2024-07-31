@@ -524,7 +524,8 @@
 					
 		             var myChatRoomList;
 		                $(document).ready(function() {
-		   
+		            	     event.stopPropagation();
+
 		                         headerUnread();
 
 		                   

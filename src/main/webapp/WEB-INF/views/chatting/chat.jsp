@@ -21,6 +21,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+.avatar-img {
+    float: left;
+    margin-right: 10px; /* 이미지와 텍스트 사이의 간격 조정 */
+}
 .friend-item.selected {
     background-color: #e0e0e0;
 }
@@ -231,7 +235,7 @@
         width: 0;
         height: 0;
         border: 10px solid transparent;
-    }1
+    }
     .bubble.sent::after {
         right: -10px;
         top: 10px;
@@ -725,18 +729,26 @@ $('.exit-button').click(function() {
                     }
 
                     var messageDetail = chatList[chat].chatMsgDetail !== undefined ? chatList[chat].chatMsgDetail : '';
-
+                    console.log(messageClass);
+                    var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
+					var sender = messageClass === 'received' ? '<div class="sender">' + chatList[chat].memberName + '</div>' : '';
                     if (messageDetail || fileElement) { // 메시지나 파일이 있는 경우에만 출력
-                        var messageElement = $(
-                            '<div class="message ' + messageClass + '"><div class="bubble ' + messageClass + '">' 
-                            + '<div class="sender">' + chatList[chat].memberName + '</div>'
-                            + fileElement
-                            + messageDetail
-                            + '<div class="sendDate">' + formattedTime + '</div>'
-                            + '<div class="unreadCount">미확인 ' + unreadCount + '명</div>'
-                            + '</div></div>'
-                        );
-
+                    	var messageElement = $(
+                    		    '<div class="message ' + messageClass + '">'
+                    		    + imgTag
+                    		    + '<div style="display:flex; flex-direction:column">'
+                    		    + sender
+                    		    + '<div class="bubble ' + messageClass + '">'
+                    		    + fileElement
+                    		    + messageDetail
+                    		    + '</div>'
+                    		    + '</div>'
+                    		    + '<div style="display:flex; flex-direction: column-reverse;">'
+                    		    + '<div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div>'
+                    		    + '<div class="unreadCount">' + unreadCount + '</div>'
+                    		    + '</div>'
+                    		    +'</div>'
+                    		);
                         chatPromises.push($("#chatting").append(messageElement).promise());
                     }
                 })(chat);
