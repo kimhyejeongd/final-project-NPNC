@@ -23,26 +23,13 @@ public class NotePaging {
 	private final NotePageFactory paging;
 	private final NotePageFactory2 paging2;
 
-	//즐겨찾기 쪽지함 페이징 
-	@RequestMapping("/noteBookMarkPaging")
-	public Map<String,Object> noteBookMarkPaging(@RequestParam(defaultValue="1") int cPage, 
-			@RequestParam(defaultValue = "6") int numPerpage, int memberKey){
-		
-		  Map<String, Object> response = new HashMap<>();
-		  int totalData= noteService.noteBookMarkTotalData(memberKey);
-
-		  response.put("notepagelist", noteService.noteBookMarkPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey)));
-		  response.put("pagebar", paging.getPage(cPage, numPerpage, totalData, "/noteBookMarkPaging"));
-		  response.put("totalData", totalData);
-		  
-		return response ;
-	}
 	
 	//받은 쪽지함 기본 페이징 
 	@RequestMapping("/notepaging")
 	public Map<String,Object> pagingNote(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage, int memberKey){
-		
+		System.out.println(cPage);
+		System.out.println(numPerpage);
 		  Map<String, Object> response = new HashMap<>();
 		  Map<String, Object> param = new HashMap<>();
 		  param.put("memberKey", memberKey);

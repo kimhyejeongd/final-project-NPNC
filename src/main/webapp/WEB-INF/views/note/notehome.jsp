@@ -116,12 +116,7 @@
 	.modalDetailGo{}
 	.modalDetailGo:hover {
             cursor: pointer; /* 커서를 포인터로 변경 */
-    }
-	
-	/* 즐겨찾기에서 커서를 포인터로 변경*/
-	.fa-star {
-		cursor: pointer;
-	}
+        }
 	
 	.noteSearchBar{
 	
@@ -363,7 +358,7 @@
 									
 								    if(searchNoteBarText.value==""){
 										var SweetAlert2Demo = (function () {
-									        //== 검색창이 비어있습니다 얼럿창
+									        //== Demos
 									        var initDemos = function () {
 									          
 												swal("검색창이 비어있습니다.", "기본 화면으로 돌아갑니다.", {
@@ -389,7 +384,6 @@
 									      jQuery(document).ready(function () {
 									        SweetAlert2Demo.init();
 									      });
-										  
 										fn_paging(1);			
 										
 									}else if(searchNoteBarText.value!=""){
@@ -416,7 +410,7 @@
                           			전체선택 
                           
                           	</th>
-                            <th>즐겨찾기</th>
+                            <th>Number</th>
                             <th>보낸이</th>
                             <th>title</th>
                             <th>Date</th>
@@ -426,29 +420,17 @@
                        
                         <tbody id="pagingtbody">
                       <c:forEach var="d" items="${notelist}" varStatus="status">
-           	    			<tr>
+           	    			<tr >
            	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
-           	  					<th>
-									<c:choose>
-										<c:when test="${d.bookMarkStatus=='N'}">
-									 		<i class="far fa-star bookmarkN" data-key="${d.postMsgRecKey}"></i>
-									 	</c:when>
-										<c:otherwise>
-											<i class="fas fa-star bookmarkY" data-key="${d.postMsgRecKey}"></i>
-											
-										</c:otherwise>	
-									</c:choose>	
-								<p>
+           	  					<th>${d.postMsgRecKey}<p>
            	  					<th>${d.memberName} ${d.jobName}<p>
            	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-           	  					<th>${d.formattedPostMsgTime}<p>
+           	  					<th>${d.postMsgTime}<p>
            	  				</tr>
           		 	  </c:forEach>
           		 	
                         </tbody>
                         
-			
-						
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
@@ -540,10 +522,10 @@
                     			   </div>		  
                     			   <div class="form-group">
                     			   <div class="input-group-prepend" style="padding:0px;">
-				                		<button type="button" class="btn btn-outlime-primary" id="addFileButton" >
+				                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFile();">
 				                		추가
 				                		</button>
-				                		<button type="button" class="btn btn-outlime-primary" id="delFileButton" >
+				                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFile();">
 				                		삭제
 				                		</button>
 				                	</div>
@@ -688,39 +670,35 @@
 			<!-- 첨부파일 -->
 			 <script>
 			 /* 개별발송 파일 추가 로직*/
-			 $(document).ready(function() {
-			     const addDelFunction = (function() {
-			         let count = 2;
-
-			         const addFileform = () => {
-			             if (count <= 5) {
-			                 const fileForm = $("#basicFileForm").clone(true);
-			                 fileForm.find("span.input-group-text1").text("첨부파일" + count);
-			                 fileForm.find("input[type=file]").attr("id", "upFile" + count).val("");
-			                 fileForm.appendTo("#fileInputsContainer");
-			                 count++;
-			             } else {
-			                 alert("첨부파일은 5개까지 가능합니다");
-			             }
-			         };
-
-			         const delFileform = () => {
-			             if (count != 2) {
-			                 $("#fileInputsContainer").children().last().remove();
-			                 count--;
-			             }
-			         };
-
-			         return { addFileform, delFileform };
-			     })();
-
-			     const fn_addFile = addDelFunction.addFileform;
-			     const fn_delFile = addDelFunction.delFileform;
-
-			     // 이벤트 핸들러를 추가하려면 여기에 추가하세요
-			     $("#addFileButton").on("click", fn_addFile);
-			     $("#delFileButton").on("click", fn_delFile);
-			 });
+			 $(document).ready(
+		    	const addDelFunction=(function(){
+		    		let count=2;
+		    		const addFileform=()=>{
+		    			if(count<=5){
+		    				const fileForm=$("#basicFileForm").clone(true);
+		    				fileForm.find("span.input-group-text1").text("첨부파일"+count);
+		    			
+		    				fileForm.find("input[type=file]").attr("id","upFile"+count).val("");
+		    				/* $("textarea[name=boardContent]").before(fileForm); */
+		    				   fileForm.appendTo("#fileInputsContainer");
+		    				count++;
+		    			}else{
+		    				alert("첨부파일은 5개까지 가능합니다");
+		    			}
+		    		}
+		    		
+		    		const delFileform=()=>{
+		    			if(count!=2){
+		    				$("#fileInputsContainer").children().last().remove();
+		    				count--;
+		    			}
+		    			
+		    		}
+		    		return {addFileform,delFileform};
+		    	})();
+		    	const fn_addFile=addDelFunction.addFileform;
+		    	const fn_delFile=addDelFunction.delFileform;
+		    	);
 		    	
 		    	
 		    /* 전체발송 파일 추가 로직  */
@@ -1162,33 +1140,15 @@
 						  var noteTotalData=document.getElementById('noteTotalData');
 						  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
 						  $.each(response.notepagelist, function(index, item) {
-							
-								if(item.bookMarkStatus=="N"){
-							
-							
 				                    var row = `<tr >
 				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-										<th>
-											<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
-										<p>
+										<th>\${item.memberKey}<p>
 										<th>\${item.memberName} \${item.jobName}<p>
 				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+				                        <th>\${item.postMsgTime}<p>
 				                    </tr>`;
 				                    tbody.append(row);
-								}else if(item.bookMarkStatus=="Y"){
-									var row = `<tr >
-				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-										<th>
-											<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
-										<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
-				                    </tr>`;
-				                    tbody.append(row);
-								}
-			                }); 
+				                }); 
 						  	var pageBarList=$('#pageBarList');
 						  	pageBarList.empty();
 						  	pageBarList.append(response.pagebar);
@@ -1223,10 +1183,10 @@
 										  $.each(response.notepagelist, function(index, item) {
 								                    var row = `<tr >
 														<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-														<th>\${item.postMsgRecKey}<p>
+														<th>\${item.memberKey}<p>
 														<th>\${item.memberName} \${item.jobName}<p>
 								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
+								                        <th>\${item.postMsgTime}<p>
 								                    </tr>`;
 								                    tbody.append(row);
 								                }); 
@@ -1240,107 +1200,7 @@
 				
           	
           	</script>
-			<script>
-			// 즐겨찾기 추가 로직
-		
-					
-					$(document).on('click', '.bookmarkN', function() {
-					          const postMsgRecKey = $(this).data('key');
-					          var memberKey = $('#memberKey').val();
-							  var starElement = $(this);
-
-					          $.ajax({
-					              url: '${path}/noteBookMarkInsert',
-					              type: 'POST',
-					              data: {
-					                  postMsgRecKey: postMsgRecKey,
-					                  memberKey: memberKey
-					              },
-					              success: function(response) {
-					                starElement.removeClass('far').addClass('fas'); 
-									
-									var SweetAlert2Demo = (function () {
-								        //== 검색창이 비어있습니다 얼럿창
-								        var initDemos = function () {
-								          
-											swal("즐겨찾기에 추가되었습니다.", "", {
-											          icon: "success",
-											          buttons: {
-											            confirm: {
-											              className: "btn btn-info",
-											            },
-											          },
-											        });
-								          
-								        };
-								
-								        return {
-								          //== Init
-								          init: function () {
-								            initDemos();
-								          },
-								        };
-								      })();
-								
-								      //== Class Initialization
-								      jQuery(document).ready(function () {
-								        SweetAlert2Demo.init();
-								      });
-					              }
-					          });
-					      });
-					
-					
-					// 즐겨찾기 삭제 로직
-				
-					
-					$(document).on('click', '.bookmarkY', function() {
-				          const postMsgRecKey = $(this).data('key');
-				          var memberKey = $('#memberKey').val();
-						  var starElement = $(this);
-
-				          $.ajax({
-				              url: '${path}/noteBookMarkDelete',
-				              type: 'POST',
-				              data: {
-				                  postMsgRecKey: postMsgRecKey,
-				                  memberKey: memberKey
-				              },
-				              success: function(response) {
-				                starElement.removeClass('fas').addClass('far'); 
-								
-								var SweetAlert2Demo = (function () {
-									//== 검색창이 비어있습니다 얼럿창
-							        var initDemos = function () {
-							          
-									swal("즐겨찾기에 삭제되었습니다.", "", {
-									          icon: "success",
-									          buttons: {
-									            confirm: {
-									              className: "btn btn-info",
-									            },
-									          },
-								        });
-						          
-							        };
-							
-							        return {
-							          //== Init
-							          init: function () {
-							            initDemos();
-							          },
-							        };
-							      })();
-							
-							      //== Class Initialization
-							      jQuery(document).ready(function () {
-							        SweetAlert2Demo.init();
-							      });
-				              }
-				          });
-				      });
-			</script>
-
+          
             
           </div>
         </div>

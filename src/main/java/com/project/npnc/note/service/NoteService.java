@@ -29,8 +29,4 @@ public interface NoteService {
 	public List<SrMember> selectMemberAllNoPaging();
 	public List<NoteReceptionDto> selectNoteMeAll(Map<String, Integer> page);
 	public int selectNoteMeTotalData(int memberKey);
-	public int noteBookMarkInsert(Map<String, Object> param);
-	public int noteBookMarkDelete(Map<String, Object> param);
-	public List<NoteReceptionDto> noteBookMarkPaging(Map<String, Object> page);
-	public int noteBookMarkTotalData(int memberKey);
 }
