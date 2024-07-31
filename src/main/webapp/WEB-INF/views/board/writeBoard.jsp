@@ -73,10 +73,10 @@
                     <h1 class="mb-4">게시물 작성</h1>
                     <div class="card">
                         <div class="card-body">
-                            <form action="new" method="post" enctype="multipart/form-data">
+                            <form action="${path}/board/new" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="boardTitle">제목</label>
-                                    <input type="text" id="boardTitle" name="BOARD_DETAIL" class="form-control" required>
+                                    <input type="text" id="boardTitle" name="BOARD_TITLE" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="author">작성자</label>
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="content">내용</label>
-                                    <textarea id="content" name="BOARD_CONTENT" class="form-control" rows="5" required></textarea>
+                                    <textarea id="content" name="BOARD_DETAIL" class="form-control" rows="5" required></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="fileUpload">파일 첨부</label>
@@ -93,7 +93,7 @@
                                 <button type="submit" class="btn btn-primary">작성</button>
                             </form>
                             <br>
-                            <form action="list" method="get">
+                            <form action="${path}/board/list" method="get">
                                 <button type="submit" class="btn btn-secondary">목록으로</button>
                             </form>
                         </div>

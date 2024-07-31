@@ -13,14 +13,6 @@
         SELECT * FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
 
-    <insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
-        INSERT INTO BOARD (
-            BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE, BOARD_TITLE
-        ) VALUES (
-            #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, #{BOARD_ENROLL_DATE}, #{BOARD_UPDATE_DATE}, #{BOARD_DELETE}, #{BOARD_TITLE}
-        )
-    </insert>
-
     <!-- 공지사항만 조회 -->
     <select id="selectNotices" resultType="com.project.npnc.board.model.dto.BoardDto">
         SELECT * FROM BOARD
@@ -48,20 +40,41 @@
     <delete id="deleteBoard" parameterType="int">
         DELETE FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </delete>
+    
+	<insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
+  	  <selectKey keyProperty="BOARD_KEY" order="AFTER" resultType="int">
+         SELECT board_seq.CURRVAL FROM DUAL
+      </selectKey>
+	    INSERT INTO BOARD (
+	        BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE, BOARD_TITLE
+	    ) VALUES (
+	        #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, SYSDATE, SYSDATE, 'N', #{BOARD_TITLE}
+	    )
+	</insert>
 
+
+	<insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
+	    INSERT INTO BOARD_FILE (
+	        BOARD_FILE_KEY, BOARD_KEY, BOARD_FILE_ORI, BOARD_FILE_POST
+	    ) VALUES (
+	        SEQ_BOARD_FILE.NEXTVAL, #{BOARD_KEY}, #{BOARD_FILE_FILE_ORI}, #{BOARD_FILE_FILE_POST}
+	    )
+	</insert>
+
+
+    
     <!-- Board Comment Dto CRUD -->
     <select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
         SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
 
     <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
-    INSERT INTO BOARD_COMMENT (
-        BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
-    ) VALUES (
-        #{BOARD_COMMENT_KEY}, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL},DEFAULT, #{BOARD_COMMENT_REF}, DEFAULT
-    )
-</insert>
-
+        INSERT INTO BOARD_COMMENT (
+            BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
+        ) VALUES (
+            #{BOARD_COMMENT_KEY}, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL}, SYSDATE, #{BOARD_COMMENT_REF}, 'N'
+        )
+    </insert>
 
     <update id="updateComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
         UPDATE BOARD_COMMENT SET
@@ -76,12 +89,6 @@
     <delete id="deleteComment" parameterType="int">
         DELETE FROM BOARD_COMMENT WHERE BOARD_COMMENT_KEY = #{BOARD_COMMENT_KEY}
     </delete>
-
-    <!-- Board File Dto CRUD -->
-    <insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
-        INSERT INTO BOARD_FILE (BOARD_KEY, BOARD_FILE_ORI, BOARD_FILE_POST)
-        VALUES (#{BOARD_KEY}, #{BOARD_FILE_ORI}, #{BOARD_FILE_POST})
-    </insert>
 
     <!-- Board Category Dto -->
     <select id="selectAllCategories" resultType="com.project.npnc.board.model.dto.BoardCategoryDto">

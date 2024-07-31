@@ -99,9 +99,10 @@
                             <h4 class="card-title">${board.BOARD_TITLE}</h4>
                         </div>
                         <div class="card-body">
-                            <p>${board.BOARD_DETAIL}</p>
                             <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
                             <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p>${board.BOARD_DETAIL}</p>
+
                         </div>
                         <div class="card-footer">
                             <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
