@@ -24,9 +24,27 @@ public class NoteServiceImpl implements NoteService{
 	
 
 	
+	
+
+
+
+
 	private final NoteDao dao;
 	private final SqlSession session;
 	private final MemberDao memberDao;
+	
+	@Override
+	public int noteBookMarkDelete(Map<String, Object> param) {
+	
+		return dao.noteBookMarkDelete(session,param);
+	}
+	
+	@Override
+	public int noteBookMarkInsert(Map<String, Object> param) {
+			
+		return dao.noteBookMarkInsert(session,param);
+	}
+
 	
 	@Override
 	public List<SrMember> selectMemberAllNoPaging() {
@@ -247,6 +265,19 @@ public class NoteServiceImpl implements NoteService{
 	public int selectNoteMeTotalData(int memberKey) {
 		
 		return dao.selectNoteMeTotalData(session, memberKey);
+	}
+
+//	즐겨찾기 화면
+	@Override
+	public List<NoteReceptionDto> noteBookMarkPaging(Map<String, Object> page) {
+		// TODO Auto-generated method stub
+		return dao.noteBookMarkPaging(session,page);
+	}
+
+	@Override
+	public int noteBookMarkTotalData(int memberKey) {
+		// TODO Auto-generated method stub
+		return dao.noteBookMarkTotalData(session, memberKey);
 	}
 
 
