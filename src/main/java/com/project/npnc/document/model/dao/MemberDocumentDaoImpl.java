@@ -14,7 +14,9 @@ import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
+import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.Referer;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -168,6 +170,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int selectRemainingVac(SqlSession session, int memberKey) {
+		return session.selectOne("document.selectRemainingVac", memberKey);
+	}
+
+	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
 	}
@@ -189,7 +196,7 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	
 	@Override
 	public List<Document> selectMyRejectDocs(SqlSession session, int no) {
-		return session.selectList("document.selectMyRejectDocs", no);
+		return session.selectList("document.selectMyRejectedDocs", no);
 	}
 
 	@Override
@@ -221,6 +228,50 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		map.put("state", state);
 		log.debug("결재 업데이트 -> " + map.toString());
 		return session.update("document.updateApprovalState", map);
+	}
+
+	@Override
+	public int insertVacationApply(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApply", vac);
+	}
+	@Override
+	public int deleteVacationApply(SqlSession session, String serial) {
+		return session.delete("document.deleteVacationApply", serial);
+	}
+	@Override
+	public int deleteOvertimeApply(SqlSession session, String serial) {
+		return session.delete("document.deleteOvertimeApply", serial);
+	}
+	@Override
+	public int insertOvertimeApply(SqlSession session, OvertimeApply ot) {
+		return session.insert("document.insertOvertimeApply", ot);
+	}
+	@Override
+	public int insertVacationApplyDraft(SqlSession session, VacationApply vac) {
+		return session.insert("document.insertVacationApplyDraft", vac);
+	}
+	@Override
+	public int updateVacationApply(SqlSession session, String docSerial, String status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", docSerial);
+		map.put("status", status);
+		log.debug("휴가 신청 임시저장 -> " + map.toString());
+		return session.update("document.updateVacationApply", map);
+	}
+	@Override
+	public int updateOvertimeApply(SqlSession session, String docSerial, String status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", docSerial);
+		map.put("status", status);
+		log.debug("추가근무 신청 임시저장 -> " + map.toString());
+		return session.update("document.updateOvertimeApply", map);
+	}
+	@Override
+	public int updateVacationCalc(SqlSession session, int memberKey, String serial) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("serial", serial);
+		log.debug("휴가 계산 테이블 업데이트 -> " + map.toString());
+		return session.update("document.updateVacationCalc", map);
 	}
 
 }

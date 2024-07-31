@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.common.NotePageFactory;
-import com.project.npnc.member.model.dto.Member;
+import com.project.npnc.common.NotePageFactory2;
+import com.project.npnc.member.model.dto.SrMember;
 import com.project.npnc.member.model.service.MemberService;
 import com.project.npnc.note.dto.NoteFileDto;
 import com.project.npnc.note.dto.NoteReceptionDto;
@@ -30,6 +33,7 @@ import com.project.npnc.note.dto.NoteSendDto;
 import com.project.npnc.note.service.NoteService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -43,21 +47,66 @@ public class NoteController {
 	private final NoteService noteService;
 	private final MemberService memberService;
 	private final NotePageFactory pageBar;
+	private final NotePageFactory2 pageBar2;
 	
+	//	즐겨찾기 화면 
+	@RequestMapping("/noteBookMark")
+	public String noteBookMark(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
+
+		Member loginMember = getCurrentUser();
+
+		List<NoteReceptionDto> notelist=noteService.noteBookMarkPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",loginMember.getMemberKey()));
+		m.addAttribute("notelist",notelist);
+		notelist.forEach(data -> System.out.print("data" + data));
+		int totalData=noteService.noteBookMarkTotalData(loginMember.getMemberKey());
+		m.addAttribute("totalData",totalData);
+
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/noteBookMarkPaging"));
+
+
+
+		return"note/noteBookMark";
+
+	}
+
+	//	즐겨찾기 삭제
+	@RequestMapping("/noteBookMarkDelete")
+	@ResponseBody
+	public String noteBookMarkDelete(int memberKey, int postMsgRecKey) {
+		Map<String, Object> param=new HashMap();
+
+		param.put("memberKey", memberKey);
+		param.put("postMsgRecKey", postMsgRecKey);
+
+		int result=noteService.noteBookMarkDelete(param);
+
+
+		return "";
+	}
+	
+	//  즐겨찾기 추가
+	@RequestMapping("/noteBookMarkInsert")
+	@ResponseBody
+	public String noteBookMarkInsert(int memberKey, int postMsgRecKey) {
+		Map<String, Object> param=new HashMap();
+
+		param.put("memberKey", memberKey);
+		param.put("postMsgRecKey", postMsgRecKey);
+
+		int result=noteService.noteBookMarkInsert(param);
+
+
+		return "";
+	}
+	
+	private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
+    }
 	
 	
 
-	
-	@RequestMapping("/notewrite3")
-	public String noteWrite() {
-		return "note/notewrite";
-	}
-	
-	@RequestMapping("/notein")
-	public String notein() {
-		
-		return "note/notein";
-	}
 	
 //	개별 파일 다운로드
 	@RequestMapping("/note/filedownload")
@@ -90,12 +139,13 @@ public class NoteController {
 	@RequestMapping("/sendNoteHome")
 	public String sendNoteHome(@RequestParam(defaultValue="1") int cPage, 
 			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
-		int memberKey=1;
-		List<NoteSendDto> notelist=noteService.sendNoteSelectAllPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
+		
+		Member loginMember = getCurrentUser();
+	
+		List<NoteSendDto> notelist=noteService.sendNoteSelectAllPaging(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",loginMember.getMemberKey()));
 		m.addAttribute("notelist",notelist);
-		System.out.println(notelist);
 		notelist.forEach(data -> System.out.print("data" + data));
-		int totalData=noteService.sendNoteSelectTotalData(memberKey);
+		int totalData=noteService.sendNoteSelectTotalData(loginMember.getMemberKey());
 		m.addAttribute("totalData",totalData);
 		
 		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notepagingsend"));
@@ -106,17 +156,45 @@ public class NoteController {
 		
 	}
 	
+//	내게 보낸 쪽지함
+	@RequestMapping("/noteSendMe")
+	public String noteSendMe(@RequestParam(defaultValue="1") int cPage, 
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
+		
+		Member loginMember = getCurrentUser();
+
+
+		List<NoteReceptionDto> notelist=noteService.selectNoteMeAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey", loginMember.getMemberKey()));
+		int totalData=noteService.selectNoteMeTotalData(loginMember.getMemberKey());
+		List<SrMember> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+
+		List<OrganizationDto> organlist=service.selectOrganAll();
+		m.addAttribute("organlist",organlist);
+		
+		m.addAttribute("totalData",totalData);
+		m.addAttribute("AllMemberList",AllMemberList);
+	
+		
+		m.addAttribute("notelist",notelist);
+		m.addAttribute("pageBar",pageBar.getPage(cPage, numPerpage, totalData,  "/notePagingSendMe"));
+
+		return "note/noteSendMe";
+	}
+	
 //	받은 쪽지함
 	@RequestMapping("/notehome")
 	public String notehome(@RequestParam(defaultValue="1") int cPage, 
-			@RequestParam(defaultValue = "6") int numPerpage ,  Model m, int memberKey, HttpSession session) {
-		System.out.println(memberKey);
-		Member loginMember=memberService.selectMemberByNo(memberKey);
+			@RequestParam(defaultValue = "6") int numPerpage ,  Model m) {
 		
-		session.setAttribute("loginMember", loginMember);
-		List<NoteReceptionDto> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey",memberKey));
-		int totalData=noteService.noteSelectTotalData(memberKey);
-		List<Member> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
+		Member loginMember = getCurrentUser();
+		
+		List<NoteReceptionDto> notelist=noteService.selectNoteAll(Map.of("cPage",cPage,"numPerpage",numPerpage,"memberKey", loginMember.getMemberKey()));
+		
+		Map<String, Object> param = new HashMap<>();
+		  param.put("memberKey", loginMember.getMemberKey());
+
+		int totalData=noteService.noteSelectTotalData(param);
+		List<SrMember> AllMemberList=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		
 		List<OrganizationDto> organlist=service.selectOrganAll();
 		System.out.println(organlist);
@@ -132,29 +210,10 @@ public class NoteController {
 		return "note/notehome";
 	}
 	
-	@RequestMapping("/notesession")
-	public String notesession(@RequestParam(defaultValue="1") int memberKey, HttpSession session) {
-		System.out.println(memberKey);
-		Member loginMember=memberService.selectMemberByNo(memberKey);
-				
-		session.setAttribute("loginMember", loginMember);
-		return "redirect:/note";
-	}
 	
 	
-	@RequestMapping("/note")
-	public String note(@RequestParam(defaultValue="1") int cPage, 
-			@RequestParam(defaultValue = "5") int numPerpage ,  Model m) {
-		
 	
-		List<Member> list=memberService.selectMemeberAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 	
-		System.out.println(list);
-		m.addAttribute("list",list);
-	
-		
-		return "note/note";
-	}
 	
 //	개별,다중 쪽지 발송
 	@RequestMapping("/notewrite")
@@ -329,6 +388,7 @@ public class NoteController {
 		return sendDto;
 		
 	}
+	
 //	받은 쪽지함 개별 조회
 	@RequestMapping("/noteSelectOne")
 	@ResponseBody

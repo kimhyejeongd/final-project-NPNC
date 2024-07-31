@@ -6,6 +6,7 @@ import java.util.Map;
 import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.Reservation;
 import com.project.npnc.calendar.model.dto.ReserveItem;
+import com.project.npnc.calendar.model.dto.Vacation;
 
 public interface CalendarService {
 	int insertCalendar(Calendar calendar);	
@@ -24,4 +25,7 @@ public interface CalendarService {
 	int insertRes(int calKey, int itemKey);
 	List<ReserveItem> selectReserveAll();
 	List<ReserveItem> selectMyReserve(int memberKey);
+	
+	int updateReCalendar(ReserveItem reserveItem);
+	List<Vacation> checkVacation(Map<String,Object> param);
 }

@@ -11,6 +11,15 @@
   		 	DEPARTMENT_NAME
   				FROM DEPARTMENT
   </select>
+  
+  <select id="selectDeptByKey" parameterType="string" resultMap="deptMap">
+ 		 SELECT 
+  			DEPARTMENT_KEY,
+  		 	DEPARTMENT_NAME
+  			FROM DEPARTMENT
+  			WHERE DEPARTMENT_KEY=#{deptKey}
+  </select>
+  
   <insert id="insertDept" parameterType="department">
   		INSERT INTO DEPARTMENT 
   			VALUES('D'||SEQ_DEPARTMENT.NEXTVAL,#{deptName})

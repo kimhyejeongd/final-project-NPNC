@@ -24,6 +24,8 @@ import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
+import com.project.npnc.memberVacation.model.dto.MemberVacation;
+import com.project.npnc.memberVacation.model.service.MemberVacationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +36,7 @@ public class AttendanceController{
 
 	private final AdminMemberService memberService;
 	private final AttendanceService attendanceService;
+	private final MemberVacationService memberVacationService;
 	private final PageFactory pageFactory;
 	private final SearchPageFactory searchPageFactory;
 	
@@ -163,10 +166,28 @@ public class AttendanceController{
 			Authentication authentication,
 			Model m){
 		int memberKey =memberService.selectMemberKeyById(authentication.getName());
+		
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(memberKey);
 		int totaldata=attendanceService.selectAttendanceCount(memberKey);
 		List<Attendance> attendances=attendanceService.selectAttendanceAll(page,memberKey);
+		
+		 // 현재 날짜 가져오기
+        LocalDate currentDate = LocalDate.now();
+        // 현재 달 숫자 가져오기
+        int currentMonth = currentDate.getMonthValue();
+        m.addAttribute("currentMonth",currentMonth);
+		//이번달 휴가
+		MemberVacation mv=memberVacationService.selectMemberVacationByMemberKey(memberKey);
+
+		m.addAttribute("memberVacation",mv);
+		
+		//이번달 근태현황
+		Attendance a=Attendance.builder().member(AdminMember.builder().memberKey(memberKey).build()).build();
+		Map<String,Integer> attendanceCount=attendanceService.selectAttendanceMonthCount(a);
+		m.addAttribute("attendanceCount",attendanceCount);
+
+		
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAttendanceAll"));
 		m.addAttribute("attendances",attendances);
 		m.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
@@ -176,14 +197,15 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/updateAttendance")
-	public String updateAttendance(int attendanceKey,Model m,Authentication authentication) {
+	public ResponseEntity<Map> updateAttendance(int attendanceKey,Authentication authentication) {
 		LocalDate today=LocalDate.now();
 		Attendance a=attendanceService.selectAttendanceByAttendanceKey(attendanceKey);
 		a.setMember(AdminMember.builder().memberId(authentication.getName()).build());
 		System.out.println(a);
-		m.addAttribute("today",today);
-		m.addAttribute("attendance",a);
-		return "attendance/updateattendance";
+		Map response =new HashMap();
+		response.put("today",today);
+		response.put("attendance",a);
+		return ResponseEntity.ok(response);
 		
 	}
 	
@@ -197,6 +219,7 @@ public class AttendanceController{
 		if(ae.getAttendanceEditBeforeTime().equals("")) {
 			
 		}
+
 		int result=attendanceService.insertAttendanceEdit(ae);
 		
 		String msg,loc;
@@ -226,10 +249,11 @@ public class AttendanceController{
 	}
 	
 	@PostMapping("/attendanceEditDetail")
-	public String attendanceEditDetail(int attendanceEditKey, Model m) {
+	public ResponseEntity<Map<String,AttendanceEdit>> attendanceEditDetail(int attendanceEditKey) {
 		AttendanceEdit attendanceEdit= attendanceService.selectAttendanceEditByKey(attendanceEditKey);
-		m.addAttribute("attendanceEdit",attendanceEdit);
-		return "attendance/attendanceEditDetail";
+		Map<String,AttendanceEdit> response =new HashMap<>();
+		response.put("attendanceEdit", attendanceEdit);
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/deleteAttendanceEdit")
@@ -238,10 +262,10 @@ public class AttendanceController{
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}else {
 			msg="삭제실패";
-			loc="/attendance/attendanceEditList";
+			loc="/attendance/selectAttendanceEditById";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

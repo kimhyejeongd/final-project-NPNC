@@ -1,7 +1,9 @@
 var selectedMembers = [];
 var maxSelection = 5; // 최대 선택 가능한 멤버 수
 
+
 var newEvent = function(start, end, eventType) {
+	console.log(path);
     Swal.fire({
         title: '새 일정 추가',
         html: `
@@ -151,7 +153,7 @@ var newEvent = function(start, end, eventType) {
             console.log(result.value);
             $.ajax({
                 type: "POST",
-                url: "/calendar/insertcalendar",
+                url: path+'/calendar/insertcalendar',
                 data: JSON.stringify(result.value),
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',

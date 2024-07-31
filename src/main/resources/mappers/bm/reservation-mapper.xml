@@ -15,8 +15,11 @@
 	
 	<resultMap id = "reItemMap" type="reserveItem">
 		<id property="calendarKey" column="CALENDAR_KEY"/>
+		<result property="reservationKey" column="RESERVATION_KEY"/>
 		<result property="memberKey" column="MEMBER_KEY"/>
 		<result property="itemKey" column="ITEM_KEY"/>
+		<result property="itemType" column="ITEM_TYPE"/>
+		<result property="itemMax" column="ITEM_MAX"/>
 		<result property="itemName" column="ITEM_NAME"/>
 		<result property="start" column="CALENDAR_START"/>
 		<result property="end" column="CALENDAR_END"/>
@@ -38,13 +41,16 @@
 		LEFT JOIN
 			RESERVATION_ITEM it on re.ITEM_KEY = it.ITEM_KEY
 		WHERE
-			cal.CALENDAR_DELETE = 'N'			
+			cal.CALENDAR_DELETE = 'N'
 	</select>
 	<select id="selectMyReserve" resultMap = "reItemMap" parameterType = "_int">
 		SELECT
 			re.CALENDAR_KEY,
 			re.ITEM_KEY,
+			re.RESERVATION_KEY,
 			it.ITEM_NAME,
+			it.ITEM_TYPE,
+			it.ITEM_MAX,
 			cal.CALENDAR_START,
 			cal.CALENDAR_END
 		FROM
@@ -54,7 +60,7 @@
 		LEFT JOIN
 			RESERVATION_ITEM it on re.ITEM_KEY = it.ITEM_KEY
 		WHERE
-			cal.CALENDAR_DELETE = 'N' AND cal.MEMBER_KEY = #{memberKey} 			
+			cal.CALENDAR_DELETE = 'N' AND cal.MEMBER_KEY = #{memberKey} 	
 	</select>
 	<select id="selectReservationAll" resultMap ="reMap">
 		SELECT

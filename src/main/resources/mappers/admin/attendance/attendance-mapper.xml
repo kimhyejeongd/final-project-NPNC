@@ -11,6 +11,20 @@
 		<result column="OVERTIME_KEY" property="overtimeKey"/>
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
+	
+	<!-- <resultMap type="overtimework" id="overtimeworkMap">
+		<id column="OVERTIME_KEY" property="overtimeKey"/>
+		<result column="ER_DOC_SERIAL_KEY" property="ErDocSerialKey"/>
+		<result column="OVERTIME_APPLY_DATE" property="overtimeApplyDate"/>
+		<result column="OVERTIME_DATE" property="overtimeDate"/>
+		<result column="OVERTIME_REASON" property="overtimeReason"/>
+		<result column="OVERTIME_STATUS" property="overtimeStatus"/>
+		<result column="OVERTIME_START_TIME" property="overtimeStartTime"/>
+		<result column="OVERTIME_END_TIME" property="overtimeEndTime"/>
+		<result column="OVERTIME_MEMBER_KEY" property="overtimeMemberKey"/>
+		<result column="OVERTIME_CATEGORY" property="overtimeCategory"/>
+	</resultMap> -->
+	
 	<insert id="startAttendance" parameterType="attendance">
 		INSERT INTO ATTENDANCE
 			VALUES(SEQ_ATTENDANCE.NEXTVAL,#{member.memberKey},SYSDATE,
@@ -146,7 +160,15 @@
 			ORDER BY ATTENDANCE_DATE DESC
 	</select>
 
-
+	<select id="selectAttendanceMonthCount" parameterType="attendance" resultType="_int">
+		SELECT 
+		COUNT(ATTENDANCE_KEY) 
+		FROM ATTENDANCE 
+		WHERE MEMBER_KEY=#{member.memberKey}
+         AND ATTENDANCE_STATE=#{attendanceState}
+         AND ATTENDANCE_DATE BETWEEN TRUNC(SYSDATE, 'MM') 
+                           AND LAST_DAY(SYSDATE)
+	</select>
 
 
 	<!-- attendanceEdit -->
@@ -209,6 +231,7 @@
 		ATTENDANCE_EDIT_STATE
 		FROM   ATTENDANCE_EDIT
 		WHERE  ATTENDANCE_EDIT_MEMBER = #{memberId} 
+		ORDER BY ATTENDANCE_EDIT_DATE DESC
 	</select>
 
 	<select id="selectAttendanceEditCount" resultType="_int">
@@ -320,7 +343,7 @@
 		ATTENDANCE_EDIT_OPINION,
 		ATTENDANCE_EDIT_STATE
 		FROM ATTENDANCE_EDIT
-		ORDER BY ATTENDANCE_EDIT_KEY DESC
+		ORDER BY ATTENDANCE_EDIT_DATE DESC
 	</select>
 	
 	<select id="selectAdminAttendanceEditCount" resultType="_int">
@@ -336,9 +359,10 @@
 		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
 	</update>
 
-	<update id="updateAttendanceEditState" parameterType="_int">
+	<update id="updateAttendanceEditState" parameterType="attendanceEdit">
 		UPDATE ATTENDANCE_EDIT
-		SET ATTENDANCE_EDIT_STATE='승인'
+		SET ATTENDANCE_EDIT_STATE='승인',
+			ATTENDANCE_EDIT_OPINION=#{attendanceEditOpinion}
 		WHERE ATTENDANCE_EDIT_KEY=#{attendanceEditKey}
 	</update>
 	

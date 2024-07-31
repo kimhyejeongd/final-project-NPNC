@@ -40,5 +40,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return dao.deleteDept(session, deptKey);
 	}
 
+	@Override
+	public Department selectDeptByKey(String deptKey) {
+		
+		return dao.selectDeptByKey(session, deptKey);
+	}
+
 	
 }

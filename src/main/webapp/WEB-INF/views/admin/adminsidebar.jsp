@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
 
+
   	<div class="sidebar" data-background-color="dark">
   	<div class="sidebar-logo">
        <!-- Logo Header -->
@@ -123,6 +124,22 @@
                     <li>
                       <a href="${path }/admin/job/selectjoball.do">
                         <span class="sub-item">직급 관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#vaca">
+                  <i class="fas fa-pen-square"></i>
+                  <p>휴가관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="vaca">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/vacation/selectVacationAll">
+                        <span class="sub-item">휴가 관리</span>
                       </a>
                     </li>
                   </ul>

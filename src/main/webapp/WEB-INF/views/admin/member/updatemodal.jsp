@@ -28,7 +28,7 @@
 		                              class="form-control input-full"
 		                              id="memberIdup"
 		                              name="memberId"
-									  value="${member.memberId}"
+									  <%-- value="${member.memberId}" --%>
 		                              placeholder="아이디"
 									  readonly
 		                            />

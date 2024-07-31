@@ -1,5 +1,9 @@
 package com.project.npnc.admin.job.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.job.model.service.JobService;
+import com.project.npnc.admin.vacation.model.dto.Vacation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,10 +30,10 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="등록성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="등록실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
@@ -37,7 +42,7 @@ public class JobController {
 	
 	@GetMapping("/selectjoball.do")
 	public String selectJobAll(Model m) {
-		m.addAttribute("job",service.selectJobAll());
+		m.addAttribute("jobs",service.selectJobAll());
 		return "admin/job/joblist";
 	}
 	
@@ -47,36 +52,37 @@ public class JobController {
 		String msg,loc;
 		if(result>0) {
 			msg="삭제성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="삭제실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);
 		return "common/msg";
 	}
 	
-	@PostMapping("/updatejob.do")
-	public String updateJob(String key,String jobName,Model m) {
-		m.addAttribute("key",key);
-		m.addAttribute("jobName",jobName);
-		
-		return "admin/job/updatejob";
+	@GetMapping("/updatejob")
+	public ResponseEntity<Map<String,Job>> updateJob(String jobKey) {
+
+		Map<String,Job> response =new HashMap<>();
+		response.put("job", service.selectJobByKey(jobKey));
+
+		return ResponseEntity.ok(response);
+
 	}
 	
-	
-	
-	@PostMapping("/updatejobend.do")
+
+	@PostMapping("/updatejobend")
 	public String updateJob(Job j,Model m) {
 		int result=service.updateJob(j);
 		String msg,loc;
 		if(result>0) {
 			msg="수정성공";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}else {
 			msg="수정실패";
-			loc="/job/selectjoball.do";
+			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
 		m.addAttribute("loc",loc);

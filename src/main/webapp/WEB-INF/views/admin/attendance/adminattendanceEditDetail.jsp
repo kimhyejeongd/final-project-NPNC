@@ -27,14 +27,14 @@
 		                              class="form-control input-full"
 		                              id="attendanceEditMember"
 		                              name="attendanceEditMember"
-									 <%--  value="${attendanceEdit.attendanceEditMember}" --%>
+									<%--   value="${attendanceEdit.attendanceEditMember}" --%>
 		                              placeholder="작성자"
 		                              readonly
 		                            />
 		                          </div>
 		           	</div>
 		           	
-		           	<input type="hidden" id="attendanceEditKey" name="attendanceEditKey" <%-- value="${attendanceEdit.attendanceEditKey } --%>">
+		           	<input type="hidden" id="attendanceEditKey" name="attendanceEditKey" value="${attendanceEdit.attendanceEditKey }">
 		           	
 		           	<div class="form-group form-inline">
 		                          <label
@@ -145,14 +145,27 @@
 		                            class="col-md-3 col-form-label"
 		                            >수정후상태</label>
 		                          <div class="col-md-9 p-0">
-		                            <input
+		                           <%--  <input
 		                              type="text"
 		                              class="form-control input-full"
 		                              id="attendanceEditAfterState"
 		                              name="attendanceEditAfterState"
-		                              <%-- value="${attendanceEdit.attendanceEditAfterState }" --%>
-		                              readonly
-		                            />
+		                              value="${attendanceEdit.attendanceEditAfterState }"
+		                              required
+		                            /> --%>
+		                            <select
+		                            class="form-select"
+		                            id="attendanceEditAfterState"
+		                            name="attendanceEditAfterState"
+		                          	>
+								  		<option value="출근" >출근</option>
+								        <option value="지각" >지각</option>
+								        <option value="조퇴" >조퇴</option>
+								        <option value="결근" >결근</option>
+								        <option value="휴가" >휴가</option>
+								        <option value="유급휴가">유급휴가</option>
+		                          </select>
+		                            
 		                          </div>
 		           	</div>
 		           
@@ -182,27 +195,30 @@
 		                              id="attendanceEditOpinion"
 		                              name="attendanceEditOpinion"
 		                              required
-		                             <%--  <c:if test="${not empty attendanceEdit.attendanceEditOpinion}"> --%>
+<%-- 		                             <c:if test="${not empty attendanceEditOpinion}">
 		                              	readonly
-		                             <%--  </c:if> --%>
-		                            ><%-- ${attendanceEdit.attendanceEditOpinion} --%></textarea>
+		                             </c:if> --%>
+		                            ></textarea>
 		                          </div>
 		           	</div>
 		           		
 		           		<input type="hidden" id="attendanceEditState" name="attendanceEditState" value="승인">
-		           		<input type="hidden" id="attendanceKey" name="attendanceKey" <%-- value="${attendanceEdit.attendance.attendanceKey }" --%>>
+		           		<input type="hidden" id="attendanceKey" name="attendanceKey">
 		           		
-		          	<%-- <c:if test="${empty attendanceEdit.attendanceEditOpinion}"> --%>
+		          	
 			           	<button
+			           		id="approveButton"
 						  	type="submit"
 						 	class="btn btn-success"
 			 				data-color="dark"
 						>승인</button>
-					<%-- </c:if> --%>
 			</div>
 			</div>
 		   </div>
-		</form>		
+		</form>
+	         		<button id="rejectButton"  onclick="rejectionAttendanceEdit();" class="btn btn-dark">
+					반려</button>
+
 		</div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
@@ -210,22 +226,19 @@
       </div>
     </div>
   </div> 
-					<%-- <c:if test="${empty attendanceEdit.attendanceEditOpinion}"> --%>
-					<%-- <div>
-	         		<button onclick="rejectionAttendanceEdit('${attendanceEdit.attendanceEditKey}');" class="btn btn-dark">
-					반려</button>
-					</div> --%>
-					<%-- </c:if> --%>
+
 		
 					
 					
-<!-- 				<script>
-				const rejectionAttendanceEdit=(key)=>{
+ 				<script>
+				const rejectionAttendanceEdit=()=>{
 					   if(confirm("반려 하시겠습니까?")){
+
 				           let form = document.createElement("form");
 				           form.setAttribute("method", "post");
 				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
 				
+				           let key = document.getElementById("attendanceEditKey").value;
 				           let $key = document.createElement("input");
 				           $key.setAttribute("type", "hidden");
 				           $key.setAttribute("name", "attendanceEditKey");
@@ -249,4 +262,4 @@
 					   
 					}
 
-				</script> -->
+				</script> 

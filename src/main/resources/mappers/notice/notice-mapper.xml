@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.npnc.notice.model.dao.NoticeDao">
+
+    <!-- 모든 공지사항 조회 -->
+    <select id="selectAllNotices" resultType="NoticeDto">
+        SELECT NOTICE_KEY as noticeKey,
+               MEMBER_KEY as memberKey,
+               NOTICE_TITLE as noticeTitle,
+               NOTICE_DETAIL as noticeDetail,
+               NOTICE_ENROLL_DATE as noticeEnrollDate,
+               NOTICE_UPDATE_DATE as noticeUpdateDate,
+               NOTICE_DELETE as noticeDelete
+        FROM NOTICE
+    </select>
+
+    <!-- 공지사항 ID로 조회 -->
+    <select id="selectNoticeById" parameterType="int" resultType="NoticeDto">
+        SELECT NOTICE_KEY as noticeKey,
+               MEMBER_KEY as memberKey,
+               NOTICE_TITLE as noticeTitle,
+               NOTICE_DETAIL as noticeDetail,
+               NOTICE_ENROLL_DATE as noticeEnrollDate,
+               NOTICE_UPDATE_DATE as noticeUpdateDate,
+               NOTICE_DELETE as noticeDelete
+        FROM NOTICE
+        WHERE NOTICE_KEY = #{id}
+    </select>
+
+    <!-- 공지사항 추가 -->
+    <insert id="insertNotice" parameterType="NoticeDto">
+        INSERT INTO NOTICE (NOTICE_TITLE, NOTICE_DETAIL, MEMBER_KEY, NOTICE_ENROLL_DATE, NOTICE_UPDATE_DATE, NOTICE_DELETE)
+        VALUES (#{noticeTitle}, #{noticeDetail}, #{memberKey}, #{noticeEnrollDate}, #{noticeUpdateDate}, #{noticeDelete})
+    </insert>
+
+    <!-- 공지사항 수정 -->
+    <update id="updateNotice" parameterType="NoticeDto">
+        UPDATE NOTICE
+        SET NOTICE_TITLE = #{noticeTitle},
+            NOTICE_DETAIL = #{noticeDetail},
+            MEMBER_KEY = #{memberKey},
+          
+            NOTICE_UPDATE_DATE = #{noticeUpdateDate},
+            NOTICE_DELETE = #{noticeDelete}
+        WHERE NOTICE_KEY = #{noticeKey}
+    </update>
+
+    <!-- 공지사항 삭제 -->
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM NOTICE WHERE NOTICE_KEY = #{id}
+    </delete>
+
+</mapper>

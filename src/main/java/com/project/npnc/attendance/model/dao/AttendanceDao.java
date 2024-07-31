@@ -32,6 +32,8 @@ public interface AttendanceDao {
 	List<Attendance> searchAttendance(SqlSession session,Map<String,Object> searchMap,Map<String,Integer> page);
 	int searchAttendanceCount(SqlSession session,Map<String,Object> searchMap);
 	
+	int selectAttendanceMonthCount(SqlSession session,Attendance a);
+	
 	//attendanceEdit
 	int insertAttendanceEdit(SqlSession session,AttendanceEdit ae);
 	List<AttendanceEdit> selectAttendanceEditById(SqlSession session,String memberId,Map<String,Integer> page);
@@ -49,7 +51,7 @@ public interface AttendanceDao {
 	int selectAdminAttendanceEditCount(SqlSession session);
 	int updateAttendanceEdit(SqlSession session,AttendanceEdit attendanceEdit);
 	int updateAttendance(SqlSession session,AttendanceEdit attendanceEdit);
-	int updateAttendanceEditState(SqlSession session,int attendanceEditKey);
+	int updateAttendanceEditState(SqlSession session,AttendanceEdit attendanceEdit);
 	List<Attendance> selectAdminAttendanceBymemberKey(SqlSession session,int memberKey,Map<String,Integer> page);
 	int selectAdminAttendanceBymemberKeyCount(SqlSession session,int memberKey);
 	

@@ -94,7 +94,7 @@
 		                            	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
 		                            </td>
 		                            <td class="">
-		                            	<fmt:formatDate value="${l.erDocStateUpdateDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
+		                            	<fmt:formatDate value="${l.erDocCompleteDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
 		                            </td>
 		                         	<td colspan="">
 		                         		<input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="rewriteModal('${l.erDocSerialKey}');">

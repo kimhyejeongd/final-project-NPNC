@@ -99,18 +99,68 @@
       <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-          <a href="index.html" class="logo">
-            <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
-          </a>
-          <button class="topbar-toggler more">
-            <i class="gg-more-vertical-alt"></i>
-          </button>
-        </div>
+            <a href="index.html" class="logo">
+              <img
+                src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
+                alt="navbar brand"
+                class="navbar-brand"
+                height="90"
+              />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
         <!-- End Logo Header -->
       </div>
-      <div class="sidebar-wrapper scrollbar scrollbar-inner">
-        <div class="sidebar-content"></div>
-      </div>
+        	<div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a
+                  href="${path }/calendar"
+                >
+                  <i class="fas fa-home"></i><p>일정 Home</p>
+                </a>
+              </li>
+              <!-- 토글리스트 -->
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#docING">
+                  <i class="fas fa-pen-square"></i>
+                  <p>예약물</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="docING">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/reservation/reservationlist">
+                        <span class="sub-item">예약하기</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/reservation/myreservation">
+                        <span class="sub-item">나의 예약</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
     </div>
     <!-- End Sidebar -->
 
@@ -268,6 +318,10 @@
       </c:forEach>
     ];
   </script>
+  
+  <script>
+  const path = "${path}";
+  </script>
 
   <script>
     var userKey = "${loginMember.memberKey}";
@@ -302,6 +356,7 @@
   <script src="${path}/resources/bm/js/daterangepicker-data.js"></script>
   <script src="${path}/resources/bm/js/daterangepicker.js"></script>
   <script src="${path}/resources/bm/js/sweetalert2.min.js"></script>
+  <script src ="${path }/resources/bm/js/addReservation.js"></script>
 
   <script>
     $(document).ready(function() {
@@ -316,202 +371,6 @@
       });
     });
   </script>
-    <script>
-    $(document).ready(function() {
-        $('.reserveStart').on('click', function () {
-            // itemName 값을 데이터 속성에서 가져옴
-            var itemName = $(this).data('item-name');
-            var itemKey = $(this).data('item-key');
-            var selectedDate = null;
-            const selectedTimes = [];
-            var reservationItem = null;
-            var reservedTimes = null;
-         
-          
-            // SweetAlert2 모달을 띄우기
-            Swal.fire({
-                title: '예약하기',
-                html: `
-                    <h4>\${itemName}</h4>
-                    <div id="calendar"></div>
-                    <div id="timeCheckBox"></div>
-                `,
-                showCancelButton: true,
-                cancelButtonText: '취소',
-                confirmButtonText: '예약',
-                width: '50%',
-                heightAuto: true,
-                didOpen: () => {
-                    // 모달이 열린 후 실행할 코드
-                    var currentDate = moment().format('YYYY-MM-DD');
-                    var calendarEl = document.getElementById('calendar');
-                    var previousDate = null;
-
-                    var calendars = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        initialDate: currentDate, // 유효한 날짜로 초기화
-                        themeSystem: 'bootstrap5',
-                        selectable: true,
-                        locale: 'ko',
-                        timeZone: 'local',
-                        slotMinTime: '09:00:00',
-                        slotMaxTime: '18:00:00',
-                        weekends: false,
-                        views: {
-                            timeGridWeek: {
-                                slotMinTime: '09:00:00',
-                                slotMaxTime: '18:00:00'
-                            },
-                            timeGridDay: {
-                                slotMinTime: '09:00:00',
-                                slotMaxTime: '18:00:00'
-                            }
-                        },
-                        headerToolbar: {
-                            left: 'prev',
-                            center: 'title',
-                            right: 'next'
-                        },
-                        datesSet: function(info) {
-                            // 모든 날짜의 배경색을 기본 색으로 설정
-                            $(calendarEl).find('.fc-daygrid-day').css('background-color', '#ffffff'); // 기본 색상
-
-                            // 오늘 날짜의 배경색을 기본 색상으로 설정
-                            $(calendarEl).find('.fc-day-today').css('background-color', '#ffffff'); // 기본 색상
-                        },
-                        displayEventTime: false,
-                        dateClick: function(info) {
-                        	
-                            if (previousDate) {
-                                // 이전에 하이라이트된 날짜를 원래대로 되돌리기
-                                $(previousDate).removeClass('highlighted');
-                            }
-                            // 현재 클릭한 날짜에 하이라이트 추가
-                            previousDate = info.dayEl;
-                            $(previousDate).addClass('highlighted');
-                            selectedDate = info.dateStr;
-                            reservationItem = reservationItems.find(item => item.itemK == itemKey && item.day == selectedDate);
-                            reservedTimes = reservationItem ? reservationItem.times : [];
-                            
-                            console.log(reservedTimes);
-                    
-
-                            const timeSlots = [];
-                            const startTime = moment().startOf('day').add(9, 'hours'); // 오전 9시
-                            const endTime = moment().startOf('day').add(18, 'hours'); // 오후 6시
-                            const interval = 90; // 90분
-
-                            // 시간 슬롯을 1시간 30분 간격으로 생성
-                            for (let time = startTime; time.isBefore(endTime); time.add(interval, 'minutes')) {
-                                timeSlots.push(time.format('YYYY-MM-DD HH:mm'));
-                            }
-
-                            const $timeSelector = $('#timeCheckBox');
-                            $timeSelector.empty();
-                            timeSlots.forEach((slot, index) => {
-                                const timeDisplayStart = `\${slot.substring(11, 16)}`;
-                                const timeDisplayEnd = moment(slot).add(90, 'minutes').format('HH:mm');
-                                //현재 날짜/ 시간에 예약되어있으면, 선택하지못하게 분기처리
-                                var isReserved = false;
-                                if(index>=reservedTimes[0] && index<=reservedTimes[1]){
-                                	isReserved = true;
-                                }/* else{
-                                	isReserved = false;
-                                } */
-                                console.log(index,isReserved);
-                                $timeSelector.append(`
-                                    <label class="selectgroup-item" style= "\${isReserved ? 'display: none;' : ''}">
-                                        <input type="checkbox" name="time" value="\${index}" class="selectgroup-input"/>
-                                        <span class="selectgroup-button">
-                                            <span class="time-label">\${timeDisplayStart} - \${timeDisplayEnd}</span>
-                                        </span>
-                                    </label>
-                                `);
-                            });
-
-                            $('input[name="time"]').on('click', function() {
-                                if (selectedTimes.length === 0) {
-                                    selectedTimes.push($(this).val());
-                                } else if (selectedTimes.length === 1) {
-                                    // 체크박스가 1개일 때
-                                    // 추가로 누른 값이 원래 값보다 작으면, 원래 값 지우고 추가로 누른 값 배열에 넣고 체크.
-                                    if (selectedTimes[0] > $(this).val()) {
-                                        selectedTimes.pop();
-                                        selectedTimes.push($(this).val());
-                                        $('input[name="time"]').each(function() {
-                                            this.checked = false;
-                                            if (this.value === selectedTimes[0]) {
-                                                this.checked = true;
-                                            }
-                                        });
-                                    } else if (selectedTimes[0] < $(this).val()) {
-                                        // 추가로 누른 값이 원래 값보다 크면, 추가로 누른 값 배열에 넣고 사이 값 모두 체크.
-                                        selectedTimes.push($(this).val());
-                                        $('input[name="time"]').each(function() {
-                                            if (this.value >= selectedTimes[0] && this.value <= selectedTimes[1]) {
-                                                this.checked = true;
-                                            }
-                                        });
-                                    } else if (selectedTimes[0] === $(this).val()) {
-                                        // 추가로 누른 값이 원래 값과 같으면, 배열 삭제
-                                        selectedTimes.pop();
-                                    }
-                                } else if (selectedTimes.length === 2) {
-                                    // 배열 길이가 2면, 모든 값 제거 후 체크박스 초기화 및 새로 누른 값만 체크
-                                    selectedTimes.pop();
-                                    selectedTimes.pop();
-                                    selectedTimes.push($(this).val());
-                                    $('input[name="time"]').each(function() {
-                                        this.checked = false;
-                                        if (this.value === selectedTimes[0]) {
-                                            this.checked = true;
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-
-                    calendars.render();
-                    document.querySelector('.fc-toolbar-title').style.fontSize = '18px';
-                },
-                preConfirm: () => {
-                    if (!selectedDate || selectedTimes.length === 0) {
-                        Swal.showValidationMessage('날짜와 시간을 선택하세요.');
-                        return false;
-                    }
-                    return new Promise((resolve) => {
-                        $.ajax({
-                            url: '/reservation/insertre',
-                            method: 'POST',
-                            dataType: 'json',
-                            data: JSON.stringify({
-                                memberKey: userKey,
-                                itemKey: itemKey,
-                                itemName: itemName,
-                                date: selectedDate,
-                                time: selectedTimes
-                            }),
-                            contentType: "application/json; charset=utf-8",
-                            success: (response) => {
-                                resolve(response);
-                            },
-                            error: (xhr, status, error) => {
-                                Swal.showValidationMessage('예약에 실패했습니다.');
-                                resolve(false);
-                            }
-                        });
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // 사용자가 '예약' 버튼을 클릭한 경우
-                    Swal.fire('예약 완료!', '', 'success');
-                }
-            });
-        });
-    });
-
-    </script>
+  
 </body>
 </html>
