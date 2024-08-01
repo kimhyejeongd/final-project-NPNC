@@ -19,7 +19,8 @@
 		<result column="MEMBER_GENDER" property="memberGender"></result>
 		<result column="MEMBER_STATE" property="memberState"></result>
 		<result column="MEMBER_BIRTHDATE" property="memberBirthdate"></result>
-		<result column="JOB_NAME" property="jobName"></result>				
+		<result column="JOB_NAME" property="jobName"></result>
+		<result column="MEMBER_PROFILE_IMAGE" property="memberProfileImage"></result>				
 	</resultMap>
 	<resultMap id="OrganMap" type="OrganizationDto">
  		<id column="DEPARTMENT_KEY" property="departmentKey"></id>

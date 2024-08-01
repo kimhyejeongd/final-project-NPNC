@@ -153,41 +153,64 @@
             </button>
           </div>
           <!-- End Logo Header -->
-        </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
-          <div class="sidebar-content">
-            <ul class="nav nav-secondary">
-            
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-layer-group"></i>
-                  <p>받은 쪽지함</p>
-                </a>
-               
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-th-list"></i>
-                  <p>보낸 쪽지함</p>
-                </a>
-                
-              </li>
-              
-             
-              
-            
-              
-            
-            </ul>
-          </div>
-        </div>
-      </div>
+		    </div>
+		    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+		      <div class="sidebar-content">
+		        <ul class="nav nav-secondary">
+		        
+		          <li class="nav-section">
+		            <span class="sidebar-mini-icon">
+		              <i class="fa fa-ellipsis-h"></i>
+		            </span>
+		            <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
+		          </li>
+		  	  
+		          <li class="nav-item" >
+		            <a data-bs-toggle="collapse" href="${path}/notehome">
+		              <i class="fas fa-file-upload"></i>
+		              <p>받은 쪽지함</p>
+		            </a>
+		           
+		          </li>
+		          <li class="nav-item">
+		            <a data-bs-toggle="collapse" href="${path}/sendNoteHome">
+		              <i class="fas fa-file-download"></i>
+		              <p>보낸 쪽지함</p>
+		            </a>
+		            
+		          </li>
+		  	 
+		  	   <li class="nav-item">
+		              <a data-bs-toggle="collapse" href="${path}/noteSendMe">
+		                <i class="fas fa-street-view"></i>
+		                <p>내게 쓴 쪽지함</p>
+		              </a>
+		              
+		            </li>
+		  		<li class="nav-item">
+		                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
+		  			  <i class="fas fa-folder-open"></i>
+		                  <p>즐겨찾기</p>
+		                </a>
+		              </li>       
+		  		
+		        </ul>
+		      </div>
+		    </div>
+		  </div>
+		  <script>
+		     document.addEventListener("DOMContentLoaded", function() {
+		         document.querySelectorAll('.nav-item').forEach(function(li) {
+		             li.addEventListener('click', function() {
+		                 var anchor = li.querySelector('a');
+		                 if (anchor) {
+		                     window.location.href = anchor.href;
+		                 }
+		             });
+		         });
+		     });
+		  </script>
+
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -215,7 +238,7 @@
           	<div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4 class="card-title">Basic</h4>
+                    <h4 class="card-title">목록</h4>
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
@@ -227,7 +250,7 @@
                           <tr>
                           <th> 
                           	<input type="checkbox" id="deleteCheckAll" value="">
-                         		 전체선택 
+                         		  
                           
                           	</th>
                             <th>Number</th>

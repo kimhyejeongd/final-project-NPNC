@@ -211,7 +211,7 @@
 			   <li class="nav-item">
                   <a data-bs-toggle="collapse" href="${path}/noteSendMe">
                     <i class="fas fa-street-view"></i>
-                    <p>내게 쓴 메일함</p>
+                    <p>내게 쓴 쪽지함</p>
                   </a>
                   
                 </li>
@@ -219,90 +219,9 @@
 	                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
 					  <i class="fas fa-folder-open"></i>
 	                  <p>즐겨찾기</p>
-	                  <span class="caret"></span>
 	                </a>
-	                <div class="collapse" id="base">
-	                  <ul class="nav nav-collapse">
-	               
-	                    <li>
-	                      <a href="components/avatars.html">
-	                        <span class="sub-item">Avatars</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/buttons.html">
-	                        <span class="sub-item">Buttons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/gridsystem.html">
-	                        <span class="sub-item">Grid System</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/panels.html">
-	                        <span class="sub-item">Panels</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/notifications.html">
-	                        <span class="sub-item">Notifications</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/sweetalert.html">
-	                        <span class="sub-item">Sweet Alert</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/font-awesome-icons.html">
-	                        <span class="sub-item">Font Awesome Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/simple-line-icons.html">
-	                        <span class="sub-item">Simple Line Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/typography.html">
-	                        <span class="sub-item">Typography</span>
-	                      </a>
-	                    </li>
-	                  </ul>
-	                </div>
 	              </li>       
-				 <li class="nav-item">
-	                 <a data-bs-toggle="collapse" href="#trash">
-						<i class="fas fa-trash-alt"></i>
-	                   <p>휴지통</p>
-	                   <span class="caret"></span>
-	                 </a>
-	                 <div class="collapse" id="trash">
-	                   <ul class="nav nav-collapse">
-	                
-	                     <li>
-	                       <a href="components/avatars.html">
-	                         <span class="sub-item">받은 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/buttons.html">
-	                         <span class="sub-item">보낸 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/gridsystem.html">
-	                         <span class="sub-item">내게 쓴 메일함</span>
-	                       </a>
-	                     </li>
-	                     
-	                     
-	                   </ul>
-	                 </div>
-	               </li>
-              
-            
+				
             </ul>
           </div>
         </div>
@@ -318,7 +237,7 @@
                  });
              });
          });
-	     </script>
+	  </script>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -348,14 +267,14 @@
                 <div class="card">
                   <div class="card-header">
 					<div class="noteSearchBar">
-						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
-							<select id="searchCheck" name="searchCheck">
-						           <option value="name">이름</option>
-						           <option value="title">제목</option>
+						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 40%; ">
+							<select id="searchCheck" name="searchCheck" style="height: 34px; margin-right:10px;">
+						           <option value="name">이름으로 검색</option>
+						           <option value="title">제목으로 검색</option>
 													           
 							</select>
-					        <div class="input-group">
-					          <div class="input-group-prepend">
+					        <div class="input-group" style="height: 35px;">
+					          <div class="input-group-prepend" >
 					            <button type="button" class="btn btn-search pe-1" onclick="searchNoteKeyword();">
 					              <i class="fa fa-search search-icon"></i>
 					            </button>
@@ -425,7 +344,7 @@
                           <tr>
                           	<th> 
                           		<input type="checkbox" id="deleteCheckAll" value="">
-                          			전체선택 
+                          			 
                           
                           	</th>
                             <th>즐겨찾기</th>
@@ -964,17 +883,18 @@
       		}
 			
           	/* 타입 , 알람 , 수신인, 메세지  */
-         	function send(reMemberKey1, memberKey){
+         	function send(reMemberKey1, memberKey, memberName, jobName){
    		   	 console.log('send보내짐');
    		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
    		   			JSON.stringify({
 						
 						alarmType : 'Note',
-						alarmPath : 'notein',
+						alarmPath : 'notehome',
 		   				alarmSendMember : memberKey,
 						alarmReMember : reMemberKey1,
-						alarmDate : new Date().toISOString()
-						
+						alarmDate : new Date().toISOString(),
+						memberName: memberName,
+						jobName : jobName
    		   				
    		   				
    		   			})
@@ -984,15 +904,17 @@
    		   	}
 			
 			<!--전체 알람 함수-->
-			function sendAll(alarmSendMember){
+			function sendAll(alarmSendMember,memberName, jobName){
 					   	 console.log('send보내짐');
 						 
 					   		stompClient.send("/pub/all",{},
 					   			JSON.stringify({
 									alarmType : 'Note',
-									alarmPath : 'notein',
+									alarmPath : 'notehome',
 					   				alarmSendMember : alarmSendMember,
-									alarmDate : new Date().toISOString()
+									alarmDate : new Date().toISOString(),
+									memberName: memberName,
+									jobName : jobName
 					   			})
 					   				
 					   		);
@@ -1026,6 +948,8 @@
 				console.log(reMemberKey1);
 	            // 나머지 인풋 값들을 가져옴
 	            var memberKey = document.getElementById('memberKey').value;
+				var memberName='${loginMember.memberName}';
+				var jobName='${loginMember.jobName}';
 	            console.log(memberKey);
 	            var postMsgDetail = document.getElementById('postMsgDetail').value;
 	            console.log(postMsgDetail);
@@ -1057,7 +981,7 @@
 		    		success : function(){
 		    			alert('성공');
 		    			for (let i=0; i<reMemberKey1.length;i++)	{
-		    				send(reMemberKey1[i], memberKey);
+		    				send(reMemberKey1[i], memberKey,memberName ,jobName);
 		    			}
 		    			
 		    			/* send(reMemberKey1, memberKey); */
@@ -1085,6 +1009,8 @@
             	}
 	          
 	            // 나머지 인풋 값들을 가져옴
+				var memberName='${loginMember.memberName}';
+				var jobName='${loginMember.jobName}';
 	            var memberKey = document.getElementById('memberKey').value;
 	            console.log(memberKey);
 	            var postMsgDetail = document.getElementById('postMsgDetailAll').value;
@@ -1107,7 +1033,7 @@
 			    	contentType: false, 
 		    		success : function(){
 		    			alert('성공');
-						sendAll(memberKey);
+						sendAll(memberKey,memberName ,jobName);
 
 		    			/* send(reMemberKey1, memberKey); */
 		    		}

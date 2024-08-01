@@ -312,13 +312,7 @@
 			}
 			.modal1Organ .modal_popup1Organ .close_btn1Organ {
 			  /*   display: block; */
-			    padding: 10px 20px;
-			    background-color: rgb(116, 0, 0);
-			    border: none;
-			    border-radius: 5px;
-			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
 			}
 			.modal1Organ.on1Organ {
 			    display: block;
@@ -475,7 +469,7 @@
 
 										          var spanBlock = document.createElement('span');
 										          spanBlock.className = 'block';
-										          spanBlock.textContent = response[i].alarmSendMember+'님의 쪽지';
+										          spanBlock.textContent = response[i].memberName+" "+response[i].jobName+'님의 쪽지';
 										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 										          var spanTime = document.createElement('span');
@@ -906,7 +900,7 @@
 		             	$.notify({
 				   		 	icon: 'icon-bell',
 				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-				   		 	message:  bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
+				   		 	message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 				   		 },{
 				   		 	type: 'primary',
 				   		 	placement: {
@@ -949,7 +943,7 @@
 		
 					          var spanBlock = document.createElement('span');
 					          spanBlock.className = 'block';
-					          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+							  spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName+'님의 쪽지';
 					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 		
 					          var spanTime = document.createElement('span');
@@ -1000,7 +994,7 @@
 			             	$.notify({
 					   		 	icon: 'icon-bell',
 					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-					   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+								message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 					   		 },{
 					   		 	type: 'primary',
 					   		 	placement: {
@@ -1042,7 +1036,7 @@
 
 		   			          var spanBlock = document.createElement('span');
 		   			          spanBlock.className = 'block';
-		   			          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
 		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 		   			          var spanTime = document.createElement('span');
