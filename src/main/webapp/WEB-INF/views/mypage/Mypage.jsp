@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 <sec:authentication var="loginMember" property="principal"/>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -14,6 +15,8 @@
 
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    
     <script>
       WebFont.load({
         google: { families: ["Public Sans:300,400,500,600,700"] },
@@ -119,7 +122,16 @@
                                 <div class="profile-card">
                                     <!-- Profile Image -->
                                     <div class="profile-image">
-                                          <img id="profileImage" src="${pageContext.request.contextPath}/member/profileImage/${member.memberId}" alt="Profile Image" />
+                                      <img id="profileImage" src="${pageContext.request.contextPath}/member/profileImage/${member.memberId}" alt="Profile Image" />
+				
+                                   	     <!-- 프로필 사진 수정 버튼 -->
+                                        <button id="editProfileImageButton" class="btn btn-sm btn-primary" style="margin-top: 10px;">프로필 사진 수정</button>
+                                        <!-- 프로필 이미지 업로드 폼, 초기에는 숨김 -->
+                                        <div id="profileImageForm" style="display: none; margin-top: 10px;">
+                                            <label for="profileImageUpload">프로필 이미지 변경</label>
+                                            <input type="file" class="form-control" id="profileImageUpload">
+                                            <button class="btn btn-primary btn-custom" id="uploadProfileImageButton">이미지 업로드</button>
+                                        </div>
                                     </div>
                                     <!-- Profile Information -->
                                     <div class="profile-info">
@@ -159,8 +171,7 @@
         </div>
         <!-- End Main Panel -->
     </div>
-
-    <!-- Address Modal -->
+   <!-- Address Modal -->
     <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
