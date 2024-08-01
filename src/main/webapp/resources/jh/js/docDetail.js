@@ -57,12 +57,6 @@ function pdf_down(serial) {
 	const width = 800; // 컨텐츠의 전체 너비
 	const height = 297 *3; // 컨텐츠의 전체 높이
 	
-	/*// 문자열을 HTML 요소로 변환
-    var container = document.createElement('div');
-    container.style.width = 'auto'; // A4 페이지 너비
-	container.style.boxSizing = 'border-box'; // 박스 사이징 조정
-	container.innerHTML = element.html;*/
-	
 	html2pdf().from(element).set({
 	    margin: [10,10,10,10],
 	    filename: serial + '.pdf',
@@ -83,50 +77,6 @@ function pdf_down(serial) {
 	}).save();
 
 	
-	/*var element;
-	$.ajax({
-		url: sessionStorage.getItem("path") + `/document/request/docHtml?serial=${serial}`,
-	        method: 'GET',
-	        success: function (data) {
-				console.log(data);
-				if(data.status === 'success'){
-					// 문자열을 HTML 요소로 변환
-			        var container = document.createElement('div');
-			        container.style.width = 'auto'; // A4 페이지 너비
-					container.style.boxSizing = 'border-box'; // 박스 사이징 조정
-					container.innerHTML = data.html;*/
-			        
-					//pdf로 생성
-					/*html2pdf().from(container).set({
-						margin: [10, 10, 10, 10],
-						filename: serial + '.pdf',
-						html2canvas: { 
-							scale: 1, // 스케일을 높여서 해상도 향상
-					        useCORS: true,
-					        width: document.body.scrollWidth, 
-					        height: document.body.scrollHeight
-					        
-				        },
-						jsPDF: {
-							orientation: 'portrait',  //세로 방향
-							unit: 'mm', 
-							format: 'a4', 
-							compressPDF: true,
-							pageSize: { // 페이지 크기
-	                            width: 2100, // A4 페이지 너비
-	                            height: 2970  // A4 페이지 높이
-                            },
-                            scaleFactor: 2 // 비율 조정
-							}
-					}).save();*/
-				/*}else{
-					alert(data.message);
-				}
-			},
-			error: function(){
-				alert('요청 실패');
-			}
-	});*/
 
 }
 

@@ -7,6 +7,9 @@
 <c:set var="aptarget" value="memberKey=${loginMember.memberKey}"/>
 <%
 	String lastPage = (String) session.getAttribute("lastPage");
+	String key = "list/";
+	int startIndex = lastPage.indexOf(key) + key.length();
+	String result = lastPage.substring(startIndex).replace(".jsp", "");
 %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -67,7 +70,6 @@
           <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
-		
 		<div class="container">
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -128,11 +130,11 @@
 										</span>
 										다시 쓰기
 									</button>
-									<button class="btn btn-label-warning btn-round" onclick="deleteModal('${l.erDocKey}')">
+									<button class="btn btn-label-warning btn-round" onclick="deleteModal('${l.erDocKey}', '<%=result %>')">
 										<span class="btn-label">
 											<i class="fas fa-trash-alt"></i>
 										</span>
-										삭제
+										삭제 ${result }
 									</button>
 								</c:when>
 								<c:when test="${fn:contains(approverStr, aptarget) and !fn:contains(lastPage, 'complete')

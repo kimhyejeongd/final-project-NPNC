@@ -557,7 +557,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	        }
 	    } else {
 	        log.debug("파일이 존재하지 않음: " + path);
-	        return -1; // 파일 없음
+	        return 1; // 파일 없음
 	    }
 	}
 	@Override

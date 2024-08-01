@@ -33,6 +33,7 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+   <script src="${path}/resources/jh/js/docwrite.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -252,37 +253,7 @@ $(document).ready(function() {
 	    let existingCount = $('#fileinputDiv .file-name').length;
         
      // 선택한 파일 이름을 표시하기 위한 내용 추가
-        Array.from(files).forEach((file, index) => {
-	       	let adjustedIndex = existingCount + index + 1;
-        	let files=this.files;
-        	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
-									.css({
-										'width': '100%',
-										'min-height': '30px',
-										'font-size' : 'larger',
-										'text-align': 'left',
-										'border-radius': '15px',
-										'background-color': 'white !important'
-									});
-		  	
-			let $box = $("<div>").addClass('d-flex align-items-center')
-								.css({
-									'color': 'black',
-									'background-color': 'white !important',
-									'border': 'none !important',
-									'width': '500px'
-								});
-			
-			 $box.html('<input name="files[' + adjustedIndex + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
-                     '<input name="files[' + adjustedIndex + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
-			
-			let $buttonbox=$("<div>").addClass('d-flex');
-			$buttonbox.html(`<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-								<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
-								<button class="btn btn-sm btn-outline-primary ml-2 bringBtn ms-2" id="fileDeleteBtn" type="button">삭제</button>`);
-			$div.append($box).append($buttonbox);
-			$('#fileinputDiv').append($div);
-        });
+      fn_arrayFiles(files, existingCount);
     });
 	
 	 var ui = $.summernote.ui;
@@ -322,14 +293,6 @@ $(document).ready(function() {
 			redobtn: redo
 		} */
 	});
-	
-	function validateAndSubmit(form) {
-        if (form.checkValidity()) {
-            form.submit();
-        } else {
-            form.reportValidity();
-        }
-    }
 	
 	// 기안하기 버튼 클릭 시
 	$("#submitbtn").click(async function() {
@@ -532,7 +495,6 @@ $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', funct
         $(element).find('.badge').val(index + 1); 
     });
 });
-
 $("#approverBtn").click(function() {
 	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
@@ -543,269 +505,16 @@ $("#refererBtn").click(function() {
 $("#storageBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/storage', 'storage', 'width=900, height=700, left=500, top=100');
 });
-function sendDataToParent(data) {
-    console.dir(data);
-    $("#approvalDiv").html(''); // approvalDiv 초기화
-    
-    // 선택 결재자
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "approval" + index,
-            css: {
-                width: '100%',
-                fontSize: 'larger',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'approvers[' + index + '].orderby',
-            value: item.orderby,
-            css: {
-                borderRadius: '15px',
-                width: '23px',
-                display: 'inline',
-                backgroundColor: 'white'
-            },
-            class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
-        }).attr('readonly', true).appendTo($div);
-		
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-		
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeamName',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJobName',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.category.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].category',
-            value: item.category,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        $div.appendTo($("#approvalDiv"));
-        $("#approverBtn").text('재선택');
-    });
-}
-function sendRefererToParent(data) {
-    console.dir(data);
-    $("#refererDiv").html('');
-    // 참조인
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "referer" + index,
-            css: {
-                width: '100%',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'referers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeamName',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberJobName',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-        
-        $("<button>").addClass('badge rounded-pill text-bg-secondary')
-        			.text('X')
-        			.attr({'type': 'button'})
-        			.css('width', '3.2ch')
-        			.addClass('Xbtn')
-        			.appendTo($div);
-
-        $div.appendTo($("#refererDiv"));
-        
-        $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
-        	e.stopPropagation(); // 이벤트 버블링 방지
-        	let $div = $(e.target).closest('div.col');
-        	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
-        	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
-        	console.log(index);
-            savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
-            localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
-        	$(e.target).parent().remove();
-        });
-    });
-}
-function sendStorageToParent(data){
-	console.log(data);
-	$("#storageDiv").html('');
-	
-	 let $div = $("<div>", {
-         id: "storage",
-         css: {
-             width: '100%',
-             textAlign: 'left',
-             borderRadius: '15px'
-         },
-         class: 'col m-0 p-2'
-     });
-
-     $("<input>", {
-         name: 'erDocStorageKey',
-         value: data.erStorageKey,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-         type: 'hidden'
-     }).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageFolder + " > ",
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageName,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $div.appendTo($("#storageDiv"));
-     $("#storageBtn").text('재선택');
-}
+$("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
+	e.stopPropagation(); // 이벤트 버블링 방지
+	let $div = $(e.target).closest('div.col');
+	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
+	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
+	console.log(index);
+    savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
+    localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
+	$(e.target).parent().remove();
+});
 </script>
 </body>
 </html>

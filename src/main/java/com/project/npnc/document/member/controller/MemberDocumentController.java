@@ -521,7 +521,6 @@ public class MemberDocumentController {
 	@PostMapping(path="/savedraft", consumes = {"multipart/form-data"})
 	public ResponseEntity<Map<String,Object>> insertDraftDoc(
 			String msg, Model m, Document doc, String html, 
-			//@RequestParam(required = false) int form,
 			@RequestParam(value="upfile")MultipartFile[] file
 			){
 		Member user = getCurrentUser();
