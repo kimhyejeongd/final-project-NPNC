@@ -68,6 +68,64 @@
 		display: flex;
 		justify-content: center;
 	}
+	.outer-cell {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 0;
+		vertical-align: top;
+		background: white; 
+		border: currentColor; 
+		text-align: right; 
+		color: black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: top;
+	}
+
+	#approverTable {
+		border-collapse: collapse;
+		margin-left: auto; /* 오른쪽에 붙이기 위해 사용 */
+		font-family: "malgun gothic", dotum, arial, tahoma;
+		text-align: center !important;
+		border: 0px solid rgb(0, 0, 0); 
+		width: auto; 
+		margin-top: 1px; 
+		border-collapse: collapse;
+	}
+
+	#approverTable th,
+	#approverTable td {
+		border: 1px solid black;
+		padding: 5px;
+		text-align: center !important;
+		vertical-align: middle;
+		font-size: 14px;
+	}
+
+	#approverTable th {
+		background: #ddd;
+		font-weight: bold;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		height: 18px; 
+		text-align: center; 
+		font-size: 14px; 
+		font-weight: bold; 
+		vertical-align: middle;
+	}
+
+	#approverTable td {
+		background: #fff;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: middle; 
+		width: auto;
+	}
   </style>
  </head>
 <body>
@@ -476,20 +534,10 @@ function sendDataToParent(data) {
                 maxWidth: '80px'
             },
         }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
 		
         let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
-            name: 'approvers[' + index + '].memberTeam',
+            name: 'approvers[' + index + '].memberTeamName',
             value: item.memberTeam,
             css: {
                 border: 'none',
@@ -501,7 +549,7 @@ function sendDataToParent(data) {
 	
         widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
-            name: 'approvers[' + index + '].memberJob',
+            name: 'approvers[' + index + '].memberJobName',
             value: item.memberJob,
             css: {
                 border: 'none',
@@ -587,7 +635,7 @@ function sendRefererToParent(data) {
 	
         let widthCalc = (item.memberTeam.length * 1.5) + 1;
         $("<input>", {
-            name: 'referers[' + index + '].memberTeam',
+            name: 'referers[' + index + '].memberTeamName',
             value: item.memberTeam,
             css: {
                 border: 'none',
@@ -599,7 +647,7 @@ function sendRefererToParent(data) {
 
         widthCalc = (item.memberJob.length * 1.5) + 1;
         $("<input>", {
-            name: 'referers[' + index + '].memberJob',
+            name: 'referers[' + index + '].memberJobName',
             value: item.memberJob,
             css: {
                 border: 'none',

@@ -1531,7 +1531,7 @@
 		VALUES
             (
               seq_er_approver_key.NEXTVAL,
-              ${memberKey},
+              #{memberKey},
               #{memberName},
               #{memberTeamKey},
               #{memberJobKey},
@@ -1547,9 +1547,35 @@
               #{opinion, jdbcType=VARCHAR},
               #{erDocSerialKey},
               sysdate,
-              ${orderby}
+              #{orderby}
             )
+        <selectKey order="AFTER" resultType="string" keyProperty="erApproverKey">
+        	SELECT
+        		seq_er_approver_key.currval
+        	FROM
+        		dual
+        </selectKey>
 	</insert>
+	<select id="selectApproverByKey" parameterType="map" resultMap="approverMap">
+		SELECT
+			ER_APPROVER_KEY,
+			MEMBER_KEY,
+			ER_APPROVER_NAME,
+			ER_APPROVER_TEAM_KEY,
+			ER_APPROVER_JOB_KEY,
+			ER_APPROVAL_CATEGORY,
+			ER_APPROVAL_STATE,
+			ER_APPROVAL_OPINION,
+			ER_DOC_SERIAL_KEY,
+			ER_APPROVAL_DATE,
+			ER_APPROVAL_ORDERBY
+		FROM
+			ER_APROVER
+		WHERE
+			MEMBER_KEY = #{memberKey}
+		AND
+			ER_DOC_SERIAL_KEY = #{serial}
+	</select>
 	
 	<!-- 결재라인 신규 저장 -->
 	<insert id="insertApproverLineStorage" parameterType="map">

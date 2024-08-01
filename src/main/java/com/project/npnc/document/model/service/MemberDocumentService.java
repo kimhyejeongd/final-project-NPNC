@@ -56,7 +56,7 @@ public interface MemberDocumentService {
 	int deleteDocFile(String docSerial) throws Exception;
 	String selecetDocFileOriname(String filename);
 	
-	int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception;
+	int updateApproveDoc(int memberKey, String serial, String msg, int formNo, String html) throws Exception;
 	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;
 	int updatePendDoc(int memberKey, String serial, String msg) throws Exception;
 	List<Approver> selectDocApprovers(String serial);

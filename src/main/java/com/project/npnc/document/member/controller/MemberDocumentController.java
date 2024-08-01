@@ -1,11 +1,6 @@
 package com.project.npnc.document.member.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
@@ -23,6 +18,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,12 +200,15 @@ public class MemberDocumentController {
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
+		
+		//로그인 유저가 결재자에 해당하는지 확인할 수 있는 데이터 생성
 		List<Approver> aps = document.getApprovers();
 		aps.removeIf(e-> e.getCategory().equals("기안"));
 		log.debug(aps.toString());
 		m .addAttribute("approverStr", Arrays.asList(aps).toString());
+		
 		//문서파일 html 가져오기
-		String html = readHtmlFile("dochtml", document.getErDocFilename());
+		String html = DocHtmlController.readHtmlFile("dochtml", document.getErDocFilename(), uploadDir);
 		if(html == null || html.equals("")) {
 			throw new Exception("문서 불러오기 실패");
 		}
@@ -220,11 +219,36 @@ public class MemberDocumentController {
 		m.addAttribute("html", html);
 	}
 	
+	@GetMapping("/request/docHtml")
+	public ResponseEntity<Map<String,Object>> requestDocHtml(
+			@RequestParam String serial
+			) throws Exception{
+		log.debug(serial);
+		log.debug("----- " + serial + "문서 다운로드 -----");
+		Map<String,Object> response = new HashMap<>();
+		
+		//문서파일 html 가져오기
+		try {
+			String html = DocHtmlController.readHtmlFile("dochtml", serial+".html" , uploadDir);
+			if(html == null || html.equals("")) {
+				throw new Exception("문서 불러오기 실패");
+			}
+			response.put("html", html);
+			response.put("status", "success");
+			response.put("message", "문서 불러오기 성공");
+		}catch(Exception e) {
+			e.printStackTrace();
+			response.put("status", "fail");
+			response.put("message", "문서 불러오기 실패");
+		}
+		
+		return ResponseEntity.ok(response);
+	}
 	
 	@GetMapping("/request/docForm{formNo}")
 	public String formDoc(String form) {
 		log.debug(form + "양식 불러오기");
-		return readHtmlFile("/docformhtml", form+".html");
+		return DocHtmlController.readHtmlFile("/docformhtml", form+".html", uploadDir);
 	}
 	
 	
@@ -247,7 +271,7 @@ public class MemberDocumentController {
 	@GetMapping("/write")
 	public String formWrite(int form, Model m) {
 		log.debug("----전자문서 작성시작----");
-		String html = readHtmlFile("docformhtml", form+".html");
+		String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
 		//기안부서 적용
 		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
 		//기안일 적용
@@ -291,7 +315,7 @@ public class MemberDocumentController {
 	public String docRewrite(String serial, Model m) {
 		log.debug("----전자문서 재작성----");
 		Document d = serv.selectDocBySerial(serial);
-		String html = readHtmlFile("dochtml", d.getErDocFilename());
+		String html = DocHtmlController.readHtmlFile("dochtml", d.getErDocFilename(), uploadDir);
 		log.debug(html);
 		m.addAttribute("html", html);
 		m.addAttribute("doc", d);
@@ -352,7 +376,7 @@ public class MemberDocumentController {
 		
 		int result=0;
 		try {
-			result = serv.updateApproveDoc(no, serial, msg, formNo);
+			result = serv.updateApproveDoc(no, serial, msg, formNo, html);
 			if(result <=0) {
 				response.put("status", "error");
 				response.put("message", "문서 결재 실패");
@@ -614,7 +638,9 @@ public class MemberDocumentController {
 		//결재자에 기안자도 추가
 		Approver me = Approver.builder().memberKey(user.getMemberKey())
 									.memberTeamKey(user.getDepartmentKey())
+									.memberTeamName(user.getDepartmentName())
 									.memberJobKey(user.getJobKey())
+									.memberJobName(user.getJobName())
 									.memberName(user.getMemberName())
 									.category("기안")
 									.opinion(msg)
@@ -632,8 +658,10 @@ public class MemberDocumentController {
 		    return toRemove;
 		});//debug
 		ap.add(me);
+		ap.sort(Comparator.comparing(Approver::getOrderby)); //정렬
 		doc.setApprovers(ap);
 		log.debug("{}", doc);
+		
 		
 		int result=0;
 		Map<String,Object> response = new HashMap<>();
@@ -653,12 +681,12 @@ public class MemberDocumentController {
 		//기안, 결재자 등록 성공시
 		response.put("status", "success");
 		response.put("message", "문서 등록 완료");
-//		response.put("no", "문서 등록 완료");
 		
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
-		//return "redirect:home"; 
 	}
+	
+	
 	//휴가 신청 기안
 	@PostMapping(path="/writeend/vacation", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertVacationDoc(
@@ -1002,27 +1030,7 @@ public class MemberDocumentController {
 	    }
     }
 	
-	//html 파일 읽기
-	public String readHtmlFile(String dir, String title) {
-        String path = uploadDir + dir + "/" + title;
-        log.debug("문서 읽기 경로 : " + path);
-        File file = new File(path);
-        StringBuilder content = new StringBuilder();
-
-        try (BufferedReader br = new BufferedReader(
-              new InputStreamReader(
-                    new FileInputStream(file), StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content.toString();
-  }
+	
 	private Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();
