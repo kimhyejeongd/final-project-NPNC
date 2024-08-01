@@ -83,10 +83,17 @@
             font-size: 0.9em;
         }
         .comment-actions, .reply-actions {
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
         }
         .comment-actions button, .reply-actions button {
             margin-right: 5px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 3px;
         }
         .comment-form, .reply-form {
             margin-top: 20px;
@@ -97,6 +104,12 @@
         }
         .btn {
             border-radius: 5px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+        }
+        .btn:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
@@ -168,7 +181,7 @@
                             </c:forEach>
                         </div>
                         <div class="card-footer">
-                            <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
+                            <a href="${path}/board/list" class="btn btn-secondary">목록으로 돌아가기</a>
                         </div>
                     </div>
                     
@@ -189,12 +202,12 @@
                                         <form action="${path}/board/updateComment" method="post" class="d-inline">
                                             <input type="hidden" name="BOARD_COMMENT_KEY" value="${comment.BOARD_COMMENT_KEY}">
                                             <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-                                            <button type="submit" class="btn btn-warning btn-sm">수정</button>
+                                            <button type="submit" class="btn btn-sm">수정</button>
                                         </form>
                                         <form action="${path}/board/deleteComment" method="post" class="d-inline">
                                             <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
                                             <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                            <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                                            <button type="submit" class="btn btn-sm">삭제</button>
                                         </form>
                                     </div>
                                 </c:if>
@@ -225,12 +238,12 @@
                                                 <form action="${path}/board/updateComment" method="post" class="d-inline">
                                                     <input type="hidden" name="BOARD_COMMENT_KEY" value="${reply.BOARD_COMMENT_KEY}">
                                                     <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-                                                    <button type="submit" class="btn btn-warning btn-sm">수정</button>
+                                                    <button type="submit" class="btn btn-sm">수정</button>
                                                 </form>
                                                 <form action="${path}/board/deleteComment" method="post" class="d-inline">
                                                     <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
                                                     <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                                                    <button type="submit" class="btn btn-sm">삭제</button>
                                                 </form>
                                             </div>
                                         </c:if>
@@ -247,7 +260,7 @@
                             <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
                             <input type="hidden" name="BOARD_COMMENT_LEVEL" value="0">
                             <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요" required>
-                            <button type="submit" class="btn btn-primary mt-2">작성</button>
+                            <button type="submit" class="btn btn-secondary mt-2">작성</button>
                         </form>
                     </div>
 
