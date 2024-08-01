@@ -87,13 +87,13 @@
 			}
 			.modal .modal_popup .close_btn {
 			  /*   display: block; */
-			    padding: 10px 20px;
-			    background-color: rgb(116, 0, 0);
+		/*	    padding: 10px 20px;
+		    	background-color: rgb(116, 0, 0);
 			    border: none;
 			    border-radius: 5px;
 			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
+			    transition: box-shadow 0.2s; */
 			}
 			.modal.on {
 			    display: block;
@@ -142,6 +142,32 @@
 	#pageBarList {
 	    margin-left: auto; /* 오른쪽으로 정렬 */
 	}
+	
+	</style>
+	<style>
+	#pagingtbody th{
+		font-weight: normal !important;
+	}
+	.downloadNoteBtn{
+		display: inline-block;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    text-align: center;
+	    width: 100px; /* 버튼의 너비를 설정 */
+	    white-space: nowrap; /* 텍스트가 줄 바꿈 없이 한 줄로 유지 */
+	    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	    text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+	    box-sizing: border-box;
+		margin-right: 10px;
+	}
+	
+	#downloadButtonBox{
+		
+	}	
 	
 	</style>
     <!-- CSS Files -->
@@ -267,20 +293,20 @@
                 <div class="card">
                   <div class="card-header">
 					<div class="noteSearchBar">
-						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 40%; ">
+						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 26%; ">
 							<select id="searchCheck" name="searchCheck" style="height: 34px; margin-right:10px;">
 						           <option value="name">이름으로 검색</option>
 						           <option value="title">제목으로 검색</option>
 													           
 							</select>
-					        <div class="input-group" style="height: 35px;">
+					        <div class="input-group"  style="height: 35px;">
 					          <div class="input-group-prepend" >
 					            <button type="button" class="btn btn-search pe-1" onclick="searchNoteKeyword();">
 					              <i class="fa fa-search search-icon"></i>
 					            </button>
 					          </div>
 							 
-					          <input
+					          <input 
 					            type="text"
 					            placeholder=""
 					            class="form-control"
@@ -338,7 +364,8 @@
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class="display table table-striped table-hover"
+                        class="table table-head-bg-primary mt-4"
+						style="margin-top: 0px!important;"
                       >
                         <thead>
                           <tr>
@@ -369,10 +396,10 @@
 
 									</c:otherwise>	
 								</c:choose>	
-							<p>
-       	  					<th>${d.memberName} ${d.jobName}<p>
-       	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-       	  					<th>${d.formattedPostMsgTime}<p>
+							</th>
+       	  					<th>${d.memberName} ${d.jobName}</th>
+       	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}</th>
+       	  					<th>${d.formattedPostMsgTime}</th>
        	  				</tr>
           		 	  </c:forEach>
           		 	
@@ -381,7 +408,7 @@
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
-	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      	  	<button class="btn btn-round btn-info" onclick="deleteSendGo();">삭제하기</button>
 	                      </div>
 	                      <div id="pageBarList">${pageBar}</div>
                       </div>
@@ -415,32 +442,32 @@
 										<span class="badge badge-info  badge-margin">이성록 사원</span>  -->
 										</div>								
 									  <ul class="dropdown-menu" style="width: 300px !important; height: 400px !important; overflow-y: auto;">
-												<div class="accordion" id="accordionPanelsStayOpenExample">
-														<c:forEach var="d" items="${organlist}" varStatus="status">
-														
-															<div class="accordion-item">
-															    <h2 class="accordion-header">
-															      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
-															     
-															      
-															        ${d.departmentName} 
-															      </button>
-															    </h2>
-												    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse">
-															      <div class="accordion-body" style='padding: 0!important;'>
-															         <div class="list-group" >
-														 				<c:forEach var="memberlist" items="${d.memberlist}">
-																		  <a href="javascript:memberselect(${memberlist.memberKey},'${memberlist.memberName}','${memberlist.jobName}')" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
-																		  
-														  				</c:forEach>
-																	</div>
-															      </div>
-															    </div>
+										<div class="accordion" id="accordionPanelsStayOpenExample">
+												<c:forEach var="d" items="${organlist}" varStatus="status">
+												
+													<div class="accordion-item">
+													    <h2 class="accordion-header">
+													      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
+													     
+													      
+													        ${d.departmentName} 
+													      </button>
+													    </h2>
+										    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse">
+													      <div class="accordion-body" style='padding: 0!important;'>
+													         <div class="list-group" >
+												 				<c:forEach var="memberlist" items="${d.memberlist}">
+																  <a href="javascript:memberselect(${memberlist.memberKey},'${memberlist.memberName}','${memberlist.jobName}')" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
+																  
+												  				</c:forEach>
 															</div>
-														
-														
-														</c:forEach>	
-													</div> 
+													      </div>
+													    </div>
+													</div>
+												
+												
+												</c:forEach>	
+											</div> 
 											
 									  </ul>
 									</div>
@@ -468,31 +495,8 @@
 			                          </div>
                     			   </div>		  
                     			   <div class="form-group">
-                    			   <div class="input-group-prepend" style="padding:0px;">
-										<button type="button" class="btn btn-outlime-primary" id="addFileButton" >
-				                		추가
-				                		</button>
-										<button type="button" class="btn btn-outlime-primary" id="delFileButton" >
-				                		삭제
-				                		</button>
-				                	</div>
-				                	<div class="form-group">
-				                	<form id="fileInputsContainer">
-				                	<div id="basicFileForm" class="input-group mb-3" style="padding:0px;">
-				                	 
-						                <div class="input-group-prepend" style="padding:0px;">
-						                	<span class="input-group-text1">첨부파일1</span>
-						                </div>
-						                <div class="custom-file">
-						               
-						                    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-						                
-						                </div>
-						                 
-						                
-						            </div>
-						            </form>
-						            </div>
+									
+					                     <input type="file" class="btn btn-black btn-border" name="upFile" id="upFile1" multiple >
                     			   </div>         	   
 								 <div class="form-group">
 							
@@ -505,10 +509,7 @@
 			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
+				         
 				           	  <div class="form-group">
 				           		   <h2>전체 쪽지</h2>
 				           	</div>   
@@ -520,6 +521,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleAll"
 			                              rows="1" cols="50"
+										  
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -534,33 +536,10 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group">
-                    			   		<div class="input-group-prepend" style="padding:0px;">
-					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFile2();">
-					                			추가
-					                		</button>
-					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFile2();">
-					                			삭제
-					                		</button>
-				                		</div>
-                    			   </div>
-                    			   <div class="form-group">
-				                	<form id="fileInputsContainer2">
-				                	<div id="basicFileForm2" class="input-group mb-3" style="padding:0px;">
-				                
-						                <div class="input-group-prepend" style="padding:0px;">
-						                	<span class="input-group-text2">첨부파일1</span>
-						                </div>
-						            	 <div class="custom-file">
-						               
-						                    <input type="file" class="custom-file-input" name="upFile2" id="upFile1" multiple >
-						                    
-						                </div>
-						                 
-						                
-						            </div>
-						            </form>
-						            </div>	           	   
+                    			
+                			   <div class="form-group">
+				                    <input type="file" class="btn btn-black btn-border" name="upFile2" id="upFile2" multiple >
+					            </div>	           	   
 								 <div class="form-group">
 								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
 								<button class="btn btn-primary btn-border close_btn" >닫기</button>
@@ -568,19 +547,21 @@
 				          </div>
 				    </div>
 			  </div>
+			  
+			  <!-- 쪽지 내용 모달-->
 			   <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
-				           	  
+				  
+							<div class="form-group">
+								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
+							</div>
+  	  
 				           	  <div class="form-group">
-				           	    <div class="namebox" >
-				           		  <!--  <h2>전체 쪽지</h2> -->
-				           		</div>
-				           	</div>   
+					           	    <div class="namebox" >
+					           		  <!--  <h2>전체 쪽지</h2> -->
+					           		</div>
+				           		</div>   
 				           		    <div class="form-group">
 			                          <div class="input-group">
 			                            <span class="input-group-text">제목</span>
@@ -589,6 +570,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleRecOne"
 			                              rows="1" cols="50"
+										  
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -603,19 +585,99 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group" id="downloadButtonBox">
-                    			   	
-                    			   </div>	           	   
-								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" >닫기</button>
-								</div>
+								   <div class="form-group">
+   	                    			   <div class="form-group" id="downloadButtonBox">
+   	                    			   	
+   	                    			   </div>	           	   
+   								  </div>		           	   
+								
 				          </div>
 				    </div>
 			  </div>
 			
 			<!-- 첨부파일 -->
 			 <script>
+				
+			/* 파일 갯수 제한 . 지금 쓰는 거*/
+							
+			 document.querySelector('input[name="upFile"]').addEventListener('change', function(event) {
+			     var files = event.target.files;
+			     var fileLimit = 5; // 파일 개수 제한
+			  
+			     if (files.length > fileLimit) {
+			       event.target.value = ''; // 선택된 파일을 초기화
+			      
+				   //== Class definition
+				      var SweetAlert2Demo = (function () {
+				        //== Demos
+				        var initDemos = function () {
+				          
+				            swal("최대 발송 파일 수를 초과하였습니다!", "파일 발송 개수는 5개 이하여야 합니다.", {
+				              icon: "error",
+				              buttons: {
+				                confirm: {
+				                  className: "btn btn-danger",
+				                },
+				              },
+				            });
+				          
+				        };
+				
+				        return {
+				          //== Init
+				          init: function () {
+				            initDemos();
+				          },
+				        };
+				      })();
+				
+				      //== Class Initialization
+				      jQuery(document).ready(function () {
+				        SweetAlert2Demo.init();
+				      });
+				   
+			     } 
+			   });
+			   
+			   document.querySelector('input[name="upFile2"]').addEventListener('change', function(event) {
+		   		     var files = event.target.files;
+		   		     var fileLimit = 5; // 파일 개수 제한
+		   		  
+		   		     if (files.length > fileLimit) {
+		   		       event.target.value = ''; // 선택된 파일을 초기화
+		   		      
+		   			   //== Class definition
+		   			      var SweetAlert2Demo = (function () {
+		   			        //== Demos
+		   			        var initDemos = function () {
+		   			          
+		   			            swal("최대 발송 파일 수를 초과하였습니다!", "파일 발송 개수는 5개 이하여야 합니다.", {
+		   			              icon: "error",
+		   			              buttons: {
+		   			                confirm: {
+		   			                  className: "btn btn-danger",
+		   			                },
+		   			              },
+		   			            });
+		   			          
+		   			        };
+		   			
+		   			        return {
+		   			          //== Init
+		   			          init: function () {
+		   			            initDemos();
+		   			          },
+		   			        };
+		   			      })();
+		   			
+		   			      //== Class Initialization
+		   			      jQuery(document).ready(function () {
+		   			        SweetAlert2Demo.init();
+		   			      });
+		   			   
+		   		     } 
+		   		   });
+				
 			 /* 개별발송 파일 추가 로직*/
 			 $(document).ready(function() {
 	 		     const addDelFunction = (function() {
@@ -702,6 +764,18 @@
 	
 	                // 'on' 클래스 추가
 	                modal[index].classList.remove('on');
+					
+					var namebox=document.getElementsByClassName("namebox");
+		      	 	document.getElementById('postMsgDetail').value='';
+		      		document.getElementById('postMsgTitle').value='';
+					document.getElementById('upFile1').value='';
+					
+					
+			    	namebox[0].innerHTML = '';
+					
+					document.getElementById('postMsgDetailAll').value='';
+		      		document.getElementById('postMsgTitleAll').value='';
+					document.getElementById('upFile2').value='';
 	            });
 	        });
           	
@@ -783,7 +857,7 @@
 								 var newElement=document.createElement("button");
 					                newElement.classList.add("btn");
 					                newElement.classList.add("btn-success");
-					                
+									newElement.classList.add("downloadNoteBtn");
 					               	newElement.textContent=files[i].postMessageFileOri;
 					                
 					               	newElement.onclick = function() {
@@ -991,6 +1065,7 @@
 	      		var namebox=document.getElementsByClassName("namebox");
 	      	 	document.getElementById('postMsgDetail').value='';
 	      		document.getElementById('postMsgTitle').value='';
+				document.getElementById(' ').value='';
 		    	namebox[0].innerHTML = '';
 		    }
           	
@@ -1039,8 +1114,11 @@
 		    		}
 		    	});
 		    	
+				
+				
 		    	document.getElementById('postMsgDetailAll').value='';
 	      		document.getElementById('postMsgTitleAll').value='';
+				document.querySelector('input[name="upfile2"]').value='';
 		    	 modal[1].classList.remove('on');
 		    }
             
@@ -1100,10 +1178,10 @@
 
 										<th>
 											<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
-										<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 				                    </tr>`;
 				                  	  tbody.append(row);
 									  
@@ -1112,10 +1190,10 @@
 				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 										<th>
 											<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
-										<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 										</tr>`;
 					                  	  tbody.append(row);	
 						  	}
@@ -1159,10 +1237,10 @@
 
 														<th>
 															<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
-														<p>
-														<th>\${item.memberName} \${item.jobName}<p>
-								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
+														</th>
+														<th>\${item.memberName} \${item.jobName}</th>
+								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+								                        <th>\${item.formattedPostMsgTime}</th>
 								                  		</tr>`;
 								                    	tbody.append(row);
 															  
@@ -1171,10 +1249,10 @@
 								                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 														<th>
 															<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
-														<p>
-														<th>\${item.memberName} \${item.jobName}<p>
-								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
+														</th>
+														<th>\${item.memberName} \${item.jobName}</th>
+								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+								                        <th>\${item.formattedPostMsgTime}</th>
 														</tr>`;
 									                  	tbody.append(row);	
 												  	}
