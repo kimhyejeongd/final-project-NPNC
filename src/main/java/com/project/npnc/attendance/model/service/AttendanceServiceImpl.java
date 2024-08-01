@@ -81,7 +81,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		//승인된 오늘날짜의 휴가시작날짜
 		List<VacationApply> vApply=attendanceDao.selectVacationApplyApprove(session);
-		
+		System.out.println("들어옴?"+vApply);
 
 		result.forEach((key, value) -> {
 			
@@ -89,30 +89,36 @@ public class AttendanceServiceImpl implements AttendanceService {
 		    if (value) {
 			    	Attendance at=selectAttendanceByMemberKey(key);
 			    	a.setMember(AdminMember.builder().memberKey(key).build());
+
+			    	//휴가승인이있는경우
 			    	
-			    	vApply.forEach(v->{
-			    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
-			   	     	Timestamp start = v.getVacationStartDate();
-			   	     	Timestamp end = v.getVacationEndDate();
-			   	     
-		    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
-		    	        System.out.println("Is date in range? " + isInRange);
-			    
-			    		
-//		    	        if(v.getVacationMemberKey()==key) {
-		    	        if(isInRange) {
-							if(v.getVacationKey()==1) {
-								a.setAttendanceState("휴가");
-							}else if(v.getVacationKey()==2) {
-								a.setAttendanceState("병가");
-							}else if(v.getVacationKey()==3) {
-								a.setAttendanceState("공가");
-							}else if(v.getVacationKey()==4) {
-								a.setAttendanceState("오전반차");
-							}else if(v.getVacationKey()==5) {
-								a.setAttendanceState("오후반차");
+				    	vApply.forEach(v->{
+				    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+				   	     	Timestamp start = v.getVacationStartDate();
+				   	     	Timestamp end = v.getVacationEndDate();
+				   	     
+			    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+			    	        System.out.println("Is date in range? " + isInRange);
+				    
+				    		System.out.println(isInRange&&v.getVacationMemberKey()==key);
+	//		    	        if(v.getVacationMemberKey()==key) {
+			    	        if(isInRange&&v.getVacationMemberKey()==key) {
+								if(v.getVacationKey()==1) {
+									a.setAttendanceState("휴가");
+								}else if(v.getVacationKey()==2) {
+									a.setAttendanceState("병가");
+								}else if(v.getVacationKey()==3) {
+									a.setAttendanceState("공가");
+								}else if(v.getVacationKey()==4) {
+									a.setAttendanceState("오전반차");
+								}else if(v.getVacationKey()==5) {
+									a.setAttendanceState("오후반차");
+								}
 							}
-						}else if(at.getAttendanceEnd()==null) {
+			    	});
+			    
+			    	if(a.getAttendanceState()==null) {
+				    	if(at.getAttendanceEnd()==null) {
 				    		a.setAttendanceState("결근");
 				    	}else {
 					    	try {	
@@ -143,43 +149,43 @@ public class AttendanceServiceImpl implements AttendanceService {
 					    		e.printStackTrace();
 					    	}
 				    	}
-			    	
-		    	});
-			    	
+			    	}
+
 			    	attendanceDao.updateAttendanceState(session, a);
-		    	
+			    	
 		    }else {
-		    	vApply.forEach(v->{
-		    		
-		    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
-		   	     	Timestamp start = v.getVacationStartDate();
-		   	     	Timestamp end = v.getVacationEndDate();
-		   	     
-	    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
-	    	        System.out.println("Is date in range? " + isInRange);
-		    		
-		    		String status="";
-		    		if(isInRange) {
-//					if(v.getVacationMemberKey()==key) {
-						if(v.getVacationKey()==1) {
-							status="휴가";
-						}else if(v.getVacationKey()==2) {
-							status="병가";
-						}else if(v.getVacationKey()==3) {
-							status="공가";
-						}else if(v.getVacationKey()==4) {
-							status="오전반차";
-						}else if(v.getVacationKey()==5) {
-							status="오후반차";
-						}
-						attendanceDao.insertAttendanceVacation(session,key,status);
-					}else {
-						attendanceDao.insertAbsent(session, key);						
-					}
-				});
 		    	
-//		    	insertAbsent(key);
-		    }
+		    		attendanceDao.insertAbsent(session, key); 	
+		    		a.setMember(AdminMember.builder().memberKey(key).build());
+		    		
+		    		vApply.forEach(v->{
+			    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+			   	     	Timestamp start = v.getVacationStartDate();
+			   	     	Timestamp end = v.getVacationEndDate();
+			   	     
+		    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+		    	        System.out.println("Is date in range? " + isInRange);
+			    		
+			    		if(isInRange&&v.getVacationMemberKey()==key) {
+			    			if(v.getVacationKey()==1) {
+								a.setAttendanceState("휴가");
+							}else if(v.getVacationKey()==2) {
+								a.setAttendanceState("병가");
+							}else if(v.getVacationKey()==3) {
+								a.setAttendanceState("공가");
+							}else if(v.getVacationKey()==4) {
+								a.setAttendanceState("오전반차");
+							}else if(v.getVacationKey()==5) {
+								a.setAttendanceState("오후반차");
+							}
+			    			
+			    			attendanceDao.updateAttendanceState(session, a);
+						}
+//			    		attendanceDao.insertAttendanceVacation(session,key,status);
+					});
+ 						    		
+		    	}
+		    
 		    	 
 		});
 
