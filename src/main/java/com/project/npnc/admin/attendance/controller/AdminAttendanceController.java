@@ -78,10 +78,10 @@ public class AdminAttendanceController {
 		int result=service.updateAttendanceEdit(attendanceEdit);
 		String msg,loc;
 		if(result>0) {
-			msg="반려성공";
+			msg="성공";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}else {
-			msg="반려실패";
+			msg="실패";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}
 		m.addAttribute("msg",msg);
@@ -96,10 +96,10 @@ public class AdminAttendanceController {
 		int result=service.updateAttendance(attendanceEdit);
 		String msg,loc;
 		if(result>0) {
-			msg="승인성공";
+			msg="성공";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}else {
-			msg="승인실패";
+			msg="실패";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}
 		m.addAttribute("msg",msg);

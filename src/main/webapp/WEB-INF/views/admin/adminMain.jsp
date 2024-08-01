@@ -13,14 +13,15 @@
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">	
 			<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
-			
-			<div id="attendanceEndResult" style="margin-top:20px;">
-				<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};">
-					퇴근
-				</button>
-
+			<br><br><br><br>
+			<div class="col-md-12">
+		    	<div class="card">
+		        	<div class="card-body">
+		
+						<h1>관리자 페이지입니다...</h1>
+					</div>
+				</div>
 			</div>
-			
 
 			
 			

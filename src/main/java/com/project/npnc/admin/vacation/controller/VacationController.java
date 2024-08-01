@@ -36,10 +36,10 @@ public class VacationController {
 		int result=service.insertVacation(vacation);
 		String msg,loc;
 		if(result>0) {
-			msg="등록성공";
+			msg="성공";
 			loc="/admin/vacation/selectVacationAll";
 		}else {
-			msg="등록실패";
+			msg="실패";
 			loc="/admin/vacation/selectVacationAll";
 		}
 		m.addAttribute("msg",msg);
@@ -61,10 +61,10 @@ public class VacationController {
 		int result=service.updateVacation(v);
 		String msg,loc;
 		if(result>0) {
-			msg="수정성공";
+			msg="성공";
 			loc="/admin/vacation/selectVacationAll";
 		}else {
-			msg="수정실패";
+			msg="실패";
 			loc="/admin/vacation/selectVacationAll";
 		}
 		m.addAttribute("msg",msg);
@@ -73,19 +73,20 @@ public class VacationController {
 	}
 	
 	@PostMapping("/deleteVacation")
-	public String deleteVacation(int vacationKey,Model m) {
-		int result=service.deleteVacation(vacationKey);
-		String msg,loc;
-		if(result>0) {
-			msg="삭제성공";
-			loc="/admin/vacation/selectVacationAll";
-		}else {
-			msg="삭제실패";
-			loc="/admin/vacation/selectVacationAll";
+	public ResponseEntity<Map<String,Object>> deleteVacation(int no) {
+		Map<String,Object> response = new HashMap<>();
+		int result=0;
+		try {
+			result = service.deleteVacation(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "삭제에 실패했습니다.");
+			return ResponseEntity.ok(response);
 		}
-		m.addAttribute("msg",msg);
-		m.addAttribute("loc",loc);
-		return "common/msg";
+		response.put("status", "success");
+		response.put("message", "삭제 완료");
+		return ResponseEntity.ok(response);
 		
 	}
 	
