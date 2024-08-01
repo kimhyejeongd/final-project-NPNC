@@ -17,7 +17,37 @@
 <title>친구 목록</title>
 <style>
 
+.room-icon {
+    display: flex;
+    flex-wrap: wrap;
+    width: 42px;
+    height: 42px;
+    gap: 5px;
+    background-color: #ededed;
+    border-radius: 9px;
+    margin-right: 18px;
+    justify-content: center;
+    align-content: flex-start;
+}
 
+.profile-img {
+    width: 45%; /* 50%로 하면 여백 없이 채워지므로 적절히 조정 */
+    height: 45%; /* 50%로 하면 여백 없이 채워지므로 적절히 조정 */
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.more-profiles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    width: 45%;
+    height: 45%;
+}
 #conversation {
 	flex: 1;
 	border: 1px solid #ccc;
@@ -42,13 +72,14 @@
 	font-size: 0.8em;
 	font-weight: bold;
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	    top: 25%;
+    right: 15px;
 	display: none; /* ê¸°ë³¸ì ì¼ë¡ ì¨ê¹ ì²ë¦¬ */
 }
 
 .room-item {
 	position: relative;
+	
 }
 /* ê¸°ë³¸ ì¤íì¼ */
 .roomForm {
@@ -134,9 +165,10 @@
 	padding: 15px;
 	border-bottom: 1px solid #eee;
 	transition: background-color 0.3s;
+
 }
 
-.friend-item img, .room-item img {
+.friend-item img{
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
@@ -144,25 +176,38 @@
 	object-fit: cover;
 }
 
+.room-item img {
+        margin-top: 9%;
+    width: 0.9vw;
+    height: 1.5vh;
+    border-radius: 49%;
+    margin-right: 1%;
+    object-fit: cover;
+}
+
+
 .friend-item .friend-info, .room-item .room-info {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+		      	justify-content: center;
+	
 }
 
 .friend-item .friend-name, .room-item {
-	font-weight: bold;
 	font-size: 1.1em;
 	color: #333;
 	margin-bottom: 5px;
 	display: block;
+	    font-size: 0.9em;
 }
 
 .room-title {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+    padding-right: 20px;
 }
 
 .friend-item .friend-status, .room-item .recent-message {
@@ -383,38 +428,38 @@ body{
     
     
     $(document).ready(function() {
-    var myChatRoomList = ${mychatRoomListJ}; 
+    var myChatRoomList = JSON.parse('${mychatRoomListJ}'); 
 
         var selectedMembers = [];
-        var myRoomMemberList = '${myRoomMemberList}';
+        var myRoomMemberList = JSON.parse('${myRoomMemberListJ}');
+        console.log("1fhnsdlfdanklsnmdklnklndlk");
+        console.log(myChatRoomList);
+        console.log(myRoomMemberList);
 
-
-        function getRoomMemberImages(members) {
+        function getRoomMemberImages(members,thisEle) {
             var memberImagesHtml = '';
             var memberCount = members.length;
-            var profileImg = null;
-            const path = '${path}/resources/assets/img/'+profileImg;
+            
 
-            if (memberCount === 1) {
-                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="single-profile">';
-            } else if (memberCount === 2) {
-                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
-            } else if (memberCount === 3) {
-                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
-            } else if (memberCount === 4) {
-                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+            if (memberCount === 2) {
+                for (var i = 0; i < memberCount; i++) {
+                    if (members[i].memberKey !== ${loginMember.memberKey}) {  // 현재 사용자가 아닌 경우만 추가
+                        memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진" style="width: 3vw;height: 5vh; margin-top: 0; margin-right: 6%;">';
+                        thisEle.find('.roomForm').prepend(memberImagesHtml);
+                        thisEle.find('.room-icon').remove();
+                    }
+                }
+            } else if  (memberCount <= 4) {
+                for (var i = 0; i < memberCount; i++) {
+                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    thisEle.find('.room-icon').html(memberImagesHtml);
+                }
             } else {
-                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
-                memberImagesHtml += '<span class="more-profiles">+' + (memberCount - 4) + '</span>';
+                for (var i = 0; i < 4; i++) {
+                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    thisEle.find('.room-icon').html(memberImagesHtml);
+
+                }
             }
 
             return memberImagesHtml;
@@ -423,9 +468,12 @@ body{
         $('.room-item').each(function() {
             var roomId = $(this).find('input[name="roomId"]').val();
             var members = myRoomMemberList[roomId];
-            var roomIconHtml = getRoomMemberImages(members);
-            $(this).find('.room-icon').html(roomIconHtml);
+            var thisEle = $(this);
+            var roomIconHtml = getRoomMemberImages(members,thisEle);
+            
         });
+
+
 
         // 모달 열기
         $('#newChatButton').click(function() {
