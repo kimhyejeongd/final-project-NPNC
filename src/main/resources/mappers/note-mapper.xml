@@ -68,7 +68,9 @@
 	</insert>
 	
 	<insert id="noteReciver" parameterType="map">
-	INSERT INTO POST_MESSAGE_RECEIVER VALUES(SEQ_PMR.NEXTVAL,#{reMemberKey} ,#{noteMsgKey}, DEFAULT)	
+	INSERT INTO POST_MESSAGE_RECEIVER VALUES(SEQ_PMR.NEXTVAL,#{reMemberKey} ,#{noteMsgKey}, DEFAULT, DEFAULT, DEFAULT)	
+	
+	
 	</insert>
 	
 	
