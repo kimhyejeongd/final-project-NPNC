@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
 <sec:authentication var="loginMember" property="principal"/>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -120,16 +119,7 @@
                                 <div class="profile-card">
                                     <!-- Profile Image -->
                                     <div class="profile-image">
-                                      <img id="profileImage" src="${pageContext.request.contextPath}/member/profileImage/${member.memberId}" alt="Profile Image" />
-								      <img src="${path}/resources/upload/${memv.BOARD_FILE_POST}" alt="게시물 이미지"/>
-                                   	     <!-- 프로필 사진 수정 버튼 -->
-                                        <button id="editProfileImageButton" class="btn btn-sm btn-primary" style="margin-top: 10px;">프로필 사진 수정</button>
-                                        <!-- 프로필 이미지 업로드 폼, 초기에는 숨김 -->
-                                        <div id="profileImageForm" style="display: none; margin-top: 10px;">
-                                            <label for="profileImageUpload">프로필 이미지 변경</label>
-                                            <input type="file" class="form-control" id="profileImageUpload">
-                                            <button class="btn btn-primary btn-custom" id="uploadProfileImageButton">이미지 업로드</button>
-                                        </div>
+                                          <img id="profileImage" src="${pageContext.request.contextPath}/member/profileImage/${member.memberId}" alt="Profile Image" />
                                     </div>
                                     <!-- Profile Information -->
                                     <div class="profile-info">
@@ -210,19 +200,26 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <p>이메일 인증이 필요합니다.</p>
                     <div class="form-group">
-                        <label for="currentPassword">현재 비밀번호</label>
-                        <input type="password" class="form-control" id="currentPassword" placeholder="현재 비밀번호">
+                        <label for="verificationEmail">이메일 입력</label>
+                        <input type="email" class="form-control" id="verificationEmail" placeholder="이메일 입력">
                     </div>
-                    <div class="form-group">
-                        <label for="newPassword">새 비밀번호</label>
-                        <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호">
+                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
+                    <div id="emailVerificationForm" class="mt-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="emailVerificationCode">인증 코드 입력</label>
+                            <input type="text" class="form-control" id="emailVerificationCode" placeholder="인증 코드 입력">
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="verifyCodeButton">인증 코드 확인</button>
                     </div>
-                    <div class="form-group">
-                        <label for="confirmNewPassword">새 비밀번호 확인</label>
-                        <input type="password" class="form-control" id="confirmNewPassword" placeholder="새 비밀번호 확인">
+                    <div id="passwordChangeForm" class="mt-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="newPassword">새 비밀번호</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="saveNewPasswordButton">비밀번호 저장</button>
                     </div>
-                    <button type="button" class="btn btn-primary" id="changePasswordButton">비밀번호 변경</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -230,60 +227,67 @@
             </div>
         </div>
     </div>
+	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
-    <!-- JavaScript Files -->
-    <script src="${path}/resources/assets/js/core/jquery.3.2.1.min.js"></script>
+    <!-- Core JS Files -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-    <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/moment/moment.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/fullcalendar/fullcalendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Plugin JS Files -->
     <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
+    <script src="${path}/resources/assets/js/setting-demo.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script>
 
+    <!-- Page Specific JS -->
     <script>
-      document.getElementById('editProfileImageButton').addEventListener('click', function() {
-        var profileImageForm = document.getElementById('profileImageForm');
-        if (profileImageForm.style.display === 'none' || profileImageForm.style.display === '') {
-            profileImageForm.style.display = 'block';
-        } else {
-            profileImageForm.style.display = 'none';
-        }
-      });
+        $(document).ready(function() {
+            $('#searchAddressButton').click(function() {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        $('#postcode').val(data.zonecode);
+                        $('#roadAddress').val(data.roadAddress);
+                        $('#jibunAddress').val(data.jibunAddress);
+                    }
+                }).open();
+            });
 
-      document.getElementById('uploadProfileImageButton').addEventListener('click', function() {
-        var formData = new FormData();
-        var fileInput = document.getElementById('profileImageUpload');
-        var file = fileInput.files[0];
+            $('#saveAddressButton').click(function() {
+                const newAddress = $('#roadAddress').val();
+                $('#memberAddressText').text(newAddress);
+                $('#addressModal').modal('hide');
+                $('#saveChangesButton').show();
+            });
 
-        if (file) {
-            formData.append('profileImage', file);
+            $('#sendEmailVerificationButton').click(function() {
+                // 이메일 전송 로직
+                $('#emailVerificationForm').show();
+            });
 
-            fetch('${path}/member/updateProfileImage', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // 프로필 이미지 업데이트
-                    document.getElementById('profileImage').src = '${path}/upload/' + data.fileName;
-                    
-                    // 폼 숨기기
-                    document.getElementById('profileImageForm').style.display = 'none';
-                } else {
-                    alert('이미지 업로드에 실패했습니다.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        } else {
-            alert('파일을 선택하세요.');
-        }
-      });
+            $('#verifyCodeButton').click(function() {
+                // 인증 코드 확인 로직
+                $('#passwordChangeForm').show();
+            });
+
+            $('#saveNewPasswordButton').click(function() {
+                // 비밀번호 저장 로직
+            });
+
+            $('#saveChangesButton').click(function() {
+                // 변경 사항 저장 로직
+            });
+        });
     </script>
 </body>
 </html>
