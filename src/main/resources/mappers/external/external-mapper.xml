@@ -15,7 +15,9 @@
     </resultMap>
 
     <select id="getAllContacts" resultMap="contactResultMap">
-        SELECT * FROM AB_EXTERNAL WHERE AB_EXTERNAL_DELETE = 'N'
+        SELECT * FROM AB_EXTERNAL
+        WHERE AB_EXTERNAL_DELETE = 'N'
+        ORDER BY CASE WHEN AB_EXTERNAL_BOOKMARK = 'Y' THEN 0 ELSE 1 END, AB_EXTERNAL_NAME
     </select>
 
     <select id="getContactById" parameterType="int" resultMap="contactResultMap">
