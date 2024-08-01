@@ -253,9 +253,28 @@ public class AttendanceDaoImpl implements AttendanceDao {
 	//overtime
 	
 	@Override
-	public List<OvertimeApply> selectoverworkByMemberKey(SqlSession session, int memberKey) {
+	public List<OvertimeApply> selectoverworkByMemberKey(SqlSession session, int memberKey,Map<String,Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectoverworkByMemberKey",memberKey,rb);
+	}
+
+	@Override
+	public int selectoverworkByMemberKeyCount(SqlSession session, int memberKey) {
 		
-		return session.selectList("attendance.selectoverworkByMemberKey",memberKey);
+		return session.selectOne("attendance.selectoverworkByMemberKeyCount",memberKey);
+	}
+
+	@Override
+	public List<OvertimeApply> searchoverworkByMemberKey(SqlSession session, Map<String, Object> searchMap,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchoverworkByMemberKey",searchMap,rb);
+	}
+
+	@Override
+	public int searchoverworkByMemberKeyCount(SqlSession session, Map<String, Object> searchMap) {
+		
+		return session.selectOne("attendance.searchoverworkByMemberKeyCount",searchMap);
 	}
 
 

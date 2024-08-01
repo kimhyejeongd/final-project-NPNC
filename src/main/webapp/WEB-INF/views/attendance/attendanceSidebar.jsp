@@ -97,13 +97,8 @@
                 <div class="collapse" id="overwork">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="${path }/attendance/selectAttendanceAll">
-                        <span class="sub-item">초과근무현황</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/attendance/selectAttendanceEditById">
-                        <span class="sub-item">초과근무신청목록</span>
+                      <a href="${path }/overwork/selectoverworkByMemberKey">
+                        <span class="sub-item">초과근무신청현황</span>
                       </a>
                     </li>
                   </ul>

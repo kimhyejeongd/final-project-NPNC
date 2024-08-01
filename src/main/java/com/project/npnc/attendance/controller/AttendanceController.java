@@ -304,7 +304,6 @@ public class AttendanceController{
 			Model m
 			) {
 
-	
 		if(!searchEndDate.equals("")) {	
 			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
 			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);

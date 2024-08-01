@@ -54,7 +54,7 @@
             <ul class="nav nav-secondary">
               <li class="nav-item">
                 <a
-                  href="${path }/"
+                  href="${path }/admin/adminMain"
                 >
                   <i class="fas fa-home"></i><p>관리자페이지 Home</p>
                 </a>

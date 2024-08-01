@@ -290,7 +290,7 @@
 		                                class="selectgroup-input"
 										<c:if test="${member.accessKey == 2}">checked</c:if>
 		                              />
-		                              <span class="selectgroup-button">사원</span>
+		                              <span class="selectgroup-button">경영</span>
 		                            </label>
 		                            <label class="selectgroup-item">
 		                              <input
@@ -301,6 +301,16 @@
 										<c:if test="${member.accessKey == 3}">checked</c:if>
 		                              />
 		                              <span class="selectgroup-button">인사</span>
+		                            </label>
+		                            <label class="selectgroup-item">
+		                              <input
+		                                type="checkbox"
+		                                name="accessKey"
+		                                value="3"
+		                                class="selectgroup-input"
+										<c:if test="${member.accessKey == 4}">checked</c:if>
+		                              />
+		                              <span class="selectgroup-button">사원</span>
 		                            </label>
 		                          </div>
 		                        </div>

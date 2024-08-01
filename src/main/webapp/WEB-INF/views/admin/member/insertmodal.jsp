@@ -268,7 +268,7 @@
                                 class="selectgroup-input"
 								
                               />
-                              <span class="selectgroup-button">사원</span>
+                              <span class="selectgroup-button">경영</span>
                             </label>
                             <label class="selectgroup-item">
                               <input
@@ -279,6 +279,16 @@
 								
                               />
                               <span class="selectgroup-button">인사</span>
+                            </label>
+                         	<label class="selectgroup-item">
+                              <input
+                                type="checkbox"
+                                name="accessKey"
+                                value="4"
+                                class="selectgroup-input"
+								
+                              />
+                              <span class="selectgroup-button">사원</span>
                             </label>
                           </div>
                         </div>

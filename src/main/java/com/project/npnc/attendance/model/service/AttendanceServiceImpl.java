@@ -405,12 +405,30 @@ public class AttendanceServiceImpl implements AttendanceService {
 	//overtime
 	
 	@Override
-	public List<OvertimeApply> selectoverworkByMemberKey(int memberKey) {
+	public List<OvertimeApply> selectoverworkByMemberKey(int memberKey,Map<String,Integer> page) {
 		
-		return attendanceDao.selectoverworkByMemberKey(session, memberKey);
+		return attendanceDao.selectoverworkByMemberKey(session, memberKey,page);
 	}
 
+	@Override
+	public int selectoverworkByMemberKeyCount(int memberKey) {
+		
+		return attendanceDao.selectoverworkByMemberKeyCount(session, memberKey);
+	}
 
+	@Override
+	public List<OvertimeApply> searchoverworkByMemberKey(Map<String, Object> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchoverworkByMemberKey(session, searchMap, page);
+	}
+
+	@Override
+	public int searchoverworkByMemberKeyCount(Map<String, Object> searchMap) {
+		
+		return attendanceDao.searchoverworkByMemberKeyCount(session, searchMap);
+	}
+
+	
 
 
 

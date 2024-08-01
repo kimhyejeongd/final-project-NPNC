@@ -556,6 +556,7 @@
 	
 	
 	<!-- overtimework -->
+	
 	<select id="selectoverworkByMemberKey" parameterType="_int" resultMap="overtimeworkMap">
 		SELECT 
 		OVERTIME_KEY,
@@ -571,9 +572,46 @@
 		OVERTIME_UPDATE_DATE
 		FROM OVERTIMEWORK
 		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		ORDER BY OVERTIME_APPLY_DATE DESC
 	</select>
 	
+	<select id="selectoverworkByMemberKeyCount" parameterType="_int" resultType="_int">
+		SELECT 
+		COUNT(OVERTIME_KEY)
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+	</select>
 	
+	<select id="searchoverworkByMemberKey" parameterType="map" resultMap="overtimeworkMap">
+		SELECT 
+		OVERTIME_KEY,
+		ER_DOC_SERIAL_KEY, 
+		OVERTIME_APPLY_DATE, 
+		OVERTIME_DATE, 
+		OVERTIME_REASON, 
+		OVERTIME_STATUS, 
+		OVERTIME_START_TIME, 
+		OVERTIME_END_TIME, 
+		OVERTIME_MEMBER_KEY, 
+		OVERTIME_CATEGORY, 
+		OVERTIME_UPDATE_DATE
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		<if test="searchType != null and searchType !='' ">
+			AND OVERTIME_STATUS=#{searchType}
+		</if>
+		ORDER BY OVERTIME_APPLY_DATE DESC
+	</select>
+	
+		<select id="searchoverworkByMemberKeyCount" parameterType="map" resultType="_int">
+		SELECT 
+		COUNT(OVERTIME_KEY)
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		<if test="searchType != null and searchType !='' ">
+			AND OVERTIME_STATUS=#{searchType}
+		</if>
+	</select>
 	
 	
 </mapper>

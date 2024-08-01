@@ -67,7 +67,10 @@ public interface AttendanceDao {
 	int insertAttendanceVacation(SqlSession session,int memberKey,String status);
 	
 	//overtime
-	List<OvertimeApply> selectoverworkByMemberKey(SqlSession session,int memberKey);
+	List<OvertimeApply> selectoverworkByMemberKey(SqlSession session,int memberKey,Map<String,Integer> page);
+	int selectoverworkByMemberKeyCount(SqlSession session,int memberKey);
 	
+	List<OvertimeApply> searchoverworkByMemberKey(SqlSession session,Map<String,Object> searchMap, Map<String,Integer> page);
+	int searchoverworkByMemberKeyCount(SqlSession session,Map<String,Object> searchMap);
 	
 }
