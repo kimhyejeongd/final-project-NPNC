@@ -146,44 +146,41 @@
     </div>
 
     <!-- 수정 모달 -->
-    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editContactModalLabel">외부 주소록 수정</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="editContactForm" action="${path}/external/edit" method="post">
-                    <input type="hidden" name="_method" value="post" />
-                    <input type="hidden" id="contactKey" name="AB_EXTERNAL_KEY" />
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="name">이름</label>
-                            <input type="text" id="name" name="AB_EXTERNAL_NAME" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tell">전화번호</label>
-                            <input type="text" id="tell" name="AB_EXTERNAL_TELL" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">이메일</label>
-                            <input type="email" id="email" name="AB_EXTERNAL_EMAIL" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="company">회사명</label>
-                            <input type="text" id="company" name="AB_EXTERNAL_COMPANY" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button type="submit" class="btn btn-primary">수정 완료</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    </div>
-
+	  <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editContactModalLabel">외부 주소록 수정</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+				<form id="editContactForm" action="${path}/external/edit" method="post">
+				    <input type="hidden" id="contactKey" name="AB_EXTERNAL_KEY" />
+				    <div class="modal-body">
+				        <div class="form-group">
+				            <label for="name">이름</label>
+				            <input type="text" id="name" name="AB_EXTERNAL_NAME" class="form-control" required>
+				        </div>
+				        <div class="form-group">
+				            <label for="tell">전화번호</label>
+				            <input type="text" id="tell" name="AB_EXTERNAL_TELL" class="form-control" required>
+				        </div>
+				        <div class="form-group">
+				            <label for="email">이메일</label>
+				            <input type="email" id="email" name="AB_EXTERNAL_EMAIL" class="form-control" required>
+				        </div>
+				        <div class="form-group">
+				            <label for="company">회사명</label>
+				            <input type="text" id="company" name="AB_EXTERNAL_COMPANY" class="form-control" required>
+				        </div>
+				    </div>
+				    <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				        <button type="submit" class="btn btn-primary">수정 완료</button>
+				    </div>
+				</form>
+	        </div>
+	    </div>
+	</div>
     <!-- Bootstrap JS and dependencies -->
     <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
