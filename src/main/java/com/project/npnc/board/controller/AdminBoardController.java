@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
+import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
 
 @Controller
@@ -82,6 +83,8 @@ public class AdminBoardController {
         model.addAttribute("boardDto", board);
         model.addAttribute("comments", comments);
         model.addAttribute("commentRepliesMap", commentRepliesMap);
+        List<BoardFileDto> fileList = boardService.getFilesByBoardId(boardKey);
+        model.addAttribute("fileList", fileList);
 
         return "board/adminBoardDetail"; // 상세 페이지 JSP
     }

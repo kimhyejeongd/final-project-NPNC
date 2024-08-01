@@ -166,12 +166,12 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">${board.BOARD_TITLE}</h4>
+                            <h4 class="card-title">${boardDto.BOARD_TITLE}</h4>
                         </div>
                         <div class="card-body">
-                            <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
-                            <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
-                            <p>${board.BOARD_DETAIL}</p>
+                            <p><strong>작성자:</strong> ${boardDto.MEMBER_KEY}</p>
+                            <p><strong>작성일:</strong> <fmt:formatDate value="${boardDto.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p>${boardDto.BOARD_DETAIL}</p>
                             <c:forEach var="file" items="${fileList}">
                                 <c:if test="${not empty file.BOARD_FILE_ORI}">
                                     <div class="image-container">
@@ -182,7 +182,6 @@
                         </div>
                     </div>
 
-                   
                     <!-- 댓글 목록 -->
                     <div class="comments mt-4">
                         <c:forEach var="comment" items="${comments}">
@@ -196,59 +195,62 @@
                                 <!-- 댓글 수정 및 삭제 버튼 (작성자만 표시) -->
                                 <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <div class="comment-actions">
-                                        <form action="${path}/board/deleteComment" method="post" class="d-inline">
-                                            <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
-                                            <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                            <button type="submit" class="btn btn-sm">삭제</button>
+                                        <form action="${path}/admin/board/deleteComment/${comment.BOARD_COMMENT_KEY}" method="post" class="d-inline">
+                                            <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                            <button type="submit">삭제</button>
                                         </form>
                                     </div>
                                 </c:if>
 
-                             
-
                                 <!-- 대댓글 목록 -->
                                 <c:forEach var="reply" items="${commentRepliesMap[comment.BOARD_COMMENT_KEY]}">
-                                    <div class="reply mt-3">
+                                    <div class="reply mt-2">
                                         <div class="meta">
                                             <span class="author">${reply.MEMBER_KEY}</span>
                                             <span class="date"><fmt:formatDate value="${reply.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                         </div>
                                         <p>${reply.BOARD_COMMENT_DETAIL}</p>
-                                        
-                                        <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
+
+                                        <!-- 대댓글 수정 및 삭제 버튼 (작성자만 표시) -->
                                         <c:if test="${reply.MEMBER_KEY == loginMember.memberKey}">
                                             <div class="reply-actions">
-                                                <form action="${path}/board/deleteComment" method="post" class="d-inline">
-                                                    <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
-                                                    <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                                    <button type="submit" class="btn btn-sm">삭제</button>
+                                                <form action="${path}/admin/board/deleteReply/${reply.BOARD_COMMENT_KEY}" method="post" class="d-inline">
+                                                    <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                                    <button type="submit">삭제</button>
                                                 </form>
                                             </div>
                                         </c:if>
                                     </div>
                                 </c:forEach>
+
                             </div>
                         </c:forEach>
                     </div>
+
+                    <!-- 댓글 작성 폼 -->
+                    <div class="comment-form mt-4">
+                        <form action="${path}/admin/board/createComment" method="post">
+                            <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                            <div class="form-group">
+                                <textarea name="commentDetail" class="form-control" rows="3" placeholder="댓글을 작성하세요"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">댓글 작성</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
-            <!-- End Main Panel -->
+
+            <!-- Footer -->
+            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
-        <!-- End Wrapper -->
     </div>
-    
+
     <!-- JS Files -->
     <script src="${path}/resources/assets/js/core/jquery.3.2.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
     <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jquery-ui.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jquery.dataTables.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/dataTables.bootstrap4.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/chart.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/bootstrap-notify.min.js"></script>
-    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="${path}/resources/assets/js/ready.min.js"></script>
 </body>
 </html>
