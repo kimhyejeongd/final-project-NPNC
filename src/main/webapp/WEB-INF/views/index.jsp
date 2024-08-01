@@ -291,7 +291,7 @@
 			            </tbody>
 			          </table>
 			          <!-- 결재 대기 문서 -->
-			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 65vw;">
+			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 100%;">
 				           <thead class="thead-light">
 				             <tr class="text-center">
 				             	<!-- <th><input type="checkbox"></th> -->
