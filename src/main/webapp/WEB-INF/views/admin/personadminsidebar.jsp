@@ -54,9 +54,9 @@
 		    <div class="sidebar-content">
 		        <ul class="nav nav-secondary">
 		            <li class="nav-item">
-		                <a href="${path}/admin/adminMain">
-		                    <i class="fas fa-home"></i><p>관리자페이지 Home</p>
-		                </a>
+		                
+		                    <i class="fas fa-home"></i><p>관리자페이지</p>
+		                
 		            </li>
 		            <!-- 토글리스트 -->
 		            <li class="nav-section">
@@ -106,7 +106,7 @@
 		                    </ul>
 		                </div>
 		            </li>
-		            <li class="nav-item">
+		            <%-- <li class="nav-item">
 		                <a data-bs-toggle="collapse" href="#forms">
 		                    <i class="fas fa-pen-square"></i>
 		                    <p>부서/직급</p>
@@ -126,8 +126,8 @@
 		                        </li>
 		                    </ul>
 		                </div>
-		            </li>
-		            <li class="nav-item">
+		            </li> --%>
+		            <%-- <li class="nav-item">
 		                <a data-bs-toggle="collapse" href="#vaca">
 		                    <i class="fas fa-pen-square"></i>
 		                    <p>휴가관리</p>
@@ -142,8 +142,8 @@
 		                        </li>
 		                    </ul>
 		                </div>
-		            </li>
-		            <li class="nav-item">
+		            </li> --%>
+		            <%-- <li class="nav-item">
 		                <a data-bs-toggle="collapse" href="#docManagement">
 		                    <i class="fas fa-pen-square"></i>
 		                    <p>전자결재 관리</p>
@@ -205,7 +205,7 @@
 		                        </li>
 		                    </ul>
 		                </div>
-		            </li>
+		            </li> --%>
 		        </ul>
 		    </div>
 		</div>

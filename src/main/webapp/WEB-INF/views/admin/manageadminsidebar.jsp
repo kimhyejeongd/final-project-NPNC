@@ -54,7 +54,7 @@
 		    <div class="sidebar-content">
 		        <ul class="nav nav-secondary">
 		            <li class="nav-item">
-		                <a href="${path}/admin/adminMain">
+		                <a href="${path}/">
 		                    <i class="fas fa-home"></i><p>관리자페이지 Home</p>
 		                </a>
 		            </li>

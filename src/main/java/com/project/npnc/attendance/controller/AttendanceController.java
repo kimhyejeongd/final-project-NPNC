@@ -151,9 +151,15 @@ public class AttendanceController{
 			}
 			
 			attendanceService.endAttendance(a);
+
+		
+			response.put("msg","성공");				
 			response.put("attendanceEnd",attendanceEndTime);
-			response.put("msg","퇴근완료");
+		}else {
+			System.out.println("결과 : ");
+			response.put("msg","실패");	
 		}
+
 		return ResponseEntity.ok(response);
 	}
 	

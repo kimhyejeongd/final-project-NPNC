@@ -249,7 +249,7 @@
  
                        <div class="form-group">
                           <label class="form-label">권한</label>
-                          <div class="selectgroup selectgroup-pills">
+                    <!--       <div class="selectgroup selectgroup-pills">
                             <label class="selectgroup-item">
                               <input
                                 type="checkbox"
@@ -290,7 +290,18 @@
                               />
                               <span class="selectgroup-button">사원</span>
                             </label>
-                          </div>
+                          </div> -->
+                           <select
+                            class="form-select"
+                            id="accessKey"
+                            name="accessKey"
+                          >
+                            <option value="4">사원</option>
+                            <option value="3">인사</option>
+                            <option value="2">경영</option>
+                            <option value="1">관리자</option>
+                            
+                          </select>
                         </div>
                           <button
 			                  type="submit"
