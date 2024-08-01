@@ -41,10 +41,10 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-
+    
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <style>
         .card-body {
@@ -110,6 +110,9 @@
         }
         .btn:hover {
             background-color: #5a6268;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -196,21 +199,17 @@
                     <div class="comments mt-4">
                         <h3>댓글</h3>
                         <c:forEach var="comment" items="${comments}">
-                            <div class="comment">
+                            <div class="comment" id="comment-${comment.BOARD_COMMENT_KEY}">
                                 <div class="meta">
                                     <span class="author">${comment.MEMBER_KEY}</span>
                                     <span class="date"><fmt:formatDate value="${comment.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                 </div>
-                                <p>${comment.BOARD_COMMENT_DETAIL}</p>
+                                <p class="comment-detail">${comment.BOARD_COMMENT_DETAIL}</p>
                                 
                                 <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
                                 <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <div class="comment-actions">
-                                        <form action="${path}/board/updateComment" method="post" class="d-inline">
-                                            <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
-                                            <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                            <button type="submit" class="btn btn-sm">수정</button>
-                                        </form>
+                                        <button class="btn btn-sm" onclick="editComment(${comment.BOARD_COMMENT_KEY})">수정</button>
                                         <form action="${path}/board/deleteComment" method="post" class="d-inline">
                                             <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
                                             <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
@@ -219,6 +218,17 @@
                                     </div>
                                 </c:if>
                                 
+                                <!-- 댓글 수정 폼 (기본적으로 숨김 처리) -->
+                                <div id="edit-comment-${comment.BOARD_COMMENT_KEY}" class="comment-form mt-2 hidden">
+                                    <form onsubmit="updateComment(event, ${comment.BOARD_COMMENT_KEY})">
+                                        <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
+                                        <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
+                                        <textarea class="form-control" name="BOARD_COMMENT_DETAIL" rows="3" required>${comment.BOARD_COMMENT_DETAIL}</textarea>
+                                        <button type="submit" class="btn btn-secondary btn-sm mt-2">수정 완료</button>
+                                        <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="cancelEditComment(${comment.BOARD_COMMENT_KEY})">취소</button>
+                                    </form>
+                                </div>
+
                                 <!-- 대댓글 작성 폼 -->
                                 <div class="reply-form mt-2">
                                     <form action="${path}/board/addReply" method="post">
@@ -232,21 +242,17 @@
 
                                 <!-- 대댓글 목록 -->
                                 <c:forEach var="reply" items="${commentRepliesMap[comment.BOARD_COMMENT_KEY]}">
-                                    <div class="reply mt-3">
+                                    <div class="reply" id="reply-${reply.BOARD_COMMENT_KEY}">
                                         <div class="meta">
                                             <span class="author">${reply.MEMBER_KEY}</span>
                                             <span class="date"><fmt:formatDate value="${reply.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                         </div>
-                                        <p>${reply.BOARD_COMMENT_DETAIL}</p>
-                                        
+                                        <p class="reply-detail">${reply.BOARD_COMMENT_DETAIL}</p>
+
                                         <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
                                         <c:if test="${reply.MEMBER_KEY == loginMember.memberKey}">
                                             <div class="reply-actions">
-                                                <form action="${path}/board/updateComment" method="post" class="d-inline">
-                                                    <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
-                                                    <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
-                                                    <button type="submit" class="btn btn-sm">수정</button>
-                                                </form>
+                                                <button class="btn btn-sm" onclick="editReply(${reply.BOARD_COMMENT_KEY})">수정</button>
                                                 <form action="${path}/board/deleteComment" method="post" class="d-inline">
                                                     <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
                                                     <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
@@ -254,24 +260,133 @@
                                                 </form>
                                             </div>
                                         </c:if>
+
+                                        <!-- 대댓글 수정 폼 (기본적으로 숨김 처리) -->
+                                        <div id="edit-reply-${reply.BOARD_COMMENT_KEY}" class="reply-form mt-2 hidden">
+                                            <form onsubmit="updateReply(event, ${reply.BOARD_COMMENT_KEY})">
+                                                <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
+                                                <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
+                                                <input type="hidden" name="BOARD_COMMENT_REF" value="${reply.BOARD_COMMENT_REF}">
+                                                <input type="hidden" name="BOARD_COMMENT_LEVEL" value="${reply.BOARD_COMMENT_LEVEL}">
+                                                <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" value="${reply.BOARD_COMMENT_DETAIL}" required>
+                                                <button type="submit" class="btn btn-secondary btn-sm mt-2">수정 완료</button>
+                                                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="cancelEditReply(${reply.BOARD_COMMENT_KEY})">취소</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </c:forEach>
                             </div>
                         </c:forEach>
                     </div>
- 
+                </div>
+            </div>
+
             <!-- Footer -->
             <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript Files -->
+    <script src="${path}/resources/assets/js/core/jquery.3.2.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="${path}/resources/assets/js/atlantis.min.js"></script>
 
-    <!-- Custom JS -->
-    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        function editComment(commentKey) {
+            var commentElement = document.getElementById('comment-' + commentKey);
+            var editForm = document.getElementById('edit-comment-' + commentKey);
+            var commentDetail = commentElement.querySelector('.comment-detail');
+
+            commentDetail.classList.add('hidden');
+            editForm.classList.remove('hidden');
+        }
+
+        function cancelEditComment(commentKey) {
+            var commentElement = document.getElementById('comment-' + commentKey);
+            var editForm = document.getElementById('edit-comment-' + commentKey);
+            var commentDetail = commentElement.querySelector('.comment-detail');
+
+            commentDetail.classList.remove('hidden');
+            editForm.classList.add('hidden');
+        }
+
+        function updateComment(event, commentKey) {
+            event.preventDefault();
+
+            var form = event.target;
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: '${path}/board/updateComment',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    var commentElement = document.getElementById('comment-' + commentKey);
+                    var editForm = document.getElementById('edit-comment-' + commentKey);
+                    var commentDetail = commentElement.querySelector('.comment-detail');
+                    
+                    commentDetail.innerText = formData.get('BOARD_COMMENT_DETAIL');
+                    commentDetail.classList.remove('hidden');
+                    editForm.classList.add('hidden');
+                    
+                    Swal.fire('성공!', '댓글이 수정되었습니다.', 'success');
+                },
+                error: function() {
+                    Swal.fire('실패!', '댓글 수정에 실패했습니다.', 'error');
+                }
+            });
+        }
+
+        function editReply(replyKey) {
+            var replyElement = document.getElementById('reply-' + replyKey);
+            var editForm = document.getElementById('edit-reply-' + replyKey);
+            var replyDetail = replyElement.querySelector('.reply-detail');
+
+            replyDetail.classList.add('hidden');
+            editForm.classList.remove('hidden');
+        }
+
+        function cancelEditReply(replyKey) {
+            var replyElement = document.getElementById('reply-' + replyKey);
+            var editForm = document.getElementById('edit-reply-' + replyKey);
+            var replyDetail = replyElement.querySelector('.reply-detail');
+
+            replyDetail.classList.remove('hidden');
+            editForm.classList.add('hidden');
+        }
+
+        function updateReply(event, replyKey) {
+            event.preventDefault();
+
+            var form = event.target;
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: '${path}/board/updateComment',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    var replyElement = document.getElementById('reply-' + replyKey);
+                    var editForm = document.getElementById('edit-reply-' + replyKey);
+                    var replyDetail = replyElement.querySelector('.reply-detail');
+
+                    replyDetail.innerText = formData.get('BOARD_COMMENT_DETAIL');
+                    replyDetail.classList.remove('hidden');
+                    editForm.classList.add('hidden');
+                    
+                    Swal.fire('성공!', '대댓글이 수정되었습니다.', 'success');
+                },
+                error: function() {
+                    Swal.fire('실패!', '대댓글 수정에 실패했습니다.', 'error');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
