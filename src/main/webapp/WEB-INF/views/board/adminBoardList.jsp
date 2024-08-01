@@ -92,52 +92,51 @@
     </style>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+    <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
    
-        <div class="main-panel">
-            <!-- Header Bar -->
-            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+    <div class="main-panel">
+        <!-- Header Bar -->
+        <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
 
-            <div class="container">
-                <h1 class="mb-4">관리자 게시판 목록</h1>
-                
-                <table class="table table-bordered">
-                    <thead>
+        <div class="container">
+            <h1 class="mb-4">관리자 게시판 목록</h1>
+            
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                        <th>카테고리</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="board" items="${boardList}">
                         <tr>
-                            <th>번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성일</th>
-                            <th>카테고리</th>
-                            <th>작업</th>
+                            <td>${board.BOARD_KEY}</td>
+                            <td>
+                                <!-- 제목 클릭 시 상세 페이지로 이동 -->
+                                <a href="${path}/admin/board/detail/${board.BOARD_KEY}">${board.BOARD_TITLE}</a>
+                            </td>
+                            <td>${board.MEMBER_KEY}</td>
+                            <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                            <td>게시판</td>
+                            <td>
+                                <!-- 삭제 버튼 폼 -->
+                                <form action="${path}/admin/board/delete/${board.BOARD_KEY}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">삭제</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="board" items="${boardList}">
-                                <tr>
-                                    <td>${board.BOARD_KEY}</td>
-                                    <td>${board.BOARD_TITLE}</td>
-                                    <td>${board.MEMBER_KEY}</td>
-                                    <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                    <td>게시판</td>
-                                    <td>
-                   
-
-                                        <!-- 삭제 버튼 폼 -->
-                                        <form action="${path}/admin/board/delete/${board.BOARD_KEY}" method="post" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger">삭제</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+                    </c:forEach>
+                </tbody>
+            </table>
         </div>
+
+        <!-- Footer -->
+        <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
