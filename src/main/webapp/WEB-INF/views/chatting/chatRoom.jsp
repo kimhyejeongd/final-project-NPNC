@@ -18,10 +18,10 @@
 <style>
 
 .room-icon {
-    display: flex;
+     display: flex;
     flex-wrap: wrap;
-    width: 42px;
-    height: 42px;
+    width: 1.7vw;
+    height: 3.2vh;
     gap: 5px;
     background-color: #ededed;
     border-radius: 9px;
@@ -177,9 +177,9 @@
 }
 
 .room-item img {
-        margin-top: 9%;
-    width: 0.9vw;
-    height: 1.5vh;
+margin-top: 9%;
+    width: 0.6vw;
+    height: 0.9vh;
     border-radius: 49%;
     margin-right: 1%;
     object-fit: cover;
@@ -444,11 +444,12 @@ body{
             if (memberCount === 2) {
                 for (var i = 0; i < memberCount; i++) {
                     if (members[i].memberKey !== ${loginMember.memberKey}) {  // 현재 사용자가 아닌 경우만 추가
-                        memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진" style="width: 3vw;height: 5vh; margin-top: 0; margin-right: 6%;">';
+                        memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진" style="width: 1.8vw;height: 3.1vh;margin-top: 0;margin-right: 6%;">';
                         thisEle.find('.roomForm').prepend(memberImagesHtml);
                         thisEle.find('.room-icon').remove();
                     }
                 }
+
             } else if  (memberCount <= 4) {
                 for (var i = 0; i < memberCount; i++) {
                     memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
