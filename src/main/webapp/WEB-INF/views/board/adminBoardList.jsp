@@ -26,14 +26,12 @@
             background-color: #f8f9fa;
         }
         .container {
-            margin-top: 20px;
+            margin-top: 70px;
         }
         h1 {
             color: #333;
         }
-        .table {
-            margin-top: 20px;
-        }
+
         .table th, .table td {
             text-align: center;
         }
@@ -92,15 +90,17 @@
     </style>
 </head>
 <body>
+	<div class="wrapper">
     <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
    
     <div class="main-panel">
         <!-- Header Bar -->
-        <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
-
+      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+        	<div class="page-inner">
         <div class="container">
-            <h1 class="mb-4">관리자 게시판 목록</h1>
-            
+                              <div class="title-container">
+                        <h1>관리자 게시판</h1>
+                    </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -133,6 +133,8 @@
                     </c:forEach>
                 </tbody>
             </table>
+            </div>
+            </div>
         </div>
 
         <!-- Footer -->
