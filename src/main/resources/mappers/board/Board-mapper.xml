@@ -104,4 +104,13 @@
     <select id="selectAllCategories" resultType="com.project.npnc.board.model.dto.BoardCategoryDto">
         SELECT * FROM BOARD_CATEGORY
     </select>
+    
+   <select id="selectCommentById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+        SELECT * FROM BoardComment WHERE COMMENT_KEY = #{commentKey}
+    </select>
+
+    <insert id="insertReply" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        INSERT INTO BoardComment (BOARD_KEY, PARENT_COMMENT_KEY, COMMENT_CONTENT, COMMENT_WRITER, COMMENT_DATE)
+        VALUES (#{BOARD_KEY}, #{PARENT_COMMENT_KEY}, #{COMMENT_CONTENT}, #{COMMENT_WRITER}, NOW())
+    </insert>
 </mapper>

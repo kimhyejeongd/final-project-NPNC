@@ -1,11 +1,9 @@
 package com.project.npnc.board.model.dao;
 
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
@@ -57,6 +55,11 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public BoardCommentDto selectCommentById(int commentKey) {
+        return sqlSession.selectOne("com.project.npnc.board.model.dao.BoardDao.selectCommentById", commentKey);
+    }
+
+    @Override
     public void insertComment(BoardCommentDto commentDto) {
         sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertComment", commentDto);
     }
@@ -72,25 +75,27 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public void insertReply(BoardCommentDto replyDto) {
+        sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertReply", replyDto);
+    }
+
+    @Override
     public List<BoardCategoryDto> selectAllCategories() {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectAllCategories");
     }
-    
 
     @Override
     public void insertBoardFile(BoardFileDto boardFileDto) {
         sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertBoardFile", boardFileDto);
     }
-    
+
     @Override
     public List<BoardFileDto> selectFilesByBoardId(int boardKey) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectFilesByBoardId", boardKey);
     }
-    
+
     @Override
     public List<BoardDto> searchBoardsByTitle(String title) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.searchBoardsByTitle", title);
     }
-
-
 }

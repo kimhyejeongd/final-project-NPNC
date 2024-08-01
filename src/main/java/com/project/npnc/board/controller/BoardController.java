@@ -104,24 +104,43 @@ public class BoardController {
         
         return "board/boardDetail";
     }
-    // 댓글 추가
     @PostMapping("/addComment")
-    public String addComment(BoardCommentDto commentDto) {
+    public String addComment(BoardCommentDto commentDto, HttpSession session) {
+        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+        commentDto.setMEMBER_KEY(memberKey);
         boardService.createComment(commentDto);
         return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 수정
     @PostMapping("/updateComment")
-    public String updateComment(BoardCommentDto commentDto) {
-        boardService.updateComment(commentDto);
+    public String updateComment(BoardCommentDto commentDto, HttpSession session) {
+        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+        BoardCommentDto existingComment = boardService.getCommentById(commentDto.getBOARD_COMMENT_KEY());
+        if (existingComment.getMEMBER_KEY() == memberKey) {
+            boardService.updateComment(commentDto);
+        }
         return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 삭제
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey) {
-        boardService.deleteComment(commentKey);
+    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey, HttpSession session) {
+        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+        BoardCommentDto existingComment = boardService.getCommentById(commentKey);
+        if (existingComment.getMEMBER_KEY() == memberKey) {
+            boardService.deleteComment(commentKey);
+        }
         return "redirect:/board/detail?boardKey=" + boardKey;
+    }
+
+    // 대댓글 추가
+    @PostMapping("/addReply")
+    public String addReply(BoardCommentDto commentDto, HttpSession session) {
+        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+        commentDto.setMEMBER_KEY(memberKey);
+        commentDto.setBOARD_COMMENT_LEVEL(1); // 대댓글 레벨 설정
+        boardService.createComment(commentDto);
+        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
     }
 }

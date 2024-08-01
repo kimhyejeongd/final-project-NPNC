@@ -102,18 +102,65 @@
                             <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
                             <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p>${board.BOARD_DETAIL}</p>
-							  <c:forEach var="file" items="${fileList}">
-               				     <c:if test="${not empty file.BOARD_FILE_ORI}">
-                       				 <div class="image-container">
-                           				 <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
-                        			</div>
-                   				 </c:if>
-               				 </c:forEach>
+                            <c:forEach var="file" items="${fileList}">
+                                <c:if test="${not empty file.BOARD_FILE_ORI}">
+                                    <div class="image-container">
+                                        <img src="${path}/resources/hj/${file.BOARD_FILE_ORI}" alt="게시물 이미지" class="img-fluid"/>
+                                    </div>
+                                </c:if>
+                            </c:forEach>
                         </div>
                         <div class="card-footer">
                             <a href="${path}/board/list" class="btn btn-primary">목록으로 돌아가기</a>
                         </div>
                     </div>
+                    
+                    <!-- 댓글 목록 -->
+                    <div class="comments mt-4">
+                        <h3>댓글</h3>
+                        <c:forEach var="comment" items="${comments}">
+                            <div class="comment">
+                                <p><strong>${comment.MEMBER_KEY}</strong> <fmt:formatDate value="${comment.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                                <p>${comment.BOARD_COMMENT_DETAIL}</p>
+                                
+                                <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
+                                <c:if test="${comment.MEMBER_KEY == sessionScope.loggedInUser.MEMBER_KEY}">
+                                    <form action="${path}/board/updateComment" method="post" class="d-inline">
+                                        <input type="hidden" name="BOARD_COMMENT_KEY" value="${comment.BOARD_COMMENT_KEY}">
+                                        <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                                        <input type="text" name="BOARD_COMMENT_DETAIL" value="${comment.BOARD_COMMENT_DETAIL}">
+                                        <button type="submit" class="btn btn-warning btn-sm">수정</button>
+                                    </form>
+                                    <form action="${path}/board/deleteComment" method="post" class="d-inline">
+                                        <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
+                                        <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
+                                        <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                                    </form>
+                                </c:if>
+                                
+                                <!-- 대댓글 작성 폼 -->
+                                <form action="${path}/board/addComment" method="post" class="mt-2">
+                                    <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                                    <input type="hidden" name="BOARD_COMMENT_REF" value="${comment.BOARD_COMMENT_KEY}">
+                                    <input type="hidden" name="BOARD_COMMENT_LEVEL" value="${comment.BOARD_COMMENT_LEVEL + 1}">
+                                    <input type="text" name="BOARD_COMMENT_DETAIL" placeholder="대댓글을 입력하세요" required>
+                                    <button type="submit" class="btn btn-secondary btn-sm">대댓글 작성</button>
+                                </form>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    
+                    <!-- 댓글 작성 폼 -->
+                    <div class="mt-4">
+                        <h3>댓글 작성</h3>
+                        <form action="${path}/board/addComment" method="post">
+                            <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                            <input type="hidden" name="BOARD_COMMENT_LEVEL" value="0">
+                            <input type="text" name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요" required>
+                            <button type="submit" class="btn btn-primary">작성</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 

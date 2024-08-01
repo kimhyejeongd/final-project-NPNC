@@ -18,12 +18,11 @@ public interface BoardService {
     void createComment(BoardCommentDto commentDto);
     void updateComment(BoardCommentDto commentDto);
     void deleteComment(int commentKey);
+    BoardCommentDto getCommentById(int commentKey);
+    void createReply(BoardCommentDto commentDto);
 
     List<BoardCategoryDto> getAllCategories();
     
     List<BoardFileDto> getFilesByBoardId(int boardKey);
     List<BoardDto> searchBoardsByTitle(String title);
-
 }
-
-

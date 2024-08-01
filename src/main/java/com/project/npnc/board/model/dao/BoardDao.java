@@ -16,16 +16,18 @@ public interface BoardDao {
     void insertBoard(BoardDto boardDto);
     void updateBoard(BoardDto boardDto);
     void deleteBoard(int boardKey);
-
+    
     List<BoardCommentDto> selectCommentsByBoardId(int boardKey);
+    BoardCommentDto selectCommentById(int commentKey); // 누락된 메서드 추가
     void insertComment(BoardCommentDto commentDto);
     void updateComment(BoardCommentDto commentDto);
     void deleteComment(int commentKey);
 
+    void insertReply(BoardCommentDto replyDto); // 대댓글 작성
+    
     List<BoardCategoryDto> selectAllCategories();
     void insertBoardFile(BoardFileDto boardFileDto);
     
     List<BoardFileDto> selectFilesByBoardId(int boardKey);
     List<BoardDto> searchBoardsByTitle(String title);
-
 }
