@@ -47,29 +47,12 @@
 
 <body>
   <div class="wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar" data-background-color="dark">
-      <div class="sidebar-logo">
-        <!-- Logo Header -->
-        <div class="logo-header" data-background-color="dark">
-          <a href="index.html" class="logo">
-            <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
-          </a>
-          <button class="topbar-toggler more">
-            <i class="gg-more-vertical-alt"></i>
-          </button>
-        </div>
-        <!-- End Logo Header -->
-      </div>
-      <div class="sidebar-wrapper scrollbar scrollbar-inner">
-        <div class="sidebar-content"></div>
-      </div>
-    </div>
-    <!-- End Sidebar -->
+ 
 
     <div class="main-panel">
       <!-- header_bar -->
       <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+      <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %>
 
       <div class="container">
         <div class="page-inner">
@@ -109,11 +92,6 @@
 									<table id="datable_1" class="table nowrap w-100 mb-5">
 										<thead>
 											<tr>
-												<th><span class="form-check"> <input
-														type="checkbox" class="form-check-input check-select-all"
-														id="customCheck1"> <label class="form-check-label"
-														for="customCheck1"></label>
-												</span></th>
 												<th>예약물번호</th>
 												<th>예약물종류</th>
 												<th>예약물이름</th>
@@ -126,7 +104,6 @@
 											<c:if test="${not empty reservations}">
 												<c:forEach var="r" items="${reservations}">
 													<tr>
-														<td><input type="checkbox" class="form-check-input check-select" id="customCheck${r.itemKey}"></td>
 														<td>${r.itemKey }</td>
 														<td class="mw-250p text-truncate text-high-em"><span>${r.itemType }</span>
 														</td>
@@ -277,9 +254,9 @@ document.addEventListener('DOMContentLoaded', function() {
  
   <!-- Core JS Files -->
   <%-- <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script> --%>
-  <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-  <%-- <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script> --%>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <%--  <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+  <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
   <!-- jQuery Scrollbar -->
   <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
   <!-- Chart JS -->
@@ -299,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
   <!-- Kaiadmin JS -->
   <script src="${path}/resources/assets/js/kaiadmin.js"></script>
-  <!-- fancy dropdown js -->
+  <!-- fancy dropdown js --> --%>
   
    <script>
     // JavaScript 내에서 서버에서 전달받은 organlist 데이터를 할당

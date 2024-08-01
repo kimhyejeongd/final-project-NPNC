@@ -19,6 +19,8 @@ public class Calendar {
 	private int empNo;
 	private String empName;
 	private String deptCode;
+	private String deptName;
+	private String jobName;
 	private int type;
 	private String title;
 	private String start;
