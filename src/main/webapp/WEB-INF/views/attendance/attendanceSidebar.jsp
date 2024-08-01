@@ -88,6 +88,22 @@
                   </ul>
                 </div>
               </li>
+               <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#overwork">
+                  <i class="fas fa-pen-square"></i>
+                  <p>초과근무관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="overwork">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/overwork/selectoverworkByMemberKey">
+                        <span class="sub-item">초과근무신청현황</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
                   </ul>
                 </div>
           </div>

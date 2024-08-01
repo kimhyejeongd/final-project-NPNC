@@ -148,5 +148,37 @@ public class AdminDocumentService {
 	public String selectParentFolderName(int folderGroup) {
 		return dao.selectParentFolderName(session,folderGroup);
 	}
+	public int updateStorageFolder(StorageFolder storageFolder) {
+		System.out.println(storageFolder);
+		StorageFolder updatingFolder = dao.selectStorageFolderAll(session, storageFolder.getFolderKey());
+		storageFolder.setFolderGroup(updatingFolder.getFolderGroup());
+		storageFolder.setFolderLevel(updatingFolder.getFolderLevel());
+		storageFolder.setFolderOrderBy(updatingFolder.getFolderOrderBy());
+		int result =dao.updateStorageFolder(session,storageFolder);
+		if(result>0) {
+			String folderParentName = dao.selectParentFolderName(session, storageFolder.getFolderGroup());
+			System.out.println(folderParentName);
+			String updatingFolderName = updatingFolder.getFolderName();
+			String path = uploadPath+"dochtml/";
+			path += folderParentName != null ? folderParentName+"/":"";
+			
+			File from = new File(path+updatingFolderName);
+			System.out.println(from);
+			updatingFolderName=storageFolder.getFolderName();
+			File to = new File(path+updatingFolderName);
+			System.out.println(to);
+			System.out.println("===========result=======");
+			try {
+				FileUtils.moveDirectory(from, to);
+				System.out.println("Directory moved successfully.");
+			}
+			catch (FileExistsException ex) {
+				ex.printStackTrace();
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 
 }

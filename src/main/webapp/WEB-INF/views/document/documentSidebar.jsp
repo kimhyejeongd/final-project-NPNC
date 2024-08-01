@@ -92,6 +92,11 @@
                       </a>
                     </li>
                     <li>
+                      <a href="${path }/document/list/employee/pending">
+                        <span class="sub-item">수정 요청 문서</span>
+                      </a>
+                    </li>
+                    <li>
                       <a href="${path }/document/list/employee/rejected">
                         <span class="sub-item">반려 문서</span>
                       </a>

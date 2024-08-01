@@ -2,149 +2,185 @@
     pageEncoding="UTF-8"%>
             <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
-    <meta
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-      name="viewport"
-    />
-    <link
-      rel="icon"
-      href="${path}/resources/assets/img/kaiadmin/favicon.ico"
-      type="image/x-icon"
-    />
-
-    <!-- Fonts and icons -->
-    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
-    <script>
-      WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-          families: [
-            "Font Awesome 5 Solid",
-            "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons",
-          ],
-          urls: ["${path}/resources/assets/css/fonts.min.css"],
-        },
-        active: function () {
-          sessionStorage.fonts = true;
-        },
-      });
-    </script>
-
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
-  </head>
-  <body>
-     <style>
-	     .main-header {
-		    background: #fff;
-		    min-height: 60px;
-		    width:100%;
-		    position: static;
-		    z-index: 1001
-		}
-		.container{
-			height: 100%;
-			/* background-color: aquamarine; */
-       		max-width: 1800px;
-			
-		}
-		.firstwidget{
-			display: flex;
-			flex-direction: row;
-			flex-wrap: noWrap;
-       	
-		}
-		.firstwidget>div{
-			margin-right: 30px;
-		}
-		 .pagination-container {
-            display: flex;
-            justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
-           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
-        }
-		.error500{
-	display: flex;
-	flex-direction:column;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
+<html>
+<head>
+<meta charset="utf-8">
+  <title>Error 500</title>
+<style>
+/**/
+:root {
+  --main-color: #eaeaea;
+  --stroke-color: black;
+  
 }
-body{
-	height: 80vh;
+/**/
+body {
+  background: var(--main-color);
 }
-.btn {
-	  position: relative;
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
-	  margin: 0px auto;
-	  max-width: 100%;
-	  color: black;
-	  text-align: center;
-	  background-color: #d1ade3;
-	  border-radius: 8px;
-	  padding: 8px 8px 8px 8px;
-	}
-	</style>	
-               <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+h1 {
+  margin: 100px auto 0 auto;
+  color: var(--stroke-color);
+  font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
+  font-size: 10rem; line-height: 10rem;
+  font-weight: 200;
+  text-align: center;
+}
+h2 {
+  margin: 20px auto 30px auto;
+  font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 200;
+  text-align: center;
+}
+h1, h2 {
+  -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
+  transition: opacity 0.5s linear, margin-top 0.5s linear;
+}
+.loading h1, .loading h2 {
+  margin-top: 0px;
+  opacity: 0;  
+}
+.gears {
+  position: relative;
+  margin: 0 auto;
+  width: auto; height: 0;
+}
+.gear {
+  position: relative;
+  z-index: 0;
+  width: 120px; height: 120px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--stroke-color);
+}
+.gear:before{
+  position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;
+  z-index: 2;
+  content: "";
+  border-radius: 50%;
+  background: var(--main-color);
+}
+.gear:after {
+  position: absolute; left: 25px; top: 25px;
+  z-index: 3;
+  content: "";
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  border: 5px solid var(--stroke-color);
+  box-sizing: border-box;
+  background: var(--main-color);
+}
+.gear.one {
+  left: -130px;
+}
+.gear.two {
+  top: -75px;
+}
+.gear.three {
+  top: -235px;
+  left: 130px;
+}
+.gear .bar {
+  position: absolute; left: -15px; top: 50%;
+  z-index: 0;
+  width: 150px; height: 30px;
+  margin-top: -15px;
+  border-radius: 5px;
+  background: var(--stroke-color);
+}
+.gear .bar:before {
+  position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;
+  z-index: 1;
+  content: "";
+  border-radius: 2px;
+  background: var(--main-color);
+}
+.gear .bar:nth-child(2) {
+  transform: rotate(60deg);
+  -webkit-transform: rotate(60deg);
+}
+.gear .bar:nth-child(3) {
+  transform: rotate(120deg);
+  -webkit-transform: rotate(120deg);
+}
+@-webkit-keyframes clockwise {
+  0% { -webkit-transform: rotate(0deg);}
+  100% { -webkit-transform: rotate(360deg);}
+}
+@-webkit-keyframes anticlockwise {
+  0% { -webkit-transform: rotate(360deg);}
+  100% { -webkit-transform: rotate(0deg);}
+}
+@-webkit-keyframes clockwiseError {
+  0% { -webkit-transform: rotate(0deg);}
+  20% { -webkit-transform: rotate(30deg);}
+  40% { -webkit-transform: rotate(25deg);}
+  60% { -webkit-transform: rotate(30deg);}
+  100% { -webkit-transform: rotate(0deg);}
+}
+@-webkit-keyframes anticlockwiseErrorStop {
+  0% { -webkit-transform: rotate(0deg);}
+  20% { -webkit-transform: rotate(-30deg);}
+  60% { -webkit-transform: rotate(-30deg);}
+  100% { -webkit-transform: rotate(0deg);}
+}
+@-webkit-keyframes anticlockwiseError {
+  0% { -webkit-transform: rotate(0deg);}
+  20% { -webkit-transform: rotate(-30deg);}
+  40% { -webkit-transform: rotate(-25deg);}
+  60% { -webkit-transform: rotate(-30deg);}
+  100% { -webkit-transform: rotate(0deg);}
+}
+.gear.one {
+  -webkit-animation: anticlockwiseErrorStop 2s linear infinite;
+}
+.gear.two {
+  -webkit-animation: anticlockwiseError 2s linear infinite;
+}
+.gear.three {
+  -webkit-animation: clockwiseError 2s linear infinite;
+}
+.loading .gear.one, .loading .gear.three {
+  -webkit-animation: clockwise 3s linear infinite;
+}
+.loading .gear.two {
+  -webkit-animation: anticlockwise 3s linear infinite;
+}
 
-	<div class="error500">
-		<img alt="500 Error Image" src="/resources/assets/img/error/500에러.png" width=70%; height=700px; class="text-align-center">
-		<button class="btn btn-outline-secondary mb-5" onclick="location.assign('${path}')">home</button>
-	</div> 
+</style>  
+</head>
+<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
+<body class="loading">
+  <h1>500</h1>
+  <h2>Internal Server Error <b>:(</b></h2>
+  <div class="gears">
+    <div class="gear one">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="gear two">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="gear three">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="js/main.js" type="text/javascript"></script>
+  <script>
+  $(function() {
+	  setTimeout(function(){
+	    $('body').removeClass('loading');
+	  }, 1000);
+	});
 
-<%@ include file="/WEB-INF/views/common/footer.jsp" %>
-       
-
-    
-    <!--   Core JS Files   -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- jQuery Scrollbar -->
-    <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-    <!-- Chart JS -->
-    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
-
-    <!-- jQuery Sparkline -->
-    <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-
-    <!-- Chart Circle -->
-    <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
-
-    <!-- Datatables -->
-    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
-
-    <!-- Bootstrap Notify -->
-    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
-    <!-- jQuery Vector Maps -->
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
-
-    <!-- Google Maps Plugin -->
-    <script src="${path}/resources/assets/js/plugin/gmaps/gmaps.js"></script>
-
-    <!-- Sweet Alert -->
-    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-
-    <!-- Kaiadmin JS -->
-    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-    
-    <!-- 출퇴근버튼 js -->
-    <%-- <script src="${path}/resources/assets/ws/attendance.js"></script>  --%>
-
-  </body>
+  
+  </script>
+</body>
 </html>
+

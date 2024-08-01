@@ -139,11 +139,11 @@ public class ChatController {
 	
 	@PostMapping("/exitChatRoom")
 	@ResponseBody
-	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberId) {
+	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberKey) {
 
 		Map<String, Integer> exitInfo = new HashMap<>();
 		exitInfo.put("roomId", roomId);
-		exitInfo.put("memberId", memberId);
+		exitInfo.put("memberId", memberKey);
 		service.exitChatRoom(exitInfo);
 		
 	}

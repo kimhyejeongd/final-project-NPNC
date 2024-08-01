@@ -2,24 +2,46 @@
  * 전자문서 상세보기 
  */
 document.addEventListener("DOMContentLoaded", function() {
-	function viewFileDetails(fileUrl) {
+	//파일 상세보기
+	$(document).on('click', '#fileViewBtn', function() {
+		console.log('파일 상세보기');
+		let fileName = $(this).data('filename');
+		console.log('원본 파일명:', fileName);
+		let encodedFileName = encodeURIComponent(fileName); // 파일명 인코딩
+		console.log('인코딩된 파일명:', encodedFileName);
 	    $.ajax({
-	        url: fileUrl,
+	        url: sessionStorage.getItem("path") + `/document/files/detail/${encodedFileName}`,
 	        method: 'GET',
 	        success: function (data) {
-	            $('#fileDetailContent').html(data);
+				console.log(data);
+				// 파일 확장자 확인
+	            let fileExtension = data.fileOriName.split('.').pop().toLowerCase();
+	            let imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+	            $('#fileDetailOriname').text(data.fileOriName);
+	            $('#fileDetailSize').text(data.fileSize + ' bytes');
+	            $('#fileDetailUploadDate').text(new Date(data.fileUploadDate).toLocaleString());
+	            
+                // 이미지일 경우
+	            if (imageExtensions.includes(fileExtension)) {
+		            $('#fileDetailImage').attr('src', sessionStorage.getItem("path") + `/document/files/download/${encodedFileName}`).show();
+	            } else {
+                // 이미지가 아닌 경우
+                	$('#fileDetailImage').hide();
+            	}
+
 	            $('#fileDetailModal').modal('show');
 	        },
-	        error: function () {
-	            $('#fileDetailContent').html('파일을 불러오는 데 실패했습니다.');
+	        error: function (jqXHR, textStatus, errorThrown) {
+				console.error("Error fetching file details: ", textStatus, errorThrown);
+	            $('.modal-body').html('파일 정보를 불러오는 데 실패했습니다.');
 	            $('#fileDetailModal').modal('show');
 	        }
 	    });
-	}
+	});
 	//파일 다운로드
 	$(document).on('click', '#fileDownBtn', function() {
 	    let fileName = $(this).data('filename');
-	    window.location.href = sessionStorage.getItem("path") + `/files/download/${fileName}`;
+	    window.location.href = sessionStorage.getItem("path") + `/document/files/download/${fileName}`;
 	});
 	$("#closeBtn").click(function(){
 		window.history.back();

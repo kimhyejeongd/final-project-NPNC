@@ -51,13 +51,14 @@ public class AttendanceController{
 	 */
 	
 	
-	@Scheduled(cron="0 0 23 1 * ?")
+	@Scheduled(cron="30 * * 10 * ?")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();
 		Attendance a=new Attendance();
 		Map<Integer, Boolean> result = new HashMap<>();
-
+		System.out.println("오늘 : "+todayAttendance);
+		System.out.println("멤버 : "+memberKeys);
 		memberKeys.forEach(memberKey -> {
 		    boolean checkKey = todayAttendance.stream().anyMatch(as -> as.getMember().getMemberKey() == memberKey);
 		    
@@ -303,7 +304,6 @@ public class AttendanceController{
 			Model m
 			) {
 
-	
 		if(!searchEndDate.equals("")) {	
 			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
 			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -321,7 +321,7 @@ public class AttendanceController{
 		return "attendance/ajax_response/membertableresponse";
 	}
 	
-	
+
 	
 	
 }

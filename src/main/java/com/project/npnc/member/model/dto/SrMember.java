@@ -31,4 +31,5 @@ public class SrMember {
 	private Date memberBirthdate;
 	private String jobName;
 	private String departmentName;
+	private String memberProfileImage;
 }
