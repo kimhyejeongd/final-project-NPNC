@@ -57,7 +57,7 @@
         }
         .comment, .reply {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 5px;
             margin-bottom: 10px;
             border-radius: 5px;
             background-color: #f9f9f9;

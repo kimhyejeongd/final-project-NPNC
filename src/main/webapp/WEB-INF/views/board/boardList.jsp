@@ -46,6 +46,7 @@
         #tablerow:hover {
             cursor: pointer; 
         }
+
     </style>
 </head>
 <body>
@@ -57,8 +58,9 @@
 
         <!-- Main Panel -->
         <div class="main-panel">
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-        
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+      	  <div class="page-inner">
+            
             <div class="container">
                 <h1>게시판 목록</h1>
                 <!-- Search Form -->
@@ -105,8 +107,10 @@
                     </div>
                 </div>
             </div>
+            </div>
             <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
     </div>
+    
 </body>
 </html>
