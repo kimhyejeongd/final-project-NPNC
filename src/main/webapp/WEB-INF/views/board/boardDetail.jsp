@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<sec:authentication var="loginMember" property="principal"/>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -32,6 +34,10 @@
           sessionStorage.fonts = true;
         },
       });
+    </script>
+    <script>
+    
+  	var userKey = "${loginMember.memberKey}";
     </script>
 
     <!-- CSS Files -->
@@ -124,11 +130,11 @@
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
                                 
                                 <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
-                                <c:if test="${comment.MEMBER_KEY == sessionScope.loggedInUser.MEMBER_KEY}">
+                                <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <form action="${path}/board/updateComment" method="post" class="d-inline">
                                         <input type="hidden" name="BOARD_COMMENT_KEY" value="${comment.BOARD_COMMENT_KEY}">
                                         <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-                                        <input type="text" name="BOARD_COMMENT_DETAIL" value="${comment.BOARD_COMMENT_DETAIL}">
+                                       <%--  <input type="text" name="BOARD_COMMENT_DETAIL" value="${comment.BOARD_COMMENT_DETAIL}"> --%>
                                         <button type="submit" class="btn btn-warning btn-sm">수정</button>
                                     </form>
                                     <form action="${path}/board/deleteComment" method="post" class="d-inline">
@@ -139,13 +145,14 @@
                                 </c:if>
                                 
                                 <!-- 대댓글 작성 폼 -->
-                                <form action="${path}/board/addComment" method="post" class="mt-2">
-                                    <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-                                    <input type="hidden" name="BOARD_COMMENT_REF" value="${comment.BOARD_COMMENT_KEY}">
-                                    <input type="hidden" name="BOARD_COMMENT_LEVEL" value="${comment.BOARD_COMMENT_LEVEL + 1}">
-                                    <input type="text" name="BOARD_COMMENT_DETAIL" placeholder="대댓글을 입력하세요" required>
-                                    <button type="submit" class="btn btn-secondary btn-sm">대댓글 작성</button>
-                                </form>
+                             <form action="${path}/board/addReply" method="post" class="mt-2">
+							    <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+							    <input type="hidden" name="BOARD_COMMENT_REF" value="${comment.BOARD_COMMENT_KEY}">
+							    <input type="hidden" name="BOARD_COMMENT_LEVEL" value="${comment.BOARD_COMMENT_LEVEL + 1}">
+							    <input type="text" name="BOARD_COMMENT_DETAIL" placeholder="대댓글을 입력하세요" required>
+							    <button type="submit" class="btn btn-secondary btn-sm">대댓글 작성</button>
+							</form>
+
                             </div>
                         </c:forEach>
                     </div>

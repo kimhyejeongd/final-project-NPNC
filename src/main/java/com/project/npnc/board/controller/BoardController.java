@@ -3,7 +3,9 @@ package com.project.npnc.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,12 +103,24 @@ public class BoardController {
     public String getBoardById(int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
         List<BoardFileDto> fileList = boardService.getFilesByBoardId(boardKey);
-        
+        List<BoardCommentDto> comments = boardService.getCommentsByBoardId(boardKey);
+
+        // 댓글에 대한 대댓글을 추가하기 위해 댓글과 대댓글을 맵에 저장
+        Map<Integer, List<BoardCommentDto>> commentRepliesMap = new HashMap<>();
+        for (BoardCommentDto comment : comments) {
+            List<BoardCommentDto> replies = boardService.getRepliesByCommentId(comment.getBOARD_COMMENT_KEY());
+            commentRepliesMap.put(comment.getBOARD_COMMENT_KEY(), replies);
+        }
+
         model.addAttribute("board", board);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentRepliesMap", commentRepliesMap);        
         model.addAttribute("fileList", fileList); // 첨부파일 목록 추가
-        
+        System.out.println("ㅎㅇ");
         return "board/boardDetail";
     }
+    
+    
     @PostMapping("/addComment")
     public String addComment(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
     	Member member=(Member)authentication.getPrincipal();
@@ -139,10 +154,11 @@ public class BoardController {
     // 대댓글 추가
     @PostMapping("/addReply")
     public String addReply(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
-        int memberKey = (int) session.getAttribute("MEMBER_KEY");
-        commentDto.setMEMBER_KEY(memberKey);
+    	Member member=(Member)authentication.getPrincipal();
+    	System.out.println("boardCommentRef : "+ commentDto.getBOARD_COMMENT_REF());
+        commentDto.setMEMBER_KEY(member.getMemberKey());
         commentDto.setBOARD_COMMENT_LEVEL(1); // 대댓글 레벨 설정
         boardService.createComment(commentDto);
-        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 }

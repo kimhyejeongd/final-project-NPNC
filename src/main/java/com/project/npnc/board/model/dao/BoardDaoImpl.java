@@ -50,11 +50,6 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public List<BoardCommentDto> selectCommentsByBoardId(int boardKey) {
-        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectCommentsByBoardId", boardKey);
-    }
-
-    @Override
     public BoardCommentDto selectCommentById(int commentKey) {
         return sqlSession.selectOne("com.project.npnc.board.model.dao.BoardDao.selectCommentById", commentKey);
     }
@@ -98,4 +93,17 @@ public class BoardDaoImpl implements BoardDao {
     public List<BoardDto> searchBoardsByTitle(String title) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.searchBoardsByTitle", title);
     }
+    
+
+    @Override
+    public List<BoardCommentDto> selectCommentsByBoardId(int boardKey) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectCommentsByBoardId", boardKey);
+    }
+
+    @Override
+    public List<BoardCommentDto> selectRepliesByCommentId(int commentKey) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectRepliesByCommentId", commentKey);
+    }
 }
+
+

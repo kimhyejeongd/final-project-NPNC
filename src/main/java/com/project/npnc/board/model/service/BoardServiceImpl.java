@@ -93,4 +93,10 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardDto> searchBoardsByTitle(String title) {
         return boardDao.searchBoardsByTitle(title);
     }
+
+    @Override
+    public List<BoardCommentDto> getRepliesByCommentId(int commentKey) {
+        return boardDao.selectRepliesByCommentId(commentKey);
+    }
+
 }

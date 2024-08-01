@@ -17,7 +17,7 @@ public interface BoardDao {
     void updateBoard(BoardDto boardDto);
     void deleteBoard(int boardKey);
     
-    List<BoardCommentDto> selectCommentsByBoardId(int boardKey);
+  
     BoardCommentDto selectCommentById(int commentKey); // 누락된 메서드 추가
     void insertComment(BoardCommentDto commentDto);
     void updateComment(BoardCommentDto commentDto);
@@ -30,4 +30,8 @@ public interface BoardDao {
     
     List<BoardFileDto> selectFilesByBoardId(int boardKey);
     List<BoardDto> searchBoardsByTitle(String title);
+    
+    List<BoardCommentDto> selectCommentsByBoardId(int boardKey);
+    // 댓글에 대한 대댓글을 가져오는 메서드
+    List<BoardCommentDto> selectRepliesByCommentId(int commentKey);
 }
