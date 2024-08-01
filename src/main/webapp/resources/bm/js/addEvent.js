@@ -3,7 +3,6 @@ var maxSelection = 5; // 최대 선택 가능한 멤버 수
 
 
 var newEvent = function(start, end, eventType) {
-	console.log(path);
     Swal.fire({
         title: '새 일정 추가',
         html: `
@@ -31,7 +30,7 @@ var newEvent = function(start, end, eventType) {
                     <option value="3">전사일정</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="reference-container">
                 <div class="btn-group">
                     <button class="btn btn-secondary dropdown-toggle button-margin" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                         참조인
@@ -44,8 +43,8 @@ var newEvent = function(start, end, eventType) {
                 </div>
             </div>
             <div class="form-group">
-                <label for="selected-members">선택된 참조인</label>
-                <div id="selected-members" class="form-control" style="height:auto;"></div>
+                <label id="selected-members2" for="selected-members" style= "display: none;">선택된 참조인</label>
+                <div id="selected-members" class="form-control" style="height:auto; display:none"></div>
             </div>
             <div class="form-group">
                 <label for="cal-desc">설명</label>
@@ -57,6 +56,28 @@ var newEvent = function(start, end, eventType) {
         cancelButtonText: '취소',
         focusConfirm: false,
         didOpen: () => {
+			const typeSelect = document.getElementById('cal-type');
+			const referenceContainer = document.getElementById('reference-container');
+
+            // Initially hide reference container if '전사일정' is selected
+            if (typeSelect.value === '3') {
+                referenceContainer.style.display = 'none';
+                document.getElementById("selected-members2").style.display = 'none';
+                document.getElementById("selected-members").style.display = 'none';
+            }
+
+            // Add event listener for changes in the type selection
+            typeSelect.addEventListener('change', function() {
+                if (this.value === '3') { // '전사일정' selected
+                    referenceContainer.style.display = 'none';
+                    document.getElementById("selected-members2").style.display = 'none';
+               		document.getElementById("selected-members").style.display = 'none';
+                } else {
+                    referenceContainer.style.display = 'block';
+                    document.getElementById("selected-members2").style.display = 'block';
+               		document.getElementById("selected-members").style.display = 'block';
+                }
+            });
 			selectedMembers = [];
             if (eventType === '내일정') {
                 document.getElementById('cal-type').value = 1;
@@ -69,10 +90,15 @@ var newEvent = function(start, end, eventType) {
             window.memberselect = function(memberKey, memberName, jobName) {
                 const member = { memberKey, memberName, jobName };
                 const memberIndex = selectedMembers.findIndex(m => m.memberKey === memberKey);
-
+				document.getElementById("selected-members").style.display='block';
+				document.getElementById("selected-members2").style.display='block';
                 if (memberIndex > -1) {
                     // 이미 선택된 멤버라면 배열에서 제거
                     selectedMembers.splice(memberIndex, 1);
+                    if(selectedMembers.length == 0){
+						document.getElementById("selected-members").style.display='none';
+						document.getElementById("selected-members2").style.display='none';
+					}
                 } else {
                     // 선택된 멤버라면 배열에 추가
                     if (selectedMembers.length >= maxSelection) {
@@ -103,7 +129,7 @@ var newEvent = function(start, end, eventType) {
                 Swal.showValidationMessage('시작 일시를 입력해주세요');
                 return false;
             }
-            if (start > end) {
+            if (allDay === 'N' && start > end) {
                 Swal.showValidationMessage('시작 일시가 종료 일시보다 클 수 없습니다.');
                 return false;
             }
@@ -149,7 +175,7 @@ var newEvent = function(start, end, eventType) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const { calendarKey, _id, title, start, end, type, description, backgroundColor, allDay,selectedMembers,empNo,empName } = result.value;
+            var { calendarKey, _id, title, start, end, type, description, backgroundColor, allDay,selectedMembers,empNo,empName } = result.value;
             console.log(result.value);
             $.ajax({
                 type: "POST",
@@ -159,7 +185,7 @@ var newEvent = function(start, end, eventType) {
                 contentType: 'application/json; charset=utf-8',
                 success: function(response) {
                     if (response.status === "success") {
-						 const newEvent = {
+						 var newEvent = {
                             calendarKey: calendarKey,
                             _id : _id,
                             empNo: empNo,
@@ -200,9 +226,6 @@ var newEvent = function(start, end, eventType) {
     });
 };
 
-function editEvent(event) {
-    // Edit event logic here
-};
 
 function generateAccordionHTML(organlist) {
     var html = '';
@@ -242,6 +265,7 @@ function generateMemberListHTML(memberlist) {
 function memberselect(memberKey, memberName, jobName) {
     const member = { memberKey, memberName, jobName };
     const memberIndex = selectedMembers.findIndex(m => m.memberKey === memberKey);
+	
 
     if (memberIndex > -1) {
         // 이미 선택된 멤버라면 배열에서 제거
@@ -258,6 +282,7 @@ function memberselect(memberKey, memberName, jobName) {
 }
 
 function updateSelectedMembers() {
+
     const selectedMembersContainer = document.getElementById('selected-members');
     selectedMembersContainer.innerHTML = selectedMembers.map(m => `${m.memberName} (${m.jobName})`).join(', ');
 
@@ -266,7 +291,7 @@ function updateSelectedMembers() {
         department.memberlist.forEach(member => {
             const memberElement = document.getElementById(`member-${member.memberKey}`);
             if (memberElement) {
-                if (selectedMembers.find(m => m.memberKey === member.memberKey)) {
+                if (selectedMembers.find(m => m.memberKey == member.memberKey)) {
                     memberElement.classList.add('selected-member');
                 } else {
                     memberElement.classList.remove('selected-member');
@@ -274,4 +299,5 @@ function updateSelectedMembers() {
             }
         });
     });
+
 }
