@@ -622,7 +622,7 @@
 			                     var attendanceStart = response.attendanceStart;
 			                     Swal.fire({
 		                             title: '성공!',
-		                             text: '퇴근이 성공적으로 완료되었습니다.',
+		                             text: '출근이 성공적으로 완료되었습니다.',
 		                             icon: 'success',
 		                             confirmButtonText: '확인'
 		                         })
