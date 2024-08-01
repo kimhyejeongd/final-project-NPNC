@@ -180,9 +180,7 @@
                                 </c:if>
                             </c:forEach>
                         </div>
-                        <div class="card-footer">
-                            <a href="${path}/board/list" class="btn btn-secondary">목록으로 돌아가기</a>
-                        </div>
+    
                     </div>
                     
                     <!-- 댓글 목록 -->
