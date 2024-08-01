@@ -602,7 +602,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 					log.debug("추가근무 신청 상태 -> 승인");
 					break;
 				case 3:
-					//휴가 문서라면 계산 진행
+					//휴가 문서라면 승인상태 적용
 					result = updateVacationApply(serial, "승인");
 					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
 					log.debug("휴가 신청 상태 -> 승인");
@@ -709,6 +709,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.selectPendingDocs(session, no);
 	}
 	@Override
+	public List<Document> selectMyPendingDocs(int no) {
+		return dao.selectMyPendingDocs(session, no);
+	}
+	@Override
 	public List<Document> selectMyCompleteDocs(int no) {
 		return dao.selectMyCompleteDocs(session, no);
 	}
@@ -744,5 +748,14 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public int updateOvertiemApply(String docSerial, String status) {
 		return dao.updateOvertimeApply(session, docSerial, status);
 	}
+	@Override
+	public String selecetDocFileOriname(String filename) {
+		return dao.selecetDocFileOriname(session, filename);
+	}
+	@Override
+	public DocFile getFileDetailByRename(String filename) {
+		return dao.getFileDetailByRename(session, filename);
+	}
+	
 	
 }

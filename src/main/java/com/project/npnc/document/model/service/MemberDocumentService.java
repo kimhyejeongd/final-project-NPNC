@@ -37,6 +37,7 @@ public interface MemberDocumentService {
 	List<Document> selectPendingDocs(int no);
 	List<Document> selectMyRejectDocs(int no);
 	List<Document> selectMyCompleteDocs(int no);
+	List<Document> selectMyPendingDocs(int no);
 	List<Document> selectCompleteDocs(int no);
 	List<Document> selectRejectedDocs(int no);
 	List<Document> selectReferenceDocs(int no);
@@ -53,6 +54,7 @@ public interface MemberDocumentService {
 	
 	int insertDocFile(List<DocFile> list) throws Exception;
 	int deleteDocFile(String docSerial) throws Exception;
+	String selecetDocFileOriname(String filename);
 	
 	int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception;
 	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;
@@ -63,4 +65,5 @@ public interface MemberDocumentService {
 	int insertVacationApply(VacationApply vac);
 	int updateVacationApply(String docSerial, String status);
 	int updateOvertiemApply(String docSerial, String status);
+	DocFile getFileDetailByRename(String filename);
 }
