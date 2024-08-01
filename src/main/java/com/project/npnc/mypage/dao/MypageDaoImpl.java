@@ -21,7 +21,7 @@ public class MypageDaoImpl implements MemberDao {
 
     @Override
     public int updateProfileImage(SqlSession session, Map<String, Object> paramMap) {
-        return session.update("mypage.updateMember", paramMap);
+        return session.update("mypage.updateProfileImage", paramMap); // 프로필 이미지 업데이트
     }
 
     @Override
@@ -34,9 +34,12 @@ public class MypageDaoImpl implements MemberDao {
         return session.update("mypage.updatePassword", paramMap);
     }
 
-    // SqlSession을 사용하여 profileImage를 업데이트하는 메서드
     @Override
     public int updateProfileImage(Map<String, Object> paramMap) {
         return sqlSession.update("mypage.updateProfileImage", paramMap);
+    }
+    @Override
+    public String getProfileImageFileName(SqlSession session, String memberId) {
+        return session.selectOne("MemberMapper.getProfileImageFileName", memberId);
     }
 }

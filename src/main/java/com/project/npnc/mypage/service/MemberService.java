@@ -8,5 +8,6 @@ public interface MemberService {
     void updateProfileImage(String memberId, MultipartFile file);
     Member getMemberByEmail(String email);
     void changePassword(String memberId, String newPassword);
+    String getProfileImageFileName(String memberId);
     
 }

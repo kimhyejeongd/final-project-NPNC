@@ -1,10 +1,18 @@
 package com.project.npnc.mypage.controller;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
@@ -12,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -144,6 +153,7 @@ public class MemberController {
     private String generateRandomCode() {
         return String.format("%06d", new Random().nextInt(999999));
     }
+    
     @PostMapping("/updateProfileImage")
     public String updateProfileImage(@RequestParam("profileImage") MultipartFile file, RedirectAttributes redirectAttributes) {
         Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -156,4 +166,20 @@ public class MemberController {
         }
         return "redirect:/member/mypage";
     }
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @GetMapping("/profileImage/{memberId}")
+    @ResponseBody
+    public ResponseEntity<Resource> getProfileImage(@PathVariable String memberId) {
+        try {
+            String fileName = memberService.getProfileImageFileName(memberId);
+            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

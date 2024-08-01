@@ -85,4 +85,9 @@ public class MypageServiceImpl implements MemberService {
             throw new RuntimeException(errorMsg, e);
         }
     }
+    @Override
+    public String getProfileImageFileName(String memberId) {
+        Member member = memberDao.findById(sqlSession, memberId);
+        return member != null ? member.getMemberProfileImage() : null;
+    }
 }
