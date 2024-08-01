@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -33,6 +34,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,6 +65,7 @@ import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -620,8 +624,17 @@ public class MemberDocumentController {
 	//일반 전자문서 기안(기안자번호, 기안자결재의견, 기본정보, 결재자들, 첨부파일)
 	@PostMapping(path="/writeend", consumes = {"multipart/form-data"}) 
 	public ResponseEntity<Map<String,Object>> insertDoc(
-			String msg, Model m, Document doc, String html,
+			String msg, Model m, @Valid Document doc, BindingResult bindingResult, 
+			String html,
 			@RequestParam(value="upfile", required = false) MultipartFile[] file) {
+		Map<String,Object> response = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			response.put("status", "error");
+			response.put("message", "필수 정보를 모두 입력하세요.");
+			response.put("message",  "필수 정보를 모두 입력하세요.\n" + bindingResult.getAllErrors().get(0).getDefaultMessage());
+			
+			return ResponseEntity.ok(response);
+        }
 		Member user = getCurrentUser();
 		if(msg.equals(",")) msg=""; //debug
 		if (msg != null && msg.endsWith(",")) {
@@ -664,7 +677,7 @@ public class MemberDocumentController {
 		
 		
 		int result=0;
-		Map<String,Object> response = new HashMap<>();
+		
 		
 		//문서 등록
 		try { 

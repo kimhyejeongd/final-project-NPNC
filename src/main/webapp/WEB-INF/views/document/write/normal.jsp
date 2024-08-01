@@ -158,21 +158,20 @@
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle" required>
 				      </div>
 				    </div>
 				    <div class="form-group">
 				      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1" required>
 				          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked required>
 				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
 			          </label>
 				    </div>
 				    <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
-				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv">
-				      </div>
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv"></div>
 				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="storageBtn">선택</button>
 				    </div>
 				    <div class="form-group d-flex">
@@ -180,16 +179,6 @@
 				      	<div class="col w-100 align-items-center p-0">
 						      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
 									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
-									 <!-- <div class="border" id="approval1">
-									  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
-									  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-									  	<input name="approvers[0].memberKey" value="2" style="display:none">
-									  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-									  	<input name="approvers[0].memberJob" value="사원" style="">
-									  	<input name="approvers[0].memberName" value="김사원" style="">
-									  	<input name="approvers[0].category" value="기안" style="">
-									  </div>
-									   -->
 						      </div>
 						      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
 						    </div>
@@ -200,12 +189,6 @@
 					      </div>
 					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
-				    <!-- <div class="form-group d-flex align-items-center gap-3">
-				      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
-				      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      </div>
-				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
-				    </div> -->
 				    <div class="form-group d-flex" id="fileDiv">
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
@@ -221,9 +204,7 @@
 			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
-				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
 				        	<div id="summernote" data-form="${form }"></div>
-				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 				        </div>
 			        </div>
 	                  <div class="p-3 text-center">
@@ -341,10 +322,95 @@ $(document).ready(function() {
 			redobtn: redo
 		} */
 	});
+	
+	function validateAndSubmit(form) {
+        if (form.checkValidity()) {
+            form.submit();
+        } else {
+            form.reportValidity();
+        }
+    }
+	
 	// 기안하기 버튼 클릭 시
-	$("#submitbtn").click(function() {
+	$("#submitbtn").click(async function() {
+		
+		// 폼 유효성 검사
+        if ($("#docForm")[0].checkValidity() === false) {
+        	console.log('유효성 검사 false');
+        	await Swal.fire({
+    			title: '확인 요청',
+    			html: '제목을 입력해주세요.',
+    			showCancelButton: false,
+    			confirmButtonClass: 'btn btn-success',
+    			confirmButtonText: '확인',
+    			buttonsStyling: false,
+    			reverseButtons: false,
+    			didOpen: () => {
+                    document.querySelector('#htmlDiv').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#htmlDiv').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+            });
+            $("#docForm")[0].reportValidity();
+           	return;
+        } 
+		
+      //보관함 선택 여부 확인
+        if($("#storageDiv").html() === '' || $("#storageDiv").html() === null){
+        	console.log('보관함 미선택');
+        	await Swal.fire({
+                title: '확인 요청',
+                html: '보관함을 선택해주세요.',
+                icon: 'warning', 
+                showCancelButton: false,
+                confirmButtonClass: 'btn btn-success',
+                confirmButtonText: '확인',
+                buttonsStyling: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+	            $("#storageBtn").click();
+            });
+            return; 
+        }
+
+        // 결재자 선택 여부 검사
+        if ($("#approvalDiv span").text() === '결재자를 선택하세요') {
+            console.log('결재자 없음');
+            
+            const result = await Swal.fire({
+                title: '확인 요청',
+                html: '결재자가 없습니다. 그래도 진행하시겠습니까?',
+                icon: 'warning', 
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger ms-2',
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                buttonsStyling: false,
+                reverseButtons: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            });
+            if(!result.isConfirmed) {
+               $("#approverBtn").click();
+             return;
+            }
+        }
+        
+       
 		// SweetAlert2 모달 띄우기
-		Swal.fire({
+		const docResult = await Swal.fire({
 			title: '결재',
 			html: '<textarea class="form-control" id="input-field" placeholder="결재 의견을 작성하세요" style="resize:none"></textarea>',
 			showCancelButton: true,
@@ -354,8 +420,9 @@ $(document).ready(function() {
 			cancelButtonText: '취소',
 			buttonsStyling: false,
 			reverseButtons: false
-		}).then((result) => {
-			if (result.isConfirmed) {
+		});
+		
+			if (docResult.isConfirmed) {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
 				// 로컬 스토리지에서 데이터를 삭제
@@ -385,6 +452,7 @@ $(document).ready(function() {
 					formData.entries().forEach(e=>{
 		            	console.log(e);
 	            	});
+		            
 					
 			     	// AJAX로 폼 데이터를 전송
 			        fetch(sessionStorage.getItem("path")+'/document/writeend', {
@@ -400,6 +468,7 @@ $(document).ready(function() {
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);
+			                console.log(data.object);
 			            }
 			        })
 			        .catch(error => {
@@ -409,7 +478,6 @@ $(document).ready(function() {
 			        alert('문서 양식 불러오기 오류');
 			    }
 			}
-		});
 	});
 	
 	$("#savedraftbtn").click(function() {
