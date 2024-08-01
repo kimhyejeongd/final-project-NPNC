@@ -47,10 +47,12 @@
                 <div class="col w-45" style="width:20%">
                     <div class="card card-round" style="height: 500px;width: 402px;">
                         <div class="card-header">
-                            <div class="card-head-row card-tools-still-right">
-                                <div class="card-title" id="formfoldername" style="padding-right: 76px;">전자문서 보관함 폴더 목록</div>
-                                <button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#addFolder">폴더 추가</button>
-                                <div class="card-tools"></div>
+                            <div class="card-head-row card-tools-still-right" style="display: flex; justify-content: space-between;">
+                                <div class="card-title" id="formfoldername">전자문서 보관함 폴더 목록</div>
+                                <div>
+	                                <button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#addFolder">폴더 추가</button>
+	                                <button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateFolder">폴더 수정</button>
+                                </div>
                             </div>
                         </div>
                         <div class="p-4 overflow-hidden">
@@ -90,6 +92,56 @@
                     </div>
                 </div>
                 <div style="width:60%">
+			<!-- Update Folder Modal -->
+			<div class="modal fade" id="updateFolder" tabindex="-1" aria-labelledby="updateFolderModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-body">
+			                <form id="updateFolderForm">
+			                    <div class="form-group mb-3">
+			                        <label for="updateFolderSelect" class="form-label">폴더 선택</label>
+			                        <select class="form-select" id="updateFolderSelect">
+			                            <optgroup label="대분류">
+			                                <c:forEach var="f" items="${folders}">
+			                                    <c:if test="${f.folderLevel == 1}">
+			                                        <option value="${f.folderKey}" data-folder-level="${f.folderLevel}" data-folder-group="${f.folderGroup}" data-folder-name="${f.folderName}" data-use-yn="${f.useYn}">
+			                                            ${f.folderName}
+			                                        </option>
+			                                    </c:if>
+			                                </c:forEach>
+			                            </optgroup>
+			                            <optgroup label="소분류">
+			                                <c:forEach var="f" items="${folders}">
+			                                    <c:if test="${f.folderLevel == 2}">
+			                                        <option value="${f.folderKey}" data-folder-level="${f.folderLevel}" data-folder-group="${f.folderGroup}" data-folder-name="${f.folderName}" data-use-yn="${f.useYn}">
+			                                            ${f.folderName}
+			                                        </option>
+			                                    </c:if>
+			                                </c:forEach>
+			                            </optgroup>
+			                        </select>
+			                    </div>
+			                    <div class="form-group mb-3">
+			                        <label for="updateFolderName" class="form-label">폴더 이름</label>
+			                        <input type="text" class="form-control" id="updateFolderName" placeholder="폴더 이름 입력">
+			                    </div>
+			                    <div class="form-group mb-3">
+			                        <label for="updateUseYn" class="form-label">사용 여부</label>
+			                        <div class="form-check" style="display:flex">
+			                            <input class="form-check-input" type="radio" name="updateUseYn" id="updateUseYnY" value="Y">
+			                            <label class="form-check-label" for="updateUseYnY">사용</label>
+			                            <input class="form-check-input" type="radio" name="updateUseYn" id="updateUseYnN" value="N">
+			                            <label class="form-check-label" for="updateUseYnN">비사용</label>
+			                        </div>
+			                    </div>
+			                    <button type="submit" class="btn btn-primary">저장</button>
+			                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+			                </form>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
                 
                   
                     <!-- Projects table -->
@@ -326,6 +378,51 @@
         	
         	 var selectedStorageId = null;
         	 var oriName=null;
+        	  $('#updateFolderSelect').on('change', function() {
+        	        var selectedOption = $(this).find('option:selected');
+        	        var folderName = selectedOption.data('folder-name');
+        	        var useYn = selectedOption.data('use-yn');
+
+        	        $('#updateFolderName').val(folderName);
+        	        $('input[name="updateUseYn"][value="' + useYn + '"]').prop('checked', true);
+        	    });
+
+        	    // 폴더 수정 폼 제출 이벤트
+        	    $('#updateFolderForm').on('submit', function(e) {
+        	        e.preventDefault(); // 기본 폼 제출 동작을 막음
+
+        	        var folderKey = $('#updateFolderSelect').val();
+        	        var folderName = $('#updateFolderName').val();
+        	        var useYn = $('input[name="updateUseYn"]:checked').val();
+
+        	        // 유효성 검사
+        	        if (!folderKey || !folderName) {
+        	            alert("모든 필드를 채워주세요.");
+        	            return;
+        	        }
+
+        	        var requestData = {
+        	            folderKey: folderKey,
+        	            folderName: folderName,
+        	            useYn: useYn
+        	        };
+
+        	        $.ajax({
+        	            url: '${path}/admin/documentForm/updateFolder', // 서버 요청 URL
+        	            type: 'POST',
+        	            data: JSON.stringify(requestData),
+        	            contentType: 'application/json;charset=utf-8',
+        	            success: function(response) {
+        	                console.log('Folder updated successfully:', response);
+        	                $('#updateFolder').modal('hide');
+        	                location.reload(); // 수정된 내용을 반영하기 위해 페이지 새로 고침
+        	            },
+        	            error: function(response) {
+        	                console.error('Error updating folder:', response);
+        	            }
+        	        });
+        	    });
+        	 
         	
             // 수정 버튼 클릭 이벤트
             $(document).on('click', '.btn-primary[data-bs-target="#updateStorage"]', function() {

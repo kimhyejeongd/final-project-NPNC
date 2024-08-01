@@ -217,6 +217,12 @@
 		FROM ER_STORAGE_FOLDER
 		WHERE ER_FOLDER_KEY = #{folderKey}
 	</select>
+	<update id="updateStorageFolder" parameterType="StorageFolder">
+		UPDATE ER_STORAGE_FOLDER
+		SET ER_FOLDER_NAME = #{folderName},
+			ER_FOLDER_USE_YN = #{useYn}
+		WHERE ER_FOLDER_KEY = #{folderKey}
+	</update>
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />
         <result property="folderName" column="ER_FOLDER_NAME" />

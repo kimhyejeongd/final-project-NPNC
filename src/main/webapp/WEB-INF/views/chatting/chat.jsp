@@ -720,6 +720,10 @@ $('.exit-button').click(function() {
                     if (sessionCount + unreadCount > countRoomMember) {
                         unreadCount -= 1;
                     }
+                    if(unreadCount == 0){
+                    	console.log("=====unreadCount 0=====");
+                    	unreadCount = '';
+                    }
                     var fileElement = '';
 
                     if (chatList[chat].file) {
@@ -782,6 +786,9 @@ $('.exit-button').click(function() {
         if (sessionCount + unreadCount > countRoomMember) {
             unreadCount -= 1;
         }
+        if(unreadCount == 0){
+        	unreadCount='';
+        }
         var formattedTime = formatDateTime(message.chatMsgTime);
         var fileElement = '';
 
@@ -840,7 +847,10 @@ $('.exit-button').click(function() {
 
             if (sessionCount + unreadCount > countRoomMember) {
                 unreadCount -= 1;
-                $(this).text("미확인 " + unreadCount + "명");
+                $(this).text(unreadCount);
+            }
+            if(unreadCount ==0){
+            	unreadCount = '';
             }
         });
     }

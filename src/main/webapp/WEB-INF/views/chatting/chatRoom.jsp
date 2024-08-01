@@ -16,6 +16,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>친구 목록</title>
 <style>
+
+
 #conversation {
 	flex: 1;
 	border: 1px solid #ccc;
@@ -384,8 +386,47 @@ body{
     var myChatRoomList = ${mychatRoomListJ}; 
 
         var selectedMembers = [];
+        var myRoomMemberList = '${myRoomMemberList}';
 
-        
+
+        function getRoomMemberImages(members) {
+            var memberImagesHtml = '';
+            var memberCount = members.length;
+            var profileImg = null;
+            const path = '${path}/resources/assets/img/'+profileImg;
+
+            if (memberCount === 1) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="single-profile">';
+            } else if (memberCount === 2) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
+            } else if (memberCount === 3) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+            } else if (memberCount === 4) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+            } else {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<span class="more-profiles">+' + (memberCount - 4) + '</span>';
+            }
+
+            return memberImagesHtml;
+        }
+
+        $('.room-item').each(function() {
+            var roomId = $(this).find('input[name="roomId"]').val();
+            var members = myRoomMemberList[roomId];
+            var roomIconHtml = getRoomMemberImages(members);
+            $(this).find('.room-icon').html(roomIconHtml);
+        });
+
         // 모달 열기
         $('#newChatButton').click(function() {
           	 event.stopPropagation(); 
