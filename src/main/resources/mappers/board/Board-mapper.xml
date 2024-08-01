@@ -69,11 +69,9 @@
     </insert>
 
     <!-- Board Comment Dto CRUD -->
-	<select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
-	    SELECT * FROM BOARD_COMMENT 
-	    WHERE BOARD_KEY = #{BOARD_KEY}
-	    ORDER BY BOARD_COMMENT_DATE DESC
-	</select>
+    <select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+        SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{BOARD_KEY}
+    </select>
 
     <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
         INSERT INTO BOARD_COMMENT (
