@@ -172,4 +172,10 @@ public class AdminDocumentFormController {
     	}
     	return ResponseEntity.ok(result);
     }
+    @PostMapping("/updateFolder")
+    public ResponseEntity<?>updateFolder(@RequestBody StorageFolder storageFolder){
+    	
+    	int result = service.updateStorageFolder(storageFolder);
+    	return ResponseEntity.ok(result);
+    }
 }
