@@ -86,13 +86,13 @@
 			}
 			.modal .modal_popup .close_btn {
 			  /*   display: block; */
-			    padding: 10px 20px;
+			 /*   padding: 10px 20px;
 			    background-color: rgb(116, 0, 0);
 			    border: none;
 			    border-radius: 5px;
 			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
+			    transition: box-shadow 0.2s; */
 			}
 			.modal.on {
 			    display: block;
@@ -117,6 +117,32 @@
             cursor: pointer; /* 커서를 포인터로 변경 */
         }
 	</style>
+	<style>
+	#pagingtbody th{
+		font-weight: normal !important;
+	}
+	.downloadNoteBtn{
+		display: inline-block;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    text-align: center;
+	    width: 100px; /* 버튼의 너비를 설정 */
+	    white-space: nowrap; /* 텍스트가 줄 바꿈 없이 한 줄로 유지 */
+	    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	    text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+	    box-sizing: border-box;
+		margin-right: 10px;
+	}
+	
+	#downloadButtonBox{
+		
+	}	
+	</style>
+
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -244,7 +270,8 @@
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class="display table table-striped table-hover"
+						class="table table-head-bg-primary mt-4"
+						style="margin-top: 0px!important;"
                       >
                         <thead>
                           <tr>
@@ -267,10 +294,10 @@
                         
            	    			<tr>
            	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
-           	  					<th>${d.postMsgRecKey}<p>
-           	  					<th>${d.memberKey}<p>
-           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-           	  					<th>${d.postMsgTime}<p>
+           	  					<th>${d.postMsgRecKey}</th>
+           	  					<th>${d.memberName} ${d.jobName}</th>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}</th>
+           	  					<th>${d.formattedPostMsgTime}</th>
            	  				</tr>
 	
           		 	  </c:forEach>
@@ -293,10 +320,9 @@
 			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
+							<div class="form-group">
+								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
+							</div>
 				           	  
 				           	  <div class="form-group">
 				           	    <div class="namebox" >
@@ -325,13 +351,12 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group" id="downloadButtonBox">
-                    			   	
-                    			   </div>	           	   
-								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" >닫기</button>
-								</div>
+								   <div class="form-group">
+   	                    			   <div class="form-group" id="downloadButtonBox">
+   	                    			   	
+   	                    			   </div>	           	   
+   								  </div>	  	   
+							
 				          </div>
 				    </div>
 			  </div>
@@ -446,7 +471,8 @@
 								 var newElement=document.createElement("button");
 					                newElement.classList.add("btn");
 					                newElement.classList.add("btn-success");
-					                
+									newElement.classList.add("downloadNoteBtn");
+
 					               	newElement.textContent=files[i].postMessageFileOri;
 					                
 					               	newElement.onclick = function() {
@@ -499,9 +525,9 @@
 		           	    				<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 
 				                        <th>\${item.postMsgRecKey}</th>
-				                        <th>\${item.memberKey}</th>
+				                        <th>\${item.memberName} \${item.jobName}</th>
 				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
-				                        <th>\${item.postMsgTime}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 				                    </tr>`;
 				                    tbody.append(row);
 				                }); 
