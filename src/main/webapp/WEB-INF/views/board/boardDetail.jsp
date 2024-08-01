@@ -185,7 +185,7 @@
                     <!-- 댓글 작성 폼 -->
                     <div class="comment-form mt-4">
                         <h3>댓글 작성</h3>
-                        <form action="${path}/board/addComment" method="post">
+                        <form id="commentForm" action="${path}/board/addComment" method="post">
                             <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
                             <input type="hidden" name="BOARD_COMMENT_LEVEL" value="0">
                             <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요" required>
@@ -276,5 +276,42 @@
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#commentForm').on('submit', function(event) {
+                event.preventDefault(); // 폼 제출 기본 동작 막기
+                var formData = $(this).serialize(); // 폼 데이터 직렬화
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        // 댓글 목록 새로고침 (예: 댓글 리스트를 업데이트하는 함수 호출)
+                        // updateComments(response.comments); // 이 함수는 실제로 댓글 리스트를 업데이트해야 함
+
+                        // 성공 메시지 표시
+                        Swal.fire({
+                            icon: 'success',
+                            title: '댓글이 작성되었습니다.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        // 댓글 작성 필드 초기화
+                        $('#commentForm')[0].reset();
+                    },
+                    error: function(xhr, status, error) {
+                        // 에러 메시지 표시
+                        Swal.fire({
+                            icon: 'error',
+                            title: '오류가 발생했습니다.',
+                            text: error,
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
