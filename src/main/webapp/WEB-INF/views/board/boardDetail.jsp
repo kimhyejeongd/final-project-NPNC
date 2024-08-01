@@ -180,9 +180,18 @@
                                 </c:if>
                             </c:forEach>
                         </div>
-    
                     </div>
                     
+                    <!-- 댓글 작성 폼 -->
+                    <div class="comment-form mt-4">
+                        <h3>댓글 작성</h3>
+                        <form action="${path}/board/addComment" method="post">
+                            <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                            <textarea class="form-control" name="BOARD_COMMENT_DETAIL" rows="3" placeholder="댓글을 입력하세요" required></textarea>
+                            <button type="submit" class="btn btn-secondary btn-sm mt-2">댓글 작성</button>
+                        </form>
+                    </div>
+
                     <!-- 댓글 목록 -->
                     <div class="comments mt-4">
                         <h3>댓글</h3>
@@ -198,8 +207,8 @@
                                 <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <div class="comment-actions">
                                         <form action="${path}/board/updateComment" method="post" class="d-inline">
-                                            <input type="hidden" name="BOARD_COMMENT_KEY" value="${comment.BOARD_COMMENT_KEY}">
-                                            <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                                            <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
+                                            <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
                                             <button type="submit" class="btn btn-sm">수정</button>
                                         </form>
                                         <form action="${path}/board/deleteComment" method="post" class="d-inline">
@@ -234,8 +243,8 @@
                                         <c:if test="${reply.MEMBER_KEY == loginMember.memberKey}">
                                             <div class="reply-actions">
                                                 <form action="${path}/board/updateComment" method="post" class="d-inline">
-                                                    <input type="hidden" name="BOARD_COMMENT_KEY" value="${reply.BOARD_COMMENT_KEY}">
-                                                    <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
+                                                    <input type="hidden" name="commentKey" value="${reply.BOARD_COMMENT_KEY}">
+                                                    <input type="hidden" name="boardKey" value="${board.BOARD_KEY}">
                                                     <button type="submit" class="btn btn-sm">수정</button>
                                                 </form>
                                                 <form action="${path}/board/deleteComment" method="post" class="d-inline">
@@ -250,21 +259,7 @@
                             </div>
                         </c:forEach>
                     </div>
-                    
-                    <!-- 댓글 작성 폼 -->
-                    <div class="comment-form mt-4">
-                        <h3>댓글 작성</h3>
-                        <form action="${path}/board/addComment" method="post">
-                            <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
-                            <input type="hidden" name="BOARD_COMMENT_LEVEL" value="0">
-                            <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요" required>
-                            <button type="submit" class="btn btn-secondary mt-2">작성</button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-
+ 
             <!-- Footer -->
             <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
