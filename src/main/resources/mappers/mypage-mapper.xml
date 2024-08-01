@@ -37,4 +37,10 @@
         SET MEMBER_PW = #{newPassword}
         WHERE MEMBER_ID = #{memberId}
     </update>
+    
+       <update id="updateProfileImage" parameterType="map">
+        UPDATE member
+        SET member_Profile_Image = #{profileImage}
+        WHERE member_Id = #{memberId}
+    </update>
 </mapper>

@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.npnc.mypage.service.MemberService;
 import com.project.npnc.security.dto.Member;
@@ -140,5 +143,17 @@ public class MemberController {
 
     private String generateRandomCode() {
         return String.format("%06d", new Random().nextInt(999999));
+    }
+    @PostMapping("/updateProfileImage")
+    public String updateProfileImage(@RequestParam("profileImage") MultipartFile file, RedirectAttributes redirectAttributes) {
+        Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            memberService.updateProfileImage(loginMember.getMemberId(), file);
+            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update profile image.");
+            e.printStackTrace();
+        }
+        return "redirect:/member/mypage";
     }
 }
