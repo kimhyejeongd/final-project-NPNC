@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 <sec:authentication var="loginMember" property="principal"/>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -119,7 +120,15 @@
                                 <div class="profile-card">
                                     <!-- Profile Image -->
                                     <div class="profile-image">
-                                        <img id="profileImage" src="${path}/${member.memberProfileImage}" alt="Profile Image">
+                                        <img id="profileImage" src="${path}/member/profileImage/${member.memberId}" alt="Profile Image" />
+                                        <!-- 프로필 사진 수정 버튼 -->
+                                        <button id="editProfileImageButton" class="btn btn-sm btn-primary" style="margin-top: 10px;">프로필 사진 수정</button>
+                                        <!-- 프로필 이미지 업로드 폼, 초기에는 숨김 -->
+                                        <div id="profileImageForm" style="display: none; margin-top: 10px;">
+                                            <label for="profileImageUpload">프로필 이미지 변경</label>
+                                            <input type="file" class="form-control" id="profileImageUpload">
+                                            <button class="btn btn-primary btn-custom" id="uploadProfileImageButton">이미지 업로드</button>
+                                        </div>
                                     </div>
                                     <!-- Profile Information -->
                                     <div class="profile-info">
@@ -128,31 +137,62 @@
                                             <div class="col">
                                                 <p><strong>아이디:</strong> <span>${member.memberId}</span></p>
                                                 <p><strong>이름:</strong> <span>${member.memberName}</span></p>
-                                                <p><strong>주소:</strong> <span id="memberAddressText">${member.memberAddress}</span>
-                                                    <button class="btn btn-sm btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#addressModal">수정</button>
-                                                </p>
-                                                <p><strong>핸드폰:</strong> <span>${member.memberPhone}</span></p>
-                                                <p><strong>e-mail:</strong> <span id="memberEmailText">${member.memberEmail}</span>
-                                                    <button class="btn btn-sm btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#passwordModal">비밀번호 수정</button>
-                                                </p>
-                                                <p><strong>성별:</strong> <span>${member.memberGender}</span></p>
-                                            </div>
-                                            <div class="col">
-                                                <p><strong>입사일:</strong> <span>${member.memberEnrollDate}</span></p>
-                                                <p><strong>퇴사일:</strong> <span>${member.memberLeaveDate}</span></p>
-                                                <p><strong>부서:</strong> <span>${member.departmentName}</span></p>
-                                                <p><strong>직급:</strong> <span>${member.jobKey}</span></p>
-                                                <p><strong>권한:</strong> <span>${member.accessKey}</span></p>
-                                                <p><strong>현황:</strong> <span>${member.memberState}</span></p>
-                                                <button id="saveChangesButton" class="btn btn-primary btn-custom" style="display:none;">저장</button>
+                                                <p><strong>이메일:</strong> <span>${member.memberEmail}</span></p>
+                                                <p><strong>전화번호:</strong> <span>${member.memberPhone}</span></p>
+                                                <p><strong>주소:</strong> <span>${member.memberAddress}</span></p>
                                             </div>
                                         </div>
-                                        <!-- Profile Image Upload -->
-                                        <div class="form-group">
-                                            <label for="profileImageUpload">프로필 이미지 변경</label>
-                                            <input type="file" class="form-control" id="profileImageUpload">
-                                            <button class="btn btn-primary btn-custom" id="uploadProfileImageButton">이미지 업로드</button>
+                                        <!-- 정보 수정 버튼 -->
+                                        <button class="btn btn-primary" id="editProfileButton">정보 수정</button>
+                                        <!-- 정보 수정 폼, 초기에는 숨김 -->
+                                        <div id="editProfileForm" style="display: none; margin-top: 10px;">
+                                            <form id="profileForm">
+                                                <div class="form-group">
+                                                    <label for="memberName">이름</label>
+                                                    <input type="text" class="form-control" id="memberName" value="${member.memberName}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="memberEmail">이메일</label>
+                                                    <input type="email" class="form-control" id="memberEmail" value="${member.memberEmail}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="memberPhone">전화번호</label>
+                                                    <input type="text" class="form-control" id="memberPhone" value="${member.memberPhone}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="memberAddress">주소</label>
+                                                    <input type="text" class="form-control" id="memberAddress" value="${member.memberAddress}">
+                                                </div>
+                                                <button type="button" class="btn btn-primary" id="saveProfileButton">저장</button>
+                                            </form>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 비밀번호 변경 섹션 -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="title">비밀번호 변경</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="passwordForm">
+                                            <div class="form-group">
+                                                <label for="currentPassword">현재 비밀번호</label>
+                                                <input type="password" class="form-control" id="currentPassword">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="newPassword">새 비밀번호</label>
+                                                <input type="password" class="form-control" id="newPassword">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPassword">비밀번호 확인</label>
+                                                <input type="password" class="form-control" id="confirmPassword">
+                                            </div>
+                                            <button type="button" class="btn btn-primary" id="changePasswordButton">비밀번호 변경</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -160,70 +200,7 @@
                     </div>
                 </div>
             </div>
-
             <%@ include file="/WEB-INF/views/common/footer.jsp" %>
-        </div>
-        <!-- End Main Panel -->
-    </div>
-
-    <!-- Address Modal -->
-    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addressModalLabel">주소 수정</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="roadAddress">도로명 주소</label>
-                        <input type="text" class="form-control" id="roadAddress" placeholder="도로명주소">
-                    </div>
-                    <div class="form-group">
-                        <label for="jibunAddress">지번 주소</label>
-                        <input type="text" class="form-control" id="jibunAddress" placeholder="지번주소">
-                    </div>
-                    <div class="form-group">
-                        <label for="postcode">우편번호</label>
-                        <input type="text" class="form-control" id="postcode" placeholder="우편번호">
-                    </div>
-                    <button type="button" class="btn btn-secondary" id="searchAddressButton">주소 검색</button>
-                    <button type="button" class="btn btn-primary" id="saveAddressButton">주소 저장</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Password Modal -->
-    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="passwordModalLabel">비밀번호 수정</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="currentPassword">현재 비밀번호</label>
-                        <input type="password" class="form-control" id="currentPassword" placeholder="현재 비밀번호">
-                    </div>
-                    <div class="form-group">
-                        <label for="newPassword">새 비밀번호</label>
-                        <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmNewPassword">새 비밀번호 확인</label>
-                        <input type="password" class="form-control" id="confirmNewPassword" placeholder="새 비밀번호 확인">
-                    </div>
-                    <button type="button" class="btn btn-primary" id="changePasswordButton">비밀번호 변경</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -233,40 +210,13 @@
     <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/moment/moment.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/fullcalendar/fullcalendar.min.js"></script>
     <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jquery.mask/jquery.mask.min.js"></script>
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script>
+    <script src="${path}/resources/js/mypage.js"></script>
 
-    <script>
-      document.getElementById('uploadProfileImageButton').addEventListener('click', function() {
-        var formData = new FormData();
-        var fileInput = document.getElementById('profileImageUpload');
-        var file = fileInput.files[0];
-
-        if (file) {
-          formData.append('profileImage', file);
-
-          fetch('${path}/member/updateProfileImage', {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              document.getElementById('profileImage').src = '${path}/upload/' + data.fileName;
-            } else {
-              alert('이미지 업로드에 실패했습니다.');
-            }
-          })
-          .catch(error => console.error('Error:', error));
-        } else {
-          alert('파일을 선택하세요.');
-        }
-      });
-    </script>
 </body>
 </html>

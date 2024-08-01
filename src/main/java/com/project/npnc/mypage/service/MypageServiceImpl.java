@@ -66,6 +66,8 @@ public class MypageServiceImpl implements MemberService {
 
             Path filePath = uploadPath.resolve(fileName);
             System.out.println("File path: " + filePath.toString());
+            System.out.println("Current working directory: " + Paths.get("").toAbsolutePath().toString());
+
 
             // 파일 복사
             try (var inputStream = file.getInputStream()) {
