@@ -37,4 +37,9 @@ public class ExternalDaoImpl implements ExternalDao {
     public void deleteContact(int id) {
         sqlSession.delete("com.project.npnc.external.dao.ExternalDao.deleteContact", id);
     }
+
+    @Override
+    public void toggleFavorite(int id) {
+        sqlSession.update("com.project.npnc.external.dao.ExternalDao.toggleFavorite", id); // 수정된 부분
+    }
 }

@@ -9,4 +9,5 @@ public interface ExternalService {
     void addContact(ExternalDto externalDto);
     void updateContact(ExternalDto externalDto);
     void deleteContact(int id);
+    void toggleFavorite(int id); // 추가된 메서드
 }

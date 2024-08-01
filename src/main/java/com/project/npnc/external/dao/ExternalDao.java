@@ -9,4 +9,5 @@ public interface ExternalDao {
     void addContact(ExternalDto externalDto);
     void updateContact(ExternalDto externalDto);
     void deleteContact(int id);
+    void toggleFavorite(int id);
 }

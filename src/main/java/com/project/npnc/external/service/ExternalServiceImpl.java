@@ -37,4 +37,15 @@ public class ExternalServiceImpl implements ExternalService {
     public void deleteContact(int id) {
         externalDao.deleteContact(id);
     }
+    
+    @Override
+    public void toggleFavorite(int id) {
+        ExternalDto externalDto = externalDao.getContactById(id);
+        if (externalDto != null) {
+            String currentStatus = externalDto.getAB_EXTERNAL_BOOKMARK();
+            String newStatus = "Y".equals(currentStatus) ? "N" : "Y";
+            externalDto.setAB_EXTERNAL_BOOKMARK(newStatus);
+            externalDao.updateContact(externalDto);
+        }
+}
 }

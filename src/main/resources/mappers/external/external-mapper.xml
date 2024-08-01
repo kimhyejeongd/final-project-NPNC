@@ -56,5 +56,14 @@
     <delete id="deleteContact" parameterType="int">
         DELETE FROM AB_EXTERNAL WHERE AB_EXTERNAL_KEY = #{id}
     </delete>
+    
+    <update id="toggleFavorite" parameterType="int">
+	    UPDATE AB_EXTERNAL
+	    SET AB_EXTERNAL_BOOKMARK = CASE
+	        WHEN AB_EXTERNAL_BOOKMARK = 'Y' THEN 'N'
+	        ELSE 'Y'
+	    END
+	    WHERE AB_EXTERNAL_KEY = #{id}
+	</update>
 
 </mapper>

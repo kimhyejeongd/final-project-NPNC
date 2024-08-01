@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.npnc.external.dto.ExternalDto;
 import com.project.npnc.external.service.ExternalService;
 
@@ -33,13 +32,13 @@ public class ExternalController {
     }
 
     @PostMapping("/add")
-    public String addContact(ExternalDto externalDto) {
+    public String addContact(@RequestBody ExternalDto externalDto) {
         externalService.addContact(externalDto);
         return "redirect:/external/list";
     }
 
     @PostMapping("/edit")
-    public String editContact(ExternalDto externalDto) {
+    public String editContact(@RequestBody ExternalDto externalDto) {
         externalService.updateContact(externalDto);
         return "redirect:/external/list";
     }
@@ -52,11 +51,12 @@ public class ExternalController {
 
     @PostMapping("/toggleFavorite")
     @ResponseBody
-    public String toggleFavorite(ExternalDto externalDto) {
+    public String toggleFavorite(@RequestParam("AB_EXTERNAL_KEY") int id) {
         try {
-            //externalService.updateContact(externalDto);
+            externalService.toggleFavorite(id);
             return "success";
         } catch (Exception e) {
+            e.printStackTrace(); // 예외를 로그에 기록합니다.
             return "error";
         }
     }
@@ -66,4 +66,5 @@ public class ExternalController {
     public ExternalDto getContactById(@PathVariable("id") int id) {
         return externalService.getContactById(id);
     }
+
 }

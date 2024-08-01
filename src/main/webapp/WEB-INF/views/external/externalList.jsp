@@ -32,12 +32,12 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-
+		
         .popup-overlay {
             display: none;
             position: fixed;
             top: 0;
-            left: 0;
+            left: 0;	
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
@@ -86,6 +86,9 @@
 
         .contact-info label {
             font-weight: bold;
+            }
+        .container {
+            margin-top: 90px;
         }
     </style>
 </head>
@@ -94,153 +97,144 @@
         <!-- Sidebar -->
         <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
 
-        <!-- Main Panel -->
-        <div class="main-panel">
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-            
+      <div class="main-panel">
+            <!-- Header Bar -->
+            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+			<div class="page-inner">
             <div class="container">
-                <h1>외부 주소록</h1>
-                <div id="contacts">
-                    <c:forEach var="contact" items="${contacts}">
-                        <div class="contact-card" data-id="${contact.AB_EXTERNAL_KEY}">
-                            <div>
-                                <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" 
-                                      title="즐겨찾기" 
-                                      onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})">
-                                    <i class="fas fa-star"></i>
-                                </span>
-                                <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
-                                <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
-                                <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
-                                <span>직급: ${contact.AB_EXTERNAL_JOB}</span>
-                            </div>
-                            <div>
-                                <button onclick="openEditPopup(${contact.AB_EXTERNAL_KEY})">수정</button>
-                                <button onclick="openDeletePopup(${contact.AB_EXTERNAL_KEY})">삭제</button>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-                <button onclick="openAddPopup()">등록하기</button>
+                <h1 class="mb-4">외부 주소록 목록</h1>
+
+                <!-- 외부 주소록 목록 테이블 -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>전화번호</th>
+                            <th>이메일</th>
+                            <th>회사명</th>
+                            <th>즐겨찾기</th>
+                            <th>조치</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="contact" items="${contacts}">
+                            <tr>
+                                <td>${contact.AB_EXTERNAL_NAME}</td>
+                                <td>${contact.AB_EXTERNAL_TELL}</td>
+                                <td>${contact.AB_EXTERNAL_EMAIL}</td>
+                                <td>${contact.AB_EXTERNAL_COMPANY}</td>
+                                <td>
+                                    <!-- 즐겨찾기 아이콘 -->
+                                    <i class="fas fa-star bookmark-icon" 
+                                       data-id="${contact.AB_EXTERNAL_KEY}" 
+                                       data-bookmark="${contact.AB_EXTERNAL_BOOKMARK}"
+                                       style="color:${contact.AB_EXTERNAL_BOOKMARK == 'Y' ? 'gold' : 'gray'};"></i>
+                                </td>
+                                <td>
+                                    <!-- 수정 버튼 -->
+                                    <button type="button" class="btn btn-primary" onclick="openEditModal(${contact.AB_EXTERNAL_KEY}, '${contact.AB_EXTERNAL_NAME}', '${contact.AB_EXTERNAL_TELL}', '${contact.AB_EXTERNAL_EMAIL}', '${contact.AB_EXTERNAL_COMPANY}')">수정</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
-            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+
+            <!-- Footer -->
+            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
 
-    <!-- 팝업 및 오버레이 -->
-    <div id="edit-popup" class="popup">
-        <h2>정보 수정</h2>
-        <form id="edit-form" action="${path}/external/edit" method="post">
-            <input type="hidden" name="AB_EXTERNAL_KEY" id="edit-id">
-            <label>이름:</label>
-            <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
-            <label>전화번호:</label>
-            <input type="text" name="AB_EXTERNAL_TELL" id="edit-phone" required><br>
-            <label>이메일:</label>
-            <input type="email" name="AB_EXTERNAL_EMAIL" id="edit-email" required><br>
-            <label>회사:</label>
-            <input type="text" name="AB_EXTERNAL_COMPANY" id="edit-company"><br>
-            <label>부서:</label>
-            <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="edit-department"><br>
-            <label>직급:</label>
-            <input type="text" name="AB_EXTERNAL_JOB" id="edit-job"><br>
-            <button type="submit">저장</button>
-            <button type="button" onclick="closePopup()">취소</button>
-        </form>
+    <!-- 수정 모달 -->
+    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editContactModalLabel">외부 주소록 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editContactForm" action="${path}/external/edit" method="post">
+                    <input type="hidden" name="_method" value="post" />
+                    <input type="hidden" id="contactKey" name="AB_EXTERNAL_KEY" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">이름</label>
+                            <input type="text" id="name" name="AB_EXTERNAL_NAME" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tell">전화번호</label>
+                            <input type="text" id="tell" name="AB_EXTERNAL_TELL" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">이메일</label>
+                            <input type="email" id="email" name="AB_EXTERNAL_EMAIL" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">회사명</label>
+                            <input type="text" id="company" name="AB_EXTERNAL_COMPANY" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">수정 완료</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
 
-    <div id="delete-popup" class="popup">
-        <h2>정말 삭제하시겠습니까?</h2>
-        <form action="${path}/external/delete" method="post">
-            <input type="hidden" name="AB_EXTERNAL_KEY" id="delete-id">
-            <button type="submit">확인</button>
-            <button type="button" onclick="closePopup()">취소</button>
-        </form>
-    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
 
-    <div id="add-popup" class="popup">
-        <h2>정보 등록</h2>
-        <form id="add-form" action="${path}/external/add" method="post">
-            <label>이름:</label>
-            <input type="text" name="AB_EXTERNAL_NAME" id="add-name" required><br>
-            <label>전화번호:</label>
-            <input type="text" name="AB_EXTERNAL_TELL" id="add-phone" required><br>
-            <label>이메일:</label>
-            <input type="email" name="AB_EXTERNAL_EMAIL" id="add-email" required><br>
-            <label>회사:</label>
-            <input type="text" name="AB_EXTERNAL_COMPANY" id="add-company"><br>
-            <label>부서:</label>
-            <input type="text" name="AB_EXTERNAL_DEPARTMENT" id="add-department"><br>
-            <label>직급:</label>
-            <input type="text" name="AB_EXTERNAL_JOB" id="add-job"><br>
-            <button type="submit">등록</button>
-            <button type="button" onclick="closePopup()">취소</button>
-        </form>
-    </div>
-
-    <div id="popup-overlay" class="popup-overlay"></div>
-
+    <!-- 모달 스크립트 -->
     <script>
-        function openEditPopup(id) {
-            fetch(`${path}/external/get/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('edit-id').value = data.AB_EXTERNAL_KEY;
-                    document.getElementById('edit-name').value = data.AB_EXTERNAL_NAME;
-                    document.getElementById('edit-phone').value = data.AB_EXTERNAL_TELL;
-                    document.getElementById('edit-email').value = data.AB_EXTERNAL_EMAIL;
-                    document.getElementById('edit-company').value = data.AB_EXTERNAL_COMPANY;
-                    document.getElementById('edit-department').value = data.AB_EXTERNAL_DEPARTMENT;
-                    document.getElementById('edit-job').value = data.AB_EXTERNAL_JOB;
-                    document.getElementById('edit-popup').style.display = 'block';
-                    document.getElementById('popup-overlay').classList.add('show');
-                })
-                .catch(error => console.error('Error:', error));
-        }
+    function openEditModal(key, name, tell, email, company) {
+        // 모달 폼의 필드에 데이터 설정
+        document.getElementById('contactKey').value = key;
+        document.getElementById('name').value = name;
+        document.getElementById('tell').value = tell;
+        document.getElementById('email').value = email;
+        document.getElementById('company').value = company;
 
-        function openDeletePopup(id) {
-            document.getElementById('delete-id').value = id;
-            document.getElementById('delete-popup').style.display = 'block';
-            document.getElementById('popup-overlay').classList.add('show');
-        }
+        // 모달 열기
+        var myModal = new bootstrap.Modal(document.getElementById('editContactModal'));
+        myModal.show();
+    }
+    </script>
 
-        function openAddPopup() {
-            document.getElementById('add-popup').style.display = 'block';
-            document.getElementById('popup-overlay').classList.add('show');
-        }
+    <!-- 즐겨찾기 토글 스크립트 -->
+    <script>
+    $(document).ready(function() {
+        $('.bookmark-icon').click(function() {
+            var icon = $(this);
+            var id = icon.data('id');
+            var currentStatus = icon.data('bookmark');
+            var newStatus = currentStatus === 'Y' ? 'N' : 'Y';
 
-        function closePopup() {
-            document.getElementById('edit-popup').style.display = 'none';
-            document.getElementById('delete-popup').style.display = 'none';
-            document.getElementById('add-popup').style.display = 'none';
-            document.getElementById('popup-overlay').classList.remove('show');
-        }
-
-        function toggleFavorite(starElement, id) {
-            console.log(id);
-            const isFavorite = starElement.classList.contains('favorite');
-            const newFavoriteStatus = isFavorite ? 'N' : 'Y';
-            
-            fetch(`${path}/external/toggleFavorite`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+            $.ajax({
+                url: '${path}/external/toggleFavorite',
+                type: 'POST',
+                data: { 'AB_EXTERNAL_KEY': id },
+                success: function(response) {
+                    if (response === 'success') {
+                        icon.data('bookmark', newStatus);
+                        icon.css('color', newStatus === 'Y' ? 'gold' : 'gray');
+                    } else {
+                        alert('즐겨찾기 토글에 실패했습니다.');
+                    }
                 },
-                body: `AB_EXTERNAL_BOOKMARK=${newFavoriteStatus}&MEMBER_KEY=${id}`
-            })
-            .then(response => response.text())
-            .then(result => {
-                if (result === 'success') {
-                    starElement.classList.toggle('favorite', !isFavorite);
-                } else {
-                    alert('즐겨찾기 등록할 수 없습니다.');
+                error: function() {
+                    alert('서버 오류');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('오류가 발생했습니다.');
             });
-        }
+        });
+    });
     </script>
 </body>
 </html>
