@@ -6,7 +6,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -22,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,6 +38,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +54,7 @@ import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
+import com.project.npnc.document.model.dto.DocFile;
 import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
@@ -54,6 +65,7 @@ import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +80,7 @@ public class MemberDocumentController {
 	private final AdminDocumentService adminserv;
 	private final VacationService vacserv;
 	@Value("${file.upload-dir}")
-    private String uploadDir;
+    private String uploadDir; // src/main/resources/upload/
 	
 	
 	@GetMapping("/home")
@@ -105,7 +117,7 @@ public class MemberDocumentController {
 		log.debug("{}", result);
 		m.addAttribute("completelist", result);
 	}
-	@GetMapping("/list/employee/reject")
+	@GetMapping("/list/employee/rejected")
 	public void selectMyRejectDocs(Model m) {
 		log.debug("----반려 문서 조회----");
 		Member user = getCurrentUser();
@@ -128,6 +140,14 @@ public class MemberDocumentController {
 		List<Document> result = serv.selectDraftDocs(user.getMemberKey());
 		log.debug("{}", result);
 		m.addAttribute("doclist", result);
+	}
+	@GetMapping("/list/employee/pending")
+	public void selectMyPendingDocs(Model m){
+		log.debug("---- 보류된 문서 조회----");
+		Member user = getCurrentUser();
+		List<Document> result = serv.selectMyPendingDocs(user.getMemberKey());
+		log.debug("{}", result);
+		m.addAttribute("pendinglist", result);
 	}
 	
 //	결재자 문서 목록 조회
@@ -184,18 +204,19 @@ public class MemberDocumentController {
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
 		m.addAttribute("l", document);
-		m .addAttribute("approverStr", Arrays.asList(document.getApprovers()).toString());
+		List<Approver> aps = document.getApprovers();
+		aps.removeIf(e-> e.getCategory().equals("기안"));
+		log.debug(aps.toString());
+		m .addAttribute("approverStr", Arrays.asList(aps).toString());
 		//문서파일 html 가져오기
 		String html = readHtmlFile("dochtml", document.getErDocFilename());
 		if(html == null || html.equals("")) {
-			log.debug("문서 내용 -> " + html);
 			throw new Exception("문서 불러오기 실패");
 		}
 		
 		if(history != null) {
 			m.addAttribute("history", history);
 		}
-		log.debug("문서 내용 -> " + html);
 		m.addAttribute("html", html);
 	}
 	
@@ -930,6 +951,56 @@ public class MemberDocumentController {
 		response.put("message", "문서 삭제 완료");
 		return ResponseEntity.ok(response);
 	}
+	//파일 다운로드
+	@GetMapping("/files/download/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(
+    		@PathVariable String filename,
+    		HttpServletRequest request) {
+		log.debug("----- 파일 다운로드 -----");
+		String oriname = serv.selecetDocFileOriname(filename);
+		
+        try {
+            Path filePath = Paths.get(uploadDir + "docfile/").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            // 파일이 존재 확인
+            if (resource.exists() && resource.isReadable()) {
+            	//인코딩
+            	String encodedFilename = URLEncoder.encode(oriname, "UTF-8").replaceAll("\\+", "%20");
+
+            	return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+	 }
+	
+	//파일 자세히보기
+	@GetMapping("/files/detail/{filename:.+}")
+	@ResponseBody
+    public ResponseEntity<DocFile> getFileDetail(
+    		@PathVariable String filename) {
+		log.debug("파일 자세히보기 요청 -> " + filename);
+		try {
+	        String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
+	        DocFile fileDetail = serv.getFileDetailByRename(decodedFilename);
+	        log.debug("{}", fileDetail);
+	        if (fileDetail != null) {
+	            return ResponseEntity.ok(fileDetail);
+	        } else {
+	            return ResponseEntity.status(404).build();
+	        }
+	    } catch (UnsupportedEncodingException e) {
+	        log.error("Error decoding filename: ", e);
+	        return ResponseEntity.status(500).build();
+	    }
+    }
 	
 	//html 파일 읽기
 	public String readHtmlFile(String dir, String title) {

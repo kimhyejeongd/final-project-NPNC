@@ -55,6 +55,19 @@
 		<collection property="recMember" resultMap="memberMap"></collection>
 		<collection property="files" resultMap="noteFileMap"></collection>
 	</resultMap> 
+	<resultMap id="noteSendMapPagingList" type="noteSend">
+
+		<result column="POST_MSG_SEND_KEY" property="postMsgSendKey"></result>
+		<result column="SEND_MEMBER_KEY" property="sendMemberKey"></result>
+		<result column="POST_MSG_SEND_TITLE" property="postMsgSendTitle"></result>
+		<result column="POST_MSG_SEND_DETAIL" property="postMsgSendDetail"></result>
+		<result column="POST_MSG_SEND_TIME" property="postMsgSendTime"></result>
+		<result column="POST_MSG_SEND_RESERVATION" property="postMsgSendReservation"></result>
+		<result column="MEMBER_NAME" property="memberName"></result>
+		<result column="JOB_NAME" property="jobName"></result>
+		<collection property="recMember" resultMap="memberMap"></collection>
+		<collection property="files" resultMap="noteFileMap"></collection>
+	</resultMap> 
 	<resultMap id="noteFileMap" type="noteFileDto">
 		<result column="POST_MSG_FILE_KEY" property="postMsgFileKey"></result>
 		<result column="POST_MSG_KEY" property="postMsgKey"></result>
@@ -68,7 +81,9 @@
 	</insert>
 	
 	<insert id="noteReciver" parameterType="map">
-	INSERT INTO POST_MESSAGE_RECEIVER VALUES(SEQ_PMR.NEXTVAL,#{reMemberKey} ,#{noteMsgKey}, DEFAULT)	
+	INSERT INTO POST_MESSAGE_RECEIVER VALUES(SEQ_PMR.NEXTVAL,#{reMemberKey} ,#{noteMsgKey}, DEFAULT, DEFAULT, DEFAULT)	
+	
+	
 	</insert>
 	
 	
@@ -130,11 +145,11 @@
 		VALUES(#{postMsgRecKey}, #{memberKey}, #{postMsgTitle}, #{postMsgDetail}, SYSDATE, NULL, DEFAULT )
 		
 	</select>
-	<select id="sendNoteSelectAllPaging" resultMap="noteSendMap">
+	<select id="sendNoteSelectAllPaging" resultMap="noteSendMapPagingList">
 	
-		SELECT * FROM POST_MESSAGE_SEND WHERE SEND_MEMBER_KEY=#{memberKey} AND SEND_DELETE_STATUS='N' ORDER BY POST_MSG_SEND_KEY DESC
-		
+	SELECT * FROM POST_MESSAGE_SEND S JOIN "MEMBER" M ON S.SEND_MEMBER_KEY=M.MEMBER_KEY JOIN JOB J ON M.JOB_KEY=J.JOB_KEY WHERE SEND_MEMBER_KEY=#{memberKey} AND SEND_DELETE_STATUS='N' ORDER BY POST_MSG_SEND_KEY DESC	
 	</select>
+	
 	<select id="sendNoteSelectAll" resultMap="noteSendMap">
 	
 		SELECT * FROM POST_MESSAGE_SEND pms 
@@ -186,25 +201,27 @@
 	</update>
 	
 	<!-- 내게 쓴 쪽지함 매퍼-->
-	<select id="selectNoteMeAll"  resultMap="noteRecMap">
-	SELECT * 
-	FROM POST_MESSAGE_RECEPTION 
-	JOIN POST_MESSAGE_RECEIVER 
-	USING (POST_MSG_REC_KEY) 
-	WHERE MEMBER_REC_KEY=#{memberKey} 
-	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
-	AND DELETE_STATUS='N' 
-	ORDER BY POST_MSG_REC_KEY DESC
+	<select id="selectNoteMeAll"  resultMap="noteRecMapPagingList">
+	SELECT *
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+	WHERE V.MEMBER_REC_KEY=#{memberKey} 
+	AND R.POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND V.DELETE_STATUS='N' 
+	ORDER BY V.POST_MSG_REC_KEY DESC
 	</select>
 	
 	<select id="selectNoteMeTotalData" parameterType="_int" resultType="_int">
-	SELECT COUNT(*) 	
-	FROM POST_MESSAGE_RECEPTION 
-	JOIN POST_MESSAGE_RECEIVER 
-	USING (POST_MSG_REC_KEY) 
-	WHERE MEMBER_REC_KEY=#{memberKey} 
-	AND POST_MSG_REC_MEMBER_KEY = #{memberKey}
-	AND DELETE_STATUS='N' 
+	SELECT COUNT(*)
+    FROM POST_MESSAGE_RECEPTION R
+    JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
+    JOIN "MEMBER" m ON m.MEMBER_KEY = R.POST_MSG_REC_MEMBER_KEY
+    JOIN JOB J ON J.JOB_KEY = m.JOB_KEY
+	WHERE V.MEMBER_REC_KEY=#{memberKey} 
+	AND R.POST_MSG_REC_MEMBER_KEY = #{memberKey}
+	AND V.DELETE_STATUS='N' 
 	</select>
 	
 	<update id="noteBookMarkInsert" parameterType="map" >

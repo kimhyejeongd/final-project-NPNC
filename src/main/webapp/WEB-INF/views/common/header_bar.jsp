@@ -312,13 +312,7 @@
 			}
 			.modal1Organ .modal_popup1Organ .close_btn1Organ {
 			  /*   display: block; */
-			    padding: 10px 20px;
-			    background-color: rgb(116, 0, 0);
-			    border: none;
-			    border-radius: 5px;
-			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
 			}
 			.modal1Organ.on1Organ {
 			    display: block;
@@ -421,36 +415,11 @@
 			</script>
 			
              <script type="text/javascript">
-             var myChatRoomList;
-                $(document).ready(function() {
-   
-                         headerUnread();
 
-                   
-                       $('#messageDropdown').on('show.bs.dropdown', function() {
-                         event.stopPropagation(); 
-                           $.ajax({
-                               url: '${path}/chatRoom', 
-                               data: {
-                                   inputValue: '1' 
-                               },
-                               success: function(response) {
-
-                                   $('.notif-center').eq(0).html(response);
-
-
-					                },
-					                error: function(xhr, status, error) {
-					                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
-					                    $("#messageContent").html(errorMessage);
-					                }
-					            });
-					        });
-					    });
 					<!-- 조직도 내용 함수-->
 					 $(document).ready(
 			            function(){
-			               $("#organ").on('show.bs.dropdown', function(){
+			               $("#organ").on('click', function(){
 			            	     event.stopPropagation();
 			            	     $.ajax({
 			            	    	url : '${path}/organ',
@@ -467,7 +436,7 @@
 					<!-- 알람 내용 드랍다운 함수 -->
 					$(document).ready(
 			            function(){
-			               $("#notifDropdown").on('show.bs.dropdown', function(){
+			               $("#notifDropdown").on('click', function(){
 								
 								$.ajax({
 									url:'${path}/alarmSelectAll',
@@ -500,7 +469,7 @@
 
 										          var spanBlock = document.createElement('span');
 										          spanBlock.className = 'block';
-										          spanBlock.textContent = response[i].alarmSendMember+'님의 쪽지';
+										          spanBlock.textContent = response[i].memberName+" "+response[i].jobName+'님의 쪽지';
 										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 										          var spanTime = document.createElement('span');
@@ -546,6 +515,34 @@
 			               });   
 			            }
 			         );
+					
+		             var myChatRoomList;
+		                $(document).ready(function() {
+		            	     event.stopPropagation();
+
+		                         headerUnread();
+
+		                   
+		                       $('#messageDropdown').on('show.bs.dropdown', function() {
+		                         event.stopPropagation(); 
+		                           $.ajax({
+		                               url: '${path}/chatRoom', 
+		                               data: {
+		                                   inputValue: '1' 
+		                               },
+		                               success: function(response) {
+
+		                                   $('.notif-center').eq(0).html(response);
+
+
+							                },
+							                error: function(xhr, status, error) {
+							                    var errorMessage = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+							                    $("#messageContent").html(errorMessage);
+							                }
+							            });
+							        });
+							    });
 							 		 
 					 var headerUnread = ()=>{						 
 						$.ajax({
@@ -604,8 +601,8 @@
                       aria-labelledby="messageDropdown">
                       <li>
                         <div class="dropdown-title d-flex justify-content-between align-items-center">
-                          Messages
-                          <a href="#" class="small">Mark all as read</a>
+                          메신저
+                          <!-- <a href="#" class="small">Mark all as read</a> -->
                         </div>
                       </li>
                       <li>
@@ -617,11 +614,6 @@
                             
                           </div>
                         </div> 
-                      </li>
-                      <li>
-                        <a class="see-all" href="javascript:void(0);"
-                          >See all messages<i class="fa fa-angle-right"></i>
-                        </a>
                       </li>
                     </ul>
                   </li>
@@ -904,7 +896,7 @@
 		             	$.notify({
 				   		 	icon: 'icon-bell',
 				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-				   		 	message:  bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
+				   		 	message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 				   		 },{
 				   		 	type: 'primary',
 				   		 	placement: {
@@ -947,7 +939,7 @@
 		
 					          var spanBlock = document.createElement('span');
 					          spanBlock.className = 'block';
-					          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+							  spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName+'님의 쪽지';
 					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 		
 					          var spanTime = document.createElement('span');
@@ -998,7 +990,7 @@
 			             	$.notify({
 					   		 	icon: 'icon-bell',
 					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-					   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+								message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 					   		 },{
 					   		 	type: 'primary',
 					   		 	placement: {
@@ -1040,7 +1032,7 @@
 
 		   			          var spanBlock = document.createElement('span');
 		   			          spanBlock.className = 'block';
-		   			          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
 		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 		   			          var spanTime = document.createElement('span');
@@ -1087,7 +1079,7 @@
 
 
                       for (var username in users) {
-                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberKey}') { // 본인의 상태는 업데이트하지 않음
+                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberId}') { // 본인의 상태는 업데이트하지 않음
                               userStatusMap[username] = users[username];
                               updateUserStatus(username, users[username]);
                           }
@@ -1099,10 +1091,10 @@
                 var statusDot = document.getElementById('status-dot-' + username);
                 
                 console.log(statusDot);
-                if (!statusDot) {
-                    console.error('status-dot element not found for user: ' + username);
+                 if (!statusDot) {
+                    console.log('status-dot element not found for user: ' + username);
                     return;
-                }
+                } 
 
                 statusDot.className = 'status-dot ' + (isOnline ? 'online' : 'offline');
             }

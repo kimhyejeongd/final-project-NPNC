@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <sec:authentication var="loginMember" property="principal"/>
+<c:set var="aptarget" value="'memberKey=' + ${loginMember.memberKey}"/>
 <%
 	String lastPage = (String) session.getAttribute("lastPage");
 %>
@@ -42,6 +43,7 @@
  </style>
  <script src="${path}/resources/jh/js/docDetail.js"></script>
  <script src="${path}/resources/jh/js/draft.js"></script>
+ <script src="${path}/resources/jh/js/inprocess.js"></script>
 <body>
 
 	<div class="wrapper">
@@ -88,18 +90,18 @@
 							<div class="d-flex">
 							<c:choose>
 								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')}">
-									<a href="#" class="btn btn-label-success btn-round btn-sm me-2">
+									<button class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
 											<i class="fas fa-edit"></i>
 										</span>
 										내용 수정
-									</a>
-									<a href="#" class="btn btn-label-info btn-round btn-sm">
+									</button>
+									<button class="btn btn-label-info btn-round btn-sm" onclick="modal('${l.erDocSerialKey}');">
 										<span class="btn-label">
 											<i class="fas fa-redo-alt"></i>
 										</span>
 										회수
-									</a>
+									</button>
 								</c:when>
 								<c:when test="${fn:contains(lastPage, 'draft') or fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
 									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocKey}')">
@@ -115,9 +117,10 @@
 										삭제
 									</button>
 								</c:when>
-								<c:when test="${fn:contains(lastPage, 'waiting') or 
-										(fn:contains(lastPage, 'home') and fn:contains(history, 'waiting')) or 
-										(fn:contains(approverStr, loginMember.memberKey))}">
+								<c:when test="${fn:contains(lastPage, 'waiting') or (fn:contains(lastPage, 'home')
+												or fn:contains(lastPage, 'approver/pending') 
+												and fn:contains(history, 'waiting')) or 
+							                  fn:contains(approverStr, aptarget)}">
 									<a href="#" class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
@@ -207,8 +210,8 @@
 						  	<span href="#" id="approvers[${vs.index }].fileOriName" style="color: black;">${f.fileOriName }</span>
 					  	</div>
 					  	<div class="d-flex">
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button" data-filename="${f.fileRename }">자세히보기</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileRename }">다운로드</button>
 					  	</div>
 					  </div>
 					</c:forEach>
@@ -234,9 +237,34 @@
          </div>
        </div>
       </div>
+<!-- 모달 HTML -->
+<div class="modal" id="fileDetailModal" tabindex="-1" role="dialog" aria-labelledby="fileDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fileDetailModalLabel">파일 상세 정보</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" onclick="fileModalClose();">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>파일 이름: <span id="fileDetailOriname"></span></p>
+        <p>파일 크기: <span id="fileDetailSize"></span></p>
+        <p>업로드 날짜: <span id="fileDetailUploadDate"></span></p>
+        <img id="fileDetailImage" src="" alt="File Image" style="width: 100%; display: none; border: 1px solid black;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fileModalClose();">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	sessionStorage.setItem("formNo", "${l.docFormKey}");
+	function fileModalClose(){
+		$('#fileDetailModal').modal('hide');
+	};
 </script>
 </body>
 </html>

@@ -16,6 +16,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>친구 목록</title>
 <style>
+
+
 #conversation {
 	flex: 1;
 	border: 1px solid #ccc;
@@ -296,10 +298,10 @@ body{
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
- 		<div class="tabs">
+<!--  		<div class="tabs">
 			<div class="tab" data-tab="contacts">연락처</div>
 			<div class="tab active" data-tab="chat">채팅</div>
-		</div> 
+		</div>  -->
 		<div id="contacts" class="content">
 			<input type="text" id="searchFriend" class="search-bar"
 				placeholder="친구 검색...">
@@ -308,7 +310,7 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="profile1.jpg" alt="프로필 사진">
+							src="/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">${m.departmentName }</div>
@@ -323,8 +325,8 @@ body{
 					<li class="room-item" id="room-${room.chatRoomKey}">
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
-							<img src="room_icon.jpg" alt="방 아이콘">
-								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
+		                    <div class="room-icon" id="room-icon-${room.chatRoomKey}"></div> <!-- 프로필 사진을 위한 div 추가 -->					
+ 								<div class="unread-badge" id="unread-${room.chatRoomKey}">0</div>
 							<!-- 안 읽은 메시지 배지 추가 -->
 							<div class="room-info">
 								<div class="room-title">
@@ -355,8 +357,8 @@ body{
 			<ul class="friend-list" id="modalFriendList">
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
-						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="profile1.jpg" alt="프로필 사진">
+						<li class="friend-item" data-member-no="${m.memberKey}">
+						<img src="profile1.jpg" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">부서이름</div>
@@ -384,6 +386,46 @@ body{
     var myChatRoomList = ${mychatRoomListJ}; 
 
         var selectedMembers = [];
+        var myRoomMemberList = '${myRoomMemberList}';
+
+
+        function getRoomMemberImages(members) {
+            var memberImagesHtml = '';
+            var memberCount = members.length;
+            var profileImg = null;
+            const path = '${path}/resources/assets/img/'+profileImg;
+
+            if (memberCount === 1) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="single-profile">';
+            } else if (memberCount === 2) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="double-profile">';
+            } else if (memberCount === 3) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="triple-profile">';
+            } else if (memberCount === 4) {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+            } else {
+                memberImagesHtml += '<img src="profile_path/' + members[0].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[1].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[2].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<img src="profile_path/' + members[3].memberKey + '.jpg" alt="프로필 사진" class="quad-profile">';
+                memberImagesHtml += '<span class="more-profiles">+' + (memberCount - 4) + '</span>';
+            }
+
+            return memberImagesHtml;
+        }
+
+        $('.room-item').each(function() {
+            var roomId = $(this).find('input[name="roomId"]').val();
+            var members = myRoomMemberList[roomId];
+            var roomIconHtml = getRoomMemberImages(members);
+            $(this).find('.room-icon').html(roomIconHtml);
+        });
 
         // 모달 열기
         $('#newChatButton').click(function() {

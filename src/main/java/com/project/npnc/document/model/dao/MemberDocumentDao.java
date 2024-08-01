@@ -33,6 +33,7 @@ public interface MemberDocumentDao {
 	
 	int retrieveDoc(SqlSession session, String erDocSerialKey);
 	int retrieveDocFile(SqlSession session, String erDocSerialKey);
+	String selecetDocFileOriname(SqlSession session, String filename);
 	
 	int updateDocFilename(SqlSession session, String erDocFilename);
 	int updateDocStatefinalize(SqlSession session, String serial);
@@ -65,10 +66,14 @@ public interface MemberDocumentDao {
 	
 	int selectRemainingVac(SqlSession session, int memberKey);
 	int insertVacationApply(SqlSession session, VacationApply vac);
+	int deleteVacationApply(SqlSession session, String serial);
 	int insertVacationApplyDraft(SqlSession session, VacationApply vac);
 	int updateVacationApply(SqlSession session, String docSerial, String status);
 	int updateVacationCalc(SqlSession session, int memberKey, String serial);
 	
 	int insertOvertimeApply(SqlSession session, OvertimeApply ot);
-	int updateOvertiemApply(SqlSession session, String docSerial, String status);
+	int updateOvertimeApply(SqlSession session, String docSerial, String status);
+	int deleteOvertimeApply(SqlSession session, String serial);
+	DocFile getFileDetailByRename(SqlSession session, String filename);
+	List<Document> selectMyPendingDocs(SqlSession session, int no);
 }

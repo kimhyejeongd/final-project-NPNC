@@ -104,14 +104,12 @@ public class ChatController {
     @GetMapping("/room/{roomId}/users")
     @ResponseBody
     public Set<String> getUsersInRoom(@PathVariable String roomId) {
-    	System.out.println("gerUsersInRoom");
         return webSocketEventListener.getSessionsForRoom(roomId);
     }
 
     @GetMapping("/room/{roomId}/sessionCount")
     @ResponseBody
     public int getChatSessionCount(@PathVariable String roomId) {
-    	System.out.println("getChatSessionCountgetChatSessionCount");
         return webSocketEventListener.getChatSessionCount(roomId);
     }
 
@@ -141,11 +139,11 @@ public class ChatController {
 	
 	@PostMapping("/exitChatRoom")
 	@ResponseBody
-	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberId) {
+	public void exitChatRoom(@RequestParam int roomId, @RequestParam int memberKey) {
 
 		Map<String, Integer> exitInfo = new HashMap<>();
 		exitInfo.put("roomId", roomId);
-		exitInfo.put("memberId", memberId);
+		exitInfo.put("memberId", memberKey);
 		service.exitChatRoom(exitInfo);
 		
 	}

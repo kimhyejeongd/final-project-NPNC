@@ -29,7 +29,7 @@ public class ReservationController {
 	private final CalendarService service;
 	
 	
-	@GetMapping("/reservation")
+	@GetMapping("/admin/reservation/reservationlist")
 	public String reserve(Model m) {
 		List<OrganizationDto> organlist = organService.selectOrganAll();
 		List<Reservation> reservations =  service.selectReservationAll();

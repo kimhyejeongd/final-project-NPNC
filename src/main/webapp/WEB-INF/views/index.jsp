@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,16 +42,32 @@
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="${path }/resources/bm/css/bootstrap-4.min.css">
+    <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.css">
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
-
+     <link rel="stylesheet" href="${path }/resources/bm/css/daterangepicker.css">
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
+    
   </head>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <script src="${path}/resources/js/index.js"></script>
-  <body>
-     <style>
+ 
+
+<style>
+#calendar-container {
+  width: 100%;
+  height: 100%; /* 화면 전체 높이 사용 */
+  position: relative; /* 자식 요소의 절대 위치 지정에 필요 */
+  overflow: hidden; /* 자식 요소가 넘칠 경우 스크롤바 제거 */
+}
+
+/* 캘린더의 크기를 부모 요소에 맞게 설정 */
+#calendar {
+  width: 100%;
+  height: 100%; /* 부모 요소의 높이와 맞추기 */
+}
 	     .main-header {
 		    background: #fff;
 		    min-height: 60px;
@@ -88,6 +105,7 @@
 		    text-overflow: ellipsis;
 		}
 	</style>	
+  <body>
                <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
 
         <div class="container">
@@ -136,18 +154,6 @@
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
                       <div class="card-title">금주의 일정</div>
-                      <div class="card-tools">
-                        <div class="dropdown">
-                          <button class="btn btn-icon btn-clean" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div class="card-body">
@@ -186,9 +192,18 @@
                   </div>
                 </div>
               </div>
+               <div class="col-md-7"  style="width: 40%;">
+                <div class="card" style="height: 470px;">
+                  <div class="card-body">
+                  	<div id="calendar-container">
+                  		<div id="calendar"></div>
+                  	</div>
+                  </div>
+                </div>
+              </div>
                <!-- 여기다 first 위젯 박스 -->
               </div>
-             <div class="col-md-8" style="width: 65vw;">
+             <div class="col-md-8" style="width: 100%;">
                 <div class="card card-round" style="height: 470px;">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
@@ -210,7 +225,7 @@
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <!-- Projects table -->
-                      <table class="table table-hover align-items-center mb-0" id="inproTable" style="width: 65vw;">
+                      <table class="table table-hover align-items-center mb-0" id="inproTable" style="width: 100%;">
 			            <thead class="thead-light">
 			              <tr class="text-center">
 			              	<!-- <th><input type="checkbox"></th> -->
@@ -276,7 +291,7 @@
 			            </tbody>
 			          </table>
 			          <!-- 결재 대기 문서 -->
-			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 65vw;">
+			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 100%;">
 				           <thead class="thead-light">
 				             <tr class="text-center">
 				             	<!-- <th><input type="checkbox"></th> -->
@@ -541,7 +556,13 @@
 
     <!-- Kaiadmin JS -->
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-    
+    <script src="${path}/resources/bm/js/dropdown-bootstrap-extended.js"></script>
+  <script src="${path}/resources/bm/js/fullcalendar.global.js"></script>
+   <script src="${path}/resources/bm/js/index.global.min.js"></script>
+     <script src="${path}/resources/bm/js/daterangepicker-data.js"></script>
+     <script src="${path}/resources/bm/js/moment.min.js"></script>
+  <script src="${path}/resources/bm/js/daterangepicker.js"></script>
+     <script src="${path}/resources/js/index.js"></script>
     <!-- 출퇴근버튼 js -->
     <%-- <script src="${path}/resources/assets/ws/attendance.js"></script>  --%>
     
@@ -585,6 +606,9 @@
 			         });
 			     }); 	
     </script>
+    <script>
+ 	const path = "${path}";
+  </script>
    
   </body>
 </html>

@@ -341,6 +341,21 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		}
 		log.debug("[1]문서 회수 완료");
 		
+		//추가근무 신청서인 경우
+		if(docKey.contains("F2")) {
+			log.debug("추가근무 신청 문서입니다");
+			result = dao.deleteOvertimeApply(session, docKey);
+			if(result <= 0) throw new Exception("[2]추가근무 신청 삭제 실패");
+			log.debug("[2]추가근무 신청 삭제 완료");
+		}
+		//휴가 신청서인 경우
+		if(docKey.contains("F3")) {
+			log.debug("휴가 신청 문서입니다");
+			result = dao.deleteVacationApply(session, docKey);
+			if(result <= 0) throw new Exception("[2]휴가 신청 삭제 실패");
+			log.debug("[2]휴가 신청 삭제 완료");
+		}
+		
 		return result;
 	}
 	@Override
@@ -587,7 +602,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 					log.debug("추가근무 신청 상태 -> 승인");
 					break;
 				case 3:
-					//휴가 문서라면 계산 진행
+					//휴가 문서라면 승인상태 적용
 					result = updateVacationApply(serial, "승인");
 					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
 					log.debug("휴가 신청 상태 -> 승인");
@@ -694,6 +709,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.selectPendingDocs(session, no);
 	}
 	@Override
+	public List<Document> selectMyPendingDocs(int no) {
+		return dao.selectMyPendingDocs(session, no);
+	}
+	@Override
 	public List<Document> selectMyCompleteDocs(int no) {
 		return dao.selectMyCompleteDocs(session, no);
 	}
@@ -727,7 +746,16 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 // 추가근무
 	@Override
 	public int updateOvertiemApply(String docSerial, String status) {
-		return dao.updateOvertiemApply(session, docSerial, status);
+		return dao.updateOvertimeApply(session, docSerial, status);
 	}
+	@Override
+	public String selecetDocFileOriname(String filename) {
+		return dao.selecetDocFileOriname(session, filename);
+	}
+	@Override
+	public DocFile getFileDetailByRename(String filename) {
+		return dao.getFileDetailByRename(session, filename);
+	}
+	
 	
 }

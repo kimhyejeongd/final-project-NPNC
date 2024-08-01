@@ -35,6 +35,8 @@
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardCommentDto" alias="BoardCommentDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardDto" alias="BoardDto"/>
 	    <typeAlias type="com.project.npnc.board.model.dto.BoardFileDto" alias="BoardFileDto"/>
+   		<typeAlias type="com.project.npnc.notice.model.dto.NoticeDto" alias="NoticeDto"/>
+   	
 
 	
 		<typeAlias type="com.project.npnc.attendance.model.dto.AttendanceEdit" alias="attendanceEdit"/>
@@ -60,6 +62,7 @@
 		<typeAlias type="com.project.npnc.alarm.dto.AlarmMessage" alias="alarmMessage"/>   
 		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>
 		<typeAlias type="com.project.npnc.admin.document.model.dto.AdminDocument" alias="adminDocument"/>
+		<typeAlias type="com.project.npnc.admin.document.model.dto.Storage" alias="storage"/>
         <typeAlias type="com.project.npnc.external.dto.ExternalDto" alias="ExternalDto"/>
         
         <typeAlias type="com.project.npnc.admin.vacation.model.dto.Vacation" alias="adminVacation"/>

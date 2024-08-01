@@ -23,8 +23,8 @@
     </select>
 
     <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
-        INSERT INTO BOARD_COMMENT (BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMNET_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF)
-        VALUES (#{boardKey}, #{memberKey}, #{boardCommentLevel}, #{boardCommentDetail}, #{boardCommentDate}, #{boardCommentRef})
+        INSERT INTO BOARD_COMMENT (BOARD_COMMENT_KEY,BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMNET_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF)
+        VALUES (SEQ_BOARD_COMMENT.NE#{boardKey}, #{memberKey}, #{boardCommentLevel}, #{boardCommentDetail}, #{boardCommentDate}, #{boardCommentRef})
     </insert>
 
     <update id="updateComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">

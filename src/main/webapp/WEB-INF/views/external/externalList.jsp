@@ -7,9 +7,17 @@
 <head>
     <meta charset="UTF-8">
     <title>외부 주소록</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <!-- FontAwesome CDN 추가 -->
+
+    <!-- 기본 CSS 파일 -->
+    <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
+
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+
     <style>
         /* 팝업 스타일 */
         .popup {
@@ -82,36 +90,47 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>외부 주소록</h1>
-        <div id="contacts">
-            <c:forEach var="contact" items="${contacts}">
-                <div class="contact-card" data-id="${contact.AB_EXTERNAL_KEY}">
-                    <div>
-                        <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" 
-                              title="즐겨찾기" 
-                              onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})">
-                            <i class="fas fa-star"></i>
-                        </span>
-                        <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
-                        <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
-                        <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
-                        <span>직급: ${contact.AB_EXTERNAL_JOB}</span>
-                    </div>
-                    <div>
-                        <button onclick="openEditPopup(${contact.AB_EXTERNAL_KEY})">수정</button>
-                        <button onclick="openDeletePopup(${contact.AB_EXTERNAL_KEY})">삭제</button>
-                    </div>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+            
+            <div class="container">
+                <h1>외부 주소록</h1>
+                <div id="contacts">
+                    <c:forEach var="contact" items="${contacts}">
+                        <div class="contact-card" data-id="${contact.AB_EXTERNAL_KEY}">
+                            <div>
+                                <span class="star <c:if test="${contact.AB_EXTERNAL_BOOKMARK == 'Y'}">favorite</c:if>" 
+                                      title="즐겨찾기" 
+                                      onclick="toggleFavorite(this, ${contact.AB_EXTERNAL_KEY})">
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <strong>${contact.AB_EXTERNAL_NAME}</strong> (${contact.AB_EXTERNAL_EMAIL})<br>
+                                <span>회사: ${contact.AB_EXTERNAL_COMPANY}</span><br>
+                                <span>부서: ${contact.AB_EXTERNAL_DEPARTMENT}</span><br>
+                                <span>직급: ${contact.AB_EXTERNAL_JOB}</span>
+                            </div>
+                            <div>
+                                <button onclick="openEditPopup(${contact.AB_EXTERNAL_KEY})">수정</button>
+                                <button onclick="openDeletePopup(${contact.AB_EXTERNAL_KEY})">삭제</button>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
+                <button onclick="openAddPopup()">등록하기</button>
+            </div>
+            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
-        <button onclick="openAddPopup()">등록하기</button>
     </div>
 
-    <!-- 수정 팝업 -->
+    <!-- 팝업 및 오버레이 -->
     <div id="edit-popup" class="popup">
         <h2>정보 수정</h2>
-        <form id="edit-form" action="${pageContext.request.contextPath}/external/edit" method="post">
+        <form id="edit-form" action="${path}/external/edit" method="post">
             <input type="hidden" name="AB_EXTERNAL_KEY" id="edit-id">
             <label>이름:</label>
             <input type="text" name="AB_EXTERNAL_NAME" id="edit-name" required><br>
@@ -130,20 +149,18 @@
         </form>
     </div>
 
-    <!-- 삭제 팝업 -->
     <div id="delete-popup" class="popup">
         <h2>정말 삭제하시겠습니까?</h2>
-        <form action="${pageContext.request.contextPath}/external/delete" method="post">
+        <form action="${path}/external/delete" method="post">
             <input type="hidden" name="AB_EXTERNAL_KEY" id="delete-id">
             <button type="submit">확인</button>
             <button type="button" onclick="closePopup()">취소</button>
         </form>
     </div>
 
-    <!-- 등록 팝업 -->
     <div id="add-popup" class="popup">
         <h2>정보 등록</h2>
-        <form id="add-form" action="${pageContext.request.contextPath}/external/add" method="post">
+        <form id="add-form" action="${path}/external/add" method="post">
             <label>이름:</label>
             <input type="text" name="AB_EXTERNAL_NAME" id="add-name" required><br>
             <label>전화번호:</label>
@@ -165,7 +182,6 @@
 
     <script>
         function openEditPopup(id) {
-      
             fetch(`${path}/external/get/${id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -201,22 +217,16 @@
         }
 
         function toggleFavorite(starElement, id) {
-        	console.log(id);
+            console.log(id);
             const isFavorite = starElement.classList.contains('favorite');
             const newFavoriteStatus = isFavorite ? 'N' : 'Y';
             
             fetch(`${path}/external/toggleFavorite`, {
                 method: 'POST',
-                dataType:'JSON',
                 headers: {
-                	'Accept': 'aplication/json',
-                    'Content-Type': 'application/json; charset=UTF-8'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({
-                    'AB_EXTERNAL_BOOKMARK': newFavoriteStatus,
-                    'MEMBER_KEY': id
-           
-                })
+                body: `AB_EXTERNAL_BOOKMARK=${newFavoriteStatus}&MEMBER_KEY=${id}`
             })
             .then(response => response.text())
             .then(result => {
@@ -231,7 +241,6 @@
                 alert('오류가 발생했습니다.');
             });
         }
-
     </script>
 </body>
 </html>
