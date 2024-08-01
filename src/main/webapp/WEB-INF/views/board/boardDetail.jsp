@@ -189,22 +189,21 @@
                             <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
                             <input type="hidden" name="BOARD_COMMENT_LEVEL" value="0">
                             <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" placeholder="댓글을 입력하세요" required>
-                            <button type="submit" class="btn btn-secondary mt-2">작성</button>
+                            <button type="submit" class="btn btn-secondary btn-sm mt-2">댓글 작성</button>
                         </form>
                     </div>
 
                     <!-- 댓글 목록 -->
                     <div class="comments mt-4">
-                        <h3>댓글</h3>
                         <c:forEach var="comment" items="${comments}">
-                            <div class="comment">
+                            <div class="comment mt-3">
                                 <div class="meta">
                                     <span class="author">${comment.MEMBER_KEY}</span>
                                     <span class="date"><fmt:formatDate value="${comment.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                 </div>
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
-                                
-                                <!-- 수정 및 삭제 버튼 (작성자만 표시) -->
+
+                                <!-- 댓글 수정 및 삭제 버튼 (작성자만 표시) -->
                                 <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <div class="comment-actions">
                                         <form action="${path}/board/updateComment" method="post" class="d-inline">
@@ -219,13 +218,13 @@
                                         </form>
                                     </div>
                                 </c:if>
-                                
+
                                 <!-- 대댓글 작성 폼 -->
                                 <div class="reply-form mt-2">
                                     <form action="${path}/board/addReply" method="post">
                                         <input type="hidden" name="BOARD_KEY" value="${board.BOARD_KEY}">
                                         <input type="hidden" name="BOARD_COMMENT_REF" value="${comment.BOARD_COMMENT_KEY}">
-                                        <input type="hidden" name="BOARD_COMMENT_LEVEL" value="${comment.BOARD_COMMENT_LEVEL + 1}">
+                                        <input type="hidden" name="BOARD_COMMENT_LEVEL" value="1">
                                         <input type="text" class="form-control" name="BOARD_COMMENT_DETAIL" placeholder="대댓글을 입력하세요" required>
                                         <button type="submit" class="btn btn-secondary btn-sm mt-2">대댓글 작성</button>
                                     </form>
@@ -262,19 +261,23 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+            <!-- End Main Panel -->
         </div>
+        <!-- End Wrapper -->
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    
+    <!-- JS Files -->
+    <script src="${path}/resources/assets/js/core/jquery.3.2.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jquery-ui.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/jquery.dataTables.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/dataTables.bootstrap4.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/chart.min.js"></script>
+    <script src="${path}/resources/assets/js/plugin/bootstrap-notify.min.js"></script>
+    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 
-    <!-- Custom JS -->
-    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
+    <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </body>
 </html>

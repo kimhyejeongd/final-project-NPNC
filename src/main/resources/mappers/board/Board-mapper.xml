@@ -69,10 +69,11 @@
     </insert>
 
     <!-- Board Comment Dto CRUD -->
+	<!-- 댓글과 대댓글을 구분하여 가져오는 쿼리 -->
 	<select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
 	    SELECT * FROM BOARD_COMMENT 
 	    WHERE BOARD_KEY = #{BOARD_KEY}
-	    ORDER BY BOARD_COMMENT_DATE DESC
+	    ORDER BY BOARD_COMMENT_REF ASC, BOARD_COMMENT_DATE DESC
 	</select>
 
 

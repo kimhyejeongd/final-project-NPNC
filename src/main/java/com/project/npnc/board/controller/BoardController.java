@@ -13,10 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.npnc.board.model.dto.BoardCommentDto;
@@ -122,9 +122,10 @@ public class BoardController {
     
     
     @PostMapping("/addComment")
-    public String addComment(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
-    	Member member=(Member)authentication.getPrincipal();
+    public String addComment(BoardCommentDto commentDto, HttpSession session, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
         commentDto.setMEMBER_KEY(member.getMemberKey());
+        commentDto.setBOARD_COMMENT_LEVEL(0); // 기본 댓글 레벨 설정
         boardService.createComment(commentDto);
         return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
@@ -153,13 +154,11 @@ public class BoardController {
 
     // 대댓글 추가
     @PostMapping("/addReply")
-    public String addReply(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
-    	Member member=(Member)authentication.getPrincipal();
-    	System.out.println("boardCommentRef : "+ commentDto.getBOARD_COMMENT_REF());
+    public String addReply(BoardCommentDto commentDto, HttpSession session, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
         commentDto.setMEMBER_KEY(member.getMemberKey());
         commentDto.setBOARD_COMMENT_LEVEL(1); // 대댓글 레벨 설정
         boardService.createComment(commentDto);
         return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
-    
 }
