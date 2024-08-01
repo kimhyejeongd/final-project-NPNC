@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -105,38 +107,38 @@ public class BoardController {
         return "board/boardDetail";
     }
     @PostMapping("/addComment")
-    public String addComment(BoardCommentDto commentDto, HttpSession session) {
-        int memberKey = (int) session.getAttribute("MEMBER_KEY");
-        commentDto.setMEMBER_KEY(memberKey);
+    public String addComment(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
+    	Member member=(Member)authentication.getPrincipal();
+        commentDto.setMEMBER_KEY(member.getMemberKey());
         boardService.createComment(commentDto);
-        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 수정
     @PostMapping("/updateComment")
-    public String updateComment(BoardCommentDto commentDto, HttpSession session) {
-        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+    public String updateComment(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
+    	Member member=(Member)authentication.getPrincipal();
         BoardCommentDto existingComment = boardService.getCommentById(commentDto.getBOARD_COMMENT_KEY());
-        if (existingComment.getMEMBER_KEY() == memberKey) {
+        if (existingComment.getMEMBER_KEY() == member.getMemberKey()) {
             boardService.updateComment(commentDto);
         }
-        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 삭제
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey, HttpSession session) {
-        int memberKey = (int) session.getAttribute("MEMBER_KEY");
+    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey, HttpSession session,Authentication authentication) {
+    	Member member=(Member)authentication.getPrincipal();
         BoardCommentDto existingComment = boardService.getCommentById(commentKey);
-        if (existingComment.getMEMBER_KEY() == memberKey) {
+        if (existingComment.getMEMBER_KEY() == member.getMemberKey()) {
             boardService.deleteComment(commentKey);
         }
-        return "redirect:/board/detail?boardKey=" + boardKey;
+        return "redirect:/board/detail/boardKey?boardKey=" + boardKey;
     }
 
     // 대댓글 추가
     @PostMapping("/addReply")
-    public String addReply(BoardCommentDto commentDto, HttpSession session) {
+    public String addReply(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
         int memberKey = (int) session.getAttribute("MEMBER_KEY");
         commentDto.setMEMBER_KEY(memberKey);
         commentDto.setBOARD_COMMENT_LEVEL(1); // 대댓글 레벨 설정
