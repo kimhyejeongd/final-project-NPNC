@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.document.model.dto.DocumentForm;
+import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.security.dto.Member;
 
 @Repository
@@ -77,6 +79,12 @@ public class AdminDocumentDao {
 	}
 	public int updateStorageFolder(SqlSessionTemplate session,StorageFolder storageFolder) {
 		return session.update("admindoc.updateStorageFolder",storageFolder);
+	}
+	public List<DocumentFormFolder>selectDocFormFolderAll(SqlSessionTemplate session){
+		return session.selectList("admindoc.selectDocFormFolderAll");
+	}
+	public List<DocumentForm>selectForm(SqlSessionTemplate session){
+		return session.selectList("admindoc.selectForm");
 	}
 
 }
