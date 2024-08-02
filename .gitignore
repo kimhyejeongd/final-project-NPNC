@@ -33,6 +33,6 @@ build/
 .vscode/
 
 /bin/
-src/main/resources/*.properties
+#src/main/resources/*.properties
 **/.DS_Store
 .dbeaver
