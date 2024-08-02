@@ -39,17 +39,12 @@
     <update id="updateContact" parameterType="com.project.npnc.external.dto.ExternalDto">
         UPDATE AB_EXTERNAL
         SET
-            MEMBER_KEY = #{MEMBER_KEY},
-            AB_EXTERNAL_NAME = #{AB_EXTERNAL_NAME},
             AB_EXTERNAL_TELL = #{AB_EXTERNAL_TELL},
             AB_EXTERNAL_EMAIL = #{AB_EXTERNAL_EMAIL},
-            AB_EXTERNAL_GENDER = #{AB_EXTERNAL_GENDER},
             AB_EXTERNAL_DEPARTMENT = #{AB_EXTERNAL_DEPARTMENT},
             AB_EXTERNAL_JOB = #{AB_EXTERNAL_JOB},
             AB_EXTERNAL_MEMO = #{AB_EXTERNAL_MEMO},
-            AB_EXTERNAL_BOOKMARK = #{AB_EXTERNAL_BOOKMARK},
-            AB_EXTERNAL_COMPANY = #{AB_EXTERNAL_COMPANY},
-            AB_EXTERNAL_DELETE = #{AB_EXTERNAL_DELETE}
+            AB_EXTERNAL_BOOKMARK = #{AB_EXTERNAL_BOOKMARK}
         WHERE AB_EXTERNAL_KEY = #{AB_EXTERNAL_KEY}
     </update>
 

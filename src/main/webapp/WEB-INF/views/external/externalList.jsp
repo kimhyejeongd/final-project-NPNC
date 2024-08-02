@@ -97,90 +97,106 @@
         <!-- Sidebar -->
         <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
 
-      <div class="main-panel">
+        <div class="main-panel">
             <!-- Header Bar -->
             <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
-			<div class="page-inner">
-            <div class="container">
-                <h1 class="mb-4">외부 주소록 목록</h1>
+            <div class="page-inner">
+                <div class="container">
+                    <h1 class="mb-4">외부 주소록 목록</h1>
 
-                <!-- 외부 주소록 목록 테이블 -->
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>이름</th>
-                            <th>전화번호</th>
-                            <th>이메일</th>
-                            <th>회사명</th>
-                            <th>즐겨찾기</th>
-                            <th>조치</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="contact" items="${contacts}">
+                    <!-- 외부 주소록 목록 테이블 -->
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>${contact.AB_EXTERNAL_NAME}</td>
-                                <td>${contact.AB_EXTERNAL_TELL}</td>
-                                <td>${contact.AB_EXTERNAL_EMAIL}</td>
-                                <td>${contact.AB_EXTERNAL_COMPANY}</td>
-                                <td>
-                                    <!-- 즐겨찾기 아이콘 -->
-                                    <i class="fas fa-star bookmark-icon" 
-                                       data-id="${contact.AB_EXTERNAL_KEY}" 
-                                       data-bookmark="${contact.AB_EXTERNAL_BOOKMARK}"
-                                       style="color:${contact.AB_EXTERNAL_BOOKMARK == 'Y' ? 'gold' : 'gray'};"></i>
-                                </td>
-                                <td>
-                                    <!-- 수정 버튼 -->
-                                    <button type="button" class="btn btn-primary" onclick="openEditModal(${contact.AB_EXTERNAL_KEY}, '${contact.AB_EXTERNAL_NAME}', '${contact.AB_EXTERNAL_TELL}', '${contact.AB_EXTERNAL_EMAIL}', '${contact.AB_EXTERNAL_COMPANY}')">수정</button>
-                                </td>
+                                <th>이름</th>
+                                <th>전화번호</th>
+                                <th>이메일</th>
+                                <th>회사명</th>
+                                <th>즐겨찾기</th>
+                                <th>조치</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="contact" items="${contacts}">
+                                <tr>
+                                    <td>${contact.AB_EXTERNAL_NAME}</td>
+                                    <td>${contact.AB_EXTERNAL_TELL}</td>
+                                    <td>${contact.AB_EXTERNAL_EMAIL}</td>
+                                    <td>${contact.AB_EXTERNAL_COMPANY}</td>
+                                    <td>
+                                        <!-- 즐겨찾기 아이콘 -->
+                                        <i class="fas fa-star bookmark-icon" 
+                                           data-id="${contact.AB_EXTERNAL_KEY}" 
+                                           data-bookmark="${contact.AB_EXTERNAL_BOOKMARK}"
+                                           style="color:${contact.AB_EXTERNAL_BOOKMARK == 'Y' ? 'gold' : 'gray'};"></i>
+                                    </td>
+                                    <td>
+                                        <!-- 수정 버튼 -->
+                                        <button type="button" class="btn btn-primary" onclick="openEditModal(${contact.AB_EXTERNAL_KEY}, '${contact.AB_EXTERNAL_NAME}', '${contact.AB_EXTERNAL_TELL}', '${contact.AB_EXTERNAL_EMAIL}', '${contact.AB_EXTERNAL_COMPANY}', '${contact.AB_EXTERNAL_DEPARTMENT}', '${contact.AB_EXTERNAL_JOB}', '${contact.AB_EXTERNAL_MEMO}')">수정</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+                <!-- Footer -->
+                <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+            </div>
+        </div>
+
+
+        <!-- 수정 모달 -->
+        <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editContactModalLabel">외부 주소록 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editContactForm" action="${path}/external/edit" method="post">
+                        <input type="hidden" id="contactKey" name="AB_EXTERNAL_KEY" />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">이름</label>
+                                <input type="text" id="name" name="AB_EXTERNAL_NAME" class="form-control" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="tell">전화번호</label>
+                                <input type="text" id="tell" name="AB_EXTERNAL_TELL" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">이메일</label>
+                                <input type="email" id="email" name="AB_EXTERNAL_EMAIL" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="company">회사명</label>
+                                <input type="text" id="company" name="AB_EXTERNAL_COMPANY" class="form-control" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">부서</label>
+                                <input type="text" id="department" name="AB_EXTERNAL_DEPARTMENT" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="job">직급</label>
+                                <input type="text" id="job" name="AB_EXTERNAL_JOB" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="memo">메모</label>
+                                <textarea id="memo" name="AB_EXTERNAL_MEMO" class="form-control" rows="3" required></textarea>
+                            </div>
+                             
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                            <button type="submit" class="btn btn-primary">수정 완료</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 수정 모달 -->
-	  <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="editContactModalLabel">외부 주소록 수정</h5>
-	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	            </div>
-				<form id="editContactForm" action="${path}/external/edit" method="post">
-				    <input type="hidden" id="contactKey" name="AB_EXTERNAL_KEY" />
-				    <div class="modal-body">
-				        <div class="form-group">
-				            <label for="name">이름</label>
-				            <input type="text" id="name" name="AB_EXTERNAL_NAME" class="form-control" required>
-				        </div>
-				        <div class="form-group">
-				            <label for="tell">전화번호</label>
-				            <input type="text" id="tell" name="AB_EXTERNAL_TELL" class="form-control" required>
-				        </div>
-				        <div class="form-group">
-				            <label for="email">이메일</label>
-				            <input type="email" id="email" name="AB_EXTERNAL_EMAIL" class="form-control" required>
-				        </div>
-				        <div class="form-group">
-				            <label for="company">회사명</label>
-				            <input type="text" id="company" name="AB_EXTERNAL_COMPANY" class="form-control" required>
-				        </div>
-				    </div>
-				    <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				        <button type="submit" class="btn btn-primary">수정 완료</button>
-				    </div>
-				</form>
-	        </div>
-	    </div>
-	</div>
     <!-- Bootstrap JS and dependencies -->
     <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${path}/resources/assets/js/core/popper.min.js"></script>
@@ -191,13 +207,17 @@
 
     <!-- 모달 스크립트 -->
     <script>
-    function openEditModal(key, name, tell, email, company) {
+    function openEditModal(key, name, tell, email, company, department, job, memo, bookmark) {
         // 모달 폼의 필드에 데이터 설정
         document.getElementById('contactKey').value = key;
         document.getElementById('name').value = name;
         document.getElementById('tell').value = tell;
         document.getElementById('email').value = email;
         document.getElementById('company').value = company;
+        document.getElementById('department').value = department;
+        document.getElementById('job').value = job;
+        document.getElementById('memo').value = memo;
+        document.getElementById('bookmark').value = bookmark;
 
         // 모달 열기
         var myModal = new bootstrap.Modal(document.getElementById('editContactModal'));

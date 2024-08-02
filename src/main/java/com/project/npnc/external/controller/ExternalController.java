@@ -40,6 +40,7 @@ import jakarta.servlet.http.HttpServletRequest;
 	
 	 @PostMapping("/edit")
 	 public String editContact(@ModelAttribute ExternalDto externalDto) {
+		 System.out.println(externalDto);
 	     externalService.updateContact(externalDto);
 	     return "redirect:/external/list";
 	 }
