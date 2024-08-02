@@ -65,6 +65,7 @@ import com.project.npnc.organization.service.OrganizationService;
 import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,8 +80,8 @@ public class MemberDocumentController {
 	private final AttendanceService attendserv;
 	private final AdminDocumentService adminserv;
 	private final VacationService vacserv;
-	@Value("${file.upload-dir}")
-    private String uploadDir; // src/main/resources/upload/
+//	@Value("${file.upload-dir}")
+//    private String uploadDir; // src/main/resources/upload/
 	
 	
 	@GetMapping("/home")
@@ -199,7 +200,7 @@ public class MemberDocumentController {
 	@PostMapping("/view/docDetail")
 	public void viewDoc(int docId, 
 			@RequestParam(required = false) String history, 
-											Model m) throws Exception {
+											Model m, HttpSession session) throws Exception {
 		log.debug("----" + docId + "번 문서 상세보기----");
 		Document document = serv.selectDocById(docId);
 		log.debug("{}", document);
@@ -212,6 +213,8 @@ public class MemberDocumentController {
 		m .addAttribute("approverStr", Arrays.asList(aps).toString());
 		
 		//문서파일 html 가져오기
+		//절대경로 설정
+		String uploadDir = session.getServletContext().getRealPath("/upload/");
 		String html = DocHtmlController.readHtmlFile("dochtml", document.getErDocFilename(), uploadDir);
 		if(html == null || html.equals("")) {
 			throw new Exception("문서 불러오기 실패");
@@ -225,7 +228,7 @@ public class MemberDocumentController {
 	
 	@GetMapping("/request/docHtml")
 	public ResponseEntity<Map<String,Object>> requestDocHtml(
-			@RequestParam String serial
+			@RequestParam String serial, HttpSession session
 			) throws Exception{
 		log.debug(serial);
 		log.debug("----- " + serial + "문서 다운로드 -----");
@@ -233,6 +236,7 @@ public class MemberDocumentController {
 		
 		//문서파일 html 가져오기
 		try {
+			String uploadDir = session.getServletContext().getRealPath("/upload/");
 			String html = DocHtmlController.readHtmlFile("dochtml", serial+".html" , uploadDir);
 			if(html == null || html.equals("")) {
 				throw new Exception("문서 불러오기 실패");
@@ -250,8 +254,9 @@ public class MemberDocumentController {
 	}
 	
 	@GetMapping("/request/docForm{formNo}")
-	public String formDoc(String form) {
+	public String formDoc(String form, HttpSession session) {
 		log.debug(form + "양식 불러오기");
+		String uploadDir = session.getServletContext().getRealPath("/upload/");
 		return DocHtmlController.readHtmlFile("/docformhtml", form+".html", uploadDir);
 	}
 	
@@ -273,8 +278,9 @@ public class MemberDocumentController {
 		return result;
 	}
 	@GetMapping("/write")
-	public String formWrite(int form, Model m) {
+	public String formWrite(int form, Model m, HttpSession session) {
 		log.debug("----전자문서 작성시작----");
+		String uploadDir = session.getServletContext().getRealPath("/upload/");
 		String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
 		//기안부서 적용
 		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
@@ -316,7 +322,8 @@ public class MemberDocumentController {
 		return "document/write/normal";
 	}
 	@PostMapping("/rewrite")
-	public String docRewrite(String serial, Model m) {
+	public String docRewrite(String serial, Model m,
+			HttpSession session) {
 		log.debug("----전자문서 재작성----");
 		//기존 작성 내용 불러오기
 		Document d = serv.selectDocBySerial(serial);
@@ -340,6 +347,7 @@ public class MemberDocumentController {
 //    	String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
     	String html = null;
     	String jsp = null;
+    	String uploadDir = session.getServletContext().getRealPath("/upload/");
 		//추가근무 신청폼인 경우 근무 현황 데이터 첨부
 		if(form == 2) {
 			log.debug("----추가근무 신청----");
@@ -1018,11 +1026,13 @@ public class MemberDocumentController {
 	@GetMapping("/files/download/{filename:.+}")
     public ResponseEntity<Resource> downloadFile(
     		@PathVariable String filename,
-    		HttpServletRequest request) {
+    		HttpServletRequest request,
+    		HttpSession session) {
 		log.debug("----- 파일 다운로드 -----");
 		String oriname = serv.selecetDocFileOriname(filename);
 		
         try {
+        	String uploadDir = session.getServletContext().getRealPath("/upload/");
             Path filePath = Paths.get(uploadDir + "docfile/").resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 

@@ -35,7 +35,7 @@
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -113,6 +113,7 @@
           </div>
         </div>
       </div>
+     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>

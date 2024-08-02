@@ -73,7 +73,7 @@
 <body>
 	<div class="wrapper">
       <!-- Sidebar -->
-      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 	  <div class="main-panel">
         <div class="main-header">
@@ -181,7 +181,7 @@
        </div>
       </div>
     </div>
-
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <!-- SweetAlert2 초기화 및 모달 관련 스크립트 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   <!-- jQuery -->

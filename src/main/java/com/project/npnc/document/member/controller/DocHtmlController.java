@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 
 import com.project.npnc.document.model.dto.Approver;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
