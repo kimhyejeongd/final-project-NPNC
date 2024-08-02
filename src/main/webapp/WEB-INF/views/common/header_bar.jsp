@@ -9,7 +9,6 @@
     <c:set var="path" value="${pageContext.request.contextPath}"/>
     
     
-
    <script
       src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
    <script
@@ -638,7 +637,7 @@
 		            });
 	
 		            
-		            stompClient.subscribe('${path}/sub/${loginMember.memberKey}', function (msg) {
+		            stompClient.subscribe('/sub/${loginMember.memberKey}', function (msg) {
 		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
 		                var bodyObject= JSON.parse(msg.body);
 		                console.log('test'+bodyObject.message);
@@ -731,7 +730,7 @@
 					
 		            });
 					
-		            stompClient.subscribe('${path}/sub/broadcast', function (msg) {
+		            stompClient.subscribe('/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
 						
 						var bodyObject= JSON.parse(msg.body);

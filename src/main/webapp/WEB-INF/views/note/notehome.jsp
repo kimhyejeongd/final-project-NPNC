@@ -170,6 +170,7 @@
 	}	
 	
 	</style>
+	
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -570,9 +571,10 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleRecOne"
 			                              rows="1" cols="50"
-										  
+										  readonly
 			                            ></textarea>
 			                          </div>
+									
                     			   </div>		
 								   <div class="form-group">
 			                          <div class="input-group">
@@ -582,6 +584,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgDetailRecOne"
 			                              rows="8" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>	
@@ -594,7 +597,14 @@
 				          </div>
 				    </div>
 			  </div>
-			
+			  <style>
+		  	     /* Disabled and readonly 스타일 재정의 */
+		  	     .form-control:disabled, .form-control[readonly] {
+		  	         opacity: 1 !important; /* 불투명도 설정 */
+		  			 background-color: #fff !important; /* 배경색 하얀색으로 설정 */
+		  	         color: #000 !important; /* 글자색 검정색으로 설정 */
+		  	     }
+		  	  </style>
 			<!-- 첨부파일 -->
 			 <script>
 				
