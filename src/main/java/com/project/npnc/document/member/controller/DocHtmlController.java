@@ -1,12 +1,5 @@
 package com.project.npnc.document.member.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -16,7 +9,6 @@ import org.springframework.stereotype.Controller;
 
 import com.project.npnc.document.model.dto.Approver;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +19,7 @@ public class DocHtmlController {
 	@Value("${file.upload-dir}")
     private String uploadDir; // src/main/resources/upload/
 
+	//기안시 문서 내 결재라인 내용 작성
 	public static String generateApproverTableHtml(List<Approver> ap) {
 		StringBuilder apTable = new StringBuilder();
 		apTable.append("<table id=\"approverTable\">")
@@ -93,7 +86,9 @@ public class DocHtmlController {
 		String finalTableHtml = apTable.toString();
 		return finalTableHtml;
 	}
-	//결재 승인시
+	
+	
+	//결재 승인시 문서 내 결재라인 업데이트
 	public static String updateApproverTableHtml(String html, Approver a) {
 		log.debug("----- 문서 html 업데이트 -----");
 		log.debug("{}", a);
@@ -115,26 +110,5 @@ public class DocHtmlController {
 		log.debug(a.getMemberName() + " " + a.getCategory() + ", "+ formattedNow + " -> html 결재라인 업데이트 완료");
 		return newhtml;
 	}
-	//html 파일 읽기
-	public static String readHtmlFile(String dir, String title, String uploadDir) {
-        String path = uploadDir + dir + "/" + title;
-        log.debug("문서 읽기 경로 : " + path);
-        File file = new File(path);
-        StringBuilder content = new StringBuilder();
-
-        try (BufferedReader br = new BufferedReader(
-              new InputStreamReader(
-                    new FileInputStream(file), StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content.toString();
-  }
 	
 }

@@ -219,9 +219,9 @@
          </div>
          </div>
        </div>
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
       </div>
     </div>
-<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <!-- SweetAlert2 초기화 및 모달 관련 스크립트 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   <!-- jQuery -->
