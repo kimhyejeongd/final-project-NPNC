@@ -558,19 +558,7 @@
                     </ul>
                   </li>
                   <li class="nav-item topbar-icon dropdown hidden-caret">
-                    <a
-                      class="nav-link dropdown-toggle"
-                      href="#"
-                      id="messageDropdown"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <i class="fa fa-envelope"></i>
-                  <span class="notification">4</span>
-                      
-                    </a>
+                   
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
                       aria-labelledby="messageDropdown">
                       <li>
@@ -592,18 +580,8 @@
                     </ul>
                   </li>
                   <li class="nav-item topbar-icon dropdown hidden-caret">
-                    <a
-                      class="nav-link dropdown-toggle"
-                      href="#"
-                      id="notifDropdown"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <i class="fa fa-bell"></i>
-                      <span class="notification">4</span>
-                    </a>
+                    
+
                     <ul
                       class="dropdown-menu notif-box animated fadeIn"
                       aria-labelledby="notifDropdown"
@@ -665,16 +643,7 @@
                     </ul>
                   </li>
                   <li class="nav-item topbar-icon dropdown hidden-caret">
-                    <a
-                      class="nav-link"
-                      data-bs-toggle="dropdown"
-                      id="organ"
-                      href="#"
-                      data-bs-auto-close="outside"
-                      aria-expanded="false"
-                    >
-                      <i class="fas fa-layer-group"></i>
-                    </a>
+                   
                     <div class="dropdown-menu quick-actions animated fadeIn">
                       <div class="quick-actions-header">
                         <span class="title mb-1">사내 조직도</span>
@@ -726,7 +695,7 @@
                         <li>
                           <div class="user-box">
                             <div class="avatar-lg">
-								<c:choose>
+<%-- 								<c:choose>
 									<c:when test="${loginMember.memberProfileImage==null || loginMember.memberProfileImage=='basicPicture'}">
 										<img
 				                          src="${path}/resources/assets/img/unname.png"
@@ -742,20 +711,16 @@
 				                        />
 
 									</c:otherwise>	
-								</c:choose>
+								</c:choose> --%>
                             </div>
                             <div class="u-text">
-                              <h4>${loginMember.memberName} ${loginMember.jobName}</h4>
-                              <p class="text-muted">${loginMember.departmentName}</p>
-                              <a
-                                href="${path}/member/mypage"
-                                class="btn btn-info"
-                                >My Page</a
-                              >
+                              <h2>관리자</h2>
+                             <a class="dropdown-item" href="${path}/logout">Logout</a>
+                             
                             </div>
                           </div>
                         </li>
-                        <li>
+                        <%-- <li>
                         <!--  <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">My Profile</a>
                           <a class="dropdown-item" href="#">My Balance</a>
@@ -764,7 +729,7 @@
                           <a class="dropdown-item" href="#">Account Setting</a>-->
                           <div class="dropdown-divider"></div>
 						  <a class="dropdown-item" href="${path}/logout">Logout</a>
-                        </li>
+                        </li> --%>
                       </div>
                     </ul>
                   </li>

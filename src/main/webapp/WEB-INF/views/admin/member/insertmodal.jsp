@@ -12,7 +12,7 @@
 	          </button>
 	        </div>
         <div class="modal-body">
-		<form action="${path}/admin/member/insertmemberend.do" method="post">
+		<form action="${path}/admin/member/insertmemberend.do" method="post" onsubmit="return combineAddresses();">
 		 <div class="container">
           <div class="page-inner">
             	<div class="form-group">
@@ -33,6 +33,8 @@
                             />
                           </div>
                		</div>
+               		
+               		       
                		<div class="form-group">
                           <label
                             for="memberAddress"
@@ -40,13 +42,21 @@
                             >주소</label
                           >
                           <div class="col-md-9 p-0">
+                          <div style="display:flex">
+                          	<input type="text"  id="zip_code" name="zip_code" onclick="openZipSearch();" readonly="readonly" placeholder="우편번호"  class="form-control input-full">
+                          	&ensp;
+						 	<input type="text"  id="addr" name="addr" onclick="openZipSearch();" readonly="readonly" placeholder="기본주소"   class="form-control input-full">
+						  </div>
+						  <input type="text"  id="addr_dtl" name="addr_dtl" placeholder="상세주소"   class="form-control input-full">
+                            
+                            
                             <input
-                              type="text"
+                              type="hidden"
                               class="form-control input-full"
                               id="memberAddress"
                               name="memberAddress"
                               placeholder="주소"
-							  required
+							 
                             />
                           </div>
                		</div>
@@ -309,6 +319,10 @@
 			                  data-color="dark"
 			                >등록</button>
                       </div>
+                      
+
+<div>
+</div>
             
            </div>
           </div>
@@ -320,3 +334,44 @@
       </div>
     </div>
   </div> 
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+function openZipSearch() {
+    new daum.Postcode({
+    	oncomplete: function(data) {     
+		var addr = ''; 
+		if (data.userSelectedType === 'R') { 
+			addr = data.roadAddress;
+		} else {
+			addr = data.jibunAddress;
+		}
+
+		$("#zip_code").val(data.zonecode);
+		$("#addr").val(addr);
+		$("#addr_dtl").val("");
+		$("#addr_dtl").focus();
+		
+		console.log($("#zip_code").val);
+        }
+    }).open();
+}
+
+function combineAddresses() {
+    // 각 입력 필드의 값 가져오기
+    var zipCode = $("#zip_code").val();
+    var basicAddress = $("#addr").val();
+    var detailedAddress = $("#addr_dtl").val();
+    
+    // 값을 결합하여 하나의 문자열로 만들기 (구분자는 필요에 따라 설정)
+    var fullAddress = zipCode + ' ' + basicAddress + ' ' + detailedAddress;
+    console.log(fullAddress);
+    // 숨겨진 입력 필드에 결합된 값을 설정
+    document.getElementById('memberAddress').value = fullAddress;
+    
+    // 폼 제출
+    return true; // 폼이 정상적으로 제출되도록 함
+}
+</script>
+

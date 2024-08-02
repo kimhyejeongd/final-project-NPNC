@@ -159,7 +159,8 @@
 			                // member 객체에 포함된 값을 폼에 채움
 			                $('#memberIdup').val(member.memberId);
 			                $('#memberNameup').val(member.memberName);
-			                $('#memberAddressup').val(member.memberAddress);
+			                $('#addr_dtl2').val(member.memberAddress);
+/* 			                $('#memberAddressup').val(member.memberAddress); */
 			                $('#memberPhoneup').val(member.memberPhone);
 			                $('#memberTellup').val(member.memberTell);
 			                $('#memberEmailup').val(member.memberEmail);
