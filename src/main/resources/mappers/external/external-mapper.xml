@@ -7,6 +7,7 @@
         <result property="AB_EXTERNAL_NAME" column="AB_EXTERNAL_NAME"/>
         <result property="AB_EXTERNAL_TELL" column="AB_EXTERNAL_TELL"/>
         <result property="AB_EXTERNAL_EMAIL" column="AB_EXTERNAL_EMAIL"/>
+        <result property="AB_EXTERNAL_GENDER" column="AB_EXTERNAL_GENDER"/>
         <result property="AB_EXTERNAL_COMPANY" column="AB_EXTERNAL_COMPANY"/>
         <result property="AB_EXTERNAL_DEPARTMENT" column="AB_EXTERNAL_DEPARTMENT"/>
         <result property="AB_EXTERNAL_JOB" column="AB_EXTERNAL_JOB"/>
@@ -25,16 +26,18 @@
     </select>
 
     <insert id="addContact" parameterType="com.project.npnc.external.dto.ExternalDto">
-        INSERT INTO AB_EXTERNAL (
-            AB_EXTERNAL_KEY, MEMBER_KEY, AB_EXTERNAL_NAME, AB_EXTERNAL_TELL, AB_EXTERNAL_EMAIL,
-            AB_EXTERNAL_GENDER, AB_EXTERNAL_DEPARTMENT, AB_EXTERNAL_JOB, AB_EXTERNAL_MEMO,
-            AB_EXTERNAL_BOOKMARK, AB_EXTERNAL_COMPANY, AB_EXTERNAL_DELETE
-        ) VALUES (
-            #{AB_EXTERNAL_KEY}, #{MEMBER_KEY}, #{AB_EXTERNAL_NAME}, #{AB_EXTERNAL_TELL}, #{AB_EXTERNAL_EMAIL},
-            #{AB_EXTERNAL_GENDER}, #{AB_EXTERNAL_DEPARTMENT}, #{AB_EXTERNAL_JOB}, #{AB_EXTERNAL_MEMO},
-            #{AB_EXTERNAL_BOOKMARK}, #{AB_EXTERNAL_COMPANY}, #{AB_EXTERNAL_DELETE}
-        )
-    </insert>
+    INSERT INTO AB_EXTERNAL (
+        AB_EXTERNAL_KEY, MEMBER_KEY, AB_EXTERNAL_NAME, AB_EXTERNAL_TELL, AB_EXTERNAL_EMAIL,
+        AB_EXTERNAL_GENDER, AB_EXTERNAL_DEPARTMENT, AB_EXTERNAL_JOB, AB_EXTERNAL_MEMO,
+        AB_EXTERNAL_BOOKMARK, AB_EXTERNAL_COMPANY, AB_EXTERNAL_DELETE
+    ) VALUES (
+        AB_EXTERNAL_SEQ.NEXTVAL, -- 시퀀스를 사용하여 자동으로 증가된 값을 삽입
+        #{MEMBER_KEY}, #{AB_EXTERNAL_NAME}, #{AB_EXTERNAL_TELL}, #{AB_EXTERNAL_EMAIL},
+        #{AB_EXTERNAL_GENDER}, #{AB_EXTERNAL_DEPARTMENT}, #{AB_EXTERNAL_JOB}, #{AB_EXTERNAL_MEMO},
+        'N', #{AB_EXTERNAL_COMPANY}, 'N'
+    )
+	</insert>
+
 
     <update id="updateContact" parameterType="com.project.npnc.external.dto.ExternalDto">
         UPDATE AB_EXTERNAL
@@ -58,7 +61,7 @@
 	        WHEN AB_EXTERNAL_BOOKMARK = 'Y' THEN 'N'
 	        ELSE 'Y'
 	    END
-	    WHERE AB_EXTERNAL_KEY = #{id}
+	    WHERE AB_EXTERNAL_KEY = #{id} 
 	</update>
 	
 	<select id="searchContacts" parameterType="map" resultMap="contactResultMap">

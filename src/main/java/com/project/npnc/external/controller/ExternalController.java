@@ -3,6 +3,7 @@ package com.project.npnc.external.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.npnc.external.dto.ExternalDto;
 import com.project.npnc.external.service.ExternalService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -39,15 +41,24 @@ public class ExternalController {
     }
 
     @PostMapping("/add")
-    public String addContact(@ModelAttribute ExternalDto externalDto) {
+    public String addContact(@ModelAttribute ExternalDto externalDto, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+ 
+    	externalDto.setMEMBER_KEY(member.getMemberKey());
+       	System.out.println(externalDto);
         externalService.addContact(externalDto);
         return "redirect:/external/list";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/edit")                                                       
     public String editContact(@ModelAttribute ExternalDto externalDto) {
         externalService.updateContact(externalDto);
         return "redirect:/external/list";
+    }
+    
+    @GetMapping("/write")
+    public String showAddContactForm() {
+        return "external/externalWrite"; 
     }
 
     @PostMapping("/delete")

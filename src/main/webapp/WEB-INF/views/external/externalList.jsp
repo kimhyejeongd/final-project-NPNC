@@ -95,7 +95,7 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
+        <%@ include file="/WEB-INF/views/external/externalSidebar.jsp" %>
 
     <div class="main-panel">
             <!-- Header Bar -->
@@ -154,38 +154,6 @@
                         </tbody>
                     </table>
 
-                    <!-- 주소록 추가 폼 -->
-                    <h2 class="mt-4">새 연락처 추가</h2>
-                    <form id="addContactForm" action="${path}/external/add" method="post">
-                        <div class="form-row">
-                            <div class="col">
-                                <input type="text" name="name" class="form-control" placeholder="이름" required>
-                            </div>
-                            <div class="col">
-                                <input type="text" name="tell" class="form-control" placeholder="전화번호" required>
-                            </div>
-                            <div class="col">
-                                <input type="email" name="email" class="form-control" placeholder="이메일">
-                            </div>
-                            <div class="col">
-                                <input type="text" name="company" class="form-control" placeholder="회사명">
-                            </div>
-                        </div>
-                        <div class="form-row mt-2">
-                            <div class="col">
-                                <input type="text" name="department" class="form-control" placeholder="부서">
-                            </div>
-                            <div class="col">
-                                <input type="text" name="job" class="form-control" placeholder="직책">
-                            </div>
-                            <div class="col">
-                                <textarea name="memo" class="form-control" placeholder="메모"></textarea>
-                            </div>
-                            <div class="col">
-                                <button type="submit" class="btn btn-success mt-2">추가</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
 
                 <!-- Footer -->
