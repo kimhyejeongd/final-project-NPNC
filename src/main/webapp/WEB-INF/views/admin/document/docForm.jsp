@@ -512,9 +512,9 @@ $('.folder-item').on('click', function(e) {
             if (event.originalEvent.clientY > $(window).height() - 100) { // 하단에 드롭한 경우
                 console.log(draggedFolderKey);
             	$.ajax({
-                    url: '${path}/admin/documentForm/removeFolder', // 서버 요청 URL
+                    url: '${path}/admin/documentForm/removeDocFolder', // 서버 요청 URL
                     type: 'POST',
-                    data: {"draggedFolderKey":draggedFolderKey},
+                    data: {draggedFolderKey},
                     success: function(response) {
                         window.draggedItem.remove(); // 드래그된 요소를 제거
                     },

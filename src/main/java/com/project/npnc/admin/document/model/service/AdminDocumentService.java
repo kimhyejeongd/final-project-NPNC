@@ -194,4 +194,7 @@ public class AdminDocumentService {
 	public int updateDocFolder(DocumentFormFolder folder) {
 		return dao.updateDocFolder(session,folder);
 	}
+	public int removeDocFolder(int draggedFolderKey) {
+		return dao.removeDocFolder(session,draggedFolderKey);
+	}
 }

@@ -195,9 +195,13 @@ public class AdminDocumentFormController {
     }
     @PostMapping("/updateDocFolder")
     public ResponseEntity<?>updateDocFolder(@RequestBody DocumentFormFolder folder){
-    	System.out.println(folder);
     	int result = service.updateDocFolder(folder);
     	return ResponseEntity.ok(result);
     }
-    @Post
+    @PostMapping("/removeDocFolder")
+    public ResponseEntity<?> removeDocFolder (@RequestParam int draggedFolderKey) {
+    	
+    	int result = service.removeDocFolder(draggedFolderKey);
+    	return ResponseEntity.ok(result);
+    }
 }

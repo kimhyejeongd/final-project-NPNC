@@ -297,6 +297,10 @@
 		ER_FORM_FOLDER_UPDATEDATE = SYSDATE
 		WHERE ER_FORM_FOLDER_KEY = #{erFormFolderKey}
 	</update>
+	<delete id="removeDocFolder" parameterType="int">
+		DELETE FROM ER_FORM_FOLDER
+		WHERE ER_FORM_FOLDER_KEY = #{draggedFolderKey}
+	</delete>
     <resultMap id="DocumentForm" type="DocumentForm">
         <id property="erFormKey" column="ER_FORM_KEY" />
         <result property="erFormName" column="ER_FORM_NAME" />

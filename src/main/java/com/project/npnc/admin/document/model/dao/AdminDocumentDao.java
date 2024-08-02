@@ -92,5 +92,8 @@ public class AdminDocumentDao {
 	public int updateDocFolder(SqlSessionTemplate session,DocumentFormFolder folder) {
 		return session.update("admindoc.updateDocFolder",folder);
 	}
+	public int removeDocFolder(SqlSessionTemplate session, int draggedFolderKey) {
+		return session.delete("admindoc.removeDocFolder",draggedFolderKey);
+	}
 
 }
