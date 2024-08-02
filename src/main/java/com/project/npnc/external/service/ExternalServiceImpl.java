@@ -1,11 +1,13 @@
 package com.project.npnc.external.service;
 
-import com.project.npnc.external.dao.ExternalDao;
-import com.project.npnc.external.dto.ExternalDto;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.project.npnc.external.dao.ExternalDao;
+import com.project.npnc.external.dto.ExternalDto;
 
 @Service
 public class ExternalServiceImpl implements ExternalService {
@@ -47,5 +49,10 @@ public class ExternalServiceImpl implements ExternalService {
             externalDto.setAB_EXTERNAL_BOOKMARK(newStatus);
             externalDao.updateContact(externalDto);
         }
+        
 }
+    @Override
+    public List<ExternalDto> searchContacts(String query) {
+        return externalDao.searchContacts(query);
+    }
 }

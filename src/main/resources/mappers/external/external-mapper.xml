@@ -60,5 +60,14 @@
 	    END
 	    WHERE AB_EXTERNAL_KEY = #{id}
 	</update>
+	
+	<select id="searchContacts" parameterType="map" resultMap="contactResultMap">
+	    SELECT * FROM AB_EXTERNAL
+	    WHERE (AB_EXTERNAL_NAME LIKE '%' || #{query} || '%'
+	       OR AB_EXTERNAL_COMPANY LIKE '%' || #{query} || '%')
+	      AND AB_EXTERNAL_DELETE = 'N'
+	    ORDER BY CASE WHEN AB_EXTERNAL_BOOKMARK = 'Y' THEN 0 ELSE 1 END, AB_EXTERNAL_NAME
+	</select>
+
 
 </mapper>
