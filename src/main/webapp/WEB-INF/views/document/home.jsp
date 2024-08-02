@@ -35,7 +35,7 @@
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
+      <%@ include file="/WEB-INF/views/document/documentSidebar.jsp" %>
       <%-- <%@ include file="/WEB-INF/views/document/documentSidebar.jsp" %> --%>
       <!-- End Sidebar -->
 
@@ -44,7 +44,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -59,8 +59,8 @@
                 <!-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> -->
               </div>
             </div>
-            <c:import url="${path }/WEB-INF/views/document/list/inprocessDoc.jsp"/>
-            <c:import url="${path }/WEB-INF/views/document/list/waitingDocs.jsp"/>
+            <c:import url="/WEB-INF/views/document/list/inprocessDoc.jsp"/>
+            <c:import url="/WEB-INF/views/document/list/waitingDocs.jsp"/>
             </div>
           </div>
           </div>

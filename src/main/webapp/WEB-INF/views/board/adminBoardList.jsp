@@ -96,7 +96,7 @@
    
         <div class="main-panel">
             <!-- Header Bar -->
-            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
 
             <div class="container">
                 <h1 class="mb-4">관리자 게시판 목록</h1>
