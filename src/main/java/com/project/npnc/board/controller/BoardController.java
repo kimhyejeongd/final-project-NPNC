@@ -2,7 +2,9 @@ package com.project.npnc.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,18 +15,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
 import com.project.npnc.security.dto.Member;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -49,6 +56,22 @@ public class BoardController {
         model.addAttribute("boardList", boards);
         return "board/boardList";
     }
+    @GetMapping("/loadMore")
+    public void loadMoreBoards(@RequestParam("page") int page, HttpServletResponse response) throws IOException {
+        int pageSize = 10; // 한 페이지당 데이터 개수
+        List<BoardDto> boards = boardService.getBoardsWithPagination(page, pageSize);
+        
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        
+        Gson gson = new Gson();
+        String json = gson.toJson(Collections.singletonMap("data", boards));
+        out.print(json);
+        out.flush();
+    }
+
+    
+
 
     @GetMapping("/notices")
     public String getNotices(Model model) {

@@ -1,7 +1,10 @@
 package com.project.npnc.board.model.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
+
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
@@ -34,4 +37,6 @@ public interface BoardDao {
     List<BoardCommentDto> selectCommentsByBoardId(int boardKey);
     // 댓글에 대한 대댓글을 가져오는 메서드
     List<BoardCommentDto> selectRepliesByCommentId(int commentKey);
+    
+    List<BoardDto> selectBoardsWithPagination(Map<String, Integer> params);
 }

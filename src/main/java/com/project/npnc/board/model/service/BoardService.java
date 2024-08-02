@@ -29,5 +29,7 @@ public interface BoardService {
     
     List<BoardFileDto> getFilesByBoardId(int boardKey);
     List<BoardDto> searchBoardsByTitle(String title);
+    
+    List<BoardDto> getBoardsWithPagination(int page, int pageSize);
  
 }

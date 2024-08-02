@@ -1,6 +1,8 @@
 package com.project.npnc.board.model.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -104,6 +106,12 @@ public class BoardDaoImpl implements BoardDao {
     public List<BoardCommentDto> selectRepliesByCommentId(int commentKey) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectRepliesByCommentId", commentKey);
     }
+
+	@Override
+	public List<BoardDto> selectBoardsWithPagination(Map<String, Integer> params) {
+	    return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectBoardsWithPagination", params);
+	}
+
 }
 
 

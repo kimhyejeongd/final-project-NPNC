@@ -59,10 +59,11 @@ public class MemberController {
     
     @PostMapping("/sendPasswordResetEmail")
     @ResponseBody
+    	
     public Map<String, Object> sendPasswordResetEmail(@RequestBody Map<String, String> request) throws MessagingException {
-        String email = request.get("email");
+		 String email = request.get("email"); // MAP  json방식으로 key email인거 
         generatedCode = generateRandomCode();
-
+        System.out.println("ddd");
 //        // HTML 이메일 내용 생성
 //        Context context = new Context();
 //        context.setVariable("code", generatedCode);
@@ -107,7 +108,7 @@ public class MemberController {
         try {
 	        helper= new MimeMessageHelper(message, true, "UTF-8");
 	        response = new HashMap<>();
-	        helper.setTo(email);
+	        helper.setTo("heajung2665@naver.com"); // 이 값 null 
 	        helper.setSubject("비밀번호 변경을 위한 인증 코드");
 				helper.setText(htmlContent, true);
 	        helper.setFrom("heajung2665@naver.com");

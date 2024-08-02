@@ -1,8 +1,12 @@
 package com.project.npnc.board.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.project.npnc.board.model.dao.BoardDao;
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
@@ -97,6 +101,17 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardCommentDto> getRepliesByCommentId(int commentKey) {
         return boardDao.selectRepliesByCommentId(commentKey);
+    }
+    @Override
+    public List<BoardDto> getBoardsWithPagination(int page, int pageSize) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = page * pageSize;
+        
+        Map<String, Integer> params = new HashMap<>();
+        params.put("startRow", startRow);
+        params.put("endRow", endRow);
+        
+        return boardDao.selectBoardsWithPagination(params);
     }
 
 }

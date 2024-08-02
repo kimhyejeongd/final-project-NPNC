@@ -283,11 +283,32 @@
 
             $('#sendEmailVerificationButton').click(function() {
                 // 이메일 전송 로직
+                fetch('/member/sendPasswordResetEmail', {
+    method: 'POST',  // method 속성은 headers가 아니라 fetch의 옵션 객체에 직접 포함되어야 합니다.
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8'  // Content-Type의 값에서 'UTF8'을 'UTF-8'로 수정합니다.
+    },
+    body: JSON.stringify({
+        // 여기서 요청 본문에 필요한 데이터를 추가하세요.
+      
+    })
+})
+.then(res => res.json())  // JSON을 파싱할 때는 'res.json()'을 사용합니다.
+.then(data => {
+    console.log("asdasdasd"+data);
+   	
+})
+.catch(error => {
+    console.log(error);
+});
+
                 $('#emailVerificationForm').show();
             });
 
-            $('#verifyCodeButton').click(function() {
+            $('#1verifyCodeButton').click(function() {
                 // 인증 코드 확인 로직
+               	
+                
                 $('#passwordChangeForm').show();
             });
 

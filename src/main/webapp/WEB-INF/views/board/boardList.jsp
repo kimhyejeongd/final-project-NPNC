@@ -46,7 +46,11 @@
         #tablerow:hover {
             cursor: pointer; 
         }
-
+        #loader {
+            display: none;
+            text-align: center;
+            margin: 20px;
+        }
     </style>
 </head>
 <body>
@@ -59,7 +63,7 @@
         <!-- Main Panel -->
         <div class="main-panel">
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
-      	  <div class="page-inner">
+          <div class="page-inner">
             
             <div class="container">
                 <h1>게시판 목록</h1>
@@ -106,11 +110,73 @@
                         </div>
                     </div>
                 </div>
+                <!-- Loader -->
+                <div id="loader">
+                    <img src="https://www.example.com/loading.gif" alt="Loading..." />
+                </div>
             </div>
-            </div>
-            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+          </div>
+          <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
     </div>
     
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        let page = 1;
+        let loading = false;
+        let hasMoreData = true; // 데이터가 더 있는지 여부를 추적
+
+        function loadMoreData() {
+            if (loading || !hasMoreData) return; // 이미 로딩 중이거나 더 이상 데이터가 없으면 종료
+
+            loading = true;
+            $("#loader").show();
+
+            $.ajax({
+                url: `${path}/board/loadMore`,
+                type: 'GET',
+                data: { page: page },
+                success: function(response) {
+                    $("#loader").hide();
+                    loading = false;
+
+                    // 서버에서 반환된 데이터가 있으면 추가
+                    if (response.data.length > 0) {
+                        let rows = '';
+                        response.data.forEach(function(board) {
+                            rows += `
+                                <tr>
+                                    <td>${board.BOARD_KEY}</td>
+                                    <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
+                                    <td>${board.MEMBER_KEY}</td>
+                                    <td>${board.BOARD_UPDATE_DATE}</td>
+                                </tr>
+                                
+                            `;
+                        });
+                        $('#multi-filter-select tbody').append(rows);
+                        page++;
+                    } else {
+                        hasMoreData = false; // 더 이상 데이터가 없으면 플래그를 업데이트
+                    }
+                },
+                error: function() {
+                    $("#loader").hide();
+                    loading = false;
+                }
+            });
+        }
+
+        $(window).scroll(function() {
+            // 스크롤이 페이지 하단에 가까워지면 데이터 로드
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                loadMoreData();
+            }
+            
+        });
+    });
+    </script>
 </body>
 </html>

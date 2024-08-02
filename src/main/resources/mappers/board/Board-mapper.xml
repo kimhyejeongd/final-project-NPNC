@@ -119,5 +119,15 @@
     <select id="selectRepliesByCommentId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
         SELECT * FROM BOARD_COMMENT WHERE BOARD_COMMENT_REF = #{BOARD_COMMENT_KEY}
     </select>
+    
+	    <!-- 페이지네이션을 적용한 게시글 조회 쿼리 -->
+		<select id="selectBoardsWithPagination" resultType="com.project.npnc.board.model.dto.BoardDto">
+		    SELECT * FROM (
+		        SELECT BOARD.*, ROW_NUMBER() OVER (ORDER BY BOARD_KEY DESC) AS rnum
+		        FROM BOARD
+		    ) WHERE rnum BETWEEN #{startRow} AND #{endRow}
+		</select>
+
+    
 
 </mapper>
