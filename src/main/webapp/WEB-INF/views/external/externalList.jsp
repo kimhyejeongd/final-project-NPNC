@@ -128,6 +128,8 @@
                                 <th>전화번호</th>
                                 <th>이메일</th>
                                 <th>회사명</th>
+                                <th>부서</th>
+                                <th>직급</th>
                                 <th>즐겨찾기</th>
                                 <th>조치</th>
                             </tr>
@@ -139,6 +141,8 @@
                                     <td>${contact.AB_EXTERNAL_TELL}</td>
                                     <td>${contact.AB_EXTERNAL_EMAIL}</td>
                                     <td>${contact.AB_EXTERNAL_COMPANY}</td>
+                                    <td>${contact.AB_EXTERNAL_DEPARTMENT}</td>
+                                    <td>${contact.AB_EXTERNAL_JOB}</td>
                                     <td>
                                         <!-- 즐겨찾기 아이콘 -->
                                         <i class="fas fa-star bookmark-icon" 
