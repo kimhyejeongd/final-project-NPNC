@@ -35,7 +35,8 @@
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
+      <%-- <%@ include file="/WEB-INF/views/document/documentSidebar.jsp" %> --%>
       <!-- End Sidebar -->
 
       <div class="main-panel">
