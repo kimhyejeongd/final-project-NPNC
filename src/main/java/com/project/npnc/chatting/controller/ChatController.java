@@ -66,19 +66,15 @@ public class ChatController {
 	@MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
 	@SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
 	public ChattingMessage test(@DestinationVariable int roomId,ChattingMessage message) {
-    	System.out.println(message);
 //		HttpSession session=(HttpSession)RequestContextHolder.currentRequestAttributes()
 //		.resolveReference(RequestAttributes.REFERENCE_SESSION);
 //		System.out.println(session);
 		if(message.getFile()!=null) {
-			System.out.println(message.getFile().toString());
 		}
-		System.out.println("Received message: " + message);
 //		Received message: ChattingMessage(chatMsgKey=0, memberKey=2, chatRoomKey=10, chatMsgDetail=ㅈㅇㅂㅇㅈㅂ, chatMsgTime=Sun Jun 30 23:19:09 KST 2024, chatMsgNotice=null, chatReadCount=0)
 // 		채팅 저장
         Map<String, Object> chatInfo = service.insertChat(message);
-            System.out.println("Insert result: " + chatInfo.get("seq"));
-            System.out.println(message);
+ 
       
             ChattingMessage chat = createChattingMessage(
 	            		(int)chatInfo.get("seq"),
@@ -182,7 +178,6 @@ public class ChatController {
                     .chatRoomKey(chatId)
                     .fileContentType(file.getContentType())
                     .build();
-            System.out.println("PostFile================="+chattingFile.getChatMsgFilePost());
             
             PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(bucketName, webPath, file.getInputStream(),metadata).withCannedAcl(CannedAccessControlList.PublicRead));
             
@@ -239,7 +234,6 @@ public class ChatController {
     @PostMapping("/myChatRoomList")
     public ResponseEntity<?> myChatRoomList(@RequestParam("memberKey")int memberKey){
     	Member member = getCurrentUser();
-    	System.out.println(member);
 		List<ChattingRoom> mychatRoomList = service.selectMyChatRoomList(member.getMemberKey());
 		return ResponseEntity.ok(mychatRoomList);
 
