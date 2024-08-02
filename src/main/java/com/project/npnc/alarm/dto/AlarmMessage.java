@@ -25,6 +25,7 @@ public class AlarmMessage {
 	private int alarmSendMember;
 	private Date alarmDate;
 	private String alarmRead;
-	
+	private String memberName;
+	private String jobName;
 	
 }

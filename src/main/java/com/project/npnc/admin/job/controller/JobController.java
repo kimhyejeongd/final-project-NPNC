@@ -29,10 +29,10 @@ public class JobController {
 		int result=service.insertJob(jobName);
 		String msg,loc;
 		if(result>0) {
-			msg="등록성공";
+			msg="성공";
 			loc="/admin/job/selectjoball.do";
 		}else {
-			msg="등록실패";
+			msg="실패";
 			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
@@ -51,10 +51,10 @@ public class JobController {
 		int result=service.deleteJob(key);
 		String msg,loc;
 		if(result>0) {
-			msg="삭제성공";
+			msg="성공";
 			loc="/admin/job/selectjoball.do";
 		}else {
-			msg="삭제실패";
+			msg="실패";
 			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);
@@ -78,10 +78,10 @@ public class JobController {
 		int result=service.updateJob(j);
 		String msg,loc;
 		if(result>0) {
-			msg="수정성공";
+			msg="성공";
 			loc="/admin/job/selectjoball.do";
 		}else {
-			msg="수정실패";
+			msg="실패";
 			loc="/admin/job/selectjoball.do";
 		}
 		m.addAttribute("msg",msg);

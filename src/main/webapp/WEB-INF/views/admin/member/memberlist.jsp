@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
@@ -83,7 +87,7 @@
 											    	수정
 											  	</button>
 				                            	 &ensp;&ensp;&ensp;
-				                            	<button onclick="deleteMember('${m.memberKey}');" class="btn btn-dark btn-round">삭제</button>
+				                            	<button onclick="deleteModal('${m.memberKey}');" class="btn btn-dark btn-round">삭제</button>
 				                            </td>
 				                          </tr>
 			                        </c:forEach>
@@ -184,6 +188,8 @@
 			                        $(this).prop('checked', false);
 			                    }
 			                });
+			                
+			                
 			            },
 			            error: function(xhr, status, error) {
 			                console.error("AJAX Error: ", status, error);
@@ -191,6 +197,42 @@
 			        });
 			    });
 			
+			  // 페이지 로드 시 초기 설정 확인
+			    document.addEventListener('DOMContentLoaded', function() {
+			        toggleReadOnly();
+			    });
+
+/* 			    function toggleReadOnly() {
+			        var memberState = document.getElementById('memberState').value;
+			        var memberLeaveDateInput = document.getElementById('memberLeaveDate');
+			        
+			        // 퇴사 상태인 경우 readonly 속성을 제거
+			        if (memberState === '퇴사') {
+			            memberLeaveDateInput.removeAttribute('readonly');
+			        } else {
+			            // 그 외의 경우에는 readonly 속성을 추가
+			            memberLeaveDateInput.setAttribute('readonly', 'readonly');
+			        }
+			    } */
+				
+			    function toggleReadOnly() {
+			        var memberState = $('#memberStateup').val();
+			        var memberLeaveDateInput = $('#memberLeaveDateup'); // 'memberLeaveDate' 대신 'memberLeaveDateup'으로 변경
+			        
+			        // 요소가 존재하는지 확인
+			        if (memberLeaveDateInput.length) {
+			            // 퇴사 상태인 경우 readonly 속성을 제거
+			            if (memberState === '퇴사') {
+			                memberLeaveDateInput.removeAttr('readonly');
+			            } else {
+			                // 그 외의 경우에는 readonly 속성을 추가
+			                memberLeaveDateInput.attr('readonly', 'readonly');
+			            }
+			        } else {
+			            console.error("Element #memberLeaveDateup not found");
+			        }
+			    }
+				
 			
 			 	function fn_paging(pageNo) {
 			 	    console.log('오긴왔냐?');
@@ -219,6 +261,58 @@
 				
 				
 			
+				 function deleteModal(no){
+						console.log(no);
+						Swal.fire({
+							title: '삭제 확인',
+							html: '<h4>정말 삭제하시겠습니까?</h4>',
+							showCancelButton: true,
+							confirmButtonClass: 'btn btn-success',
+							cancelButtonClass: 'btn btn-danger ms-2',
+							confirmButtonText: '삭제',
+							cancelButtonText: '취소',
+							buttonsStyling: false,
+							reverseButtons: false
+						}).then(result => {
+							if (result.isConfirmed) {
+								//삭제 요청 전송
+								$.ajax({
+									url: '${path}/admin/member/deletemember.do',
+									data: {no : no},
+									dataType: "json",
+									method: "post",
+									success: data=>{
+										console.log();
+										if(data.status==="success"){
+											Swal.fire({
+												title: '삭제 완료',
+												html: '<h4>정상적으로 삭제되었습니다.</h4>',
+												showCancelButton: true,
+												confirmButtonClass: 'btn btn-success',
+												cancelButtonClass: 'btn btn-danger ms-2',
+												confirmButtonText: '확인',
+												cancelButtonText: '취소',
+												buttonsStyling: false,
+												reverseButtons: false
+											}).then(result => {
+												location.reload();
+											});
+										}else{
+								            alert("다음과 같은 에러가 발생하였습니다. (" + data.message + ")");
+								        };
+									},
+									error: (xhr, status, error) => {
+					                    console.error("Error: ", error);
+					                    alert("삭제 요청 중 오류가 발생했습니다.");
+					                }
+								});
+							}
+						});
+					};
+				
+				
+				
+				
 				const deleteMember=(key)=>{
 					   if(confirm("정말 삭제 하시겠습니까?")){
 				           let form = document.createElement("form");
