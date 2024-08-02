@@ -55,12 +55,12 @@
                 <h3 class="fw-bold mb-3">결재 상신함</h3>
               </div>
             </div>
-            <c:import url="${path}/WEB-INF/views/document/list/inprocessDoc.jsp"/>
+            <c:import url="/WEB-INF/views/document/list/inprocessDoc.jsp"/>
            </div>
           </div>
+     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
-     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>

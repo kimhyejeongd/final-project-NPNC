@@ -262,9 +262,9 @@
             </div>
           </div>
          </div>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
        </div>
       </div>
-<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <!-- 모달 HTML -->
 <div class="modal" id="fileDetailModal" tabindex="-1" role="dialog" aria-labelledby="fileDetailModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

@@ -93,8 +93,8 @@
 			                  	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 			                  </td>
 			               		<td colspan="">
-			               			<input type="button" value="재작성" class="btn btn-outline-secondary" id="rewriteBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
-			               			<input type="button" value="삭제" class="btn btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}','employee/draft');">
+			               			<input type="button" value="재작성" class="btn-sm btn-outline-secondary" id="rewriteBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
+			               			<input type="button" value="삭제" class="btn-sm btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}','employee/draft');">
 			              		</td>
 			                </tr>
 			                </c:forEach>
@@ -108,9 +108,9 @@
 			</div>
            </div>
           </div>
+    <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
-    <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>

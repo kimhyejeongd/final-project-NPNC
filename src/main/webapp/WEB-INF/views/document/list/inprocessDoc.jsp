@@ -78,7 +78,7 @@
                     </c:forEach>
                   </td>
                		<td colspan="">
-               			<input type="button" value="회수" class="btn btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocSerialKey}');">
+               			<input type="button" value="회수" class="btn-sm btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocSerialKey}');">
              		</td>
                 </tr>
                 </c:forEach>

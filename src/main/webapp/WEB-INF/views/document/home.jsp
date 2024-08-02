@@ -63,9 +63,9 @@
             <c:import url="/WEB-INF/views/document/list/waitingDocs.jsp"/>
             </div>
           </div>
+        <%@ include file="/WEB-INF/views/common/footer.jsp" %>
           </div>
         </div>
-        <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
