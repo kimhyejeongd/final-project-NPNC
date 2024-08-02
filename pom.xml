@@ -200,6 +200,7 @@
 
 
    <build>
+		<finalName>GDJ79_NPNC_final</finalName>
       <plugins>
          <plugin>
             <groupId>org.springframework.boot</groupId>
