@@ -428,20 +428,10 @@ $(document).ready(function() {
 				.attr('name', 'vacationUseCount').prependTo($("#docForm"));
 				
 				
-				//문서 내용 정리
-				$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
-				$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
-				$("#vacationTypeArea").html($("#vacationSelectArea").val());
-				$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
-						" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
-				dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-				
-				
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		     	// AJAX로 폼 데이터를 전송
-		        fetch(sessionStorage.getItem("path")+'/document/savedraft/vacation', {
+		        fetch(sessionStorage.getItem("path")+'/document/savedraft', {
 		            method: 'POST',
 		            body: formData,
 		        })

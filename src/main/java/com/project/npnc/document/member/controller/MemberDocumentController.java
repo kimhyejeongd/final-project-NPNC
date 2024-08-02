@@ -318,13 +318,12 @@ public class MemberDocumentController {
 	@PostMapping("/rewrite")
 	public String docRewrite(String serial, Model m) {
 		log.debug("----전자문서 재작성----");
+		//기존 작성 내용 불러오기
 		Document d = serv.selectDocBySerial(serial);
-		String html = DocHtmlController.readHtmlFile("dochtml", d.getErDocFilename(), uploadDir);
-		log.debug(html);
-		m.addAttribute("html", html);
 		m.addAttribute("doc", d);
 		log.debug("{}", d);
 		
+		//양식번호
 		//날짜- 제거
 		String afterF = serial.substring(serial.indexOf("F"));
 		//뒤 -이후 제거
@@ -334,12 +333,53 @@ public class MemberDocumentController {
 		}
 		String formNo = afterFbeforebar.replace("F", "");
 		System.out.println(formNo);
-        	m.addAttribute("form", formNo);
-        	log.debug(m.getAttribute("form").toString());
-//        }else {
-//            log.warn("No match found.");
-//        }
-		return "document/rewrite/normal";
+    	m.addAttribute("form", formNo);
+    	log.debug(m.getAttribute("form").toString());
+    	int form = Integer.parseInt(formNo);
+    	
+//    	String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
+    	String html = null;
+    	String jsp = null;
+		//추가근무 신청폼인 경우 근무 현황 데이터 첨부
+		if(form == 2) {
+			log.debug("----추가근무 신청----");
+			html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
+			jsp = "document/rewrite/overwork";
+		}else
+
+		//휴가 신청폼인 경우 휴가 데이터 첨부
+		if(form ==3) {
+			log.debug("----휴가 신청----");
+			html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
+			html = html.replace("[잔여 연차]", serv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
+			
+			List<Vacation> vacation =vacserv.selectVacationAll();
+			log.debug("{}", vacation);
+			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationSelectArea\">";
+			vacselect += "<option>---선택---</option>";
+			for(Vacation v : vacation) {
+				vacselect += "<option data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
+			}
+			vacselect += "</select>";
+			html = html.replace("[휴가 종류]", vacselect);
+			
+			jsp= "document/rewrite/vacation";
+		}else {
+			//작성했던 파일
+			html = DocHtmlController.readHtmlFile("dochtml", d.getErDocFilename(), uploadDir);
+			jsp= "document/rewrite/normal";
+		}
+		//기안부서 적용
+		html = html.replace("[기안부서]", getCurrentUser().getDepartmentName());
+		//기안일 적용
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		html = html.replace("[기안일]", LocalDate.now().format(formatter));
+		//기안자
+		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
+		
+		log.debug(html);
+		m.addAttribute("html", html);
+		return jsp;
 	}
 //	팝업
 	//결재자 선택팝업 호출, 조직도와 저장된 결재라인 출력
@@ -526,11 +566,35 @@ public class MemberDocumentController {
 		Member user = getCurrentUser();
 		log.debug("{}", html);
 		log.debug("{}", user);
-		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
-//		doc.setErDocStorageKey(); //문서보관함 임시세팅
+		doc.setErDocSerialKey(user.getDepartmentKey()+
+				"F"+ doc.getDocFormKey() + "TEMP"); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+									.memberTeamKey(user.getDepartmentKey())
+									.memberTeamName(user.getDepartmentName())
+									.memberJobKey(user.getJobKey())
+									.memberJobName(user.getJobName())
+									.memberName(user.getMemberName())
+									.category("기안")
+									.opinion(msg)
+									.state("승인")
+									.date(Date.valueOf(LocalDate.now()))
+									.orderby(0)
+						.build();
+		List<Approver> ap = doc.getApprovers();
+		ap.removeIf(a -> {
+		    boolean toRemove = a.getMemberKey() == 0;
+		    if (toRemove) {
+		        log.debug("없는 결재자 삭제");
+		        log.debug("{}", a);
+		    }
+		    return toRemove;
+		});//debug
+		ap.add(me);
+		ap.sort(Comparator.comparing(Approver::getOrderby)); //정렬
 		log.debug("{}", doc);
 		
 		int result=0;
@@ -645,33 +709,7 @@ public class MemberDocumentController {
 		log.debug("{}", user);
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
-		//기안자=로그인유저
-		doc.setErDocWriter(user.getMemberKey()); 
-		//결재자에 기안자도 추가
-		Approver me = Approver.builder().memberKey(user.getMemberKey())
-									.memberTeamKey(user.getDepartmentKey())
-									.memberTeamName(user.getDepartmentName())
-									.memberJobKey(user.getJobKey())
-									.memberJobName(user.getJobName())
-									.memberName(user.getMemberName())
-									.category("기안")
-									.opinion(msg)
-									.state("승인")
-									.date(Date.valueOf(LocalDate.now()))
-									.orderby(0)
-						.build();
-		List<Approver> ap = doc.getApprovers();
-		ap.removeIf(a -> {
-		    boolean toRemove = a.getMemberKey() == 0;
-		    if (toRemove) {
-		        log.debug("없는 결재자 삭제");
-		        log.debug("{}", a);
-		    }
-		    return toRemove;
-		});//debug
-		ap.add(me);
-		ap.sort(Comparator.comparing(Approver::getOrderby)); //정렬
-		doc.setApprovers(ap);
+		doc = generateApprover(doc, msg);
 		log.debug("{}", doc);
 		
 		
@@ -725,30 +763,7 @@ public class MemberDocumentController {
 		log.debug(file.toString());
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
-		//기안자=로그인유저
-		doc.setErDocWriter(user.getMemberKey()); 
-		//결재자에 기안자도 추가
-		Approver me = Approver.builder().memberKey(user.getMemberKey())
-				.memberTeamKey(user.getDepartmentKey())
-				.memberJobKey(user.getJobKey())
-				.memberName(user.getMemberName())
-				.category("기안")
-				.opinion(msg)
-				.state("승인")
-				.date(Date.valueOf(LocalDate.now()))
-				.orderby(0)
-				.build();
-		List<Approver> ap = doc.getApprovers();
-		ap.removeIf(a -> {
-			boolean toRemove = a.getMemberKey() == 0;
-			if (toRemove) {
-				log.debug("없는 결재자 삭제");
-				log.debug("{}", a);
-			}
-			return toRemove;
-		});//debug
-		ap.add(me);
-		doc.setApprovers(ap);
+		doc = generateApprover(doc, msg);
 		log.debug("{}", doc);
 		
 		
@@ -828,30 +843,7 @@ public class MemberDocumentController {
 		log.debug(file.toString());
 		doc.setErDocSerialKey(user.getDepartmentKey()+"F"+ doc.getDocFormKey()); //문서구분키 생성을 위한 사전세팅(부서코드양식코드)
 		
-		//기안자=로그인유저
-		doc.setErDocWriter(user.getMemberKey()); 
-		//결재자에 기안자도 추가
-		Approver me = Approver.builder().memberKey(user.getMemberKey())
-				.memberTeamKey(user.getDepartmentKey())
-				.memberJobKey(user.getJobKey())
-				.memberName(user.getMemberName())
-				.category("기안")
-				.opinion(msg)
-				.state("승인")
-				.date(Date.valueOf(LocalDate.now()))
-				.orderby(0)
-				.build();
-		List<Approver> ap = doc.getApprovers();
-		ap.removeIf(a -> {
-			boolean toRemove = a.getMemberKey() == 0;
-			if (toRemove) {
-				log.debug("없는 결재자 삭제");
-				log.debug("{}", a);
-			}
-			return toRemove;
-		});//debug
-		ap.add(me);
-		doc.setApprovers(ap);
+		doc = generateApprover(doc, msg);
 		log.debug("{}", doc);
 		
 		String startTime = overtimeStartHH+":"+overtimeStartMM+":00";
@@ -923,6 +915,37 @@ public class MemberDocumentController {
 		return ResponseEntity.ok(response);
 	}
 	
+	private Document generateApprover(Document doc, String msg){
+		Member user = getCurrentUser();
+		//기안자=로그인유저
+		doc.setErDocWriter(user.getMemberKey()); 
+		//결재자에 기안자도 추가
+		Approver me = Approver.builder().memberKey(user.getMemberKey())
+				.memberTeamKey(user.getDepartmentKey())
+				.memberTeamName(user.getDepartmentName())
+				.memberJobKey(user.getJobKey())
+				.memberJobName(user.getJobName())
+				.memberName(user.getMemberName())
+				.category("기안")
+				.opinion(msg)
+				.state("승인")
+				.date(Date.valueOf(LocalDate.now()))
+				.orderby(0)
+				.build();
+		List<Approver> ap = doc.getApprovers();
+		ap.removeIf(a -> {
+			boolean toRemove = a.getMemberKey() == 0;
+			if (toRemove) {
+				log.debug("없는 결재자 삭제");
+				log.debug("{}", a);
+			}
+			return toRemove;
+		});//debug
+		ap.add(me);
+		ap.sort(Comparator.comparing(Approver::getOrderby)); //정렬
+		doc.setApprovers(ap);
+		return doc;
+	}
 	private Timestamp convertToTimestamp(String date, String time) {
 		 // 날짜 및 시간 포맷 정의
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -246,7 +246,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if (result <= 0) {
 			throw new Exception("[1]draft 문서 insert 실패");
 		}
-		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocKey());
+		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocSerialKey());
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
@@ -339,7 +339,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	@Transactional	
 	public int retrieveDoc(String docKey) throws Exception {
-		//전자문서 테이블 상태변경 (처리중 -> 회수)
+		//전자문서 테이블 상태변경 (처리중 -> 회수) 시리얼키
 		int result = dao.retrieveDoc(session, docKey); 
 		//selectKey "fileRename"
 		if(result<=0) {
@@ -361,6 +361,13 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			if(result <= 0) throw new Exception("[2]휴가 신청 삭제 실패");
 			log.debug("[2]휴가 신청 삭제 완료");
 		}
+		
+		String html = DocHtmlController.readHtmlFile("dochtml", docKey+".html", uploadDir);
+		if(html.contains(docKey)) {
+			html.replace(docKey, "");
+			log.debug("[3]문서 내 시리얼코드 삭제 완료");
+		}
+		
 		
 		return result;
 	}

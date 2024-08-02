@@ -109,7 +109,7 @@
 							<!-- 재기안, 삭제 -->
 							<div class="d-flex">
 							<c:choose>
-								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess') or fn:contains(lastPage, 'pend')}">
+								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess') or fn:contains(lastPage, 'pend') or fn:contains(lastPage, 'index')}">
 									<!-- <button class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
 											<i class="fas fa-edit"></i>
@@ -124,7 +124,7 @@
 									</button>
 								</c:when>
 								<c:when test="${fn:contains(lastPage, 'draft') or fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
-									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocKey}')">
+									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
 										</span>
