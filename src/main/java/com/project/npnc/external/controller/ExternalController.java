@@ -1,8 +1,11 @@
 package com.project.npnc.external.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +30,9 @@ public class ExternalController {
     private ExternalService externalService;
 
     @GetMapping("/list")
-    public String listContacts(HttpServletRequest request) {
-        List<ExternalDto> contacts = externalService.getAllContacts();
+    public String listContacts(HttpServletRequest request,Authentication authentication) {
+    	Member member = (Member) authentication.getPrincipal();
+        List<ExternalDto> contacts = externalService.getAllContacts(member.getMemberKey());
         request.setAttribute("contacts", contacts);
         return "external/externalList";
     }
@@ -62,10 +66,22 @@ public class ExternalController {
     }
 
     @PostMapping("/delete")
-    public String deleteContact(@RequestParam("AB_EXTERNAL_KEY") int id) {
-        externalService.deleteContact(id);
-        return "redirect:/external/list";
+    public ResponseEntity<Map<String, Boolean>> deleteContact(@RequestParam("AB_EXTERNAL_KEY") int id, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+        ExternalDto externalDto = externalService.getContactById(id);
+        Map<String, Boolean> response = new HashMap<>();
+        System.out.println(externalDto.getMEMBER_KEY());
+        System.out.println(member.getMemberKey());
+        if (externalDto.getMEMBER_KEY() == member.getMemberKey()) {
+        	System.out.println("gd");
+            externalService.deleteContact(id);
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+        }
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/toggleFavorite")
     @ResponseBody

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.project.npnc.external.dto.ExternalDto;
 
 public interface ExternalService {
-    List<ExternalDto> getAllContacts();
+    List<ExternalDto> getAllContacts(int memberkey);
     ExternalDto getContactById(int id);
     void addContact(ExternalDto externalDto);
     void updateContact(ExternalDto externalDto);

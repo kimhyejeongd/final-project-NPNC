@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>새 연락처 추가</title>
+    <title>새 주소록 추가</title>
 
     <!-- 기본 CSS 파일 -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />

@@ -15,9 +15,9 @@
         <result property="AB_EXTERNAL_DELETE" column="AB_EXTERNAL_DELETE"/>
     </resultMap>
 
-    <select id="getAllContacts" resultMap="contactResultMap">
+    <select id="getAllContacts" resultMap="contactResultMap" parameterType="int">
         SELECT * FROM AB_EXTERNAL
-        WHERE AB_EXTERNAL_DELETE = 'N'
+        WHERE AB_EXTERNAL_DELETE = 'N' AND MEMBER_KEY=#{memberkey}
         ORDER BY CASE WHEN AB_EXTERNAL_BOOKMARK = 'Y' THEN 0 ELSE 1 END, AB_EXTERNAL_NAME
     </select>
 

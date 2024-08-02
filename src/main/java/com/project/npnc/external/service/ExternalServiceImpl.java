@@ -16,8 +16,8 @@ public class ExternalServiceImpl implements ExternalService {
     private ExternalDao externalDao;
 
     @Override
-    public List<ExternalDto> getAllContacts() {
-        return externalDao.getAllContacts();
+    public List<ExternalDto> getAllContacts(int memberkey) {
+        return externalDao.getAllContacts(memberkey);
     }
 
     @Override

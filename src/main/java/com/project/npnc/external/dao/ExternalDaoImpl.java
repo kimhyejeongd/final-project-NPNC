@@ -16,8 +16,8 @@ public class ExternalDaoImpl implements ExternalDao {
     private SqlSession sqlSession;
 
     @Override
-    public List<ExternalDto> getAllContacts() {
-        return sqlSession.selectList("com.project.npnc.external.dao.ExternalDao.getAllContacts");
+    public List<ExternalDto> getAllContacts(int memberkey) {
+        return sqlSession.selectList("com.project.npnc.external.dao.ExternalDao.getAllContacts",memberkey);
     }
 
     @Override
