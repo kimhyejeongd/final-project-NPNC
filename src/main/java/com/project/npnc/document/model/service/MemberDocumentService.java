@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +23,8 @@ public interface MemberDocumentService {
 	DocumentForm selectFormByNo(int no);
 	
 	int insertDoc(Document d, MultipartFile[] file, String html) throws Exception;
-	int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception;
-	int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot) throws Exception;
+	int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac, String uploadDir) throws Exception;
+	int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot, String uploadDir) throws Exception;
 	int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception;
 	int insertDraftVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception;
 //	int deleteDoc(Document d) throws Exception;
@@ -56,10 +57,6 @@ public interface MemberDocumentService {
 	int deleteDocFile(String docSerial) throws Exception;
 	String selecetDocFileOriname(String filename);
 	
-	int updateApproveDoc(int memberKey, String serial, String msg, int formNo, String html) throws Exception;
-	int updateRejectDoc(int memberKey, String serial, String msg) throws Exception;
-	int updatePendDoc(int memberKey, String serial, String msg) throws Exception;
-	List<Approver> selectDocApprovers(String serial);
 	
 	int selectRemainingVac(int memberKey);
 	int insertVacationApply(VacationApply vac);
