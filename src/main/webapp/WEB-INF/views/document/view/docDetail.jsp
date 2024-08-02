@@ -60,7 +60,7 @@
 
 	<div class="wrapper">
       <!-- Sidebar -->
-      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 	  <div class="main-panel">
         <div class="main-header">
@@ -264,6 +264,7 @@
          </div>
        </div>
       </div>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <!-- 모달 HTML -->
 <div class="modal" id="fileDetailModal" tabindex="-1" role="dialog" aria-labelledby="fileDetailModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
