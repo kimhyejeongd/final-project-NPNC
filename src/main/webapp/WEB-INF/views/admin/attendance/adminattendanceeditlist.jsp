@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
@@ -161,6 +165,7 @@
 			                } else {
 			                    $('#attendanceEditOpinion').removeAttr('readonly');
 			                }
+			             
 
 			                // 버튼 표시/숨기기
 			                if (data.attendanceEdit.attendanceEditOpinion) {

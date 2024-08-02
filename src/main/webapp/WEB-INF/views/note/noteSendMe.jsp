@@ -86,13 +86,13 @@
 			}
 			.modal .modal_popup .close_btn {
 			  /*   display: block; */
-			    padding: 10px 20px;
+			 /*   padding: 10px 20px;
 			    background-color: rgb(116, 0, 0);
 			    border: none;
 			    border-radius: 5px;
 			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
+			    transition: box-shadow 0.2s; */
 			}
 			.modal.on {
 			    display: block;
@@ -117,6 +117,32 @@
             cursor: pointer; /* 커서를 포인터로 변경 */
         }
 	</style>
+	<style>
+	#pagingtbody th{
+		font-weight: normal !important;
+	}
+	.downloadNoteBtn{
+		display: inline-block;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    text-align: center;
+	    width: 100px; /* 버튼의 너비를 설정 */
+	    white-space: nowrap; /* 텍스트가 줄 바꿈 없이 한 줄로 유지 */
+	    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	    text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+	    box-sizing: border-box;
+		margin-right: 10px;
+	}
+	
+	#downloadButtonBox{
+		
+	}	
+	</style>
+
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -153,131 +179,64 @@
             </button>
           </div>
           <!-- End Logo Header -->
-        </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
-          <div class="sidebar-content">
-			<ul class="nav nav-secondary">
-			     
-			       <li class="nav-section">
-			         <span class="sidebar-mini-icon">
-			           <i class="fa fa-ellipsis-h"></i>
-			         </span>
-			         <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
-			       </li>
-			       <li class="nav-item">
-			         <a data-bs-toggle="collapse" href="#base">
-			           <i class="fas fa-file-upload"></i>
-			           <p>받은 쪽지함</p>
-			         </a>
-			        
-			       </li>
-			       <li class="nav-item">
-			         <a data-bs-toggle="collapse" href="#sidebarLayouts">
-			           <i class="fas fa-file-download"></i>
-			           <p>보낸 쪽지함</p>
-			         </a>
-			         
-			       </li>
-				 
-				   <li class="nav-item">
-			           <a data-bs-toggle="collapse" href="#sidebarLayouts">
-			             <i class="fas fa-street-view"></i>
-			             <p>내게 쓴 메일함</p>
-			           </a>
-			           
-			         </li>
-					<li class="nav-item">
-			             <a data-bs-toggle="collapse" href="#base">
-						  <i class="fas fa-folder-open"></i>
-			               <p>보관 메일함</p>
-			               <span class="caret"></span>
-			             </a>
-			             <div class="collapse" id="base">
-			               <ul class="nav nav-collapse">
-			            
-			                 <li>
-			                   <a href="components/avatars.html">
-			                     <span class="sub-item">Avatars</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/buttons.html">
-			                     <span class="sub-item">Buttons</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/gridsystem.html">
-			                     <span class="sub-item">Grid System</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/panels.html">
-			                     <span class="sub-item">Panels</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/notifications.html">
-			                     <span class="sub-item">Notifications</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/sweetalert.html">
-			                     <span class="sub-item">Sweet Alert</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/font-awesome-icons.html">
-			                     <span class="sub-item">Font Awesome Icons</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/simple-line-icons.html">
-			                     <span class="sub-item">Simple Line Icons</span>
-			                   </a>
-			                 </li>
-			                 <li>
-			                   <a href="components/typography.html">
-			                     <span class="sub-item">Typography</span>
-			                   </a>
-			                 </li>
-			               </ul>
-			             </div>
-			           </li>       
-					 <li class="nav-item">
-			              <a data-bs-toggle="collapse" href="#trash">
-							<i class="fas fa-trash-alt"></i>
-			                <p>휴지통</p>
-			                <span class="caret"></span>
-			              </a>
-			              <div class="collapse" id="trash">
-			                <ul class="nav nav-collapse">
-			             
-			                  <li>
-			                    <a href="components/avatars.html">
-			                      <span class="sub-item">받은 메일함</span>
-			                    </a>
-			                  </li>
-			                  <li>
-			                    <a href="components/buttons.html">
-			                      <span class="sub-item">보낸 메일함</span>
-			                    </a>
-			                  </li>
-			                  <li>
-			                    <a href="components/gridsystem.html">
-			                      <span class="sub-item">내게 쓴 메일함</span>
-			                    </a>
-			                  </li>
-			                  
-			                  
-			                </ul>
-			              </div>
-			            </li>
-			       
-			     
-			     </ul>
-          </div>
-        </div>
-      </div>
+		    </div>
+		    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+		      <div class="sidebar-content">
+		        <ul class="nav nav-secondary">
+		        
+		          <li class="nav-section">
+		            <span class="sidebar-mini-icon">
+		              <i class="fa fa-ellipsis-h"></i>
+		            </span>
+		            <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
+		          </li>
+		  	  
+		          <li class="nav-item" >
+		            <a data-bs-toggle="collapse" href="${path}/notehome">
+		              <i class="fas fa-file-upload"></i>
+		              <p>받은 쪽지함</p>
+		            </a>
+		           
+		          </li>
+		          <li class="nav-item">
+		            <a data-bs-toggle="collapse" href="${path}/sendNoteHome">
+		              <i class="fas fa-file-download"></i>
+		              <p>보낸 쪽지함</p>
+		            </a>
+		            
+		          </li>
+		  	 
+		  	   <li class="nav-item">
+		              <a data-bs-toggle="collapse" href="${path}/noteSendMe">
+		                <i class="fas fa-street-view"></i>
+		                <p>내게 쓴 쪽지함</p>
+		              </a>
+		              
+		            </li>
+		  		<li class="nav-item">
+		                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
+		  			  <i class="fas fa-folder-open"></i>
+		                  <p>즐겨찾기</p>
+		                </a>
+		              </li>       
+		  		
+		        </ul>
+		      </div>
+		    </div>
+		  </div>
+		  <script>
+		     document.addEventListener("DOMContentLoaded", function() {
+		         document.querySelectorAll('.nav-item').forEach(function(li) {
+		             li.addEventListener('click', function() {
+		                 var anchor = li.querySelector('a');
+		                 if (anchor) {
+		                     window.location.href = anchor.href;
+		                 }
+		             });
+		         });
+		     });
+		  </script>
+
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -293,7 +252,7 @@
               class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
             >
               <div>
-                <h3 class="fw-bold mb-3">내게 쓴 메일함</h3>
+                <h3 class="fw-bold mb-3">내게 쓴 쪽지함</h3>
                 <h6 class="op-7 mb-2">총 ${totalData}건의 쪽지가 있습니다.</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
@@ -305,35 +264,20 @@
           	<div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-					<div class="noteSearchBar">
-						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
-					        <div class="input-group">
-					          <div class="input-group-prepend">
-					            <button type="submit" class="btn btn-search pe-1">
-					              <i class="fa fa-search search-icon"></i>
-					            </button>
-					          </div>
-					          <input
-					            type="text"
-					            placeholder="제목으로 검색하여 주세요"
-					            class="form-control"
-								id="searchNoteBarText"
-					          />
-					        </div>
-					    </nav>
-					</div>	
+					<h4 class="card-title">목록</h4>
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class="display table table-striped table-hover"
+						class="table table-head-bg-primary mt-4"
+						style="margin-top: 0px!important;"
                       >
                         <thead>
                           <tr>
                           <th> 
                           	<input type="checkbox" id="deleteCheckAll" value="">
-                         		 전체선택 
+                         		  
                           
                           	</th>
                             <th>Number</th>
@@ -350,10 +294,10 @@
                         
            	    			<tr>
            	    				<th><input type="checkbox" name="deleteCheck" value="${d.postMsgRecKey}"></th>
-           	  					<th>${d.postMsgRecKey}<p>
-           	  					<th>${d.memberKey}<p>
-           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-           	  					<th>${d.postMsgTime}<p>
+           	  					<th>${d.postMsgRecKey}</th>
+           	  					<th>${d.memberName} ${d.jobName}</th>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}</th>
+           	  					<th>${d.formattedPostMsgTime}</th>
            	  				</tr>
 	
           		 	  </c:forEach>
@@ -376,10 +320,9 @@
 			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
+							<div class="form-group">
+								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
+							</div>
 				           	  
 				           	  <div class="form-group">
 				           	    <div class="namebox" >
@@ -408,13 +351,12 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group" id="downloadButtonBox">
-                    			   	
-                    			   </div>	           	   
-								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" >닫기</button>
-								</div>
+								   <div class="form-group">
+   	                    			   <div class="form-group" id="downloadButtonBox">
+   	                    			   	
+   	                    			   </div>	           	   
+   								  </div>	  	   
+							
 				          </div>
 				    </div>
 			  </div>
@@ -529,7 +471,8 @@
 								 var newElement=document.createElement("button");
 					                newElement.classList.add("btn");
 					                newElement.classList.add("btn-success");
-					                
+									newElement.classList.add("downloadNoteBtn");
+
 					               	newElement.textContent=files[i].postMessageFileOri;
 					                
 					               	newElement.onclick = function() {
@@ -582,9 +525,9 @@
 		           	    				<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 
 				                        <th>\${item.postMsgRecKey}</th>
-				                        <th>\${item.memberKey}</th>
+				                        <th>\${item.memberName} \${item.jobName}</th>
 				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
-				                        <th>\${item.postMsgTime}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 				                    </tr>`;
 				                    tbody.append(row);
 				                }); 

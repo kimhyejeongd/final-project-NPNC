@@ -15,257 +15,7 @@
    <script
       src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" defer></script>
    <style>
-   .unread-badge {
-      background-color: red;
-      color: white;
-      border-radius: 50%;
-      display: inline-block;
-      padding: 2px 6px;
-      font-size: 0.8em;
-      font-weight: bold;
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      display: none; /* ê¸°ë³¸ì ì¼ë¡ ì¨ê¹ ì²ë¦¬ */
-   }
-   
-   .room-item {
-      position: relative;
-   }
-   /* ê¸°ë³¸ ì¤íì¼ */
-   .roomForm {
-      display: flex;
-   }
-   
-   /* body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start; /* ìì : ììë ì¤í¬ë¡¤ ê°ë¥íê² */
-      min-height: 100vh; /* ì¶ê°: íë©´ í¬ê¸° ìµì ëì´ */
-   } */
-   
-   .container {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      max-width: 100%;
-      margin: 20px 0; /* ì¶ê°: ìí ë§ì§ */
-   }
-   
-   .header {
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 1.5em;
-   }
-   
-   .tabs {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0;
-      position: relative;
-   }
-   
-   .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-   }
-   
-   .tab.active {
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 10px;
-   }
-   
-   .menu-button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.5em;
-      
-   }
-   
-   .dropdown-menu {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: 40px;
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      overflow: hidden;
-      z-index: 1;
-   }
-   
-   .dropdown-menu a {
-      display: block;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: black;
-   }
-   
-   .dropdown-menu a:hover {
-      background-color: #f0f0f0;
-   }
-   
-   .friend-list, .room-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-   }
-   
-   .friend-item, .room-item {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #eee;
-      transition: background-color 0.3s;
-   }
-   
-   .friend-item img, .room-item img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 15px;
-      object-fit: cover;
-   }
-   
-   .friend-item .friend-info, .room-item .room-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-   }
-   
-   .friend-item .friend-name, .room-item {
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #333;
-      margin-bottom: 5px;
-      display: block;
-   }
-   
-   .room-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-   }
-   
-   .friend-item .friend-status, .room-item .recent-message {
-      color: #777;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-   }
-   
-   .friend-item.selected {
-      background-color: #3a3f3e4d; /* ì í ì ë°°ê²½ìì ê²ì ì¼ë¡ ì¤ì  */
-   }
-   
-   .content {
-      display: none;
-   }
-   
-   .content.active {
-      display: block;
-   }
-   /* ëª¨ë¬ ì¤íì¼ */
-   /* .modal {
-      display: none;
-      position: fixed;
-      z-index: 2;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-      justify-content: center;
-      align-items: center;
-   }
-   
-   .modal-content {
-      background-color: #fff;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      max-width: 500px;
-      border-radius: 10px;
-   } */
-   
-   .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-   }
-   
-   .close:hover, .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-   }
-   
-   .search-bar {
-      width: 80%; /* ìë ¥ íëì ëë¹ë¥¼ ì¤ìëë¤ */
-      margin: 10px auto 20px; /* ì, ìë ì¬ë°±ê³¼ ìë ì¸ë¶ ì¬ë°±ì¼ë¡ ì¤ì ì ë ¬ */
-      padding: 8px 10px; /* í¨ë©ì ì¡°ì íì¬ ìë ¥ íëì ëì´ë¥¼ ì¡°ê¸ ì¤ìëë¤ */
-      box-sizing: border-box;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      display: block; /* íëë¥¼ ë¸ë¡ ììë¡ ë§ë¤ì´ ì¤ ì ì²´ ì¬ì© */
-   }
-   
-   /* .modal-content {
-      width: 300px; /* ëª¨ë¬ ëë¹ ì¡°ì  */
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-   } */
-   
-   .profile-info {
-      margin-top: 20px;
-   }
-   
-   .profile-image {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-   }
-   
-   .profile-name, .profile-department {
-      font-size: 16px;
-      color: #333;
-   }
-   
-   .proContentImg{
-   	
-	margin-top: 20px;
-    
-}
-    
-   
-   .start-chat-btn {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 15px;
-   }
-   
-   .start-chat-btn:hover {
-      background-color: #45a049;
-   }
+
    </style>
    <style>
 	
@@ -312,13 +62,7 @@
 			}
 			.modal1Organ .modal_popup1Organ .close_btn1Organ {
 			  /*   display: block; */
-			    padding: 10px 20px;
-			    background-color: rgb(116, 0, 0);
-			    border: none;
-			    border-radius: 5px;
-			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
 			}
 			.modal1Organ.on1Organ {
 			    display: block;
@@ -475,7 +219,7 @@
 
 										          var spanBlock = document.createElement('span');
 										          spanBlock.className = 'block';
-										          spanBlock.textContent = response[i].alarmSendMember+'님의 쪽지';
+										          spanBlock.textContent = response[i].memberName+" "+response[i].jobName+'님의 쪽지';
 										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 										          var spanTime = document.createElement('span');
@@ -524,7 +268,8 @@
 					
 		             var myChatRoomList;
 		                $(document).ready(function() {
-		   
+		            	     event.stopPropagation();
+
 		                         headerUnread();
 
 		                   
@@ -606,8 +351,8 @@
                       aria-labelledby="messageDropdown">
                       <li>
                         <div class="dropdown-title d-flex justify-content-between align-items-center">
-                          Messages
-                          <a href="#" class="small">Mark all as read</a>
+                          메신저
+                          <!-- <a href="#" class="small">Mark all as read</a> -->
                         </div>
                       </li>
                       <li>
@@ -619,11 +364,6 @@
                             
                           </div>
                         </div> 
-                      </li>
-                      <li>
-                        <a class="see-all" href="javascript:void(0);"
-                          >See all messages<i class="fa fa-angle-right"></i>
-                        </a>
                       </li>
                     </ul>
                   </li>
@@ -906,7 +646,7 @@
 		             	$.notify({
 				   		 	icon: 'icon-bell',
 				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-				   		 	message:  bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
+				   		 	message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 				   		 },{
 				   		 	type: 'primary',
 				   		 	placement: {
@@ -949,7 +689,7 @@
 		
 					          var spanBlock = document.createElement('span');
 					          spanBlock.className = 'block';
-					          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+							  spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName+'님의 쪽지';
 					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 		
 					          var spanTime = document.createElement('span');
@@ -1000,7 +740,7 @@
 			             	$.notify({
 					   		 	icon: 'icon-bell',
 					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-					   		 	message: bodyObject.alarmSendMember+"님께서 쪽지를 보내셨습니다." /* 얘는 안깨져요 */
+								message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
 					   		 },{
 					   		 	type: 'primary',
 					   		 	placement: {
@@ -1042,7 +782,7 @@
 
 		   			          var spanBlock = document.createElement('span');
 		   			          spanBlock.className = 'block';
-		   			          spanBlock.textContent = bodyObject.alarmSendMember+'님의 쪽지';
+		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
 		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 
 		   			          var spanTime = document.createElement('span');

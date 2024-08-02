@@ -21,13 +21,13 @@ public class MyErrorController implements ErrorController {
 
 	            if (statusCode == HttpStatus.NOT_FOUND.value()) {
 	                return "error/404"; // 404.jsp
-	            } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
-	                return "error/403"; // 403.jsp
 	            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 	                return "error/500"; // 500.jsp
 	            } else if (statusCode == HttpStatus.PAYMENT_REQUIRED.value()) {
 	                return "error/402"; // 402.jsp
-	            }
+	            }else if (statusCode == HttpStatus.FORBIDDEN.value()) {
+	                return "error/403"; // 403.jsp
+	            } 
 	            
 	            
 	        }

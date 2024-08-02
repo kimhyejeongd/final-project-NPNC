@@ -60,8 +60,10 @@
         selectable: false,
         droppable: false,
         editable: false,
+        expandedRows: true,
         locale: 'ko',
-        dayMaxEvents: true,
+        dayMaxEvents: 1,
+        fixedWeekCount:false,
         headerToolbar:{
 			left : 'prev',
 			center : 'title',

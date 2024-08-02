@@ -12,11 +12,12 @@ var editEvent = function(event) {
         memberName: member.refEmpName,
         jobName: member.refJobName
     }));
+    
+    
     currentEvent = event;
     //참조인은 수정불가, 예약은 예약페이지에서만 수정가능
     var isCreator = (event.extendedProps.empNo == currentUser.empNo && event.extendedProps.type != '4');
-
-
+	var sharer = event.extendedProps.empName;
     // 각 입력 필드에 이벤트 정보 설정
     var start = moment(event.start).format('YYYY-MM-DD HH:mm');
     var end = moment(event.end).format('YYYY-MM-DD HH:mm');
@@ -24,7 +25,7 @@ var editEvent = function(event) {
     // 수정 모달 창 열기
     Swal.fire({
         title: '일정 수정',
-        html: `
+        html:  `
             <div class="form-group">
                 <label for="cal-allDay">종일</label>
                 <input id="cal-allDay" type="checkbox" ${!isCreator ? 'disabled' : ''}>
@@ -35,11 +36,11 @@ var editEvent = function(event) {
             </div>
             <div class="form-group">
                 <label for="cal-start">시작 일시</label>
-                <input id="cal-start" type="datetime-local" class="form-control" required ${!isCreator ? 'disabled' : ''}>
+                <input id="cal-start" type="datetime-local" class="form-control" value="${start}" required ${!isCreator ? 'disabled' : ''}>
             </div>
             <div class="form-group">
                 <label for="cal-end">종료 일시</label>
-                <input id="cal-end" type="datetime-local" class="form-control" required ${!isCreator ? 'disabled' : ''}>
+                <input id="cal-end" type="datetime-local" class="form-control" value="${end}" required ${!isCreator ? 'disabled' : ''}>
             </div>
             <div class="form-group">
                 <label for="cal-type">구분</label>
@@ -49,7 +50,7 @@ var editEvent = function(event) {
                     <option value="3">전사일정</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="reference-container" style="display: ${!isCreator ? 'none' : 'block'};">
                 <div class="btn-group">
                     <button class="btn btn-secondary dropdown-toggle button-margin" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" ${!isCreator ? 'disabled' : ''}>
                         참조인
@@ -61,10 +62,16 @@ var editEvent = function(event) {
                     </ul>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="selected-members">선택된 참조인</label>
-                <div id="selected-members" class="form-control" style="height:auto;"></div>
+            <div class="form-group" id="selected-members-container" style="display: ${!isCreator ? 'none' : 'block'};">
+                <label for="selected-members" id="selected-members2" style="display:none;">선택된 참조인</label>
+                <div id="selected-members" class="form-control" style="height:auto; display:none };"></div>
             </div>
+            ${!isCreator ? `
+            <div class="form-group">
+                <label for="cal-sharers">일정공유자</label>
+                <input type="text" class="form-control value="" id="cal-sharer" disabled>
+            </div>
+            ` : ''}
             <div class="form-group">
                 <label for="cal-desc">설명</label>
                 <textarea id="cal-desc" class="form-control" rows="3" ${!isCreator ? 'disabled' : ''}></textarea>
@@ -87,12 +94,21 @@ var editEvent = function(event) {
             document.getElementById('cal-end').value = end;
             document.getElementById('cal-type').value = event.extendedProps.type;
             document.getElementById('cal-desc').value = event.extendedProps.description;
+            if(!isCreator){
+				
+            	document.getElementById('cal-sharer').value = event.extendedProps.empDeptName+" "+event.extendedProps.empName+event.extendedProps.empJobName;
+			}
             if(event.allDay === true) {
                 document.getElementById('cal-allDay').checked = true;
             } else {
                 document.getElementById('cal-allDay').checked = false;
             }
             updateSelectedMembers();
+            if(selectedMembers.length>0){
+				document.getElementById("selected-members").style.display='block';
+				document.getElementById("selected-members2").style.display='block';
+			}
+            
         }
     }).then((result) => {
         if (result.isConfirmed && isCreator) {
@@ -114,7 +130,7 @@ var editEvent = function(event) {
             };
             if (updatedEvent.allDay === 'Y') {
                 updatedEvent.start = moment(updatedEvent.start).format('YYYY-MM-DD');
-                updatedEvent.end = moment(updatedEvent.end).add(1, 'days').format('YYYY-MM-DD');
+                updatedEvent.end = moment(updatedEvent.end).format('YYYY-MM-DD');
             } else {
                 updatedEvent.start = moment(updatedEvent.start).format('YYYY-MM-DD HH:mm');
                 updatedEvent.end = moment(updatedEvent.end).format('YYYY-MM-DD HH:mm');

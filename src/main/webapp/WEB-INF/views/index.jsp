@@ -55,6 +55,10 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
     
+      <!-- SweetAlert2 CSS -->
+	  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+	  <!-- SweetAlert2 JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   </head>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  
@@ -580,10 +584,31 @@
 			                 url: '${path}/attendance/endattendance',
 			                 success: function(response) {
 			                     var message = response.msg;
+			                     console.log(message);
 			                     var attendanceEnd = response.attendanceEnd;
-			                     alert(message);
-			                     $('#endAttendanceBtn').hide();
-			                     $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
+			                     if(message == '실패'){
+			                    	 Swal.fire({
+			                             title: '실패!',
+			                             text: '출근부터 찍어주세요!',
+			                             icon: 'error',
+			                             confirmButtonText: '확인'
+			                         }).then((result) => {
+			                             /* if (result.isConfirmed) {
+			                                 location.replace('${path}');
+			                             } */
+			                         });
+			                     }else{
+			                    	 Swal.fire({
+			                             title: '성공!',
+			                             text: '퇴근이 성공적으로 완료되었습니다.',
+			                             icon: 'success',
+			                             confirmButtonText: '확인'
+			                         })
+
+				                    	$('#endAttendanceBtn').hide();
+				                     	$('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
+
+			                     }
 			                 },
 			                 error: function(xhr, status, error) {
 			                     alert('퇴근 처리에 실패하였습니다.');
@@ -597,7 +622,12 @@
 			                 success: function(response) {
 			                     var message = response.msg;
 			                     var attendanceStart = response.attendanceStart;
-			                     alert(message);
+			                     Swal.fire({
+		                             title: '성공!',
+		                             text: '퇴근이 성공적으로 완료되었습니다.',
+		                             icon: 'success',
+		                             confirmButtonText: '확인'
+		                         })
 			                     $('#startAttendanceBtn').hide();
 			                     $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
 			                 },

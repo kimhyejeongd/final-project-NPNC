@@ -12,9 +12,9 @@
 		<association property="member" resultMap="adminmember.memberMap"/>
 	</resultMap>
 	
-	<!-- <resultMap type="overtimework" id="overtimeworkMap">
+	<resultMap type="overtimeApply" id="overtimeworkMap">
 		<id column="OVERTIME_KEY" property="overtimeKey"/>
-		<result column="ER_DOC_SERIAL_KEY" property="ErDocSerialKey"/>
+		<result column="ER_DOC_SERIAL_KEY" property="erDocSerialKey"/>
 		<result column="OVERTIME_APPLY_DATE" property="overtimeApplyDate"/>
 		<result column="OVERTIME_DATE" property="overtimeDate"/>
 		<result column="OVERTIME_REASON" property="overtimeReason"/>
@@ -23,7 +23,7 @@
 		<result column="OVERTIME_END_TIME" property="overtimeEndTime"/>
 		<result column="OVERTIME_MEMBER_KEY" property="overtimeMemberKey"/>
 		<result column="OVERTIME_CATEGORY" property="overtimeCategory"/>
-	</resultMap> -->
+	</resultMap>
 	
 	<insert id="startAttendance" parameterType="attendance">
 		INSERT INTO ATTENDANCE
@@ -112,7 +112,8 @@
 		    ATTENDANCE_START,
 		    ATTENDANCE_END,
 		    ATTENDANCE_STATE,
-		    OVERTIME_KEY
+		    OVERTIME_KEY,
+		    MEMBER_KEY
 			FROM ATTENDANCE 
 			WHERE TRUNC(ATTENDANCE_DATE)=TRUNC(SYSDATE)
 	</select>
@@ -504,6 +505,112 @@
         		ATTENDANCE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
    			</if>
 		</where>
+	</select>
+	
+	<!-- vacationApply -->
+	<resultMap type="vacationApply" id="vacationApplyMap">
+		<id column="VACATION_USE_KEY" property="vacationUseKey"/>
+		<result column="VACATION_KEY"  property="vacationKey"/>
+		<result column="ER_DOCUMENT_KEY"  property="vacationDocSerialKey"/>
+		<result column="VACATION_APPLY_DATE"  property="vacationApplyDate"/>
+		<result column="VACATION_APPLY_STATUS"  property="vacationApplyStatus"/>
+		<result column="VACATION_START_DATE"  property="vacationStartDate"/>
+		<result column="VACATION_END_DATE"  property="vacationEndDate"/>
+		<result column="VACATION_USE_COUNT"  property="vacationUseCount"/>
+		<result column="VACATION_MEMBER_KEY"  property="vacationMemberKey"/>
+		<result column="VACATION_REASON"  property="vacationReason"/>
+		<result column="MEMBER_VAC_KEY"  property="memberVacKey"/>
+		<result column="VACATION_UPDATE_DATE"  property="vacationUpdateDate"/>
+	</resultMap>
+	
+	<select id="selectVacationApplyApprove" resultMap="vacationApplyMap">
+		SELECT 
+		VACATION_USE_KEY,
+		VACATION_KEY, 
+		ER_DOCUMENT_KEY, 
+		VACATION_APPLY_DATE, 
+		VACATION_APPLY_STATUS, 
+		VACATION_START_DATE, 
+		VACATION_END_DATE, 
+		VACATION_USE_COUNT, 
+		VACATION_MEMBER_KEY, 
+		VACATION_REASON, 
+		MEMBER_VAC_KEY, 
+		VACATION_UPDATE_DATE
+		FROM VACATION_APPLY 
+		WHERE VACATION_APPLY_STATUS='승인' 
+		<!-- AND TO_CHAR(VACATION_START_DATE,'YY/MM/DD')=TO_CHAR(SYSDATE,'YY/MM/DD') -->
+	</select>
+	
+	<insert id="insertAttendanceVacation" parameterType="map">
+		INSERT INTO ATTENDANCE 
+		VALUES(
+			SEQ_ATTENDANCE.NEXTVAL,
+			#{memberKey},
+			SYSDATE,
+			NULL,
+			NULL,
+			#{status},
+			NULL)
+	</insert>
+	
+	
+	<!-- overtimework -->
+	
+	<select id="selectoverworkByMemberKey" parameterType="_int" resultMap="overtimeworkMap">
+		SELECT 
+		OVERTIME_KEY,
+		ER_DOC_SERIAL_KEY, 
+		OVERTIME_APPLY_DATE, 
+		OVERTIME_DATE, 
+		OVERTIME_REASON, 
+		OVERTIME_STATUS, 
+		OVERTIME_START_TIME, 
+		OVERTIME_END_TIME, 
+		OVERTIME_MEMBER_KEY, 
+		OVERTIME_CATEGORY, 
+		OVERTIME_UPDATE_DATE
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		ORDER BY OVERTIME_APPLY_DATE DESC
+	</select>
+	
+	<select id="selectoverworkByMemberKeyCount" parameterType="_int" resultType="_int">
+		SELECT 
+		COUNT(OVERTIME_KEY)
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+	</select>
+	
+	<select id="searchoverworkByMemberKey" parameterType="map" resultMap="overtimeworkMap">
+		SELECT 
+		OVERTIME_KEY,
+		ER_DOC_SERIAL_KEY, 
+		OVERTIME_APPLY_DATE, 
+		OVERTIME_DATE, 
+		OVERTIME_REASON, 
+		OVERTIME_STATUS, 
+		OVERTIME_START_TIME, 
+		OVERTIME_END_TIME, 
+		OVERTIME_MEMBER_KEY, 
+		OVERTIME_CATEGORY, 
+		OVERTIME_UPDATE_DATE
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		<if test="searchType != null and searchType !='' ">
+			AND OVERTIME_STATUS=#{searchType}
+		</if>
+		ORDER BY OVERTIME_APPLY_DATE DESC
+	</select>
+	
+		<select id="searchoverworkByMemberKeyCount" parameterType="map" resultType="_int">
+		SELECT 
+		COUNT(OVERTIME_KEY)
+		FROM OVERTIMEWORK
+		WHERE OVERTIME_MEMBER_KEY=#{memberKey}
+		<if test="searchType != null and searchType !='' ">
+			AND OVERTIME_STATUS=#{searchType}
+		</if>
 	</select>
 	
 	

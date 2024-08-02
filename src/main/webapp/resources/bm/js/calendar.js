@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var currentYear = moment().format('YYYY'),
         currentMonth = moment().format('MM');
+        var backgroundColor;
 
     var calendarE1 = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarE1, {
@@ -14,7 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
         droppable: true,
         editable: false,
         locale: 'ko',
-        timezone: "local",
+        dayMaxEvents: 2,
+        fixedWeekCount: false,
+        selectAllow: function(selectInfo){
+			var click_start = selectInfo.start.getMonth();
+			var click_end = selectInfo.end.getMonth();
+			if(click_start != month_int){
+				return false;
+			}else if(click_end != month_int && selectInfo.end.getDate() != 1){
+				return false;
+			}else{
+				return true;
+			}
+		},
         select: function(info) {
             var today = moment();
 
@@ -60,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         },
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev',
             center: 'title',
-            right: 'dayGridMonth,timeGridDay,listWeek'
+            right: 'next'
         },
         eventClick: function(info) {
             editEvent(info.event);
@@ -70,40 +83,64 @@ document.addEventListener('DOMContentLoaded', function() {
         events: function(fetchInfo, successCallback, failureCallback) {
             fetchCalendarEvents(successCallback, failureCallback);
         },
+        datesSet: function(info){
+			reloadCalendarEvents();
+		},
         eventDidMount: function(info) {
-		  var tooltip = new bootstrap.Tooltip(info.el, {
-		    title: `
+		  tippy(info.el, {
+			content:`
 		      <div class="tooltip-content">
 		        <div class="popover-title">${info.event.title}</div>
 		        <div class="popover-info">등록자 : ${info.event.extendedProps.empName}</div>
-		        <div class="popover-info">시간 : ${getDisplayEventDate(info.event)}</div>
+		        <div class="popover-info">${getDisplayEventDate(info.event)}</div>
 		          <div class="popover-description"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
 		        </div>
 		      </div>
 		    `,
-		    html: true,
-		    placement: 'top',
-		    trigger: 'hover',
-		    container: 'body'
-		  });
+			theme:'light-border',
+			placement:"bottom",
+			offset: [0,0],
+			delay: 5,
+			distance: 15,
+			maxWidth: 150,
+			ignoreAttributes:true,
+			allowHTML:true,
+			interactive: true,
+		  })
+			console.log(info.event);
 		}
     });
 
     calendar.render();
+/*	 $('.fc-prev-button').removeClass('btn-primary');
+	 $('.fc-next-button').removeClass('btn-primary');
+	*/
+	//month 불러오기
+	// 달 이동후 month 불러오기
+	var month_int = calendar.getDate().getMonth();
+	$('.fc-prev-button').click(function(){
+			month_int = calendar.getDate().getMonth();
+	});
+	$('.fc-next-button').click(function(){
+		month_int = calendar.getDate().getMonth();
+	})
+	
+	
 
     window.calendar = calendar;
 
-    // 네비게이션 버튼 클릭 시 이벤트를 다시 로드
+   /* // 네비게이션 버튼 클릭 시 이벤트를 다시 로드
     document.querySelectorAll('.fc-prev-button, .fc-next-button, .fc-today-button').forEach(button => {
         button.addEventListener('click', function() {
             reloadCalendarEvents();
         });
-    });
+    });*/
 
     // 체크박스 초기 상태 설정 및 이벤트 로드
     $('#myCalendar, #deptCalendar, #companyCalendar, #reservationCalendar').prop('checked', true);
     fetchCalendarEvents(
         function(events) {
+		console.log('설마 여기들어오나?');
             calendar.removeAllEvents();	  // 기존 이벤트 삭제
             calendar.addEventSource(events);  // 새로운 이벤트 추가
         },
@@ -119,24 +156,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function reloadCalendarEvents() {
-            calendar.removeAllEvents();  // 기존 이벤트 삭제
+		console.log('몇번 들어오나 체크용');
         fetchCalendarEvents(
             function(events) {
+            	calendar.removeAllEvents();  // 기존 이벤트 삭제
                 calendar.addEventSource(events);  // 새로운 이벤트 추가
+                if($('#myVacationCalendar').is(':checked')){
+					fetchVacationEvents(
+						function(events){
+							calendar.addEventSource(events);
+						}
+					);
+				}
+				else if($('#deptVacationCalendar').is(':checked')){
+					fetchVacationEvents(
+						function(events){
+							calendar.addEventSource(events);
+						}
+					)
+				}
+                
             },
             function(error) {
                 console.error('데이터를 가져오는 도중 에러발생 :', error);
             }
         )
-        fetchVacationEvents(
-			function(events){
-				calendar.addEventSource(events);
-			},
-			function(error){
-				console.error('데이터를 가져오는 도중 에러발생 :', error )
-			}
-		)
-        
+
     }
 	function fetchVacationEvents(successCallback, failureCallback){
 		var searchType = '';
@@ -160,13 +205,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			contentType: "application/json; charset=utf-8",
 			success: function(data){
 				var events = data.map(function(event){
+					if(event.memberKey!= userKey){
+						backgroundColor = '#9932CC';
+					}
+					else{
+						backgroundColor = '#ff9e27';
+					}
 					return {
 						id: event._id,
 						empNo: event._id,
 						title: event.title,
 						start: event.start,
 						end: event.end,
-						backgroundColor: '#ff9e27',
+						backgroundColor: backgroundColor,
 						description: event.title,
 						empName: event.empName,
 						empDeptCode: event.deptCode,
@@ -223,6 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         description: event.description,
                         empName: event.empName,
                         empDeptCode: event.deptCode,
+                        empDeptName: event.deptName,
+                        empJobName: event.jobName,
                         allDay: event.allDay === 'Y' ? true : false,
                         type: event.type,
                         calendarKey: event.calendarKey,
@@ -241,9 +294,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-     function getDisplayEventDate(event) {
-        var start = new Date(event.start);
-        var end = new Date(event.end || event.start);
-        return start.toLocaleString() + ' - ' + end.toLocaleString();
-      }
+      function getDisplayEventDate(event) {
+	    var start = new Date(event.start);
+	    var end = new Date(event.end || event.start);
+	    if(event.allDay == true){
+			return '하루종일';
+		}
+	    else{
+			
+	    	return start.toLocaleString('ko-KR', { hour12: false, timeStyle: 'short', dateStyle: 'short' }) + ' - ' + end.toLocaleString('ko-KR', { hour12: false, timeStyle: 'short', dateStyle: 'short' });
+		}
+	}
 });

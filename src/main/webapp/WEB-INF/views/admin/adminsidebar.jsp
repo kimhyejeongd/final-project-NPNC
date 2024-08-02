@@ -50,11 +50,12 @@
        </div>
        <!-- End Logo Header -->
      </div>
+
 		<div class="sidebar-wrapper scrollbar scrollbar-inner">
 		    <div class="sidebar-content">
 		        <ul class="nav nav-secondary">
 		            <li class="nav-item">
-		                <a href="${path}/">
+		                <a href="${path}/admin/adminMain">
 		                    <i class="fas fa-home"></i><p>관리자페이지 Home</p>
 		                </a>
 		            </li>
@@ -153,12 +154,12 @@
 		                    <ul class="nav nav-collapse">
 		                        <li>
 		                            <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
-		                                <span class="sub-item">결재 양식</span>
+		                                <span class="sub-item">결재 보관함</span>
 		                            </a>
 		                        </li>
 		                        <li>
-		                            <a href="${path}/admin/job/selectjoball.do">
-		                                <span class="sub-item">결재 보관함</span>
+		                            <a href="${path}/admin/documentForm/selectAdminFormAll">
+		                                <span class="sub-item">결재 양식</span>
 		                            </a>
 		                        </li>
 		                        <li>

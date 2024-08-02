@@ -249,7 +249,7 @@
  
                        <div class="form-group">
                           <label class="form-label">권한</label>
-                          <div class="selectgroup selectgroup-pills">
+                    <!--       <div class="selectgroup selectgroup-pills">
                             <label class="selectgroup-item">
                               <input
                                 type="checkbox"
@@ -268,7 +268,7 @@
                                 class="selectgroup-input"
 								
                               />
-                              <span class="selectgroup-button">사원</span>
+                              <span class="selectgroup-button">경영</span>
                             </label>
                             <label class="selectgroup-item">
                               <input
@@ -280,7 +280,28 @@
                               />
                               <span class="selectgroup-button">인사</span>
                             </label>
-                          </div>
+                         	<label class="selectgroup-item">
+                              <input
+                                type="checkbox"
+                                name="accessKey"
+                                value="4"
+                                class="selectgroup-input"
+								
+                              />
+                              <span class="selectgroup-button">사원</span>
+                            </label>
+                          </div> -->
+                           <select
+                            class="form-select"
+                            id="accessKey"
+                            name="accessKey"
+                          >
+                            <option value="4">사원</option>
+                            <option value="3">인사</option>
+                            <option value="2">경영</option>
+                            <option value="1">관리자</option>
+                            
+                          </select>
                         </div>
                           <button
 			                  type="submit"
