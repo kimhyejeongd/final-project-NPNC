@@ -98,7 +98,7 @@
 		                            </td>
 		                         	<td colspan="">
 		                         		<input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
-		                         		<input type="button" value="삭제" class="btn btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}');">
+		                         		<input type="button" value="삭제" class="btn btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}', 'employee/retrieve');">
 		                         	</td>
 		                          </tr>
 		                          </c:forEach>

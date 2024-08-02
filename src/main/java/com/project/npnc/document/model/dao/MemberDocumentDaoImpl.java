@@ -286,5 +286,13 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	public List<Document> selectMyPendingDocs(SqlSession session, int no) {
 		return session.selectList("document.selectMyPendingDocs", no);
 	}
+
+	@Override
+	public Approver selectApproverByKey(SqlSession session, int memberKey, String serial) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberKey", memberKey);
+		map.put("serial", serial);
+		return session.selectOne("document.selectApproverByKey", map);
+	}
 	
 }

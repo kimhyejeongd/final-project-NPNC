@@ -33,6 +33,7 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+   <script src="${path}/resources/jh/js/docwrite.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -68,6 +69,64 @@
 		display: flex;
 		justify-content: center;
 	}
+	.outer-cell {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 0;
+		vertical-align: top;
+		background: white; 
+		border: currentColor; 
+		text-align: right; 
+		color: black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: top;
+	}
+
+	#approverTable {
+		border-collapse: collapse;
+		margin-left: auto; /* 오른쪽에 붙이기 위해 사용 */
+		font-family: "malgun gothic", dotum, arial, tahoma;
+		text-align: center !important;
+		border: 0px solid rgb(0, 0, 0); 
+		width: auto; 
+		margin-top: 1px; 
+		border-collapse: collapse;
+	}
+
+	#approverTable th,
+	#approverTable td {
+		border: 1px solid black;
+		padding: 5px;
+		text-align: center !important;
+		vertical-align: middle;
+		font-size: 14px;
+	}
+
+	#approverTable th {
+		background: #ddd;
+		font-weight: bold;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		height: 18px; 
+		text-align: center; 
+		font-size: 14px; 
+		font-weight: bold; 
+		vertical-align: middle;
+	}
+
+	#approverTable td {
+		background: #fff;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: middle; 
+		width: auto;
+	}
   </style>
  </head>
 <body>
@@ -100,21 +159,20 @@
 	               	<div class="form-group d-flex">
 				      <label for="smallInput"><span class="h5 me-5">문서명</span></label>
 				      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+				      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle" required>
 				      </div>
 				    </div>
 				    <div class="form-group">
 				      <label class=""><span class="h5 me-1">긴급 여부</span></label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1">
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="Y" id="flexRadioDefault1" required>
 				          <label class="ms-1" for="flexRadioDefault1"><span class="h5">긴급</span> </label>
-				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked>
+				          <input class="ms-3" type="radio" name="erDocEmergencyYn" value="N" id="flexRadioDefault2" checked required>
 				          <label class="ms-1" for="flexRadioDefault2"><span class="h5">일반</span>
 			          </label>
 				    </div>
 				    <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
-				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv">
-				      </div>
+				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv"></div>
 				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="storageBtn">선택</button>
 				    </div>
 				    <div class="form-group d-flex">
@@ -122,16 +180,6 @@
 				      	<div class="col w-100 align-items-center p-0">
 						      <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
 									<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">결재자를 선택하세요</span> 
-									 <!-- <div class="border" id="approval1">
-									  	<input name="approvers[0].orderby" value="1" style="border-radius: 15px; width: 20px;">
-									  	<input name="approvers[0].orderby" value="1" disabled="disabled" class="badge rounded-pill text-bg-secondary me-2 ms-0" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">
-									  	<input name="approvers[0].memberKey" value="2" style="display:none">
-									  	<input name="approvers[0].memberTeam" value="기술지원팀" style="">
-									  	<input name="approvers[0].memberJob" value="사원" style="">
-									  	<input name="approvers[0].memberName" value="김사원" style="">
-									  	<input name="approvers[0].category" value="기안" style="">
-									  </div>
-									   -->
 						      </div>
 						      <button class="btn btn-sm btn-info w-100 row m-0" type="button" id="approverBtn">선택</button>
 						    </div>
@@ -142,12 +190,6 @@
 					      </div>
 					      <button class="btn btn-sm btn-info btn-block" type="button" style="width: 70px; height: 30px" id="refererBtn">선택</button>
 			        </div>
-				    <!-- <div class="form-group d-flex align-items-center gap-3">
-				      <label for="smallInput"><span class="h5" style="margin-right: 0.9rem !important;" >참조문서</span></label>
-				      <div class="border d-block" style="height: auto; min-height: 30px; width: 90%;" id="">
-				      </div>
-				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="referDocBtn">선택</button>
-				    </div> -->
 				    <div class="form-group d-flex" id="fileDiv">
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
@@ -163,9 +205,7 @@
 			          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
 				        <div id="htmlDiv" class="scrollable-content justify-content-center d-flex" style="width: auto; height: 800px; margin: 0px auto">
 				        	<!-- 문서 작성 창 -->
-				        	<%-- <iframe id="htmlDiv_frame" src="${path }/document/doc4" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes" style="width:100%; height:100%;"></iframe> --%>
 				        	<div id="summernote" data-form="${form }"></div>
-				        	<%-- <c:import url="${path}/WEB-INF/views/document/doc4.jsp"/> --%>
 				        </div>
 			        </div>
 	                  <div class="p-3 text-center">
@@ -213,37 +253,7 @@ $(document).ready(function() {
 	    let existingCount = $('#fileinputDiv .file-name').length;
         
      // 선택한 파일 이름을 표시하기 위한 내용 추가
-        Array.from(files).forEach((file, index) => {
-	       	let adjustedIndex = existingCount + index + 1;
-        	let files=this.files;
-        	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
-									.css({
-										'width': '100%',
-										'min-height': '30px',
-										'font-size' : 'larger',
-										'text-align': 'left',
-										'border-radius': '15px',
-										'background-color': 'white !important'
-									});
-		  	
-			let $box = $("<div>").addClass('d-flex align-items-center')
-								.css({
-									'color': 'black',
-									'background-color': 'white !important',
-									'border': 'none !important',
-									'width': '500px'
-								});
-			
-			 $box.html('<input name="files[' + adjustedIndex + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
-                     '<input name="files[' + adjustedIndex + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
-			
-			let $buttonbox=$("<div>").addClass('d-flex');
-			$buttonbox.html(`<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-								<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
-								<button class="btn btn-sm btn-outline-primary ml-2 bringBtn ms-2" id="fileDeleteBtn" type="button">삭제</button>`);
-			$div.append($box).append($buttonbox);
-			$('#fileinputDiv').append($div);
-        });
+      fn_arrayFiles(files, existingCount);
     });
 	
 	 var ui = $.summernote.ui;
@@ -283,10 +293,87 @@ $(document).ready(function() {
 			redobtn: redo
 		} */
 	});
+	
 	// 기안하기 버튼 클릭 시
-	$("#submitbtn").click(function() {
+	$("#submitbtn").click(async function() {
+		
+		// 폼 유효성 검사
+        if ($("#docForm")[0].checkValidity() === false) {
+        	console.log('유효성 검사 false');
+        	await Swal.fire({
+    			title: '확인 요청',
+    			html: '제목을 입력해주세요.',
+    			showCancelButton: false,
+    			confirmButtonClass: 'btn btn-success',
+    			confirmButtonText: '확인',
+    			buttonsStyling: false,
+    			reverseButtons: false,
+    			didOpen: () => {
+                    document.querySelector('#htmlDiv').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#htmlDiv').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+            });
+            $("#docForm")[0].reportValidity();
+           	return;
+        } 
+		
+      //보관함 선택 여부 확인
+        if($("#storageDiv").html() === '' || $("#storageDiv").html() === null){
+        	console.log('보관함 미선택');
+        	await Swal.fire({
+                title: '확인 요청',
+                html: '보관함을 선택해주세요.',
+                icon: 'warning', 
+                showCancelButton: false,
+                confirmButtonClass: 'btn btn-success',
+                confirmButtonText: '확인',
+                buttonsStyling: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+	            $("#storageBtn").click();
+            });
+            return; 
+        }
+
+        // 결재자 선택 여부 검사
+        if ($("#approvalDiv span").text() === '결재자를 선택하세요') {
+            console.log('결재자 없음');
+            
+            const result = await Swal.fire({
+                title: '확인 요청',
+                html: '결재자가 없습니다. 그래도 진행하시겠습니까?',
+                icon: 'warning', 
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger ms-2',
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                buttonsStyling: false,
+                reverseButtons: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            });
+            if(!result.isConfirmed) {
+               $("#approverBtn").click();
+             return;
+            }
+        }
+        
+       
 		// SweetAlert2 모달 띄우기
-		Swal.fire({
+		const docResult = await Swal.fire({
 			title: '결재',
 			html: '<textarea class="form-control" id="input-field" placeholder="결재 의견을 작성하세요" style="resize:none"></textarea>',
 			showCancelButton: true,
@@ -296,8 +383,9 @@ $(document).ready(function() {
 			cancelButtonText: '취소',
 			buttonsStyling: false,
 			reverseButtons: false
-		}).then((result) => {
-			if (result.isConfirmed) {
+		});
+		
+			if (docResult.isConfirmed) {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
 				// 로컬 스토리지에서 데이터를 삭제
@@ -327,6 +415,7 @@ $(document).ready(function() {
 					formData.entries().forEach(e=>{
 		            	console.log(e);
 	            	});
+		            
 					
 			     	// AJAX로 폼 데이터를 전송
 			        fetch(sessionStorage.getItem("path")+'/document/writeend', {
@@ -342,6 +431,7 @@ $(document).ready(function() {
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);
+			                console.log(data.object);
 			            }
 			        })
 			        .catch(error => {
@@ -351,7 +441,6 @@ $(document).ready(function() {
 			        alert('문서 양식 불러오기 오류');
 			    }
 			}
-		});
 	});
 	
 	$("#savedraftbtn").click(function() {
@@ -406,7 +495,6 @@ $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', funct
         $(element).find('.badge').val(index + 1); 
     });
 });
-
 $("#approverBtn").click(function() {
 	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
@@ -417,279 +505,16 @@ $("#refererBtn").click(function() {
 $("#storageBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/storage', 'storage', 'width=900, height=700, left=500, top=100');
 });
-function sendDataToParent(data) {
-    console.dir(data);
-    $("#approvalDiv").html(''); // approvalDiv 초기화
-    
-    // 선택 결재자
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "approval" + index,
-            css: {
-                width: '100%',
-                fontSize: 'larger',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'approvers[' + index + '].orderby',
-            value: item.orderby,
-            css: {
-                borderRadius: '15px',
-                width: '23px',
-                display: 'inline',
-                backgroundColor: 'white'
-            },
-            class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
-        }).attr('readonly', true).appendTo($div);
-		
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-		
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeam',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJob',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.category.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].category',
-            value: item.category,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        $div.appendTo($("#approvalDiv"));
-        $("#approverBtn").text('재선택');
-    });
-}
-function sendRefererToParent(data) {
-    console.dir(data);
-    $("#refererDiv").html('');
-    // 참조인
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "referer" + index,
-            css: {
-                width: '100%',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'referers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeam',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberJob',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-        
-        $("<button>").addClass('badge rounded-pill text-bg-secondary')
-        			.text('X')
-        			.attr({'type': 'button'})
-        			.css('width', '3.2ch')
-        			.addClass('Xbtn')
-        			.appendTo($div);
-
-        $div.appendTo($("#refererDiv"));
-        
-        $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
-        	e.stopPropagation(); // 이벤트 버블링 방지
-        	let $div = $(e.target).closest('div.col');
-        	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
-        	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
-        	console.log(index);
-            savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
-            localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
-        	$(e.target).parent().remove();
-        });
-    });
-}
-function sendStorageToParent(data){
-	console.log(data);
-	$("#storageDiv").html('');
-	
-	 let $div = $("<div>", {
-         id: "storage",
-         css: {
-             width: '100%',
-             textAlign: 'left',
-             borderRadius: '15px'
-         },
-         class: 'col m-0 p-2'
-     });
-
-     $("<input>", {
-         name: 'erDocStorageKey',
-         value: data.erStorageKey,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-         type: 'hidden'
-     }).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageFolder + " > ",
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageName,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $div.appendTo($("#storageDiv"));
-     $("#storageBtn").text('재선택');
-}
+$("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
+	e.stopPropagation(); // 이벤트 버블링 방지
+	let $div = $(e.target).closest('div.col');
+	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
+	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
+	console.log(index);
+    savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
+    localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
+	$(e.target).parent().remove();
+});
 </script>
 </body>
 </html>

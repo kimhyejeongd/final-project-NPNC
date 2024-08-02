@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.npnc.document.member.controller.DocHtmlController;
 import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
@@ -107,7 +108,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if (result <= 0) {
 	        throw new Exception("[1]문서 insert 실패");
 	    }
-		log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
+		log.debug("[1]문서 insert 성공 : " + d.getErDocSerialKey());
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
@@ -185,6 +186,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    //시리얼번호 문서 내 등록
 	    html=html.replace("[문서번호]", d.getErDocSerialKey());
 	    
+		//문서 html 내 결재자 세팅
+		String finalTableHtml = DocHtmlController.generateApproverTableHtml(d.getApprovers());
+		html = html.replace("[결재선]", finalTableHtml);
+	    
 	    result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");
@@ -230,6 +235,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.insertVacationApply(session, vac);
 	}
 	
+	//임시저장
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -240,7 +246,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if (result <= 0) {
 			throw new Exception("[1]draft 문서 insert 실패");
 		}
-		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocKey());
+		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocSerialKey());
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
@@ -333,7 +339,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	@Transactional	
 	public int retrieveDoc(String docKey) throws Exception {
-		//전자문서 테이블 상태변경 (처리중 -> 회수)
+		//전자문서 테이블 상태변경 (처리중 -> 회수) 시리얼키
 		int result = dao.retrieveDoc(session, docKey); 
 		//selectKey "fileRename"
 		if(result<=0) {
@@ -355,6 +361,13 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			if(result <= 0) throw new Exception("[2]휴가 신청 삭제 실패");
 			log.debug("[2]휴가 신청 삭제 완료");
 		}
+		
+		String html = DocHtmlController.readHtmlFile("dochtml", docKey+".html", uploadDir);
+		if(html.contains(docKey)) {
+			html.replace(docKey, "");
+			log.debug("[3]문서 내 시리얼코드 삭제 완료");
+		}
+		
 		
 		return result;
 	}
@@ -551,7 +564,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	        }
 	    } else {
 	        log.debug("파일이 존재하지 않음: " + path);
-	        return -1; // 파일 없음
+	        return 1; // 파일 없음
 	    }
 	}
 	@Override
@@ -570,7 +583,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	//결재 : 승인
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception {
+	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo, String html) 
+			throws Exception {
 		int result = 0;
 		int lastApCk = 0;
 		
@@ -582,6 +596,17 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 				throw new Exception("결재 상태 승인으로 변경 실패");
 			}
 			log.debug("결재 상태 -> 승인");
+			
+			//결재자 정보 조회
+			Approver p = dao.selectApproverByKey(session, memberKey, serial);
+
+			//문서 파일 내 결재라인 업데이트
+			String newhtml = DocHtmlController.updateApproverTableHtml(html, p);
+			result = htmlFileUpload("dochtml",serial, newhtml);
+			if(result <= 0) {
+				throw new Exception("문서 html 업데이트 실패");
+			}
+			log.debug("문서 html 업데이트 성공");
 			
 			//마지막 결재자인지 확인
 			lastApCk = lastApproverCk(memberKey, serial);

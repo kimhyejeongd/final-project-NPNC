@@ -13,14 +13,13 @@
 	    <result column="er_doc_create_date" property="erDocCreateDate"/>
 	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
 	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
-	    <result column="er_doc_storage_key" property="erDocStorageKey"/>
+	    <result column="ER_DOC_STORAGE_KEY" property="erDocStorageKey"/>
 	    <result column="ER_STORAGE_NAME" property="erDocStorageName"/>
 	    <result column="er_doc_filename" property="erDocFilename"/>
 	    <result column="er_doc_state" property="erDocState"/>
 	    <result column="er_doc_state_update_date" property="erDocStateUpdateDate"/>
 	    <result column="er_doc_last_updater" property="erDocLastUpdater"/>
 	    <result column="er_doc_update_date" property="erDocUpdateDate"/>
-	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="ER_DOC_FORM_KEY" property="docFormKey"/>
@@ -1349,10 +1348,7 @@
 				ER_DOC_DELETE_YN,
 				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
-				ER_DOC_STATE, 
-				ER_DOC_STATE_UPDATE_DATE,
-				ER_DOC_LAST_UPDATER,
-				ER_DOC_LAST_UPDATE_REASON
+				ER_DOC_STATE
 			)
 		VALUES
             (
@@ -1362,7 +1358,7 @@
                         || #{erDocSerialKey}
                         || '-'
                         || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.NEXTVAL),
-              #{erDocWriter},
+              ${erDocWriter},
               #{erDocTitle},
               DEFAULT,
               #{erDocEmergencyYn},
@@ -1372,12 +1368,9 @@
                         || '-'
                         || #{erDocSerialKey}
                         || '-'
-                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.currval)
-              			|| '.html',
-              '임시저장',
-              NULL,
-              NULL,
-              NULL
+                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.CURRVAL)
+                        || '.html',
+              '임시저장'
             )
         <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
@@ -1394,7 +1387,7 @@
 			AND
 				ROWNUM = 1
 			ORDER BY 
-				ER_DOC_KEY DESC
+				ER_DOC_KEY DESC 
 		</selectKey>
 	</insert>
 	
@@ -1531,7 +1524,7 @@
 		VALUES
             (
               seq_er_approver_key.NEXTVAL,
-              ${memberKey},
+              #{memberKey},
               #{memberName},
               #{memberTeamKey},
               #{memberJobKey},
@@ -1547,9 +1540,35 @@
               #{opinion, jdbcType=VARCHAR},
               #{erDocSerialKey},
               sysdate,
-              ${orderby}
+              #{orderby}
             )
+        <selectKey order="AFTER" resultType="string" keyProperty="erApproverKey">
+        	SELECT
+        		seq_er_approver_key.currval
+        	FROM
+        		dual
+        </selectKey>
 	</insert>
+	<select id="selectApproverByKey" parameterType="map" resultMap="approverMap">
+		SELECT
+			ER_APPROVER_KEY,
+			MEMBER_KEY,
+			ER_APPROVER_NAME,
+			ER_APPROVER_TEAM_KEY,
+			ER_APPROVER_JOB_KEY,
+			ER_APPROVAL_CATEGORY,
+			ER_APPROVAL_STATE,
+			ER_APPROVAL_OPINION,
+			ER_DOC_SERIAL_KEY,
+			ER_APPROVAL_DATE,
+			ER_APPROVAL_ORDERBY
+		FROM
+			ER_APROVER
+		WHERE
+			MEMBER_KEY = #{memberKey}
+		AND
+			ER_DOC_SERIAL_KEY = #{serial}
+	</select>
 	
 	<!-- 결재라인 신규 저장 -->
 	<insert id="insertApproverLineStorage" parameterType="map">
@@ -1744,6 +1763,14 @@
 	</insert>
 	<!-- 전자문서 임시저장 첨부파일 등록 -->
 	<insert id="insertDraftDocFile" parameterType="docFile">
+		<!-- <selectKey keyProperty="erDocSerialKey" resultType="string" order="BEFORE">
+			SELECT 
+				ER_DOC_SERIAL_KEY
+			FROM   
+				ER_DOCUMENT
+			WHERE
+				ER_DOC_KEY = #{erDocKey}
+		</selectKey> -->
 		INSERT INTO 
 			er_file
 			(

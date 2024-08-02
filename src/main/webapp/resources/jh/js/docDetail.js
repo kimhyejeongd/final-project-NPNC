@@ -46,7 +46,40 @@ document.addEventListener("DOMContentLoaded", function() {
 	$("#closeBtn").click(function(){
 		window.history.back();
 	});
+	
 });
+
+//pdf 다운로드
+function pdf_down(serial) {
+	console.log("PDF 다운로드");
+	//내용 가져오기
+	var element = $("#content").html();
+	const width = 800; // 컨텐츠의 전체 너비
+	const height = 297 *3; // 컨텐츠의 전체 높이
+	
+	html2pdf().from(element).set({
+	    margin: [10,10,10,10],
+	    filename: serial + '.pdf',
+	    html2canvas: { 
+			scale: 4,
+			scrollX: 0,
+            scrollY: 0,
+            width: width, // A4 페이지 너비 (축소 비율 고려)
+            height: height // A4 페이지 높이 (축소 비율 고려)
+		},
+	    jsPDF: { 
+			orientation: 'portrait', 
+			unit: 'mm', 
+			format: 'a4', 
+			compressPDF: true,
+			scaleFactor: 2 // 비율 조정
+		}
+	}).save();
+
+	
+
+}
+
 function approveModal(no, serial){
 	Swal.fire({
 		title: '결재',

@@ -2,6 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+	//세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
+%>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html lang="en">
@@ -212,6 +216,7 @@
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
                       <div class="card-title">전자결재 현황</div>
+                      	<a href="${path }/document/form" class="btn-secondary btn-border btn btn-round ms-2 selectgroup-button">신규 작성</a>
                       <div class="card-tools">
                       	<div class="selectgroup selectgroup-secondary selectgroup-pills">
                             <label class="selectgroup-item">
@@ -610,9 +615,6 @@
 			                 }
 			             });
 			         });
-			     }); 
-				 
-				 $(document).ready(function(){
 			         $('#startAttendanceBtn').click(function(){
 			             $.ajax({
 			                 type: 'POST',
@@ -634,6 +636,16 @@
 			                 }
 			             });
 			         });
+			         
+			      	// 페이지 로드 시 저장된 값으로 라디오 버튼 체크
+			         const selectedValue = sessionStorage.getItem('selectedOptionDoc');
+			         if (selectedValue) {
+			             const radioButton = document.querySelector(`input[name="option"][value="${selectedValue}"]`);
+			             if (radioButton) {
+			                 radioButton.checked = true;
+			             }
+			         }
+			         
 			     }); 	
     </script>
     <script>

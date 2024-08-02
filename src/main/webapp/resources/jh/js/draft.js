@@ -31,7 +31,7 @@
 		}
 	});
 };
- function deleteModal(no){
+ function deleteModal(no, url){
 	console.log(no);
 	Swal.fire({
 		title: '삭제 확인',
@@ -65,7 +65,7 @@
 							buttonsStyling: false,
 							reverseButtons: false
 						}).then(result => {
-							location.reload();
+							window.location.href = sessionStorage.getItem("path")+"/document/list/" + url;
 						});
 					}else{
 			            alert("다음과 같은 에러가 발생하였습니다. (" + data.message + ")");
