@@ -89,7 +89,7 @@
                     </li>
                     <li>
                       <a href="${path }/document/list/employee/complete">
-                        <span class="sub-item">승인 문서</span>
+                        <span class="sub-item">승인 완료 문서</span>
                       </a>
                     </li>
                     <li>

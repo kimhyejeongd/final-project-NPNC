@@ -13,7 +13,7 @@
 <html lang="ko">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>승인 문서</title>
+    <title>승인 완료 문서</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -64,7 +64,7 @@
 			   <div class="card card-round">
 			     <div class="card-header">
 			       <div class="card-head-row card-tools-still-right">
-			         <div class="card-title">승인 문서</div>
+			         <div class="card-title">승인 완료 문서</div>
 			         <div class="card-tools">
 			         </div>
 			       </div>
@@ -138,7 +138,7 @@
 			                   </c:forEach>
 			                 </td>
 			                 <td>
-			                 	<input type="button" value="재기안" class="btn btn-outline-secondary" id="retrieveBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
+			                 	<input type="button" value="재기안" class="btn-sm btn-outline-secondary" id="retrieveBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
 			                 </td>
 			               </tr>
 			               </c:forEach>
@@ -152,9 +152,9 @@
 			</div>
            </div>
           </div>
+     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
-     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script>
 	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
 </script>
