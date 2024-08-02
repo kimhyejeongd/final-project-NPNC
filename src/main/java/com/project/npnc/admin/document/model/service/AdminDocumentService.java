@@ -15,6 +15,8 @@ import com.project.npnc.admin.document.model.dao.AdminDocumentDao;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.document.model.dto.DocumentForm;
+import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -180,5 +182,19 @@ public class AdminDocumentService {
 		}
 		return result;
 	}
-
+	public List<DocumentFormFolder>selectDocFormFolderAll(){
+		return dao.selectDocFormFolderAll(session);
+	}
+	public List<DocumentForm>selectForm(int folderKey){
+		return dao.selectForm(session,folderKey);	
+		}
+	public int createDocFolder(DocumentFormFolder folder) {
+		return dao.createDocFolder(session,folder);
+	}
+	public int updateDocFolder(DocumentFormFolder folder) {
+		return dao.updateDocFolder(session,folder);
+	}
+	public int removeDocFolder(int draggedFolderKey) {
+		return dao.removeDocFolder(session,draggedFolderKey);
+	}
 }

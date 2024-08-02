@@ -93,6 +93,7 @@ public class HomeController {
 		
 		Gson gson = new Gson();
 		model.addAttribute("myRoomMemberList",myRoomMemberList);
+		model.addAttribute("myRoomMemberListJ",gson.toJson(myRoomMemberList) );
 		model.addAttribute("mychatRoomListJ",gson.toJson(mychatRoomList));
 		model.addAttribute("mychatRoomList",mychatRoomList);
 		List<Member>members = service.selectAllMembers();	

@@ -154,12 +154,12 @@
 		                    <ul class="nav nav-collapse">
 		                        <li>
 		                            <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
-		                                <span class="sub-item">결재 양식</span>
+		                                <span class="sub-item">결재 보관함</span>
 		                            </a>
 		                        </li>
 		                        <li>
-		                            <a href="${path}/admin/job/selectjoball.do">
-		                                <span class="sub-item">결재 보관함</span>
+		                            <a href="${path}/admin/documentForm/selectAdminFormAll">
+		                                <span class="sub-item">결재 양식</span>
 		                            </a>
 		                        </li>
 		                        <li>
