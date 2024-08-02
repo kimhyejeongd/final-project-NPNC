@@ -176,34 +176,9 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>
+								           
 								   <div class="form-group">
-									   <div class="input-group-prepend" style="padding:0px;">
-			   		                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFileOrgan();">
-			   		                		추가
-			   		                		</button>
-			   		                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFileOrgan();">
-			   		                		삭제
-			   		                		</button>
-			   		                	</div>
-									</div>	         
-								   <div class="form-group">
-								   								
-									<form id="fileInputsContainerOrgan">
-	   								<div id="basicFileFormOrgan" class="input-group mb-3" style="padding:0px;">
-
-	   					                <div class="input-group-prepend" style="padding:0px;">
-	   					                	<span class="input-group-textOrgan">첨부파일1</span>
-	   					                </div>
-	   					            	 <div class="custom-file">
-	   					               
-	   					                    <input type="file" class="custom-file-input" name="upFileOrgan" id="upFileOrgan" multiple >
-	   					                    
-	   					                </div>
-	   					                 
-	   					                
-	   					            </div>
-									</form>
-
+   					                    <input type="file" class="btn btn-black btn-border" name="upFileOrgan" id="upFileOrgan" multiple >
 	   							   </div>  	   
 								   <div class="form-group">
 										<button class="btn btn-primary" style="margin-right: 10px;" id="organNoteSendButton">전송</button>
@@ -270,7 +245,48 @@
 	  		  </div>
 			  
 			  <script>
-								
+							
+				
+					
+				document.querySelector('input[name="upFileOrgan"]').addEventListener('change', function(event) {
+				    var files = event.target.files;
+				    var fileLimit = 5; // 파일 개수 제한
+				 
+				    if (files.length > fileLimit) {
+				      event.target.value = ''; // 선택된 파일을 초기화
+				     
+				   //== Class definition
+				      var SweetAlert2Demo = (function () {
+				        //== Demos
+				        var initDemos = function () {
+				          
+				            swal("최대 발송 파일 수를 초과하였습니다!", "파일 발송 개수는 5개 이하여야 합니다.", {
+				              icon: "error",
+				              buttons: {
+				                confirm: {
+				                  className: "btn btn-danger",
+				                },
+				              },
+				            });
+				          
+				        };
+
+				        return {
+				          //== Init
+				          init: function () {
+				            initDemos();
+				          },
+				        };
+				      })();
+
+				      //== Class Initialization
+				      jQuery(document).ready(function () {
+				        SweetAlert2Demo.init();
+				      });
+				   
+				    } 
+				  });
+				  	
 				function openOrganPro(memberName, jobName, memberAddress, memberPhone, memberEmail, departmentName,memberProfileImage){
 				    
 					document.getElementById('profileNameJob').innerText = memberName +" "+ jobName+ '님의 프로필입니다.';
@@ -326,6 +342,7 @@
 				            });
 				        });
 				  	
+					//모달 팝업 닫힘	
 				  	document.querySelectorAll('.close_btn1Organ').forEach((button, index) => {
 				  		const modal1Organ = document.querySelectorAll('.modal1Organ');
 				        button.addEventListener('click', function() {
@@ -334,6 +351,11 @@
 							
 				            // 'on' 클래스 제거
 				            modal1Organ[0].classList.remove('on1Organ');
+							document.getElementById('postMsgDetailOrgan').value='';
+				      		document.getElementById('postMsgTitleOrgan').value='';
+							
+							document.getElementById('upFileOrgan').value='';
+											
 				        });
 				    });
 					

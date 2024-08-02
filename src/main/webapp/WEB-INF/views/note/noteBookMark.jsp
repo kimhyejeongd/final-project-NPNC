@@ -446,7 +446,7 @@
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
-	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      	  	<button class="btn btn-round btn-info" onclick="deleteSendGo();">삭제하기</button>
 	                      </div>
 	                      <div id="pageBarList">${pageBar}</div>
                       </div>
@@ -653,6 +653,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleRecOne"
 			                              rows="1" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -664,6 +665,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgDetailRecOne"
 			                              rows="8" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>	
@@ -675,7 +677,14 @@
 				          </div>
 				    </div>
 			  </div>
-
+			  <style>
+	  	  	     /* Disabled and readonly 스타일 재정의 */
+	  	  	     .form-control:disabled, .form-control[readonly] {
+	  	  	         opacity: 1 !important; /* 불투명도 설정 */
+	  	  			 background-color: #fff !important; /* 배경색 하얀색으로 설정 */
+	  	  	         color: #000 !important; /* 글자색 검정색으로 설정 */
+	  	  	     }
+	  	  	  </style>
 			<!-- 첨부파일 -->
 			 <script>
 			 /* 개별발송 파일 추가 로직*/

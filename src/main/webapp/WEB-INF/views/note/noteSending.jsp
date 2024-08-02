@@ -140,8 +140,23 @@
 	
 	#downloadButtonBox{
 		
-	}	
+	}
+		
+	.noteTableFooter{
+		display: flex;
+		justify-content: center; /* 수평 중앙 정렬 */
+		align-items: center; /* 수직 중앙 정렬 (선택 사항) */
+		
+	}
 	
+		
+	#deleteButton {
+		    margin-right: auto; /* 왼쪽으로 정렬 */
+	}
+
+	#pageBarList {
+	    margin-left: auto; /* 오른쪽으로 정렬 */
+	}
 	</style>
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
@@ -305,13 +320,12 @@
                         </tbody>
                         
                       </table>
-                      <div>
-                      	  <div id="deleteButton"> 
-                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
-                      	  </div>
-	                      <div id="pageBarList">${pageBar}</div>
-	                      <!-- <button type="button" onclick="paging();"> 에이작스 test </button> -->
-	                      </div>
+					  <div class="noteTableFooter">
+	                     <div id="deleteButton"> 
+	                     	  	<button class="btn btn-round btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                     </div>
+	                     <div id="pageBarList">${pageBar}</div>
+	                  </div>
                       </div>
                   </div>
                 </div>
@@ -337,6 +351,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleAll"
 			                              rows="1" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -348,6 +363,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgDetailAll"
 			                              rows="8" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>	
@@ -361,9 +377,14 @@
 				    </div>
 			  </div>
 			
-			<script>
-		  
-		    </script>
+			  <style>
+	  	  	     /* Disabled and readonly 스타일 재정의 */
+	  	  	     .form-control:disabled, .form-control[readonly] {
+	  	  	         opacity: 1 !important; /* 불투명도 설정 */
+	  	  			 background-color: #fff !important; /* 배경색 하얀색으로 설정 */
+	  	  	         color: #000 !important; /* 글자색 검정색으로 설정 */
+	  	  	     }
+	  	  	  </style>
           	<script>
           	
           	const modal = document.querySelectorAll('.modal');
