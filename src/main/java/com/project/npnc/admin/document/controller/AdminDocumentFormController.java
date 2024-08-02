@@ -53,7 +53,6 @@ public class AdminDocumentFormController {
 	@GetMapping("selectAdminFormAll")
 	public String selectAdminFormAll(Model model) {
 		List<DocumentFormFolder>folders = service.selectDocFormFolderAll();
-		System.out.println(folders);
 		model.addAttribute("folders",folders);
 		return "admin/document/docForm";
 	}
@@ -122,7 +121,6 @@ public class AdminDocumentFormController {
         		String parentFolderName = service.selectParentFolderName(storageFolder.getFolderGroup());
         		docPath += parentFolderName+"/";
         	}
-        	System.out.println(docPath);
             File folder = new File(uploadPath+docPath+storageFolder.getFolderName());
             // 디렉토리가 이미 존재하는지 확인
             if (!folder.exists()) {
@@ -138,7 +136,6 @@ public class AdminDocumentFormController {
     }
     @PostMapping("/createStorage")
     public ResponseEntity<?>createStorage(@RequestBody Storage storage) throws IOException{
-    	System.out.println(storage);
     	List<AdminDocument> result = service.insertStorage(storage);
     	String docPath = "/dochtml/";
     	StorageFolder parentFolder = service.selectStorageFolder(storage.getStorageFolderKey());
@@ -164,7 +161,6 @@ public class AdminDocumentFormController {
     }
     @PostMapping("/updateStorage")
     public ResponseEntity<?>updateStorage(@RequestBody Storage storage){
-    	System.out.println(storage);
     	int result = service.updateStorage(storage);
     	if(result>0) {
     		String docPath = "/dochtml/";
@@ -188,8 +184,20 @@ public class AdminDocumentFormController {
     	return ResponseEntity.ok(result);
     }
     @PostMapping("/selectForm")
-    public ResponseEntity<List<DocumentForm>> selectForm(@RequestBody int folderKey){
+    public ResponseEntity<List<DocumentForm>> selectForm(@RequestParam int folderKey){
     	List<DocumentForm> result = service.selectForm(folderKey);
     	return ResponseEntity.ok(result);
     }
+    @PostMapping("/createDocFolder")
+    public ResponseEntity<?> createDocFolder(@RequestBody DocumentFormFolder folder){
+    	int result =service.createDocFolder(folder);
+    	return ResponseEntity.ok(result);
+    }
+    @PostMapping("/updateDocFolder")
+    public ResponseEntity<?>updateDocFolder(@RequestBody DocumentFormFolder folder){
+    	System.out.println(folder);
+    	int result = service.updateDocFolder(folder);
+    	return ResponseEntity.ok(result);
+    }
+    @Post
 }

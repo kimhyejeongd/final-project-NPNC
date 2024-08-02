@@ -233,19 +233,70 @@
 				ER_FORM_FOLDER_ORDERBY
 		FROM ER_FORM_FOLDER
 	</select>
-	<select id="selectForm" resultMap="DocumentForm">
-		SELECT ER_FORM_KEY,
-				ER_FORM_NAME,
-				ER_FORM_CREATER,
-				ER_FORM_CREATE_DATE,
-				ER_FORM_FOLDER_KEY,
-				ER_FORM_YN,
-				ER_FORM_UPDATER,
-				ER_FORM_UPDATE_DATE,
-				ER_FORM_ORDERBY,
-				ER_DOC_FILENAME
-		FROM ER_FORM
+	<select id="selectForm" resultMap="DocumentForm" parameterType="int">
+		SELECT ef.ER_FORM_KEY,
+				ef.ER_FORM_NAME,
+				ef.ER_FORM_CREATER,
+				ef.ER_FORM_CREATE_DATE,
+				ef.ER_FORM_FOLDER_KEY,
+				ef.ER_FORM_YN,
+				ef.ER_FORM_UPDATER,
+				ef.ER_FORM_UPDATE_DATE,
+				ef.ER_FORM_ORDERBY,
+				ef.ER_DOC_FILENAME,m.MEMBER_KEY,
+				m.DEPARTMENT_KEY,
+				m.JOB_KEY,
+				m.MEMBER_ID,
+				m.MEMBER_PW,
+				m.MEMBER_PHONE,
+				m.MEMBER_EMAIL,
+				m.MEMBER_MESSAGE,
+				m.MEMBER_ENROLL_DATE,
+				m.MEMBER_LEAVE_DATE,
+				m.MEMBER_TELL,
+				m.MEMBER_ADDRESS,
+				m.ACCESS_KEY,
+				m.MEMBER_NAME,
+				m.MEMBER_GENDER,
+				m.MEMBER_STATE,
+				m.MEMBER_BIRTHDATE,
+				m.MEMBER_PROFILE_IMAGE,
+				d.DEPARTMENT_NAME,
+				J.JOB_NAME
+		FROM ER_FORM ef
+		LEFT JOIN MEMBER m ON ER_FORM_UPDATER = member_key 
+		LEFT JOIN DEPARTMENT d ON m.DEPARTMENT_KEY = d.DEPARTMENT_KEY 
+		LEFT JOIN JOB J ON  m.JOB_KEY =j.JOB_KEY		
+		WHERE ER_FORM_FOLDER_KEY=#{folderKey}
 	</select>
+	<insert id="createDocFolder" parameterType="DocumentFormFolder">
+		INSERT INTO ER_FORM_FOLDER(
+			ER_FORM_FOLDER_KEY,
+			ER_FORM_FOLDER_NAME,
+			ER_FORM_FOLDER_CREATER,
+			ER_FORM_FOLDER_CREATEDATE,
+			ER_FORM_FOLDER_UPDATER,
+			ER_FORM_FOLDER_UPDATEDATE,
+			ER_FORM_FOLDER_ORDERBY
+		)VALUES(
+			SEQ_ER_FORM_FOLDER.NEXTVAL,
+			#{erFormFolderName},
+			#{erFormFolderCreater},
+			SYSDATE,
+			NULL,
+			NULL,
+			0
+		)
+		
+		
+	</insert>
+	<update id="updateDocFolder" parameterType="DocumentFormFolder">
+		UPDATE ER_FORM_FOLDER
+		SET ER_FORM_FOLDER_NAME = #{erFormFolderName},
+		ER_FORM_FOLDER_UPDATER = #{erFormFolderUpdater},
+		ER_FORM_FOLDER_UPDATEDATE = SYSDATE
+		WHERE ER_FORM_FOLDER_KEY = #{erFormFolderKey}
+	</update>
     <resultMap id="DocumentForm" type="DocumentForm">
         <id property="erFormKey" column="ER_FORM_KEY" />
         <result property="erFormName" column="ER_FORM_NAME" />
@@ -256,7 +307,37 @@
         <result property="erFormUpdater" column="ER_FORM_UPDATER" />   
         <result property="erFormUpdateDate" column="ER_FORM_UPDATE_DATE" />   
         <result property="erFormOrderby" column="ER_FORM_ORDERBY" />   
-        <result property="erDocFileName" column="ER_DOC_FILENAME" />   
+        <result property="erDocFileName" column="ER_DOC_FILENAME" /> 
+ 
+        <association property="job" javaType="com.project.npnc.admin.job.model.dto.Job">
+        	<id property="jobKey" column="JOB_KEY"/>
+        	<result property="jobName" column="JOB_NAME"/>
+        </association>
+        
+        <association property="department" javaType="com.project.npnc.admin.department.model.dto.Department">
+        	<id property="deptKey" column="DEPARTMENT_KEY"/>
+        	<result property="deptName" column="DEPARTMENT_NAME"/>
+        </association>
+        
+        <association property="member" javaType="com.project.npnc.security.dto.Member">
+            <id property="memberKey" column="MEMBER_KEY" />
+            <result property="departmentKey" column="DEPARTMENT_KEY" />
+            <result property="jobKey" column="JOB_KEY" />
+            <result property="memberId" column="MEMBER_ID" />
+            <result property="memberPw" column="MEMBER_PW" />
+            <result property="memberPhone" column="MEMBER_PHONE" />
+            <result property="memberEmail" column="MEMBER_EMAIL" />
+            <result property="memberMessage" column="MEMBER_MESSAGE" />
+            <result property="memberEnrollDate" column="MEMBER_ENROLL_DATE" />
+            <result property="memberLeaveDate" column="MEMBER_LEAVE_DATE" />
+            <result property="memberTell" column="MEMBER_TELL" />
+            <result property="memberAddress" column="MEMBER_ADDRESS" />
+            <result property="accessKey" column="ACCESS_KEY" />
+            <result property="memberName" column="MEMBER_NAME" />
+            <result property="memberGender" column="MEMBER_GENDER" />
+            <result property="memberState" column="MEMBER_STATE" />
+            <result property="memberBirthdate" column="MEMBER_BIRTHDATE" />
+        </association> 
 	</resultMap>
     <resultMap id="DocumentFormFolder" type="DocumentFormFolder">
         <id property="erFormFolderKey" column="ER_FORM_FOLDER_KEY" />
@@ -265,7 +346,8 @@
         <result property="erFormFolderCreateDate" column="ER_FORM_FOLDER_CREATEDATE" />
         <result property="erFormFolderUpdater" column="ER_FORM_FOLDER_UPDATER" />
         <result property="erFormFolderUpdateDate" column="ER_FORM_FOLDER_UPDATEDATE" />   
-        <result property="erFormFolderOrderBy" column="ER_FORM_FOLDER_ORDERBY" />   
+        <result property="erFormFolderOrderBy" column="ER_FORM_FOLDER_ORDERBY" />    
+       
 	</resultMap>
     <resultMap id="StorageFolder" type="storageFolder">
         <id property="folderKey" column="ER_FOLDER_KEY" />

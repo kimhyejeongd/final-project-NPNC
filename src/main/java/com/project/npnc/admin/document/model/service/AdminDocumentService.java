@@ -186,5 +186,12 @@ public class AdminDocumentService {
 		return dao.selectDocFormFolderAll(session);
 	}
 	public List<DocumentForm>selectForm(int folderKey){
-		return dao.selectForm(session);	}
+		return dao.selectForm(session,folderKey);	
+		}
+	public int createDocFolder(DocumentFormFolder folder) {
+		return dao.createDocFolder(session,folder);
+	}
+	public int updateDocFolder(DocumentFormFolder folder) {
+		return dao.updateDocFolder(session,folder);
+	}
 }

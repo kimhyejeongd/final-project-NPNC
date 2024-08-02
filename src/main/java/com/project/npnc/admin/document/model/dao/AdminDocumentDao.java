@@ -83,8 +83,14 @@ public class AdminDocumentDao {
 	public List<DocumentFormFolder>selectDocFormFolderAll(SqlSessionTemplate session){
 		return session.selectList("admindoc.selectDocFormFolderAll");
 	}
-	public List<DocumentForm>selectForm(SqlSessionTemplate session){
-		return session.selectList("admindoc.selectForm");
+	public List<DocumentForm>selectForm(SqlSessionTemplate session, int folderKey){
+		return session.selectList("admindoc.selectForm",folderKey);
+	}
+	public int createDocFolder(SqlSessionTemplate session,DocumentFormFolder folder) {
+		return session.insert("admindoc.createDocFolder",folder);
+	}
+	public int updateDocFolder(SqlSessionTemplate session,DocumentFormFolder folder) {
+		return session.update("admindoc.updateDocFolder",folder);
 	}
 
 }
