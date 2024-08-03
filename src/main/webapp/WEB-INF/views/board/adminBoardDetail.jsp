@@ -116,45 +116,7 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar" data-background-color="dark">
-            <div class="sidebar-logo">
-                <div class="logo-header" data-background-color="dark">
-                    <a href="${path}/index.html" class="logo">
-                        <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20"/>
-                    </a>
-                    <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
-                            <i class="gg-menu-right"></i>
-                        </button>
-                        <button class="btn btn-toggle sidenav-toggler">
-                            <i class="gg-menu-left"></i>
-                        </button>
-                    </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="sidebar-wrapper scrollbar scrollbar-inner">
-                <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
-                        <li class="nav-item">
-                            <a href="${path}/notice/list" class="collapsed">
-                                <i class="fas fa-bell"></i>
-                                <p>공지사항</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${path}/board/list" class="collapsed">
-                                <i class="fas fa-th-list"></i>
-                                <p>게시판</p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- End Sidebar -->
+          <c:import url="${path}/WEB-INF/views/admin/adminsidebar.jsp"/> 
 
         <div class="main-panel">
             <!-- Header Bar -->
@@ -162,7 +124,7 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <h1 class="mb-4">게시물 상세보기</h1>
+                    <h1 class="mb-4">관리자 게시물 상세보기</h1>
 
                     <div class="card">
                         <div class="card-header">
