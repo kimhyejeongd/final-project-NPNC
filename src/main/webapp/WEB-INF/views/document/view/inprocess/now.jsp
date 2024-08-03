@@ -131,28 +131,41 @@
                     <ol class="activity-feed" style="margin-bottom: 0px;">
                     <c:forEach items="${doc.approvers }" var="p">
                    	<c:if test="${p.state ne '대기'}">
-                      <li class="feed-item feed-item-secondary">
-                        <time class="date" datetime="">${p.date }</time>
-                        <div>
-	                        <span class="badge badge-count me-2">${p.category }</span>
-	                        <span class="text" style="top: 0px !important;">
-	                        ${p.memberTeamName } ${p.memberJobName } ${p.memberName }
-	                         </span>
-	                         <c:if test="${p.opinion ne null}">
-	                         	<div class="message-bubble" style="width: 80%; text-align: center;">
-				                    ${p.opinion }
-				                </div>
-			                </c:if>
-                         </div>
-                      </c:if>
-                      </li>
+                   		<c:choose>
+		                   	<c:when test="${p.state eq '반려' }">
+			                      <li class="feed-item feed-item-danger">
+			                </c:when>
+		                   	<c:when test="${p.state eq '승인' }">
+			                      <li class="feed-item feed-item-success">
+			                </c:when>
+		                   	<c:when test="${p.state eq '보류' }">
+			                      <li class="feed-item feed-item-warning">
+			                </c:when>
+		                   	<c:when test="${p.state eq '읽음' }">
+			                      <li class="feed-item feed-item-info">
+			                </c:when>
+		                </c:choose>
+		                        <time class="date" datetime="">${p.date }</time>
+		                        <div>
+			                        <span class="badge badge-count me-2">${p.category }</span>
+			                        <span class="text" style="top: 0px !important;">
+			                        ${p.memberTeamName } ${p.memberJobName } ${p.memberName }  <c:if test="${p.category ne '기안'}">(${p.state})</c:if>
+			                         </span>
+			                         <c:if test="${p.opinion ne null}">
+			                         	<div class="message-bubble" style="width: 80%; text-align: center;">
+						                    ${p.opinion }
+						                </div>
+					                </c:if>
+		                         </div>
+		                      </c:if>
+		                      </li>
                       </c:forEach>
                     </ol>
                   </div>
                 </div>
               </div>
 			</div>
-    	<div class="d-flex justify-content-end gap-2">
+    	<div class="d-flex justify-content-center gap-2">
 	        <button class="btn btn-primary" id="" onclick="window.close();">확인</button>
 	    </div>
 	</div>
