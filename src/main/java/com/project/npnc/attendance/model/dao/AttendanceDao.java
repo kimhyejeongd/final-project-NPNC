@@ -62,6 +62,9 @@ public interface AttendanceDao {
 	List<Attendance> searchAdminAttendance(SqlSession session,Map<String,Object> searchMap, Map<String,Integer> page);
 	int searchAdminAttendanceCount(SqlSession session,Map<String,Object> searchMap);
 	
+	int updateAdminAttendance(SqlSession session,Attendance attendance);
+	
+	
 	//vacation Apply
 	List<VacationApply> selectVacationApplyApprove(SqlSession session);
 	int insertAttendanceVacation(SqlSession session,int memberKey,String status);

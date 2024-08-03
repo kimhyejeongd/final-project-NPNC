@@ -235,6 +235,13 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
 
+	@Override
+	public int updateAdminAttendance(SqlSession session, Attendance attendance) {
+		
+		return session.update("attendance.updateAdminAttendance",attendance);
+	}
+	
+	
 	//vacationApply
 	
 	@Override
@@ -276,6 +283,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		
 		return session.selectOne("attendance.searchoverworkByMemberKeyCount",searchMap);
 	}
+
+
 
 
 	

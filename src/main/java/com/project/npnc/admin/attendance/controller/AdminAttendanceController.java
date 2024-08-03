@@ -20,7 +20,6 @@ import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
-import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 
 import lombok.RequiredArgsConstructor;
@@ -177,6 +176,39 @@ public class AdminAttendanceController {
 		m.addAttribute("searchSD",searchStartDate);
 		m.addAttribute("searchED",searchEndDate);
 		return "admin/attendance/adminattendancelist";
+	}
+	
+	@GetMapping("/adminAttendanceDetail")
+	public ResponseEntity<Map<String,Attendance>> adminAttendanceDetail(int attendanceKey,String memberId) {
+		Attendance attendance=service.selectAttendanceByAttendanceKey(attendanceKey);
+		System.out.println("admin : "+attendance);
+		System.out.println("memberKey : "+memberId);
+		attendance.setMember(AdminMember.builder().memberId(memberId).build());
+		Map<String,Attendance> response =new HashMap<>();
+		response.put("attendance", attendance);
+		System.out.println("test");
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	@PostMapping("/updateAdminAttendance")
+	public String updateAdminAttendance(Attendance attendance,Model m) {
+		System.out.println("attendance : "+attendance);
+		int result=service.updateAdminAttendance(attendance);
+		
+		String msg,loc;
+		if(result>0) {
+			msg="성공";
+			loc="/admin/attendance/selectAdminAttendanceAll";
+		}else {
+			msg="실패";
+			loc="/admin/attendance/selectAdminAttendanceAll";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+		
 	}
 	
 	
