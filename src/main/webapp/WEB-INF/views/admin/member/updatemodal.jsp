@@ -12,7 +12,7 @@
 	          </button>
 	        </div>
         <div class="modal-body">
-			<form action="${path}/admin/member/updatememberend.do" method="post" onsubmit="return combineAddresses();">
+			<form action="${path}/admin/member/updatememberend.do" method="post" onsubmit="return combineAddressesup();">
 				 <div class="container">
 		          <div class="page-inner">
 		            	<div class="form-group">
@@ -62,7 +62,7 @@
 		                          	<input type="text"
 		                          	  		id="zip_code2" 
 		                          	  		name="zip_code" 
-		                          	  		onclick="openZipSearch();" 
+		                          	  		onclick="openZipSearchUp();" 
 		                          	  		readonly="readonly" 
 		                          	  		placeholder="우편번호"  
 		                          	  		class="form-control input-full">
@@ -70,7 +70,7 @@
 								 	<input type="text"
 								 	 		 id="addr2" 
 								 	 		 name="addr" 
-								 	 		 onclick="openZipSearch();" 
+								 	 		 onclick="openZipSearchUp();" 
 								 	 		 readonly="readonly" 
 								 	 		 placeholder="기본주소"   
 								 	 		 class="form-control input-full">
@@ -367,10 +367,9 @@
     </div>
   </div> 
   
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script>
-function openZipSearch() {
+function openZipSearchUp() {
     new daum.Postcode({
     	oncomplete: function(data) {     
 		var addr = ''; 
@@ -389,7 +388,7 @@ function openZipSearch() {
     }).open();
 }
 
-function combineAddresses() {
+function combineAddressesup() {
     // 각 입력 필드의 값 가져오기
     var zipCode = $("#zip_code2").val();
     var basicAddress = $("#addr2").val();
