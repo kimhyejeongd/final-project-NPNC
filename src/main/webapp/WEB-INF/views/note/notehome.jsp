@@ -1075,7 +1075,7 @@
 	      		var namebox=document.getElementsByClassName("namebox");
 	      	 	document.getElementById('postMsgDetail').value='';
 	      		document.getElementById('postMsgTitle').value='';
-				document.getElementById(' ').value='';
+				document.getElementById('upFile1').value='';
 		    	namebox[0].innerHTML = '';
 		    }
           	
@@ -1128,8 +1128,8 @@
 				
 		    	document.getElementById('postMsgDetailAll').value='';
 	      		document.getElementById('postMsgTitleAll').value='';
-				document.querySelector('input[name="upfile2"]').value='';
-		    	 modal[1].classList.remove('on');
+				document.getElementById('upFile2').value='';		    	 
+				modal[1].classList.remove('on');
 		    }
             
           	

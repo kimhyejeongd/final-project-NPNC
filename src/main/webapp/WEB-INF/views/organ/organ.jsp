@@ -38,6 +38,9 @@
 			flex-wrap: wrap;
 		 }
 		 
+		 .organProGo{
+		     color: black;
+		 }
 </style>
 
 	<div class="accordion" id="accordionPanelsStayOpenExample">
@@ -56,7 +59,7 @@
 			         <div class="list-group" >
 		 				<c:forEach var="memberlist" items="${d.memberlist}">
 		 					<c:if test="${currentUserId != memberlist.memberId }">
-							  <a href="javascript:openOrganPro('${memberlist.memberName}','${memberlist.jobName}','${memberlist.memberAddress}','${memberlist.memberPhone}','${memberlist.memberEmail}','${d.departmentName}','${memberlist.memberProfileImage}');" class="list-group-item list-group-item-action organProGo" ><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> &emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName} 
+							  <div class="list-group-item list-group-item-action"><span class="status-dot" id="status-dot-${memberlist.memberId}"></span> <a class="organProGo" href="javascript:openOrganPro('${memberlist.memberName}','${memberlist.jobName}','${memberlist.memberAddress}','${memberlist.memberPhone}','${memberlist.memberEmail}','${d.departmentName}','${memberlist.memberProfileImage}');">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a> 
 							  <div>
 							  <button type="button" onclick="noteOrganGo('${memberlist.memberName}','${memberlist.jobName}','${memberlist.memberKey}');" class="btn btn-icon btn-round btn-success modal_btn1Organ" style=" height: 1.6rem; width: 1.6rem!important; min-width: 0rem!important; border-radius: 50%!important; font-size: 1rem;"  >
 		                        <i class="fas fa-envelope"></i>
@@ -65,7 +68,7 @@
 	                              <i class="fa fa-comment"></i>
 	                            </div>
 							  </div>
-							   </a>
+							   </div>
 		 					</c:if>
 						
 		  				</c:forEach>
@@ -306,8 +309,13 @@
 					
 				}
 				
+				
+				
+				
 				  //열기 버튼을 눌렀을 때 모달프로필이 열림
 			  	  document.querySelectorAll('.organProGo').forEach((button, index) => {
+			  		   event.stopPropagation(); // 이벤트 전파 방지
+
 			  		 const modal1Organ = document.querySelectorAll('.modal1Organ');
 			            button.addEventListener('click', function() {
 			                // 인덱스 출력
@@ -318,6 +326,19 @@
 			            });
 			        });
 					
+			    	//열기 버튼을 눌렀을 때 모달팝업이 열림
+			  	  document.querySelectorAll('.modal_btn1Organ').forEach((button, index) => {
+			  		 const modal1Organ = document.querySelectorAll('.modal1Organ');
+			            button.addEventListener('click', function() {
+			                // 인덱스 출력
+			                console.log('Modal button index:', index);
+
+			                // 'on' 클래스 추가
+			                modal1Organ[0].classList.add('on1Organ');
+			            });
+			        });
+				  
+				  
 					//닫기 버튼을 눌렀을 때 모달프로필이 닫힘
 					document.querySelectorAll('.close_btn1Organ').forEach((button, index) => {
 				  		const modal1Organ = document.querySelectorAll('.modal1Organ');
@@ -330,17 +351,7 @@
 				        });
 				    });
 										
-				  	//열기 버튼을 눌렀을 때 모달팝업이 열림
-				  	  document.querySelectorAll('.modal_btn1Organ').forEach((button, index) => {
-				  		 const modal1Organ = document.querySelectorAll('.modal1Organ');
-				            button.addEventListener('click', function() {
-				                // 인덱스 출력
-				                console.log('Modal button index:', index);
-
-				                // 'on' 클래스 추가
-				                modal1Organ[0].classList.add('on1Organ');
-				            });
-				        });
+				
 				  	
 					//모달 팝업 닫힘	
 				  	document.querySelectorAll('.close_btn1Organ').forEach((button, index) => {
@@ -355,6 +366,7 @@
 				      		document.getElementById('postMsgTitleOrgan').value='';
 							
 							document.getElementById('upFileOrgan').value='';
+							
 											
 				        });
 				    });
@@ -487,7 +499,8 @@
 					    if (children.length > 1) {
 					        children.slice(1).remove();
 					    }
-						children.first().find("input[type=file]").val("");
+						
+					    document.getElementById('upFileOrgan').value='';
 						
 				}	
 				
