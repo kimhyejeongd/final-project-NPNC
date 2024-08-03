@@ -11,6 +11,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -151,6 +154,34 @@ public class DocS3Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 	 }
+	
+	//파일 자세히보기
+		@GetMapping("/files/detail/{filename:.+}")
+		@ResponseBody
+		public ResponseEntity<Map<String, Object>> getFileDetail(
+				@PathVariable String filename) {
+			log.debug("파일 자세히보기 요청 -> " + filename);
+			try {
+				
+				// 인코딩된 파일 이름 디코딩
+		        String decodedFileName = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
+		        
+		        // 파일 정보를 S3에서 가져오는 로직을 구현합니다.
+		        S3Object s3Object = s3ForDoc.getObject(new GetObjectRequest(bucketName, "upload/docfile/" + decodedFileName));
+		        ObjectMetadata metadata = s3Object.getObjectMetadata();
+
+		        // 파일 정보 생성
+		        Map<String, Object> fileInfo = new HashMap<>();
+		        fileInfo.put("fileOriName", decodedFileName);
+		        fileInfo.put("fileSize", metadata.getContentLength());
+		        fileInfo.put("fileUploadDate", metadata.getLastModified());
+		        return ResponseEntity.ok(fileInfo);
+		        
+		    } catch (UnsupportedEncodingException e) {
+		        log.error("Error decoding filename: ", e);
+		        return ResponseEntity.status(500).build();
+		    }
+		}
 	
 	//파일 삭제 메소드
 	public int fileRemove(String dir, String title) throws IOException {

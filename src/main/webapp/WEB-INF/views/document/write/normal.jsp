@@ -247,10 +247,12 @@ $(document).ready(function() {
  	// 파일 입력 필드에서 파일이 선택되면 호출되는 이벤트 핸들러
     $('#formFile').on('change', function() {
         // 선택한 파일 가져오기
+        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
         let files = fileInput.files;
 		$("#dragspan").removeClass('d-flex').css('display', 'none');
 		// 현재 파일 리스트에서 이미 추가된 파일의 개수를 계산
 	    let existingCount = $('#fileinputDiv .file-name').length;
+		console.log('이미 추가된 파일 개수 : ' + existingCount);
         
      // 선택한 파일 이름을 표시하기 위한 내용 추가
       fn_arrayFiles(files, existingCount);
@@ -404,12 +406,13 @@ $(document).ready(function() {
 			        let formData = new FormData(document.getElementById("docForm"));
 			        formData.delete("files");
 			        
-		            let files = fileInput.files;
+			        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
+			        let files = fileInput.files;
 
-		            // 다중 파일 추가
+		            /* // 다중 파일 추가
 		            for (let i = 0; i < files.length; i++) {
-		            	formData.append('upfile', fileInput.files[i]);
-		            } 
+		            	formData.append('upfile', files[i]);
+		            }  */
 
 		            // FormData의 내용 확인
 					formData.entries().forEach(e=>{

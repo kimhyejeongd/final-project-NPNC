@@ -12,6 +12,7 @@ import com.project.npnc.document.member.controller.DocHtmlController;
 import com.project.npnc.document.member.controller.DocS3Controller;
 import com.project.npnc.document.model.dao.MemberDocumentDao;
 import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.model.dto.Document;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -177,5 +178,10 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public Document selectInprocessDocApproveNow(int docId) {
+		return dao.selectInprocessDocApproveNow(session, docId);
 	}
 }

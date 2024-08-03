@@ -77,4 +77,5 @@ public interface MemberDocumentDao {
 	DocFile getFileDetailByRename(SqlSession session, String filename);
 	List<Document> selectMyPendingDocs(SqlSession session, int no);
 	Approver selectApproverByKey(SqlSession session, int memberKey, String serial);
+	Document selectInprocessDocApproveNow(SqlSession session, int docId);
 }

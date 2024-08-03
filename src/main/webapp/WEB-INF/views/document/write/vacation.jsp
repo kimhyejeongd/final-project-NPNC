@@ -33,6 +33,7 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+  <script src="${path}/resources/jh/js/docwrite.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -284,9 +285,83 @@ $(document).ready(function() {
 		} */
 	});
 	// 기안하기 버튼 클릭 시
-	$("#submitbtn").click(function() {
-		// SweetAlert2 모달 띄우기
-		Swal.fire({
+	$("#submitbtn").click(async function() {
+		
+		// 폼 유효성 검사
+        if ($("#docForm")[0].checkValidity() === false) {
+        	console.log('유효성 검사 false');
+        	await Swal.fire({
+    			title: '확인 요청',
+    			html: '제목을 입력해주세요.',
+    			showCancelButton: false,
+    			confirmButtonClass: 'btn btn-success',
+    			confirmButtonText: '확인',
+    			buttonsStyling: false,
+    			reverseButtons: false,
+    			didOpen: () => {
+                    document.querySelector('#htmlDiv').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#htmlDiv').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+            });
+            $("#docForm")[0].reportValidity();
+           	return;
+        } 
+		
+      //보관함 선택 여부 확인
+        if($("#storageDiv").html() === '' || $("#storageDiv").html() === null){
+        	console.log('보관함 미선택');
+        	await Swal.fire({
+                title: '확인 요청',
+                html: '보관함을 선택해주세요.',
+                icon: 'warning', 
+                showCancelButton: false,
+                confirmButtonClass: 'btn btn-success',
+                confirmButtonText: '확인',
+                buttonsStyling: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+	            $("#storageBtn").click();
+            });
+            return; 
+        }
+
+        // 결재자 선택 여부 검사
+        if ($("#approvalDiv span").text() === '결재자를 선택하세요') {
+            console.log('결재자 없음');
+            
+            const result = await Swal.fire({
+                title: '확인 요청',
+                html: '결재자가 없습니다. 그래도 진행하시겠습니까?',
+                icon: 'warning', 
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger ms-2',
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                buttonsStyling: false,
+                reverseButtons: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            });
+            if(!result.isConfirmed) {
+               $("#approverBtn").click();
+             return;
+            }
+        }
+		
+        const docResult = await Swal.fire({
 			title: '결재',
 			html: '<textarea class="form-control" id="input-field" placeholder="결재 의견을 작성하세요" style="resize:none"></textarea>',
 			showCancelButton: true,
@@ -296,93 +371,124 @@ $(document).ready(function() {
 			cancelButtonText: '취소',
 			buttonsStyling: false,
 			reverseButtons: false
-		}).then((result) => {
-			if (result.isConfirmed) {
-				// 결재 버튼이 클릭되었을 때 처리할 로직
-				console.log('결재하기');
-				// 로컬 스토리지에서 데이터를 삭제
-				localStorage.removeItem('selectedReferer'); 
-				localStorage.removeItem('selectedApprover'); 
-				
-				let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-				if(dochtml != null){
-					//결재 정보
-					let opinion = $('#input-field').val();
-					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
-					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
-					
-					//휴가 정보
-			        var dataKey = $("#vacationSelectArea").find('option:selected').data('key');
-					$("<input>").val(dataKey).css('display', 'none')
-						.attr('name', 'vacationKey').prependTo($("#docForm"));
-			        
-					$("<input>").val($("td#vacationReason").text())
-						.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
-					
-					var startDate = $("#vacationStartDate").val();
-				    var startTime = $("#vacationStartTime").val();
-					var endDate = $("#vacationEndDate").val();
-				    var endTime = $("#vacationEndTime").val();
-				    $("<input>").val(startDate).css('display', 'none')
-					.attr('name', 'vacationStartDate').prependTo($("#docForm"));
-				    $("<input>").val(startTime).css('display', 'none')
-					.attr('name', 'vacationStartTime').prependTo($("#docForm"));
-				    $("<input>").val(endDate).css('display', 'none')
-					.attr('name', 'vacationEndDate').prependTo($("#docForm"));
-				    $("<input>").val(endTime).css('display', 'none')
-					.attr('name', 'vacationEndTime').prependTo($("#docForm"));
-				    $("<input>").val($("#minusPointArea").val()).css('display', 'none')
-					.attr('name', 'vacationUseCount').prependTo($("#docForm"));
-					
-					
-					//문서 내용 정리
-					$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
-					$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
-					$("#vacationTypeArea").html($("#vacationSelectArea").val());
-					$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
-							" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
-					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-					
-					// 폼 데이터를 수집
-			        let formData = new FormData(document.getElementById("docForm"));
-			        formData.delete("files");
-			        
-		            let files = fileInput.files;
-
-		            // 다중 파일 추가
-		            for (let i = 0; i < files.length; i++) {
-		            	formData.append('upfile', fileInput.files[i]);
-		            } 
-
-		            // FormData의 내용 확인
-					formData.entries().forEach(e=>{
-		            	console.log(e);
-	            	});
-					
-			     	// AJAX로 폼 데이터를 전송
-			        fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
-			            method: 'POST',
-			            body: formData,
-			        })
-			        .then(response => response.json())
-			        .then(data => {
-			            if (data.status === "success") {
-			                alert(data.message);
-			                // 성공 시 페이지 리다이렉트
-			                window.location.href = sessionStorage.getItem("path")+"/document/home";
-			            } else {
-			                alert(data.message);
-			            }
-			        })
-			        .catch(error => {
-			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-			        });  
-			    } else{
-			        alert('문서 양식 불러오기 오류');
-			    }
-			}
 		});
+        
+		if (docResult.isConfirmed) {
+			// 결재 버튼이 클릭되었을 때 처리할 로직
+			console.log('결재하기');
+			// 로컬 스토리지에서 데이터를 삭제
+			localStorage.removeItem('selectedReferer'); 
+			localStorage.removeItem('selectedApprover'); 
+			
+			let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+			if(dochtml != null){
+				//결재 정보
+				let opinion = $('#input-field').val();
+				$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
+				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
+				
+				//휴가 정보
+		        var dataKey = $("#vacationSelectArea").find('option:selected').data('key');
+				$("<input>").val(dataKey).css('display', 'none')
+					.attr('name', 'vacationKey').prependTo($("#docForm"));
+		        
+				$("<input>").val($("td#vacationReason").text())
+					.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
+				
+				//문서 내용 세션 임시 저장
+				session.setStorage('ckBeforeDoc', dochtml);
+				
+				//문서 내용 정리
+				$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
+				$("#remainingPointP").text("잔여 연차 : " + $("#remainingPointArea").val());
+				$("#vacationTypeArea").html($("#vacationSelectArea").val());
+				$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
+						" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
+				dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
+				//문서파일 저장을 위한 전달
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				
+				// 폼 데이터를 수집
+		        let formData = new FormData(document.getElementById("docForm"));
+		        formData.delete("files");
+		        
+	            let files = fileInput.files;
+
+	            // 다중 파일 추가
+	            for (let i = 0; i < files.length; i++) {
+	            	formData.append('upfile', fileInput.files[i]);
+	            } 
+
+	            // FormData의 내용 확인
+				formData.entries().forEach(e=>{
+	            	console.log(e);
+            	});
+	            
+				//신청자의 기존 신청 내역 중 중복 휴가 일정이 있는 지 확인
+				fetch(sessionStorage.getItem("path")+'/document/vacation/check', {
+		            method: 'POST',
+		            body: formData,
+		        }).then(response => response.json())
+		        .then(data => {
+		            if (data.status === "success") {
+		                alert(data.message);
+		                // 성공 시 계속 진행
+		                Swal.fire({
+		        			title: '신청 가능',
+		        			html: `<p>${data.message}</p>`,
+		        			showCancelButton: false,
+		        			confirmButtonClass: 'btn btn-success',
+		        			confirmButtonText: '확인',
+		        			buttonsStyling: false,
+		        			reverseButtons: false
+		        		});
+		            } else {
+		                alert(data.message);
+		                Swal.fire({
+		        			title: '신청 불가능',
+		        			icon: 'warning',
+		        			html: `<p>${data.message}</p>`,
+		        			showCancelButton: false,
+		        			confirmButtonClass: 'btn btn-success',
+		        			confirmButtonText: '확인',
+		        			buttonsStyling: false,
+		        			reverseButtons: false
+		        		});
+			            //저장내용으로 다시 문서 내용 리셋
+			            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
+		            }
+		        })
+		        .catch(error => {
+		            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+		            //저장내용으로 다시 문서 내용 리셋
+		            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
+		        });  
+				
+		     	// AJAX로 폼 데이터를 전송
+		        fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
+		            method: 'POST',
+		            body: formData,
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            if (data.status === "success") {
+		                alert(data.message);
+		                // 성공 시 페이지 리다이렉트
+		                window.location.href = sessionStorage.getItem("path")+"/document/home";
+		            } else {
+		                alert(data.message);
+		                location.reload();
+		            }
+		        })
+		        .catch(error => {
+		            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+		            location.reload();
+		        });  
+		    } else{
+		        alert('문서 양식 불러오기 오류');
+		        location.reload();
+		    }
+		}
 	});
 	
 	$("#savedraftbtn").click(function() {
@@ -443,21 +549,24 @@ $(document).ready(function() {
 		                window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
 		            } else {
 		                alert(data.message);
+		                location.reload();
 		            }
 		        })
 		        .catch(error => {
 		            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+		            location.reload();
 		        });
 			}
 		});
 	});
 	
 	
-	//휴가종류 이벤트
+	//휴가 종류 이벤트
 	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
-		console.log($(e.target).val());
-		let target = $(e.target).val();
-		if(target == '공가' || target == '병가'){
+		var selectedOption = $(this).find('option:selected');
+		$("#vacationTerm").children().last().css('display','inline-flex');
+		
+		if(selectedOption.data('yn') == 'N'){
 			$("#vacationStartTime").css('display','none');
 			$("#vacationEndTime").css('display','none');
 			$("#alldayCk").attr('checked',true);
@@ -465,19 +574,44 @@ $(document).ready(function() {
 		}else {
 	        $("#vacationStartTime").css('display','inline-block');
 	        $("#vacationEndTime").css('display','inline-block');
-	        $("#alldayCk").prop('checked', false); // 체크박스를 체크 해제 상태로 설정 (필요한 경우)
 	    }
-	});
-	//종일 이벤트
-	$("#htmlDiv").on("change", "#vacationTypeArea", function(e){
-		console.log($(e.target).val());
+		
 		let target = $(e.target).val();
 		if(target == '공가' || target == '병가'){
 			$("#vacationStartTime").css('display','none');
 			$("#vacationEndTime").css('display','none');
+		}else if(target == '오전반차'){
+			$("#vacationStartTime").val('09:00');
+			$("#vacationEndTime").val('13:00');
+			$("#minusPointArea").val('0.5');
+			$("#vacationEndDate").css('display','none');
+			$("#vacationTerm").children().last().css('display','none');
+			$("#htmlDiv").on("change", "#vacationStartDate", function(e){
+				$("#vacationEndDate").val($(this).val());
+			});
+		}else if(target == '오후반차'){
+			$("#vacationStartTime").val('14:00');
+			$("#vacationEndTime").val('18:00');
+			$("#minusPointArea").val('0.5');
+			$("#vacationTerm").children().last().css('display','none');
+			$("#htmlDiv").on("change", "#vacationStartDate", function(e){
+				$("#vacationEndDate").val($(this).val());
+			});
 		}
 	});
 	
+	//종일 해당시
+	$("#alldayCk").on("change", function() {
+	    if ($(this).is(':checked')) {
+	        // 체크박스가 체크되었을 때의 이벤트 처리
+	    	$("#vacationStartTime").val('09:00');
+			$("#vacationEndTime").val('18:00');
+	    } else {
+	        // 체크박스가 체크 해제되었을 때의 이벤트 처리
+	    	$("#vacationStartTime").val('');
+			$("#vacationEndTime").val('');
+	    }
+	});
 	
 });
 
@@ -489,7 +623,6 @@ $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', funct
         $(element).find('.badge').val(index + 1); 
     });
 });
-
 $("#approverBtn").click(function() {
 	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	window.open('${pageContext.request.contextPath}/document/write/approver', 'approver', 'width=900, height=700, left=500, top=100');
@@ -500,279 +633,16 @@ $("#refererBtn").click(function() {
 $("#storageBtn").click(function() {
 	window.open('${pageContext.request.contextPath}/document/write/storage', 'storage', 'width=900, height=700, left=500, top=100');
 });
-function sendDataToParent(data) {
-    console.dir(data);
-    $("#approvalDiv").html(''); // approvalDiv 초기화
-    
-    // 선택 결재자
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "approval" + index,
-            css: {
-                width: '100%',
-                fontSize: 'larger',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'approvers[' + index + '].orderby',
-            value: item.orderby,
-            css: {
-                borderRadius: '15px',
-                width: '23px',
-                display: 'inline',
-                backgroundColor: 'white'
-            },
-            class: 'badge rounded-pill text-bg-secondary me-2 ms-0'
-        }).attr('readonly', true).appendTo($div);
-		
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'approvers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-		
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberTeam',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberJob',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.category.length * 1.5) + 1;
-        $("<input>", {
-            name: 'approvers[' + index + '].category',
-            value: item.category,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        $div.appendTo($("#approvalDiv"));
-        $("#approverBtn").text('재선택');
-    });
-}
-function sendRefererToParent(data) {
-    console.dir(data);
-    $("#refererDiv").html('');
-    // 참조인
-    data.forEach(function(item, index) {
-        let $div = $("<div>", {
-            id: "referer" + index,
-            css: {
-                width: '100%',
-                textAlign: 'left',
-                borderRadius: '15px'
-            },
-            class: 'col m-0 p-2'
-        });
-
-        $("<input>", {
-            name: 'referers[' + index + '].memberKey',
-            value: item.memberKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeamKey',
-            value: item.teamKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-        $("<input>", {
-            name: 'referers[' + index + '].memberJobKey',
-            value: item.jobKey,
-            css: {
-                display: 'none',
-                border: 'none',
-                width: 'auto',
-                maxWidth: '80px'
-            },
-        }).attr('readonly', true).appendTo($div);
-	
-        let widthCalc = (item.memberTeam.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberTeam',
-            value: item.memberTeam,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberJob.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberJob',
-            value: item.memberJob,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-
-        widthCalc = (item.memberName.length * 1.5) + 1;
-        $("<input>", {
-            name: 'referers[' + index + '].memberName',
-            value: item.memberName,
-            css: {
-                border: 'none',
-                width: widthCalc + "ch",
-                maxWidth: '80px',
-                backgroundColor: 'white'
-            },
-        }).attr('readonly', true).appendTo($div);
-        
-        $("<button>").addClass('badge rounded-pill text-bg-secondary')
-        			.text('X')
-        			.attr({'type': 'button'})
-        			.css('width', '3.2ch')
-        			.addClass('Xbtn')
-        			.appendTo($div);
-
-        $div.appendTo($("#refererDiv"));
-        
-        $("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
-        	e.stopPropagation(); // 이벤트 버블링 방지
-        	let $div = $(e.target).closest('div.col');
-        	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
-        	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
-        	console.log(index);
-            savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
-            localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
-        	$(e.target).parent().remove();
-        });
-    });
-}
-function sendStorageToParent(data){
-	console.log(data);
-	$("#storageDiv").html('');
-	
-	 let $div = $("<div>", {
-         id: "storage",
-         css: {
-             width: '100%',
-             textAlign: 'left',
-             borderRadius: '15px'
-         },
-         class: 'col m-0 p-2'
-     });
-
-     $("<input>", {
-         name: 'erDocStorageKey',
-         value: data.erStorageKey,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-         type: 'hidden'
-     }).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageFolder + " > ",
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageName,
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $div.appendTo($("#storageDiv"));
-     $("#storageBtn").text('재선택');
-}
+$("#refererDiv").off('click', '.Xbtn').on('click', '.Xbtn', function(e) {
+	e.stopPropagation(); // 이벤트 버블링 방지
+	let $div = $(e.target).closest('div.col');
+	let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
+	let index = parseInt($div.attr('id').replace('referer', '')); // 해당 <div>의 인덱스 번호 확인
+	console.log(index);
+    savedData.splice(index, 1);  // 배열에서 해당 항목 삭제
+    localStorage.setItem('selectedReferer', JSON.stringify(savedData));  // 로컬 스토리지 업데이트
+	$(e.target).parent().remove();
+});
 </script>
 </body>
 </html>

@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
             event.stopPropagation();
             return;
         }
-
         const row = target.closest('tr');
         if (row && row.dataset.docId) {
             const docId = row.dataset.docId;
@@ -66,7 +65,25 @@ document.addEventListener("DOMContentLoaded", function() {
             selectDoc(docId);
         }
     });
+    // approverNow 클래스가 있는 td 클릭 이벤트 핸들러
+        $("#inproTable").on('click', '.approverNow', function(event) {
+            event.stopPropagation(); // 이벤트 전파 막기
+            const cell = event.target;
+            console.log('ApproverNow cell clicked:', cell);
+
+            // 팝업 열기
+            const docId = $(cell).closest('tr').data('doc-id');
+            openPopupWindow(docId);
+        });
     
+    // 팝업 윈도우 열기 함수
+    function openPopupWindow(no) {
+        const popup = window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${no}`, "approveNow", "width=700, height=700, left=500, top=100, scrollbars=yes,resizable=yes");
+        if (popup) {
+        } else {
+            alert("팝업이 차단되었습니다. 팝업을 허용해주세요.")
+        }
+    }
     
 	//상세보기
 	function selectDoc(docId){

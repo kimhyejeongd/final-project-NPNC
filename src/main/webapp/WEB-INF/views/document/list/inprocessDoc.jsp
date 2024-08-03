@@ -44,7 +44,15 @@
                   	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
                   </td>
                   <td class="approverNow p-3">
-                  	<c:forEach items="${l.approvers }" var="ap">
+                  <div class="progress progress-sm">
+                 			<c:set var="count" value="0" />
+                  	<c:forEach items="${l.approvers}" var="ap">
+					    <c:if test="${ap.state eq '승인'}">
+					        <c:set var="count" value="${count + 1}" />
+					    </c:if>
+					</c:forEach>
+                  	<div class="progress-bar bg-danger" style="width: ${count/l.approvers.size()*100}%;" role="progressbar" aria-valuenow="${count }" aria-valuemin="0" aria-valuemax="${l.approvers.size() }"></div>
+                  	<%-- <c:forEach items="${l.approvers }" var="ap">
                   		<c:if test="${ap.state eq '승인' }">
                   			<div class="badge badge-success" style="min-width: 60px;">
                   				<small class="">${ap.memberTeamName }</small><br>
@@ -75,7 +83,8 @@
                   				<small class="">${ap.memberJobName} ${ap.memberName}</small>
                   			</div>
                  		</c:if>
-                    </c:forEach>
+                    </c:forEach> --%>
+                    </div>
                   </td>
                		<td colspan="">
                			<input type="button" value="회수" class="btn-sm btn-outline-secondary" id="retrieveBtn" onclick="modal('${l.erDocSerialKey}');">

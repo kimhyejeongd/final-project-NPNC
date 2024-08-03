@@ -597,29 +597,30 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	
 	
-	//파일 자세히보기
-	@GetMapping("/files/detail/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<DocFile> getFileDetail(
-			@PathVariable String filename) {
-		log.debug("파일 자세히보기 요청 -> " + filename);
-		try {
-			
-			//db에서 파일 정보 조회
-	        String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
-	        DocFile fileDetail = getFileDetailByRename(decodedFilename);
-	        log.debug("{}", fileDetail);
-	        
-	        if (fileDetail != null) {
-	            return ResponseEntity.ok(fileDetail);
-	        } else {
-	            return ResponseEntity.status(404).build();
-	        }
-	        
-	    } catch (UnsupportedEncodingException e) {
-	        log.error("Error decoding filename: ", e);
-	        return ResponseEntity.status(500).build();
-	    }
-	}
+//	//파일 자세히보기
+//	@GetMapping("/files/detail/{filename:.+}")
+//	@ResponseBody
+//	public ResponseEntity<DocFile> getFileDetail(
+//			@PathVariable String filename) {
+//		log.debug("파일 자세히보기 요청 -> " + filename);
+//		try {
+//			
+//			//db에서 파일 정보 조회
+//	        String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
+//	        DocFile fileDetail = getFileDetailByRename(decodedFilename);
+//	        log.debug("{}", fileDetail);
+//	        
+//	        if (fileDetail != null) {
+//	            return ResponseEntity.ok(fileDetail);
+//	        } else {
+//	        	log.debug("----파일 정보 없음----");
+//	            return ResponseEntity.status(404).build();
+//	        }
+//	        
+//	    } catch (UnsupportedEncodingException e) {
+//	        log.error("Error decoding filename: ", e);
+//	        return ResponseEntity.status(500).build();
+//	    }
+//	}
 	
 }

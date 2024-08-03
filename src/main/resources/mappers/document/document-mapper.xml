@@ -1188,6 +1188,56 @@
 			ea.ER_APPROVAL_ORDERBY asc,
 			ER_FILE_ORDERBY
 	</select>
+	<select id="selectInprocessDocApproveNow" parameterType="int" resultMap="documentMap">
+		SELECT 
+			d.ER_DOC_KEY,
+			d.ER_DOC_SERIAL_KEY,
+			d.ER_DOC_WRITER,
+			d.ER_DOC_TITLE,
+			d.ER_DOC_CREATE_DATE,
+			d.ER_DOC_EMERGENCY_YN,
+			d.ER_DOC_DELETE_YN,
+			d.ER_DOC_STORAGE_KEY,
+			d.ER_DOC_FILENAME, 
+			d.ER_DOC_STATE, 
+			d.ER_DOC_STATE_UPDATE_DATE,
+			d.ER_DOC_LAST_UPDATER,
+			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
+			ea.ER_APPROVER_KEY,
+			ea.MEMBER_KEY,
+			ea.ER_APPROVER_NAME,
+			ea.ER_APPROVER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			ea.ER_APPROVER_JOB_KEY,
+			j.JOB_NAME,
+			ea.ER_APPROVAL_CATEGORY,
+			ea.ER_APPROVAL_STATE,
+			ea.ER_APPROVAL_OPINION,
+			ea.ER_DOC_SERIAL_KEY,
+			ea.ER_APPROVAL_DATE,
+			ea.ER_APPROVAL_ORDERBY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
+		FROM   
+			er_document d
+        LEFT JOIN 
+       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		LEFT JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY
+		LEFT JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+        LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
+		WHERE  
+			d.ER_DOC_KEY = #{docId}
+		ORDER BY
+			ea.ER_APPROVAL_ORDERBY asc
+	</select>
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
 		SELECT 
 			d.ER_DOC_KEY,

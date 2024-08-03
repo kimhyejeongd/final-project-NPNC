@@ -42,6 +42,7 @@ import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.OvertimeApply;
 import com.project.npnc.document.model.dto.VacationApply;
+import com.project.npnc.document.model.service.MemberApproveService;
 import com.project.npnc.document.model.service.MemberDocumentService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
@@ -58,6 +59,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j 
 public class MemberDocumentController {
 	private final MemberDocumentService serv;
+	private final MemberApproveService apserv;
 	private final OrganizationService orserv;
 	private final AdminDocumentService adminserv;
 	private final VacationService vacserv;
@@ -74,6 +76,9 @@ public class MemberDocumentController {
 		log.debug("{}", m.getAttribute("doclist"));
 		m.addAttribute("waitinglist", serv.selectWaitingDocs(user.getMemberKey()));
 		log.debug("{}", m.getAttribute("waitinglist"));
+	}
+	@GetMapping("/test")
+	public void docTest(Model m) {
 	}
 	@GetMapping("/form")
 	public void formChoice(Model m){
@@ -295,7 +300,7 @@ public class MemberDocumentController {
 			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationSelectArea\">";
 			vacselect += "<option>---선택---</option>";
 			for(Vacation v : vacation) {
-				vacselect += "<option data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
+				vacselect += "<option data-yn=\""+ v.getVacationCalcYN().toUpperCase() + "\" data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
 			}
 			vacselect += "</select>";
 			html = html.replace("[휴가 종류]", vacselect);
@@ -354,7 +359,7 @@ public class MemberDocumentController {
 			String vacselect = "<select class=\"form-select form-control-sm w-25\" id=\"vacationSelectArea\">";
 			vacselect += "<option>---선택---</option>";
 			for(Vacation v : vacation) {
-				vacselect += "<option data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
+				vacselect += "<option data-yn=\""+ v.getVacationCalcYN().toUpperCase() + "\" data-key=\"" + v.getVacationKey() + "\">" + v.getVacationName() + "</option>";
 			}
 			vacselect += "</select>";
 			html = html.replace("[휴가 종류]", vacselect);
@@ -401,6 +406,14 @@ public class MemberDocumentController {
 		log.debug("----- 보관함 선택 -----");
 		m.addAttribute("folders", folders);
 		log.debug("{}", folders); 
+	}
+	//현재 결재 현황 팝업 호출
+	@GetMapping("/view/inprocess/now")
+	public void docApproveNow(Model m, @RequestParam int no) {
+		log.debug("----- 결재 내역 자세히보기 -----");
+		m.addAttribute("doc", apserv.selectInprocessDocApproveNow(no));
+		log.debug("{}", m.getAttribute("doc"));
+		
 	}
 	
 	//결재라인 삭제
@@ -632,7 +645,8 @@ public class MemberDocumentController {
 			HttpSession session) {
 		
 		Member user = getCurrentUser();
-		log.debug("----- 휴가 신청 기안 -----");
+		log.debug("----- 휴가 신청 기안 -----");	
+		
 		log.debug(startDate + " " + startTime);
 		log.debug(endDate + " " + endTime);
 		log.debug("차감 : "+vacationUseCount + " \n사유 : " + vacationReason);
@@ -698,6 +712,17 @@ public class MemberDocumentController {
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
 	}
+	
+	
+	
+	
+	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
+	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
+	//첨부파일 자세히보기 오류 확인
+	//일반문서 임시저장 재기안 확인 -> 회수 재기안 확인
+	//TODO 결재 대기문서 수신, 기안 문서 종결(처리상태 변경알림 = 반려 || 처리완료), 참조문서 수신 알람 기능 구현
+	//TODO 위아래 이동 기능 구현
+	//TODO 전체 문서 조회 및 상세 검색 기능
 	
 	
 	//추가근무 신청 기안
@@ -803,6 +828,8 @@ public class MemberDocumentController {
 		//기안자=로그인유저
 		doc.setErDocWriter(user.getMemberKey()); 
 		//결재자에 기안자도 추가
+		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
 		Approver me = Approver.builder().memberKey(user.getMemberKey())
 				.memberTeamKey(user.getDepartmentKey())
 				.memberTeamName(user.getDepartmentName())
@@ -812,7 +839,8 @@ public class MemberDocumentController {
 				.category("기안")
 				.opinion(msg)
 				.state("승인")
-				.date(Date.valueOf(LocalDate.now()))
+//				.date(Date.valueOf(LocalDate.now()))
+				.date(currentTimestamp)
 				.orderby(0)
 				.build();
 		List<Approver> ap = doc.getApprovers();
