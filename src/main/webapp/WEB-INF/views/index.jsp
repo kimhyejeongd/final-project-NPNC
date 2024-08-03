@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	//세션에 현재 페이지를 저장
 	session.setAttribute("lastPage", request.getRequestURL().toString());
@@ -179,7 +180,8 @@
 										출근
 								</button>
 								<c:if test="${not empty checkStartTime}">
-									출근 시간 : ${checkStartTime.substring(9, 17)}  
+									<%-- 출근 시간 : ${checkStartTime.substring(9, 17)}   --%>
+									출근 시간 : ${fn:substring(checkStartTime, fn:length(checkStartTime) - 8, fn:length(checkStartTime))}
 								</c:if>	
 							</div>
 							<div id="attendanceEndResult" style="margin-top:20px;">
@@ -187,7 +189,8 @@
 									퇴근
 								</button>
 								<c:if test="${not empty checkEndTime}">
-									퇴근 시간 : ${checkEndTime.substring(9, 17)}  
+									<%-- 퇴근 시간 : ${checkEndTime.substring(9, 17)}   --%>
+									퇴근 시간 : ${fn:substring(checkEndTime, fn:length(checkEndTime) - 8, fn:length(checkEndTime))}
 								</c:if>
 							</div>	
 						</div>
