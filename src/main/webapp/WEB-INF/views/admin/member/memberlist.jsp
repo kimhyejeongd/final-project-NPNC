@@ -29,14 +29,9 @@
 		                  <form action="${path }/admin/member/searchMember">
 		                   <nav
 					        class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
-					       >
-								  <select class="form-select input-fixed" name="searchType">					              	
-					              	<option></option>
-					              	<option value="재직" <c:if test="${searchT eq '재직'}">selected</c:if>>재직</option>
-					              	<option value="휴직" <c:if test="${searchT eq '휴직'}">selected</c:if>>휴직</option>
-					              	<option value="퇴사" <c:if test="${searchT eq '퇴사'}">selected</c:if>>퇴사</option>
-					              </select>
-		                          <div class="input-group">
+					       >		
+					       	<div>
+					            <div class="input-group">
 				                    <div class="input-group-prepend">
 				                      <button type="submit" class="btn btn-search pe-1">
 				                        <i class="fa fa-search search-icon"></i>
@@ -50,10 +45,41 @@
 				                      class="form-control"
 				                      value="${searchK }"
 				                    />
-				                  </div>          
+				                 </div>  
+				                 <br>
+				                 <div class="col-md-12" style="display:flex;">   
+								  <h5>상태</h5>
+								  &ensp;
+								  <select class="form-select input-fixed" name="searchType">					              	
+					              	<option></option>
+					              	<option value="재직" <c:if test="${searchT eq '재직'}">selected</c:if>>재직</option>
+					              	<option value="휴직" <c:if test="${searchT eq '휴직'}">selected</c:if>>휴직</option>
+					              	<option value="퇴사" <c:if test="${searchT eq '퇴사'}">selected</c:if>>퇴사</option>
+					              </select>
+					              &ensp;&ensp;&ensp;
+					              <h5>부서</h5>
+					              &ensp;
+					               <select class="form-select input-fixed" name="searchDept">					              	
+					              	<option></option>
+					              	<c:forEach var="d" items="${dept }">
+					              		<option value="${d.deptKey }" <c:if test="${searchDept eq d.deptKey}">selected</c:if>>${d.deptName }</option>
+					              	</c:forEach>
+
+					              </select>
+					              &ensp;&ensp;&ensp;
+					              <h5>직급</h5>
+					              &ensp;
+					               <select class="form-select input-fixed" name="searchJob">					              	
+					              	<option></option>
+					              	<c:forEach var="j" items="${job }">
+					              		<option value="${j.jobKey }" <c:if test="${searchJob eq j.jobKey}">selected</c:if>>${j.jobName }</option>
+					              	</c:forEach>
+					              </select>
+					       		</div>
+							</div>
 				               </nav>
 				              </form>
-				              
+				            <br><br>  
 		                    <div class="table-responsive">
 		                      <table
 		                        id="multi-filter-select"
@@ -237,8 +263,8 @@
 			
 			 	function fn_paging(pageNo) {
 			 	    console.log('오긴왔냐?');
-			 	    /* cosnt searchKey= ${searchK}; */
-			 	    location.assign('${path}/admin/member/searchMember?cPage=' + pageNo + '&searchKey=${searchK}&totaldata=${totaldata}&searchType=${searchT}');
+					
+			 	    location.assign('${path}/admin/member/searchMember?cPage=' + pageNo + '&searchKey=${searchK}&totaldata=${totaldata}&searchType=${searchT}&searchDept=${searchDept}&searchJob=${searchJob}');
 			 	    /* location.assign('${path}/${url}?cPage=' + pageNo + '&numPerpage=${numPerpage}&searchKey=${searchK}&searchType=${searchType}&searchStartDate=${searchStartDate}&searchEndDate=${searchEndDate}'); */
 			 	    
 			 	}	

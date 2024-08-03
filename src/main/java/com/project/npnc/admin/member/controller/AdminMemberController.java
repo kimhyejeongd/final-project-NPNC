@@ -188,13 +188,18 @@ public class AdminMemberController {
 	public String searchMember(
 			String searchKey,
 			String searchType,
+			String searchDept,
+			String searchJob,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,			
 			Model m
 			){
+		
+		System.out.println("부서 : "+searchDept);
+		System.out.println("직급 : "+searchJob);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
-		Map searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
-		if((searchKey.equals("")||searchKey==null) &&(searchType.equals("")||searchType==null)) {
+		Map searchMap=Map.of("searchKey",searchKey,"searchType",searchType,"searchDept",searchDept,"searchJob",searchJob);
+		if((searchKey.equals("")||searchKey==null) &&(searchType.equals("")||searchType==null)&&(searchDept.equals("")||searchDept==null)&&(searchJob.equals("")||searchJob==null)) {
 			int totaldata=service.selectMemberCount();
 			List<AdminMember> members= service.selectMemeberAll(page);
 			m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
@@ -203,10 +208,12 @@ public class AdminMemberController {
 		}else {
 			int totaldata=service.searchMemberCount(searchMap);
 			List<AdminMember> members= service.searchMember(searchMap, page);
-			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,null,null,"searchMember"));
+			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,searchDept,searchJob,"searchMember"));
 			m.addAttribute("members",members);
 			m.addAttribute("searchK",searchKey);
 			m.addAttribute("searchT",searchType);
+			m.addAttribute("searchDept",searchDept);
+			m.addAttribute("searchJob",searchJob);
 			m.addAttribute("totaldata",totaldata);
 		}
 		
