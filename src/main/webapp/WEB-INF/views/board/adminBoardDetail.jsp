@@ -115,9 +115,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- Sidebar -->
           <c:import url="${path}/WEB-INF/views/admin/adminsidebar.jsp"/> 
-
         <div class="main-panel">
             <!-- Header Bar -->
             <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>

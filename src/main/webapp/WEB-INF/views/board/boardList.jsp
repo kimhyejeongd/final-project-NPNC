@@ -121,7 +121,12 @@
           <c:import url="${path}/WEB-INF/views/common/footer.jsp" />
         </div>
     </div>
+    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
+    <script src="${path}/resources/assets/js/core/bootstrap.bundle.min.js"></script>
     
+    <!-- Custom JS -->
+    <script src="${path}/resources/assets/js/kaiadmin.js"></script>
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
