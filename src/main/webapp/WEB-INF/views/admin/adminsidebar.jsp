@@ -78,11 +78,11 @@
 		                                <span class="sub-item">전체사원관리</span>
 		                            </a>
 		                        </li>
-		                        <li>
+<%-- 		                        <li>
 		                            <a href="${path}/admin/member/insertmember.do">
 		                                <span class="sub-item">사원등록</span>
 		                            </a>
-		                        </li>
+		                        </li> --%>
 		                    </ul>
 		                </div>
 		            </li>

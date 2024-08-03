@@ -198,4 +198,23 @@
 	</where>
 	
 	</select>
+	
+	<select id="selectMemberCountByDept" parameterType="string" resultType="_int">
+		SELECT 
+		COUNT(MEMBER_KEY)
+		FROM MEMBER
+		WHERE DEPARTMENT_KEY=#{deptKey}
+	</select>
+	
+	<select id="selectMemberCountByJob" parameterType="string" resultType="_int">
+		SELECT 
+		COUNT(MEMBER_KEY)
+		FROM MEMBER
+		WHERE JOB_KEY=#{jobKey}
+	</select>
+	
+	
+	
+	
+	
 </mapper>

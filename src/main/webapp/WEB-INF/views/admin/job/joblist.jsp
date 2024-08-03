@@ -12,7 +12,7 @@
 <body>
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
- 		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 	
 		<br><br><br><br>
 		<div>
 		   	<h4 class="card-title">직급관리</h4>

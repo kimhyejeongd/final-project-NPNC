@@ -217,4 +217,13 @@ public class AdminMemberController {
 		return "admin/member/memberlist";
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -223,9 +223,6 @@
 	         		<button id="rejectButton"  onclick="rejectionAttendanceEdit();" class="btn btn-dark">
 						반려
 					</button>
-					<button id="rejectButton"  onclick="deleteModal();" class="btn btn-dark">
-						반려sweet
-					</button>
 
 		</div>
         <div class="modal-footer">
@@ -239,6 +236,13 @@
 					
 					
  				<script>
+ 				
+ 				document.getElementById('approveButton').addEventListener('click', function() {
+ 				    document.getElementById('attendanceForm').submit();
+ 				});
+ 				
+ 				
+ 				
 				const rejectionAttendanceEdit=()=>{
 					   if(confirm("반려 하시겠습니까?")){
 
