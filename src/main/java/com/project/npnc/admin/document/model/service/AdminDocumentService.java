@@ -197,4 +197,7 @@ public class AdminDocumentService {
 	public int removeDocFolder(int draggedFolderKey) {
 		return dao.removeDocFolder(session,draggedFolderKey);
 	}
+	public DocumentFormFolder selectDocFormFolderOne(int erFormFolderKey) {
+		return dao.selectDocFormFolderOne(session,erFormFolderKey);
+	}
 }

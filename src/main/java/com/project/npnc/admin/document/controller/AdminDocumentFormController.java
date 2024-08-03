@@ -1,6 +1,8 @@
 package com.project.npnc.admin.document.controller;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +30,13 @@ import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/admin/documentForm")
 @Controller
 @RequiredArgsConstructor
+
 public class AdminDocumentFormController {
     private final ObjectMapper objectMapper;
 	private final OrganizationService orserv;
@@ -189,19 +193,86 @@ public class AdminDocumentFormController {
     	return ResponseEntity.ok(result);
     }
     @PostMapping("/createDocFolder")
-    public ResponseEntity<?> createDocFolder(@RequestBody DocumentFormFolder folder){
+    public ResponseEntity<?> createDocFolder(@RequestBody DocumentFormFolder folder) throws IOException{
     	int result =service.createDocFolder(folder);
+
+    	
+    	String path = "src/main/webapp/resources/upload/docFile";
+
+        if (result >0 ) {
+        	 File folder1 = new File(path+"/"+folder.getErFormFolderName());
+        	 System.out.println(folder1);
+             // 디렉토리가 이미 존재하는지 확인
+             if (!folder1.exists()) {
+                 // 디렉토리 생성
+                 folder1.mkdir();
+             } else {
+                 throw new IOException("Folder already exists");
+             }
+        }
     	return ResponseEntity.ok(result);
     }
     @PostMapping("/updateDocFolder")
-    public ResponseEntity<?>updateDocFolder(@RequestBody DocumentFormFolder folder){
+    public ResponseEntity<?>updateDocFolder(@RequestBody DocumentFormFolder folder,HttpSession session) throws IOException {
+    	DocumentFormFolder oldFolder = service.selectDocFormFolderOne(folder.getErFormFolderKey());
     	int result = service.updateDocFolder(folder);
-    	return ResponseEntity.ok(result);
+    	String path = "src/main/webapp/resources/upload/docFile";
+        if (result >0 ) {
+        	 File fromFolder = new File(path+"/"+oldFolder.getErFormFolderName());
+        	 File toFolder = new File(path+"/"+folder.getErFormFolderName());
+             // 디렉토리가 이미 존재하는지 확인
+             if (fromFolder.exists()) {
+         		FileUtils.moveDirectory(fromFolder, toFolder);
+             } else {
+                 throw new IOException("Folder already exists");
+             }
+        }
+
+    	return ResponseEntity.ok(result); 
     }
     @PostMapping("/removeDocFolder")
     public ResponseEntity<?> removeDocFolder (@RequestParam int draggedFolderKey) {
-    	
+    	DocumentFormFolder draggedFolder = service.selectDocFormFolderOne(draggedFolderKey);
     	int result = service.removeDocFolder(draggedFolderKey);
+    	String path = "src/main/webapp/resources/upload/docFile";
+		File folder = new File(path+"/"+draggedFolder.getErFormFolderName());
+		try {
+			if (folder.exists()) {
+				FileUtils.deleteDirectory(folder);//하위 폴더와 파일 모두 삭제
+				if (folder.isDirectory()) {
+					folder.delete(); // 대상폴더 삭제
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	return ResponseEntity.ok(result);
+    }
+    @GetMapping("/form")
+    public String showForm() {
+        return "admin/document/form";
+    }
+    
+    @PostMapping("/insertForm")
+    public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent) {
+        // 저장할 경로 지정 (예: webapps 폴더 내 resources/upload/docformhtml)
+        String filePath = servletContext.getRealPath("/resources/upload/docformhtml/savedDocument.html");
+
+        // 파일에 HTML 내용 저장
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(htmlContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error saving file");
+        }
+
+        return ResponseEntity.ok("File saved successfully");
+    }
+    @GetMapping("/selectFolder")
+    public String selectFolder(Model m){
+    	System.out.println("-----------");
+    	List<DocumentFormFolder>folders= service.selectDocFormFolderAll();
+    	m.addAttribute("folders", folders);
+    	return "admin/document/selectFolder";
     }
 }
