@@ -325,13 +325,14 @@ $(document).ready(function() {
 					$("#selectArea").text($("#overworkDateSpan").text() + " " + time);
 					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 			        formData.append('html', dochtml);
-
+					
+			        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
 					let files = fileInput.files;
 
 		            // 다중 파일 추가
-		            for (let i = 0; i < files.length; i++) {
+		            /* for (let i = 0; i < files.length; i++) {
 		            	formData.append('upfile', fileInput.files[i]);
-		            } 
+		            }  */
 
 		            // FormData의 내용 확인
 					formData.entries().forEach(e=>{

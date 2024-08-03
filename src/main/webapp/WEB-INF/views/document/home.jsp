@@ -36,7 +36,6 @@
     <div class="wrapper">
       <!-- Sidebar -->
       <%@ include file="/WEB-INF/views/document/documentSidebar.jsp" %>
-      <%-- <%@ include file="/WEB-INF/views/document/documentSidebar.jsp" %> --%>
       <!-- End Sidebar -->
 
       <div class="main-panel">

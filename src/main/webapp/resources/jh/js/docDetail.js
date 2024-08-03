@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		console.log('원본 파일명:', fileName);
 		let encodedFileName = encodeURIComponent(fileName); // 파일명 인코딩
 		console.log('인코딩된 파일명:', encodedFileName);
+		console.log('요청주소', sessionStorage.getItem("path") + `/document/files/detail/${encodedFileName}`);
 	    $.ajax({
 	        url: sessionStorage.getItem("path") + `/document/files/detail/${encodedFileName}`,
 	        method: 'GET',

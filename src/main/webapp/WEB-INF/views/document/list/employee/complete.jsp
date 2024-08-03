@@ -30,6 +30,10 @@
     	#tablerow:hover{
     		cursor: pointer; 
     	}
+    	#tablerow td{
+		    padding-left: 0px !important;
+		    padding-right: 0px !important;
+		}
     </style>
   </head>
   <script src="${path}/resources/jh/js/draft.js"></script>
@@ -45,6 +49,11 @@
           </div>
           <!--  header Navbar 넣을 곳 -->
           <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+          <style>
+          	.approverNow{
+	    		padding: 0px !important;
+	    	}
+          </style>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -72,7 +81,7 @@
 			     <div class="card-body p-0">
 			       <div class="table-responsive">
 			         <!-- Projects table -->
-			         <table class="table table-hover align-items-center mb-0" id="completeTable">
+			         <table class="table table-hover align-items-center mb-0" id="completeTable" style="">
 			           <thead class="thead-light">
 			             <tr class="text-center">
 			             	<!-- <th><input type="checkbox"></th> -->
@@ -85,7 +94,7 @@
 			               <th></th>
 			             </tr>
 			           </thead>
-			           <tbody>
+			           <tbody id="tablerow">
 			             <c:if test="${empty completelist}">
 			              <tr class="text-center">
 			              	<td colspan="6">결재 완료된 문서가 없습니다</td>
@@ -93,7 +102,7 @@
 			             </c:if>
 			             <c:if test="${completelist ne null}">
 			             	<c:forEach items="${completelist }" var="l" varStatus="vs">
-			              <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
+			              <tr class="text-center" data-doc-id="${l.erDocKey }">
 			              	<td>${vs.index+1 }</td>
 			                 <td class="text-muted">${l.erDocSerialKey }</td>
 			              	<td>${l.erDocTitle }</td>
@@ -103,7 +112,7 @@
 			                  <td class="">
                         		<fmt:formatDate value="${l.erDocCompleteDate}" type="date" pattern="yyyy/MM/dd HH:mm"/>
                              </td>
-			                 <td class="approverNow p-3">
+			                 <td class="approverNow">
 			                 	<c:forEach items="${l.approvers }" var="ap">
 			                 		<c:if test="${ap.state eq '승인' }">
 				                   			<div class="badge badge-success" style="min-width: 60px;">

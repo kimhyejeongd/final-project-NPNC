@@ -269,6 +269,7 @@ function sendStorageToParent(data){
 function fn_arrayFiles(files, existingCount){
 	Array.from(files).forEach((file, index) => {
        	let adjustedIndex = existingCount + index + 1;
+       	console.log('files[index] : ' + index); 
     	let files=this.files;
     	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
 								.css({
@@ -288,8 +289,8 @@ function fn_arrayFiles(files, existingCount){
 								'width': '500px'
 							});
 		
-		 $box.html('<input name="files[' + adjustedIndex + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
-                 '<input name="files[' + adjustedIndex + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
+		 $box.html('<input name="files[' + (adjustedIndex-1) + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
+                 '<input name="files[' + (adjustedIndex-1) + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
 		
 		let $buttonbox=$("<div>").addClass('d-flex');
 		$buttonbox.html(`<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
@@ -299,3 +300,44 @@ function fn_arrayFiles(files, existingCount){
 		$('#fileinputDiv').append($div);
     });
 }
+//파일 상세보기
+$(document).on('click', '#fileViewBtn', function() {
+	console.log('파일 상세보기');
+	let fileName = $(this).data('filename');
+	console.log('원본 파일명:', fileName);
+	let encodedFileName = encodeURIComponent(fileName); // 파일명 인코딩
+	console.log('인코딩된 파일명:', encodedFileName);
+    $.ajax({
+        url: sessionStorage.getItem("path") + `/document/files/detail/${encodedFileName}`,
+        method: 'GET',
+        success: function (data) {
+			console.log(data);
+			// 파일 확장자 확인
+            let fileExtension = data.fileOriName.split('.').pop().toLowerCase();
+            let imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+            $('#fileDetailOriname').text(data.fileOriName);
+            $('#fileDetailSize').text(data.fileSize + ' bytes');
+            $('#fileDetailUploadDate').text(new Date(data.fileUploadDate).toLocaleString());
+            
+            // 이미지일 경우
+            if (imageExtensions.includes(fileExtension)) {
+	            $('#fileDetailImage').attr('src', sessionStorage.getItem("path") + `/document/files/download/${encodedFileName}`).show();
+            } else {
+            // 이미지가 아닌 경우
+            	$('#fileDetailImage').hide();
+        	}
+
+            $('#fileDetailModal').modal('show');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+			console.error("Error fetching file details: ", textStatus, errorThrown);
+            $('.modal-body').html('파일 정보를 불러오는 데 실패했습니다.');
+            $('#fileDetailModal').modal('show');
+        }
+    });
+});
+//파일 다운로드
+$(document).on('click', '#fileDownBtn', function() {
+    let fileName = $(this).data('filename');
+    window.location.href = sessionStorage.getItem("path") + `/document/files/download/${fileName}`;
+});

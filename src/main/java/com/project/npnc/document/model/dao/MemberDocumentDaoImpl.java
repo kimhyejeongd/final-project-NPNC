@@ -170,6 +170,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public Document selectInprocessDocApproveNow(SqlSession session, int docId) {
+		return session.selectOne("document.selectInprocessDocApproveNow", docId);
+	}
+
+	@Override
 	public int selectRemainingVac(SqlSession session, int memberKey) {
 		return session.selectOne("document.selectRemainingVac", memberKey);
 	}
