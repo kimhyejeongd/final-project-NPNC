@@ -46,7 +46,7 @@ public class MemberApproveController {
 		int result=0;
 		try {
 			String uploadDir = session.getServletContext().getRealPath("/upload/");
-			result = serv.updateApproveDoc(no, serial, msg, formNo, html, uploadDir);
+			result = serv.updateApproveDoc(no, serial, msg, formNo, html);
 			if(result <=0) {
 				response.put("status", "error");
 				response.put("message", "문서 결재 실패");
@@ -77,7 +77,7 @@ public class MemberApproveController {
 		
 		int result=0;
 		try {
-			result = serv.updateRejectDoc(no, serial, msg);
+			result = serv.updateRejectDoc(no, serial, msg, html);
 			if(result <=0) {
 				response.put("status", "error");
 				response.put("message", "문서 결재 실패");
