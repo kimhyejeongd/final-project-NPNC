@@ -112,13 +112,33 @@
 		    white-space: nowrap;
 		    text-overflow: ellipsis;
 		}
+				
+		.cityAndTem {
+		    display: flex;
+		    flex-direction: row;
+		    flex-wrap: nowrap;
+		    justify-content: space-between; /* .weather_icon을 왼쪽 정렬하고 나머지 요소를 오른쪽 정렬합니다 */
+		    align-items: flex-start; /* 항목을 상단에 정렬합니다 */
+		}
 		
-		.cityAndTem{
-			display: flex;
-			flex-direction: row;
-			flex-wrap: noWrap;
-			justify-content: flex-end;
-       	
+		.weather_icon {
+		    margin-right: auto; /* 다른 항목들을 오른쪽으로 밀어냅니다 */
+		}
+		
+		.right-container {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-end;
+		    margin-top: 36px;
+		    margin-right: 40px;
+		}
+		
+		.left-container {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-start;
+		    margin-top: 60px;
+		    font-size: 11pt;
 		}
 		
 		.weatherFont{
@@ -175,19 +195,20 @@
                    
                   </div>
                 </div>
+                <!-- 날씨 위젯  -->
 				<div class="card" style=" padding : 20px; color : #fff; height : 210px">
 				 
 				  <div class="cityAndTem">			
-					  <div style="float : left;" >
-					      <div class="weather_icon" >
-					      </div>
-					  </div>
-					  <div style="float : right; margin-top: 36px; margin-right:40px;">
-					      <div class="current_temp weatherFont" style="font-size : 35pt"></div>
+					  
+				      <div class="weather_icon" >
+				      </div>
+					  
+					  <div class=" right-container" ">
+					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
 					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
 					      <div class="city weatherFont" style="font-size : 13pt"></div>
 					  </div>
-					   <div style="float : left; margin-top: 60px; font-size : 11pt">
+					   <div class="left-container" style="float : left; margin-top: 60px; font-size : 11pt">
 					          <div class="temp_min weatherFont" style="width: 100px;"></div>
 					          <div class="temp_max weatherFont" style="width: 100px;"></div>
 					          <div class="humidity weatherFont" style="width: 100px;"></div>
@@ -736,7 +757,7 @@
 		        var $temp_max = '최고 온도&nbsp;&nbsp;&nbsp;&nbsp;' + Math.floor(resp.main.temp_max- 273.15) + 'º';
 		        
 
-		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'" style="width:100px; margin-top:-10px; margin-right:80px;"/>');
+		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'"  />');
 		        $('.weather_description').prepend($weather_description);
 		        $('.current_temp').prepend($Temp);
 		        $('.humidity').prepend($humidity);
