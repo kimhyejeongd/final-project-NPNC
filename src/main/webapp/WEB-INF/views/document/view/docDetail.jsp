@@ -75,7 +75,9 @@
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
               	<c:choose>
-              		<c:when test="${fn:contains(lastPage, 'inprocess') or (fn:contains(lastPage, 'home') and fn:contains(history, 'inprocess'))}">
+              		<c:when test="${fn:contains(lastPage, 'inprocess') or 
+              				(fn:contains(lastPage, 'home') and fn:contains(history, 'inprocess')) or
+							(loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'index'))}">
 		              	<h3 class="fw-bold text-center">진행 중 문서</h3>
 		            </c:when>
               		<c:when test="${fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
@@ -109,7 +111,9 @@
 							<!-- 재기안, 삭제 -->
 							<div class="d-flex">
 							<c:choose>
-								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess') or fn:contains(lastPage, 'pend') or fn:contains(lastPage, 'index')}">
+								<c:when test="${(loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')) 
+											or (loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'index'))
+											or fn:contains(lastPage, 'pend') }">
 									<!-- <button class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
 											<i class="fas fa-edit"></i>
@@ -148,6 +152,12 @@
 								</c:when>
 							</c:choose>
 								<div class="d-flex align-items-center">
+								<button class="btn btn-label-info btn-round" onclick='window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
+										<span class="btn-label">
+											<i class="fa fa-search"></i>
+										</span>
+										결재 내역
+									</button>
 									<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
 	           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button>
            						</div>

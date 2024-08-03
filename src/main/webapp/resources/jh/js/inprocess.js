@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 팝업 윈도우 열기 함수
     function openPopupWindow(no) {
-        const popup = window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${no}`, "approveNow", "width=700, height=700, left=500, top=100, scrollbars=yes,resizable=yes");
+        const popup = window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${no}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");
         if (popup) {
         } else {
             alert("팝업이 차단되었습니다. 팝업을 허용해주세요.")
