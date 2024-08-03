@@ -1006,11 +1006,8 @@
         	
          	/* 파일 다운로드 버튼 로직 */
           	function fn_download(ori,post){
-          		let path = "${path}";
-          		if (path.startsWith("http://")) {
-          		    path = path.replace("http://", "https://");
-          		}
-          		location.assign("${path}/note/filedownload?oriname="+ori+"&rename="+post);
+          	
+          		location.assign("https://${path}/note/filedownload?oriname="+ori+"&rename="+post);
           	}
         	
             function notego(){
