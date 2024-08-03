@@ -147,8 +147,8 @@
 		
 			<script>
 				// 원하는 URL을 설정
-				const targetUrl = "http://localhost:8080/";
-				const targetUrl2="http://localhost:8080/?continue";
+				const targetUrl = "http://14.36.141.71:10079/GDJ79_NPNC_final/";
+				const targetUrl2="http://14.36.141.71:10079/GDJ79_NPNC_final/?continue";
 				
 				// 현재 URL을 확인
 				const currentUrl = window.location.href;

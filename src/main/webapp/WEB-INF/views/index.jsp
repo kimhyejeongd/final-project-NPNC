@@ -21,7 +21,7 @@
       href="${path}/resources/assets/img/kaiadmin/favicon.ico"
       type="image/x-icon"
     />
-
+	
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -112,6 +112,24 @@
 		    white-space: nowrap;
 		    text-overflow: ellipsis;
 		}
+		
+		.cityAndTem{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: noWrap;
+			justify-content: flex-end;
+       	
+		}
+		
+		.weatherFont{
+			color: black;
+		}
+		
+		.attendanceBox{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: noWrap;
+		}
 	</style>	
   <body>
                <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
@@ -121,9 +139,10 @@
           
            
           
-            <div class="firstwidget">
+          <div class="firstwidget">
+			<!--출퇴근, 날씨-->
              <div class="col-md-6" style="width: 26%; height: 470px;">
-                <div class="card bg-primary-gradient">
+                <div class="card bg-primary-gradient" style="height: 228px;">
                   <div class="card-header">
                     <h4 class="card-title" style="color: white;">출/퇴근 버튼</h4>
                   </div>
@@ -134,7 +153,7 @@
 							<script type="text/javascript"> var css_file=document.createElement("link"); css_file.setAttribute("rel","stylesheet"); css_file.setAttribute("type","text/css"); css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-180x170r4.css?v=0.0.1"); document.getElementsByTagName("head")[0].appendChild(css_file); </script> <div id="tw_14_2058017150"><div style="width:145px; height:50px; margin: 0 auto;"><a href="https://booked.kr/time/seoul-18406">서울특별시</a><br/></div></div> <script type="text/javascript"> function setWidgetData_2058017150(data){ if(typeof(data) != 'undefined' && data.results.length > 0) { for(var i = 0; i < data.results.length; ++i) { var objMainBlock = ''; var params = data.results[i]; objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; } } } var clock_timer_2058017150 = -1; widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=593;type=14;id=2058017150;scode=;city_id=;wlangid=24;mode=2;details=0;background=ffffff;border_color=ffffff;color=e6e6e6;add_background=ffffff;add_color=e6e6e6;head_color=ffffff;border=0;transparent=0"; var widgetUrl = location.href; widgetSrc += '&ref=' + widgetUrl; var wstrackId = ""; if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } var timeBookedScript = document.createElement("script"); timeBookedScript.setAttribute("type", "text/javascript"); timeBookedScript.src = widgetSrc; document.body.appendChild(timeBookedScript); </script>
 							<!-- clock widget end -->
 						</div>
-						<div>
+						<div class="attendanceBox">
 							<div id="attendanceResult" style="margin-top:20px;">
 								<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};" class="btn btn-dark btn-round">
 										출근
@@ -156,6 +175,28 @@
                    
                   </div>
                 </div>
+				<div class="card" style=" padding : 20px; color : #fff; height : 210px">
+				 
+				  <div class="cityAndTem">			
+					  <div style="float : left;" >
+					      <div class="weather_icon" >
+					      </div>
+					  </div>
+					  <div style="float : right; margin-top: 36px; margin-right:40px;">
+					      <div class="current_temp weatherFont" style="font-size : 35pt"></div>
+					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
+					      <div class="city weatherFont" style="font-size : 13pt"></div>
+					  </div>
+					   <div style="float : left; margin-top: 60px; font-size : 11pt">
+					          <div class="temp_min weatherFont" style="width: 100px;"></div>
+					          <div class="temp_max weatherFont" style="width: 100px;"></div>
+					          <div class="humidity weatherFont" style="width: 100px;"></div>
+					          <div class="wind weatherFont" style="width: 100px;"></div>
+					          <div class="cloud weatherFont" style="width: 100px;"></div>
+					  </div>
+				  </div>
+				</div>
+				
               </div>
             <div class="col-md-6"  style="width: 30%;">
                 <div class="card" style="height: 470px;">
@@ -467,25 +508,7 @@
                 </div>
               </div>
             </div> -->
-			<div class="col-md-8" style="width: 100%;">
-			<div style="background-color : rgb(101, 178, 255); padding : 40px;color : #fff; height : 220px">
-			    <div style="float : left;">
-			        <div class="weather_icon"></div>
-			    </div><br>
-
-			    <div style="float : right; margin : -5px 0px 0px 60px; font-size : 11pt">
-			            <div class="temp_min"></div>
-			            <div class="temp_max"></div>
-			            <div class="humidity"></div>
-			            <div class="wind"></div>
-			            <div class="cloud"></div>
-			    </div>
-			    <div style="float : right; margin-top : -45px;">
-			        <div class="current_temp" style="font-size : 50pt"></div>
-			        <div class="weather_description" style="font-size : 20pt"></div>
-			        <div class="city" style="font-size : 13pt"></div>
-			    </div>
-			</div>
+			
 							
 		      </div>
                 <div class="card">
@@ -678,22 +701,22 @@
 	<script>
 		// 날씨 api - fontawesome 아이콘
 		var weatherIcon = {
-		    '01' : 'fas fa-sun',
-		    '02' : 'fas fa-cloud-sun',
-		    '03' : 'fas fa-cloud',
-		    '04' : 'fas fa-cloud-meatball',
-		    '09' : 'fas fa-cloud-sun-rain',
-		    '10' : 'fas fa-cloud-showers-heavy',
-		    '11' : 'fas fa-poo-storm',
-		    '13' : 'far fa-snowflake',
-		    '50' : 'fas fa-smog'
+		    '01' : '${path}/resources/assets/img/sun.png', /* 해 */
+		    '02' : '${path}/resources/assets/img/cloudfull.png', /* 구름 */
+		    '03' : '${path}/resources/assets/img/cloudfull.png', /* 구름 */
+		    '04' : '${path}/resources/assets/img/cloudfull.png',  /* 구름 */
+		    '09' : '${path}/resources/assets/img/rainfull.png', /* 비 */
+		    '10' : '${path}/resources/assets/img/rainfull.png', /* 비 */
+		    '11' : '${path}/resources/assets/img/rainfull.png',   /* 비 */
+		    '13' : '${path}/resources/assets/img/rainfull.png',  /* 눈 */
+		    '50' : '${path}/resources/assets/img/cloudfull.png'      /* 구름 */
 		};
 
 		
 
 
 		// 날씨 api - 서울
-		var apiURI = "http://api.openweathermap.org/data/2.5/weather?q="+'seoul'+"&appid="+"640e2c1052830e64ffcc65d6cd7e56f9";
+	 	var apiURI = "http://api.openweathermap.org/data/2.5/weather?q="+'seoul'+"&appid="+"640e2c1052830e64ffcc65d6cd7e56f9"; 
 		$.ajax({
 		    url: apiURI,
 		    dataType: "json",
@@ -713,7 +736,7 @@
 		        var $temp_max = '최고 온도&nbsp;&nbsp;&nbsp;&nbsp;' + Math.floor(resp.main.temp_max- 273.15) + 'º';
 		        
 
-		        $('.weather_icon').append('<i class="' + weatherIcon[$Icon] +' fa-5x" style="height : 150px; width : 150px;"></i>');
+		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'" style="width:100px; margin-top:-10px; margin-right:80px;"/>');
 		        $('.weather_description').prepend($weather_description);
 		        $('.current_temp').prepend($Temp);
 		        $('.humidity').prepend($humidity);
