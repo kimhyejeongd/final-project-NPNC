@@ -15,7 +15,7 @@
 <body>
  	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
-  	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 
 		<div>	
 			<br><br><br><br>
 		    <div>

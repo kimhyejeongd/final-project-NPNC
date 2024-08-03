@@ -13,33 +13,70 @@
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">	
 			<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 	
-			<br><br><br><br>
+			<br><br><br><br><br>
+			
 			<div class="col-md-12">
 		    	<div class="card">
 		        	<div class="card-body">
-						<h1>관리자 페이지입니다...</h1>
+						<div class="card-title">
+							관리자 페이지
+						</div>	
 					</div>
-					<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 0%"></div>
-</div>
-<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 25%"></div>
-</div>
-<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 50%"></div>
-</div>
-<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 75%"></div>
-</div>
-<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 100%"></div>
-</div>
-				</div>
 			</div>
+		</div> 
+		
+			<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">전체 사원 수</div>
+								</div>
+								<div class="card-body">
+									<h5 style="font-weight:bold; " >${memberCount }명</h5>
+									<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${memberCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+									<div class="progress-bar" style="width: ${memberCount }%">${memberCount }</div>
+									</div>
+									<br>
+									
+								</div>
+							</div>
+						</div>
+			
+			<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">직급별</div>
+								</div>
+								<div class="card-body">
+									<c:forEach var="j" items="${job}" >
+										<h5 style="font-weight: bold;" >${j.jobName } : ${j.memberJobCount }명</h5>
+										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${j.memberJobCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+										  <div class="progress-bar" style="width: ${j.memberJobCount }%">${j.memberJobCount }</div>
+										</div>
+										<br>
+									</c:forEach>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">부서별</div>
+								</div>
+								<div class="card-body">
+									<c:forEach var="d" items="${dept}" >
+										<h5 style="font-weight: bold;" >${d.deptName } : ${d.memberDeptCount }명</h5>
+										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${d.memberDeptCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+										  <div class="progress-bar" style="width: ${d.memberDeptCount }%">${d.memberDeptCount }</div>
+										</div>
+										<br>
+									</c:forEach>
+								</div>
+							</div>
+						</div>
 
-			
-			
-			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+					</div>
 	</div>
 	
 	

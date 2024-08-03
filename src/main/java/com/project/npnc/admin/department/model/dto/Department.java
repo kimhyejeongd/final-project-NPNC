@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Department {
 	private String deptKey;
 	private String deptName;
+	private int memberDeptCount;
 }

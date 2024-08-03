@@ -16,7 +16,7 @@
 
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">
-	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 
+	<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 	 
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
