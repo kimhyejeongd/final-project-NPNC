@@ -56,6 +56,7 @@ public class BoardController {
         model.addAttribute("boardList", boards);
         return "board/boardList";
     }
+    
     @GetMapping("/loadMore")
     public void loadMoreBoards(@RequestParam("page") int page, HttpServletResponse response) throws IOException {
         int pageSize = 10; // 한 페이지당 데이터 개수

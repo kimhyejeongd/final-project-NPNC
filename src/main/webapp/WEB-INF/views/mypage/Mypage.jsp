@@ -3,7 +3,6 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <sec:authentication var="loginMember" property="principal"/>
-<%@ page session="true" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -122,11 +121,8 @@
                                 <div class="profile-card">
                                     <!-- Profile Image -->
                                     <div class="profile-image">
-                                      <img id="profileImage" src="${pageContext.request.contextPath}/member/profileImage/${member.memberId}" alt="Profile Image" />
-				
-                                   	     <!-- 프로필 사진 수정 버튼 -->
+                                        <img id="profileImage" src="${path}/member/profileImage/${member.memberId}" alt="Profile Image" />
                                         <button id="editProfileImageButton" class="btn btn-sm btn-primary" style="margin-top: 10px;">프로필 사진 수정</button>
-                                        <!-- 프로필 이미지 업로드 폼, 초기에는 숨김 -->
                                         <div id="profileImageForm" style="display: none; margin-top: 10px;">
                                             <label for="profileImageUpload">프로필 이미지 변경</label>
                                             <input type="file" class="form-control" id="profileImageUpload">
@@ -171,7 +167,8 @@
         </div>
         <!-- End Main Panel -->
     </div>
-   <!-- Address Modal -->
+
+    <!-- Address Modal -->
     <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -189,14 +186,10 @@
                         <input type="text" class="form-control" id="jibunAddress" placeholder="지번주소">
                     </div>
                     <div class="form-group">
-                        <label for="postcode">우편번호</label>
-                        <input type="text" class="form-control" id="postcode" placeholder="우편번호">
+                        <label for="detailedAddress">상세 주소</label>
+                        <input type="text" class="form-control" id="detailedAddress" placeholder="상세주소">
                     </div>
-                    <button type="button" class="btn btn-secondary" id="searchAddressButton">주소 검색</button>
-                    <button type="button" class="btn btn-primary" id="saveAddressButton">주소 저장</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button id="updateAddressButton" class="btn btn-primary">주소 수정</button>
                 </div>
             </div>
         </div>
@@ -211,115 +204,104 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>이메일 인증이 필요합니다.</p>
                     <div class="form-group">
-                        <label for="verificationEmail">이메일 입력</label>
-                        <input type="email" class="form-control" id="verificationEmail" placeholder="이메일 입력">
+                        <label for="currentPassword">현재 비밀번호</label>
+                        <input type="password" class="form-control" id="currentPassword" placeholder="현재 비밀번호">
                     </div>
-                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
-                    <div id="emailVerificationForm" class="mt-3" style="display: none;">
-                        <div class="form-group">
-                            <label for="emailVerificationCode">인증 코드 입력</label>
-                            <input type="text" class="form-control" id="emailVerificationCode" placeholder="인증 코드 입력">
-                        </div>
-                        <button type="button" class="btn btn-secondary" id="verifyCodeButton">인증 코드 확인</button>
+                    <div class="form-group">
+                        <label for="newPassword">새 비밀번호</label>
+                        <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호">
                     </div>
-                    <div id="passwordChangeForm" class="mt-3" style="display: none;">
-                        <div class="form-group">
-                            <label for="newPassword">새 비밀번호</label>
-                            <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호">
-                        </div>
-                        <button type="button" class="btn btn-primary" id="saveNewPasswordButton">비밀번호 저장</button>
+                    <div class="form-group">
+                        <label for="confirmPassword">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="비밀번호 확인">
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button id="updatePasswordButton" class="btn btn-primary">비밀번호 수정</button>
                 </div>
             </div>
         </div>
     </div>
-	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
-    <!-- Core JS Files -->
-    <script src="${path}/resources/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="${path}/resources/assets/js/core/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <!-- Plugin JS Files -->
-    <script src="${path}/resources/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/chart.js/chart.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/chart-circle/circles.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/datatables/datatables.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-    <script src="${path}/resources/assets/js/plugin/jsvectormap/world.js"></script>
-    <script src="${path}/resources/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-
-    <!-- Kaiadmin JS -->
-    <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
-    <script src="${path}/resources/assets/js/setting-demo.js"></script>
-    <script src="${path}/resources/assets/js/demo.js"></script>
-
-    <!-- Page Specific JS -->
+    <!-- JavaScript Files -->
+    <script src="${path}/resources/assets/js/jquery.min.js"></script>
+    <script src="${path}/resources/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="${path}/resources/assets/js/bs5.min.js"></script>
+    <script src="${path}/resources/assets/js/theme.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#searchAddressButton').click(function() {
-                new daum.Postcode({
-                    oncomplete: function(data) {
-                        $('#postcode').val(data.zonecode);
-                        $('#roadAddress').val(data.roadAddress);
-                        $('#jibunAddress').val(data.jibunAddress);
-                    }
-                }).open();
-            });
-
-            $('#saveAddressButton').click(function() {
-                const newAddress = $('#roadAddress').val();
-                $('#memberAddressText').text(newAddress);
-                $('#addressModal').modal('hide');
-                $('#saveChangesButton').show();
-            });
-
-            $('#sendEmailVerificationButton').click(function() {
-                // 이메일 전송 로직
-                fetch('/member/sendPasswordResetEmail', {
-    method: 'POST',  // method 속성은 headers가 아니라 fetch의 옵션 객체에 직접 포함되어야 합니다.
-    headers: {
-        'Content-Type': 'application/json;charset=UTF-8'  // Content-Type의 값에서 'UTF8'을 'UTF-8'로 수정합니다.
-    },
-    body: JSON.stringify({
-        // 여기서 요청 본문에 필요한 데이터를 추가하세요.
-      
-    })
-})
-.then(res => res.json())  // JSON을 파싱할 때는 'res.json()'을 사용합니다.
-.then(data => {
-    console.log("asdasdasd"+data);
-   	
-})
-.catch(error => {
-    console.log(error);
-});
-
-                $('#emailVerificationForm').show();
-            });
-
-            $('#1verifyCodeButton').click(function() {
-                // 인증 코드 확인 로직
-               	
-                
-                $('#passwordChangeForm').show();
-            });
-
-            $('#saveNewPasswordButton').click(function() {
-                // 비밀번호 저장 로직
-            });
-
-            $('#saveChangesButton').click(function() {
-                // 변경 사항 저장 로직
-            });
+      $(document).ready(function() {
+        $("#editProfileImageButton").click(function() {
+          $("#profileImageForm").toggle();
         });
+
+        $("#uploadProfileImageButton").click(function() {
+          var formData = new FormData();
+          var files = $("#profileImageUpload")[0].files;
+          if (files.length > 0) {
+            formData.append("profileImage", files[0]);
+            $.ajax({
+              url: "${path}/member/uploadProfileImage",
+              type: "POST",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                $("#profileImage").attr("src", response.newImageUrl);
+                $("#profileImageForm").hide();
+              },
+              error: function(xhr, status, error) {
+                alert("파일 업로드 실패: " + error);
+              }
+            });
+          }
+        });
+
+        $("#updateAddressButton").click(function() {
+          var roadAddress = $("#roadAddress").val();
+          var jibunAddress = $("#jibunAddress").val();
+          var detailedAddress = $("#detailedAddress").val();
+          $.ajax({
+            url: "${path}/member/updateAddress",
+            type: "POST",
+            data: {
+              roadAddress: roadAddress,
+              jibunAddress: jibunAddress,
+              detailedAddress: detailedAddress
+            },
+            success: function(response) {
+              $("#memberAddressText").text(response.updatedAddress);
+              $("#addressModal").modal("hide");
+            },
+            error: function(xhr, status, error) {
+              alert("주소 수정 실패: " + error);
+            }
+          });
+        });
+
+        $("#updatePasswordButton").click(function() {
+          var currentPassword = $("#currentPassword").val();
+          var newPassword = $("#newPassword").val();
+          var confirmPassword = $("#confirmPassword").val();
+          if (newPassword === confirmPassword) {
+            $.ajax({
+              url: "${path}/member/updatePassword",
+              type: "POST",
+              data: {
+                currentPassword: currentPassword,
+                newPassword: newPassword
+              },
+              success: function(response) {
+                alert("비밀번호 수정 성공");
+                $("#passwordModal").modal("hide");
+              },
+              error: function(xhr, status, error) {
+                alert("비밀번호 수정 실패: " + error);
+              }
+            });
+          } else {
+            alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+          }
+        });
+      });
     </script>
 </body>
 </html>

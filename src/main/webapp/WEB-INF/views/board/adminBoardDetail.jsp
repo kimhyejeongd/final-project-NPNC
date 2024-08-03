@@ -227,7 +227,7 @@
                         </c:forEach>
                     </div>
 
-                    <!-- 댓글 작성 폼 -->
+ <%--                    <!-- 댓글 작성 폼 -->
                     <div class="comment-form mt-4">
                         <form action="${path}/admin/board/createComment" method="post">
                             <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
@@ -236,7 +236,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary">댓글 작성</button>
                         </form>
-                    </div>
+                    </div> --%>
 
                 </div>
             </div>
