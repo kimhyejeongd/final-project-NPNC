@@ -218,8 +218,8 @@
 			      </div>
 			    </div>
 	          	<c:if test="${l.files[0].fileKey ne 0}">
-			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
+			    <div class="form-group d-flex align-items-top">
+		          <label for="exampleFormControlFile1 d-flex"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
 	          		<c:forEach items="${l.files }" var="f" varStatus="vs">
 					  <div class="m-0 p-2 d-flex align-items-center justify-content-between" id="approval1" style="width: 100%; font-size: larger; text-align: left; border-radius: 15px;">

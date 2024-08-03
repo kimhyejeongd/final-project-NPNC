@@ -89,7 +89,7 @@ public class DocHtmlController {
 	
 	
 	//결재 승인시 문서 내 결재라인 업데이트
-	public static String updateApproverTableHtml(String html, Approver a) {
+	public static String updateApproverTableHtmlForApprove(String html, Approver a) {
 		log.debug("----- 문서 html 업데이트 -----");
 		log.debug("{}", a);
 		System.out.println(html.contains("<span class=\"signature\">[" + a.getErApproverKey() + " 서명]</span>"));
@@ -108,6 +108,26 @@ public class DocHtmlController {
 		newhtml = newhtml.replace("<span class=\"signature\">[" + a.getErApproverKey() + " 일시]</span>", 
 				formattedNow);
 		log.debug(a.getMemberName() + " " + a.getCategory() + ", "+ formattedNow + " -> html 결재라인 업데이트 완료");
+		return newhtml;
+	}
+	//결재 반려시 문서 내 결재라인 업데이트
+	public static String updateApproverTableHtmlForReject(String html, Approver a) {
+		log.debug("----- 문서 html 업데이트 -----");
+		log.debug("{}", a);
+		System.out.println(html.contains("<span class=\"signature\">[" + a.getErApproverKey() + " 서명]</span>"));
+		String newhtml = html.replace("<span class=\"signature\">[" + a.getErApproverKey() + " 서명]</span>", 
+				a.getMemberName());
+		
+		// 현재 시간을 LocalDateTime 객체로 가져오기
+		LocalDateTime now = LocalDateTime.now();
+		
+		// 날짜 및 시간 형식 지정
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		
+		System.out.println(html.contains("<span class=\"signature\">[" + a.getErApproverKey() + " 일시]</span>"));
+		newhtml = newhtml.replace("<span class=\"signature\">[" + a.getErApproverKey() + " 일시]</span>", 
+				"<span class=\"signature\" style=\"color: red;\">반려</span>");
+		log.debug(a.getMemberName() + " " + a.getCategory() + "반려 -> html 결재라인 업데이트 완료");
 		return newhtml;
 	}
 	

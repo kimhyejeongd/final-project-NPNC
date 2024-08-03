@@ -28,7 +28,7 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 	//결재 : 승인
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo, String html, String uploadDir) 
+	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo, String html) 
 			throws Exception {
 		int result = 0;
 		int lastApCk = 0;
@@ -46,8 +46,8 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 			Approver p = dao.selectApproverByKey(session, memberKey, serial);
 
 			//문서 파일 내 결재라인 업데이트
-			String newhtml = DocHtmlController.updateApproverTableHtml(html, p);
-			result = scCon.docHtmlUpload("dochtml",serial, newhtml);
+			String newhtml = DocHtmlController.updateApproverTableHtmlForApprove(html, p);
+			result = scCon.docHtmlUpload("upload/dochtml",serial, newhtml);
 			if(result <= 0) {
 				throw new Exception("문서 html 업데이트 실패");
 			}
@@ -95,7 +95,7 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 	//결재 : 반려
 	@Override
 	@Transactional
-	public int updateRejectDoc(int memberKey, String serial, String msg) throws Exception {
+	public int updateRejectDoc(int memberKey, String serial, String msg, String html) throws Exception {
 		int result = 0;
 		
 		try {
@@ -112,6 +112,17 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 				throw new Exception("문서 상태 반려로 변경 실패");
 			}
 			log.debug("문서 상태 -> 반려");
+			
+			//결재자 정보 조회
+			Approver p = dao.selectApproverByKey(session, memberKey, serial);
+			
+			//문서 파일 내 결재라인 업데이트
+			String newhtml = DocHtmlController.updateApproverTableHtmlForReject(html, p);
+			result = scCon.docHtmlUpload("upload/dochtml",serial, newhtml);
+			if(result <= 0) {
+				throw new Exception("문서 html 업데이트 실패");
+			}
+			log.debug("문서 html 업데이트 성공");
 			
 		}catch(Exception e) {
 			log.error("문서 결재 처리 중 예외 발생: ", e);

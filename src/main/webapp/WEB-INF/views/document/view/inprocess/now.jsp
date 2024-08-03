@@ -120,7 +120,7 @@
                <h2 class="fw-bold mb-4">문서 결재 내역</h2>
            	<div class="row w-100 mx-auto">
            	<div class="col-md-6"  style="width: 100%;">
-                <div class="card" style="height: 470px;">
+                <div class="card" style="height: auto;">
                   <div class="card-header">
                     <div class="d-grid col">
                     	<span class="p-1">문서명 : ${doc.erDocTitle}</span>
@@ -128,8 +128,9 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <ol class="activity-feed">
+                    <ol class="activity-feed" style="margin-bottom: 0px;">
                     <c:forEach items="${doc.approvers }" var="p">
+                   	<c:if test="${p.state ne '대기'}">
                       <li class="feed-item feed-item-secondary">
                         <time class="date" datetime="">${p.date }</time>
                         <div>
@@ -138,11 +139,12 @@
 	                        ${p.memberTeamName } ${p.memberJobName } ${p.memberName }
 	                         </span>
 	                         <c:if test="${p.opinion ne null}">
-	                         <div class="message-bubble w-50">
-			                    ${p.opinion }
-			                </div>
+	                         	<div class="message-bubble" style="width: 80%; text-align: center;">
+				                    ${p.opinion }
+				                </div>
 			                </c:if>
                          </div>
+                      </c:if>
                       </li>
                       </c:forEach>
                     </ol>
