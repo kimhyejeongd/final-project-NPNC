@@ -422,6 +422,8 @@
 				/* 타입 , 알람 , 수신인, 메세지  */
 		     	function organNoteAlarmSend(reMemberKey, memberKey){
 			   	 console.log('send보내짐');
+			   	var memberName='${loginMember.memberName}';
+				var jobName='${loginMember.jobName}';
 			   		stompClient.send("/pub/msg/"+reMemberKey,{},
 			   			JSON.stringify({
 							
@@ -429,9 +431,9 @@
 							alarmPath : 'notein',
 			   				alarmSendMember : memberKey,
 							alarmReMember : reMemberKey,
-							alarmDate : new Date().toISOString()
-							
-			   				
+							alarmDate : new Date().toISOString(),
+							memberName : memberName,
+							jobName : jobName
 			   				
 			   			})
 			   				
@@ -483,7 +485,7 @@
 				    	    contentType: false, // 필수 항목
 				    		success : function(){
 				    			alert('성공');
-				    			
+				    				
 				    				organNoteAlarmSend(reMemberKey, memberKey);
 				    			
 				    			
