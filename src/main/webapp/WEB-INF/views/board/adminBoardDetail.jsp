@@ -192,15 +192,13 @@
                                 </div>
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
 
-                                <!-- 댓글 수정 및 삭제 버튼 (작성자만 표시) -->
-                                <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
-                                    <div class="comment-actions">
-                                        <form action="${path}/admin/board/deleteComment/${comment.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                            <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
-                                            <button type="submit">삭제</button>
-                                        </form>
-                                    </div>
-                                </c:if>
+                                <!-- 댓글 삭제 버튼 (관리자만 표시) -->
+                                <div class="comment-actions">
+                                    <form action="${path}/admin/board/deleteComment/${comment.BOARD_COMMENT_KEY}" method="post" class="d-inline">
+                                        <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                        <button type="submit">삭제</button>
+                                    </form>
+                                </div>
 
                                 <!-- 대댓글 목록 -->
                                 <c:forEach var="reply" items="${commentRepliesMap[comment.BOARD_COMMENT_KEY]}">
@@ -211,35 +209,19 @@
                                         </div>
                                         <p>${reply.BOARD_COMMENT_DETAIL}</p>
 
-                                        <!-- 대댓글 수정 및 삭제 버튼 (작성자만 표시) -->
-                                        <c:if test="${reply.MEMBER_KEY == loginMember.memberKey}">
-                                            <div class="reply-actions">
-                                                <form action="${path}/admin/board/deleteReply/${reply.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                                    <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
-                                                    <button type="submit">삭제</button>
-                                                </form>
-                                            </div>
-                                        </c:if>
+                                        <!-- 대댓글 삭제 버튼 (관리자만 표시) -->
+                                        <div class="reply-actions">
+                                            <form action="${path}/admin/board/deleteReply/${reply.BOARD_COMMENT_KEY}" method="post" class="d-inline">
+                                                <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                                <button type="submit">삭제</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </c:forEach>
 
                             </div>
                         </c:forEach>
                     </div>
-
- <%--                    <!-- 댓글 작성 폼 -->
-                    <div class="comment-form mt-4">
-                        <form action="${path}/admin/board/createComment" method="post">
-                            <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
-                            <div class="form-group">
-                                <textarea name="commentDetail" class="form-control" rows="3" placeholder="댓글을 작성하세요"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">댓글 작성</button>
-                        </form>
-                    </div> --%>
-
-                </div>
-            </div>
 
             <!-- Footer -->
             <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
