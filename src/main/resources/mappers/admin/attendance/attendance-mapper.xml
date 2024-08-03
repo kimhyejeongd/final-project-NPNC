@@ -139,7 +139,8 @@
 					AND ATTENDANCE_STATE=#{searchType}
 				</if>
 				<if test="(searchStartDate != null and searchStartDate !='') and (searchEndDate != null and searchEndDate != '')">
-	        		AND ATTENDANCE_DATE BETWEEN TO_TIMESTAMP(#{searchStartDate},'YYYY/MM/DD HH24:MI:SS') AND TO_TIMESTAMP(#{searchEndDate},'YYYY/MM/DD HH24:MI:SS')
+	        		AND ATTENDANCE_DATE BETWEEN TO_DATE(#{searchStartDate},'YYYY/MM/DD') AND TO_DATE(#{searchEndDate},'YYYY/MM/DD')
+	        		
 	   			</if>
 			</where>
 			ORDER BY ATTENDANCE_DATE DESC
@@ -155,7 +156,7 @@
 					AND ATTENDANCE_STATE=#{searchType}
 				</if>
 				<if test="(searchStartDate != null and searchStartDate !='') and (searchEndDate != null and searchEndDate != '')">
-	        		AND ATTENDANCE_DATE BETWEEN TO_TIMESTAMP(#{searchStartDate},'YYYY/MM/DD HH24:MI:SS') AND TO_TIMESTAMP(#{searchEndDate},'YYYY/MM/DD HH24:MI:SS')
+	        		AND ATTENDANCE_DATE BETWEEN TO_DATE(#{searchStartDate},'YYYY/MM/DD') AND TO_DATE(#{searchEndDate},'YYYY/MM/DD')
 	   			</if>
 			</where>
 			ORDER BY ATTENDANCE_DATE DESC
@@ -476,7 +477,7 @@
 				AND 
 			</if>
 			<if test="(searchStartDate != null and searchStartDate !='') and (searchEndDate != null and searchEndDate != '')">
-        		ATTENDANCE_DATE BETWEEN TO_TIMESTAMP(#{searchStartDate},'YYYY/MM/DD HH24:MI:SS') AND TO_TIMESTAMP(#{searchEndDate},'YYYY/MM/DD HH24:MI:SS')
+        		ATTENDANCE_DATE BETWEEN TO_DATE(#{searchStartDate},'YYYY/MM/DD') AND TO_DATE(#{searchEndDate},'YYYY/MM/DD')
    			</if>
 		</where>
 		ORDER BY ATTENDANCE_DATE DESC
@@ -502,7 +503,7 @@
 				AND 
 			</if>
 			<if test="searchStartDate != null and searchEndDate != null and searchStartDate != '' and searchEndDate != ''">
-        		ATTENDANCE_DATE BETWEEN TO_TIMESTAMP(#{searchStartDate},'YYYY/MM/DD HH24:MI:SS') AND TO_TIMESTAMP(#{searchEndDate},'YYYY/MM/DD HH24:MI:SS')
+        		ATTENDANCE_DATE BETWEEN TO_DATE(#{searchStartDate},'YYYY/MM/DD') AND TO_DATE(#{searchEndDate},'YYYY/MM/DD')
    			</if>
 		</where>
 	</select>
