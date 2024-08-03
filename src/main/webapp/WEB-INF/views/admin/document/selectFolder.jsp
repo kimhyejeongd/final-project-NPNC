@@ -153,50 +153,24 @@ $(document).ready(function() {
     });
     
 
-    $('.folder-item').on('click', function(e) {
+    $('.list-group-item').on('click', function(e) {
         e.preventDefault(); // 기본 클릭 동작을 막음
 
         var folderKey = $(this).data('folder-key'); // 클릭된 항목의 folderId 가져오기
+        var folderName = $(this).data('folder'); // 클릭된 항목의 폴더 이름 가져오기
 
-        $.ajax({
-            url: '${path}/admin/documentForm/selectDoc', // 서버 요청 URL
-            type: 'GET',
-            data: { folderKey: folderKey }, // 요청에 포함될 데이터
-            success: function(response) {
-                // 서버에서 받은 데이터를 사용하여 추가
-                var list = $('#storagelist');
-                list.empty(); // 기존 내용을 비움
-                
-                let count = 0;
-				//순회하며 리스트에 추가
-                response.forEach(function(doc, index) {
-                    console.log(doc);
-                    if(doc.storageFolder.useYn === 'Y'){
-                    	count++;
-	                    let $a = $("<a>").addClass('border rounded list-group-item list-group-item-action align-items-center justify-content-between')
-						.attr({
-							'href':'#',
-							'data-key': doc.erStorageKey, 
-							'data-name' : doc.erStorageName,
-							'data-folder' : doc.storageFolder.folderName							
-							});
-						let $i = $("<i>").addClass('icon-drawer me-2');
-						let $span=$("<span>").addClass('badge rounded-pill text-bg-secondary me-2 ms-0').text(`${count}`);
-						let $div = $("<div>").append($($span));
-						$div.append($i).append("<span>" + doc.erStorageName + "</span>");
-						$a.append($($div)).appendTo(list);
-                    }
-                });
-            }
-        });
-        
-        //보관함 선택 효과
-	    $("#storagelist").on('click', "a", function(e) {
-	    	e.preventDefault(); // 기본 클릭 동작을 막음
-	    	$('#storagelist a').removeClass('selected');
-		    $(this).toggleClass('selected');
-		    e.stopPropagation();
-		});
+        let folderData = {
+            erFormFolderKey: folderKey,
+            erFormFolderName: folderName
+        };
+
+        // 부모 창에 데이터를 전송
+        window.opener.sendFolderToParent(folderData);
+        window.close();
+    });
+    
+    $("#cancelBtn").click(e=>{
+        window.close();
     });
     
     //적용버튼 클릭

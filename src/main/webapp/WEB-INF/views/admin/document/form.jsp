@@ -95,12 +95,11 @@
               <div class=""> <!-- 컨테이너박스 -->
                 <div class="card card-round p-3">
                   <div class="card-body">
-	                <form method="post" action="${path}/admin/documentForm/insertForm" id="docForm" enctype="multipart/form-data">
-			      		<input type="hidden" class="form-control form-control-sm" name="erDocFormKey" value="${form }">
+	                <form method="post" action="${path}/admin/documentForm/insertForm" id="docForm" >
 		               	<div class="form-group d-flex">
 					      <label for="smallInput"><span class="h5 me-5">양식명</span></label>
 					      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
-					      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erDocTitle">
+					      		<input type="text" class="form-control form-control-sm" style="border: none; height: auto; min-height: 30px; font-size: 15px;" id="smallInput" name="erFormName">
 					      </div>
 					    </div>
 	
@@ -232,58 +231,8 @@ $(document).ready(function() {
         $("#docForm").submit();
     });
     
-    $("#savedraftbtn").click(function() {
-        Swal.fire({
-            title: '임시저장',
-            text: '작성중인 문서 내용이 저장됩니다.',
-            showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger ms-2',
-            confirmButtonText: '임시저장',
-            cancelButtonText: '닫기',
-            buttonsStyling: false,
-            reverseButtons: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-                $("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-                $("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
-                $("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
-                let formData = new FormData(document.getElementById("docForm"));
-                fetch(sessionStorage.getItem("path")+'/document/savedraft', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        alert(data.message);
-                        window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
-                });
-            }
-        });
-    });
-    
-    $("#submitbtn").click(function() {
-        // 작성된 HTML 내용을 가져옴
-        let htmlContent = $('.note-editable.card-block').html();
-        
-        // 폼에 HTML 내용을 추가
-        $("<input>").attr({
-            type: "hidden",
-            name: "htmlContent",
-            value: htmlContent
-        }).appendTo("#docForm");
 
-        // 폼을 서버로 전송
-        $("#docForm").submit();
-    });
+    
 });
 
 $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', function(e) {
@@ -520,7 +469,7 @@ function sendRefererToParent(data) {
         });
     });
 }
-function sendStorageToParent(data){
+function sendFolderToParent(data){
     console.log(data);
     $("#storageDiv").html('');
     
@@ -535,8 +484,19 @@ function sendStorageToParent(data){
      });
 
      $("<input>", {
-         name: 'erDocStorageKey',
-         value: data.erStorageKey,
+         name: 'erFormFolderKey',
+         value: data.erFormFolderKey,
+         css: {
+             border: 'none',
+             width: 'auto',
+             maxWidth: '80px'
+         },
+         type: 'hidden'
+     }).appendTo($div);
+     
+     $("<input>", {
+         name: 'erFormFolderName',
+         value: data.erFormFolderName,
          css: {
              border: 'none',
              width: 'auto',
@@ -547,17 +507,7 @@ function sendStorageToParent(data){
      
      $("<span>", {
          name: '',
-         text: data.erStorageFolder + " > ",
-         css: {
-             border: 'none',
-             width: 'auto',
-             maxWidth: '80px'
-         },
-     }).attr('readonly', true).appendTo($div);
-     
-     $("<span>", {
-         name: '',
-         text: data.erStorageName,
+         text: data.erFormFolderName,
          css: {
              border: 'none',
              width: 'auto',

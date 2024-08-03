@@ -254,7 +254,10 @@ public class AdminDocumentFormController {
     }
     
     @PostMapping("/insertForm")
-    public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent) {
+    public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent, @RequestParam(value = "erFormFolderKey", required = false) int erFormFolderKey) {
+        System.out.println(erFormFolderKey + "11111111111111111");
+        System.out.println("11111111111111111");
+
         // 저장할 경로 지정 (예: webapps 폴더 내 resources/upload/docformhtml)
         String filePath = servletContext.getRealPath("/resources/upload/docformhtml/savedDocument.html");
 
