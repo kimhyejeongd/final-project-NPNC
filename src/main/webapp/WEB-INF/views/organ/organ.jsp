@@ -428,7 +428,7 @@
 			   			JSON.stringify({
 							
 							alarmType : 'Note',
-							alarmPath : 'notein',
+							alarmPath : 'notehome',
 			   				alarmSendMember : memberKey,
 							alarmReMember : reMemberKey,
 							alarmDate : new Date().toISOString(),
