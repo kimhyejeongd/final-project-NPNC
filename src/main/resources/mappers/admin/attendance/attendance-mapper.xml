@@ -508,7 +508,23 @@
 		</where>
 	</select>
 	
+	<update id="updateAdminAttendance" parameterType="attendance">
+		UPDATE ATTENDANCE
+		SET ATTENDANCE_DATE=TO_DATE(#{attendanceDate},'YYYY/MM/DD'),
+		ATTENDANCE_STATE=#{attendanceState}
+		<if test="attendanceStart !=null and attendanceStart != ''">
+		,ATTENDANCE_START=TO_TIMESTAMP(#{attendanceDate}||' '||#{attendanceStart}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		<if test="attendanceEnd !=null and attendanceEnd != ''">
+		,ATTENDANCE_END=TO_TIMESTAMP(#{attendanceDate}||' '||#{attendanceEnd}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		WHERE ATTENDANCE_KEY=#{attendanceKey}
+	</update>
+	
+	
+	
 	<!-- vacationApply -->
+	
 	<resultMap type="vacationApply" id="vacationApplyMap">
 		<id column="VACATION_USE_KEY" property="vacationUseKey"/>
 		<result column="VACATION_KEY"  property="vacationKey"/>

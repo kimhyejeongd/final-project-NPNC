@@ -55,6 +55,9 @@ public interface AttendanceService {
 	List<Attendance> searchAdminAttendance(Map<String,Object> searchMap, Map<String,Integer> page);
 	int searchAdminAttendanceCount(Map<String,Object> searchMap);
 	
+	int updateAdminAttendance(Attendance attendance);
+	
+	
 	//overtime
 	List<OvertimeApply> selectoverworkByMemberKey(int memberKey,Map<String,Integer> page);
 	int selectoverworkByMemberKeyCount(int memberKey);

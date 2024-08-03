@@ -407,6 +407,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
 	}
 
+	@Override
+	public int updateAdminAttendance(Attendance attendance) {
+		
+		return attendanceDao.updateAdminAttendance(session, attendance);
+	}
+	
 	
 	//overtime
 	
@@ -433,6 +439,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return attendanceDao.searchoverworkByMemberKeyCount(session, searchMap);
 	}
+
+
 
 	
 
