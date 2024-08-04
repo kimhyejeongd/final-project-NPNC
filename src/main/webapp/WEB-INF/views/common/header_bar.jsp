@@ -736,21 +736,92 @@
 						var bodyObject= JSON.parse(msg.body);
 						
 			                if(bodyObject.alarmType=='Note'){
-			             	$.notify({
-					   		 	icon: 'icon-bell',
-					   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-								message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
-					   		 },{
-					   		 	type: 'primary',
-					   		 	placement: {
-					   		 		from: "bottom",
-					   		 		align: "right"
-					   		 	},
-					   		 	time: 1000,
-					   		 });
+				             	$.notify({
+						   		 	icon: 'icon-bell',
+						   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
+									message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
+						   		 },{
+						   		 	type: 'primary',
+						   		 	placement: {
+						   		 		from: "bottom",
+						   		 		align: "right"
+						   		 	},
+						   		 	time: 1000,
+						   		 });
+				             	
+				             	//쪽지 알람 목록 출력 디자인
+ 								var divIcon = document.createElement('div');
+ 			   			          divIcon.className = 'notif-icon notif-success';
+
+ 			   			          var faIcon = document.createElement('i');
+ 			   			          faIcon.className = 'fa fa-envelope';
+
+ 			   			          var divContent = document.createElement('div');
+ 			   			          divContent.className = 'notif-content';
+
+ 			   			          var spanBlock = document.createElement('span');
+ 			   			          spanBlock.className = 'block';
+ 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
+ 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 							 
-	 							}
-								
+ 							}else if(bodyObject.alarmType=='DocReferer'){
+ 								$.notify({
+						   		 	icon: 'icon-bell',
+						   		 	title: '참조문서가 도착하였습니다.', 
+									message: bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 참조문서 1건이 도착하였습니다'
+						   		 },{
+						   		 	type: 'primary',
+						   		 	placement: {
+						   		 		from: "bottom",
+						   		 		align: "right"
+						   		 	},
+						   		 	time: 1000,
+						   		 });
+ 								//전자문서 알람 목록 출력 디자인
+ 								var divIcon = document.createElement('div');
+ 			   			          divIcon.className = 'notif-icon notif-primary';
+
+ 			   			          var faIcon = document.createElement('i');
+ 			   			          faIcon.className = 'fa fa-book';
+
+ 			   			          var divContent = document.createElement('div');
+ 			   			          divContent.className = 'notif-content';
+
+ 			   			          var spanBlock = document.createElement('span');
+ 			   			          spanBlock.className = 'block';
+ 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 참조문서 1건이 도착하였습니다';
+ 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+ 								
+ 							}else if(bodyObject.alarmType=='DocAprover'){
+ 								$.notify({
+						   		 	icon: 'icon-bell',
+						   		 	title: '결재 대기 문서가 도착하였습니다.', 
+									message: bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.'
+						   		 },{
+						   		 	type: 'primary',
+						   		 	placement: {
+						   		 		from: "bottom",
+						   		 		align: "right"
+						   		 	},
+						   		 	time: 1000,
+						   		 });
+ 								//전자문서 알람 목록 출력 디자인
+ 								var divIcon = document.createElement('div');
+ 			   			          divIcon.className = 'notif-icon notif-primary';
+
+ 			   			          var faIcon = document.createElement('i');
+ 			   			          faIcon.className = 'fa fa-book';
+
+ 			   			          var divContent = document.createElement('div');
+ 			   			          divContent.className = 'notif-content';
+
+ 			   			          var spanBlock = document.createElement('span');
+ 			   			          spanBlock.className = 'block';
+ 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.';
+ 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+ 							}
+			                
+			                //공통 디자인
 							   // Step 1: Extract the current number from the element
 					           var notificationText = $('.notification').eq(1).text();
 					           var currentCount = parseInt(notificationText, 10);
@@ -770,19 +841,7 @@
 		   					  a.className='noteDeleteOne';		
 		   					  a.id =  bodyObject.alarmKey;
 		   					  
-		   			          var divIcon = document.createElement('div');
-		   			          divIcon.className = 'notif-icon notif-success';
-
-		   			          var faIcon = document.createElement('i');
-		   			          faIcon.className = 'fa fa-envelope';
-
-		   			          var divContent = document.createElement('div');
-		   			          divContent.className = 'notif-content';
-
-		   			          var spanBlock = document.createElement('span');
-		   			          spanBlock.className = 'block';
-		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
-		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		   			          
 
 		   			          var spanTime = document.createElement('span');
 		   			          spanTime.className = 'time';

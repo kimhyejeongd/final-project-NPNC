@@ -34,6 +34,7 @@
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
    <script src="${path}/resources/jh/js/docwrite.js"></script>
+   <script src="${path}/resources/jh/js/doc-alarm.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -429,8 +430,28 @@ $(document).ready(function() {
 			        .then(data => {
 			            if (data.status === "success") {
 			                alert(data.message);
+			                var loginMemberKey = "${loginMember.memberKey}";
+			                var loginMemberName = "${loginMember.memberName}";
+			                var loginMemberJobName = "${loginMember.jobName}";
+			                //참조인 있으면 발송
+			                if (data.referer && data.referer.length > 0) {
+			                	console.log(data.referer.length);
+			                	console.log('참조인 알람 send try');
+					            // 각 참조인에 대해 반복 전송
+					            $.each(data.referer, function(index, referer) {
+					            	refererAlarmSend(referer.memberKey, loginMemberKey, loginMemberName, loginMemberJobName)
+					            });
+			                }
+			                
+			                //다음 결재자 알람 발송
+			                if (data.nextAprover && data.nextAprover.memberKey) {
+			                	console.log('결재자 알람 send try');
+			                	 console.log(data.nextAprover);
+				                nextAproverAlarmSend(data.nextAprover.memberKey, loginMemberKey, loginMemberName, loginMemberJobName);
+			                }
+			                alert('콘솔 확인용');
+			                
 			                // 성공 시 페이지 리다이렉트
-			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);
