@@ -105,7 +105,6 @@
                                 </th>
                                 <th scope="col" class="">양식명</th>
                                 <th scope="col" class="">최종 수정자</th>
-                                <th scope="col" class="">작성 권한</th>
                                 <th scope="col" class="">사용여부</th>
                                 <th scope="col" class="">수정</th>
                             </tr>
@@ -296,10 +295,10 @@ $(document).ready(function() {
 	                        '<td class="approverNow p-3"><input type="checkbox" class="checkItem"></td>' +
 	                        '<td class="approverNow p-3">' + doc.erFormName + '</td>' +
 	                        '<td class="approverNow p-3">' + updaterInfo + '</td>' +
-	                        '<td class="approverNow p-3">' + doc.erStorageTerm + '</td>' +
 	                        '<td class="approverNow p-3">' + doc.erFormYn + '</td>' +
 	                        '<td class="approverNow p-3">' + 
-	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage">수정</button>'+
+	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage" onclick="window.location.href=\'${path}/admin/documentForm/form?formKey='+doc.erFormKey+'\'">수정</button>'+
+	                        
 	              			'<input type="hidden" id="oriName" name="oriName" value="'+doc.erStorageName+'">'
 	                        + '</td>' +
 	                    '</tr>';

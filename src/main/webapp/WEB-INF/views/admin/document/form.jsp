@@ -88,7 +88,7 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
-                <h3 class="fw-bold text-center">양식 작성</h3>
+                <h3 class="fw-bold text-center">양식 수정</h3>
               </div>
             </div>
             <div class="row">
@@ -156,7 +156,18 @@ function loadHtml(html) {
 }
 
 $(document).ready(function() {
-    // 페이지가 로드될 때 모달을 표시하고 리스트를 표시
+	// 현재 URL의 쿼리스트링 가져오기
+	var queryString = window.location.search;
+
+	// URLSearchParams 객체 생성
+	var urlParams = new URLSearchParams(queryString);
+
+	// 특정 파라미터 값 가져오기
+	var param1Value = urlParams.get('formKey');
+
+	console.log(param1Value); // value1
+
+	/*     // 페이지가 로드될 때 모달을 표시하고 리스트를 표시
     const listItems = [
         '리스트 항목 1',
         '리스트 항목 2',
@@ -175,7 +186,7 @@ $(document).ready(function() {
         html: '<div id="modal-content" onclick="loadHtml()">'+listHtml+'</div>',
         icon: 'info',
         confirmButtonText: '닫기'
-    });
+    }); */
     // Summernote 및 기타 기능 초기화
     const fileBtn = document.getElementById('fileBtn');
     const fileInput = document.getElementById('formFile');
