@@ -624,8 +624,6 @@ public class MemberDocumentController {
 		response.put("status", "success");
 		response.put("message", "문서 등록 완료");
 		
-		//알람을 위한 정보 전달
-		response.put("referer", doc.getReferers());
 		//다음 결재자 찾기
 		Approver nextAprover = null;
 		for (Approver approver : doc.getApprovers()) {

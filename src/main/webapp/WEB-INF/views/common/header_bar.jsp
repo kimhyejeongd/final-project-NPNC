@@ -200,67 +200,134 @@
 										var alarmBox = document.getElementById('alarmBox');
 										 alarmBox.innerHTML = ''; // Clear innerHTML
 										for(let i=0; i<response.length;i++){
-											if(response[i].alarmType=='Note'){
-
-												var a = document.createElement('a');
-										          a.href = 'javascript:alarmDeleteOne(\''+response[i].alarmKey+'\''+'\,\''+'${path}/'+response[i].alarmPath+'\');';
-												  a.className='noteDeleteOne';		
-												  a.id = response[i].alarmKey;
-												  
-										          var divIcon = document.createElement('div');
-										          divIcon.className = 'notif-icon notif-success';
-
-										          var faIcon = document.createElement('i');
-										          faIcon.className = 'fa fa-envelope';
-
-										          var divContent = document.createElement('div');
-										          divContent.className = 'notif-content';
-
-										          var spanBlock = document.createElement('span');
-										          spanBlock.className = 'block';
-										          spanBlock.textContent = response[i].memberName+" "+response[i].jobName+'님의 쪽지';
-										  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
-
-										          var spanTime = document.createElement('span');
-										          spanTime.className = 'time';
-											   	
-												   	// 예시 ISO 8601 날짜 문자열
-												   	const isoDateString = response[i].alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
-		
-												   	// ISO 8601 문자열을 Date 객체로 변환
-												   	const date = new Date(isoDateString);
-		
-												   	// Date 객체를 로컬 형식으로 변환하여 출력
-												   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
-		
-												   	// 또는 직접 포맷하여 사용할 수 있습니다.
-													//const year = date.getFullYear();
-												   	//const month = (date.getMonth() + 1).toString().padStart(2, '0');
-												   	//const day = date.getDate().toString().padStart(2, '0');
-												   	//const hours = date.getHours().toString().padStart(2, '0');
-												   	//const minutes = date.getMinutes().toString().padStart(2, '0');
-												   	//const seconds = date.getSeconds().toString().padStart(2, '0');
-												   	//const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;		
-												   	
-													//spanTime에 포맷된 날짜를 설정
-												   	spanTime.textContent = formattedDate + " ";
-												   	
-											          // Append the child elements
-											          divIcon.appendChild(faIcon);
-											          divContent.appendChild(spanBlock);
-											          divContent.appendChild(spanTime);
-											          a.appendChild(divIcon);
-											          a.appendChild(divContent);
-	
-											   		document.getElementById('alarmBox').appendChild(a);				
-											}
-																					
-												
-										} 
+											var divIcon = null;
+								            var faIcon = null;
+								            var divContent = null;
+								            var spanBlock = null;
+								            console.dir(response[i]);
+								            //알람 종류 분기정
+							            	switch (response[i].alarmType) {
+									                case 'Note':
+									                  //쪽지 알람 목록 출력 디자인
+													  divIcon = document.createElement('div');
+								   			          divIcon.className = 'notif-icon notif-success';
+							
+								   			          faIcon = document.createElement('i');
+								   			          faIcon.className = 'fa fa-envelope';
+							
+								   			          divContent = document.createElement('div');
+								   			          divContent.className = 'notif-content';
+							
+								   			          spanBlock = document.createElement('span');
+								   			          spanBlock.className = 'block';
+								   			          spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님의 쪽지';
+								   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+									                    
+									                    
+									                    break;
+							
+									                case 'DocReferer':
+									                    //참조문서 알람 목록 출력 디자인
+														divIcon = document.createElement('div');
+								   			          	divIcon.className = 'notif-icon notif-primary';
+							
+								   			          	faIcon = document.createElement('i');
+								   			         	faIcon.className = 'fa fa-book';
+							
+									   			        divContent = document.createElement('div');
+									   			        divContent.className = 'notif-content';
+								
+								   			          	spanBlock = document.createElement('span');
+								   			            spanBlock.className = 'block';
+								   			            spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님이 작성한 참조문서 1건 도착';
+								   			  		    spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+									                    
+									                    break;
+							
+									                case 'DocAprover':
+										                  //결재 대기 문서 알람 목록 출력 디자인
+														  divIcon = document.createElement('div');
+									   			          divIcon.className = 'notif-icon notif-primary';
+								
+									   			          faIcon = document.createElement('i');
+									   			          faIcon.className = 'fa fa-book';
+								
+									   			          divContent = document.createElement('div');
+									   			          divContent.className = 'notif-content';
+								
+									   			          spanBlock = document.createElement('span');
+									   			          spanBlock.className = 'block';
+									   			          spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님의 결재 대기 문서 1건 도착';
+									   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+									                    
+									                    break;
+							
+									                default:
+									                    console.error('Unknown alarm type:', response[i].alarmType);
+									                    break;
+							            	}
+								            
+							            
+							               //공통 디자인
+										   // Step 1: Extract the current number from the element
+								           var notificationText = $('.notification').eq(1).text();
+								           var currentCount = parseInt(notificationText, 10);
+					
+								           // Step 2: Perform the desired operation (e.g., increment by 1)
+								           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+					
+								           // Step 3: Update the elements with the new value
+								           $('.notification').eq(1).text(updatedCount);
+					
+								           var dropdownTitle = $('.dropdown-title').eq(1).text();
+								           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+								           $('.dropdown-title').eq(1).text(newDropdownTitle);
+										   
+										   var a = document.createElement('a');
+					   			           a.href = 'javascript:alarmDeleteOne(\''+ response[i].alarmKey+'\''+'\,\''+'${path}/'+ response[i].alarmPath+'\');';
+					   					   a.className='noteDeleteOne';		
+					   					   a.id =  response[i].alarmKey;
+					   					   
+					   			          var spanTime = document.createElement('span');
+					   			          spanTime.className = 'time';
+					   				   	
+					   					  // 예시 ISO 8601 날짜 문자열
+					   					  const isoDateString = response[i].alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+					
+					   					   	// ISO 8601 문자열을 Date 객체로 변환
+					   					  const date = new Date(isoDateString);
+					
+					   					  // Date 객체를 로컬 형식으로 변환하여 출력
+					   					  const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+					
+					   					  // 또는 직접 포맷하여 사용할 수 있습니다.
+					   					  const year = date.getFullYear();
+					   					  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+					   					  const day = date.getDate().toString().padStart(2, '0');
+					   					  const hours = date.getHours().toString().padStart(2, '0');
+					   					  const minutes = date.getMinutes().toString().padStart(2, '0');
+					   					  const seconds = date.getSeconds().toString().padStart(2, '0');
+					   					  const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+					
+					   					  // spanTime에 포맷된 날짜를 설정
+					   					  spanTime.textContent = customFormattedDate + " ";
+					   					   	
+					   				      // Append the child elements
+					   				      divIcon.appendChild(faIcon);
+					   				      divContent.appendChild(spanBlock);
+					  				          divContent.appendChild(spanTime);
+					  				          a.appendChild(divIcon);
+					  				          a.appendChild(divContent);
+					   				   		
+						   			      // alarmBox의 첫 번째 자식으로 추가
+						   			      const alarmBox = document.getElementById('alarmBox');
+						   			      alarmBox.insertBefore(a, alarmBox.firstChild);
+											
+										}
 										
 									   
-									}
-								});
+									}//success end
+								}); //ajax end
 			               });   
 			            }
 			         );
@@ -434,7 +501,7 @@
                       </li>
                       <li>
                         <a class="see-all" href="javascript:alarmReadAll();"
-                          >전체 확인<i class="fa fa-angle-right"></i>
+                          ><span>전체 알림 읽음 처리<i class="fa fa-check ms-2" style="color: green; transform: translateY(2px);"></i></span>
                         </a>
                       </li>
                     </ul>
@@ -623,6 +690,7 @@
           }
             
             function connect() {
+            	//socket 설정
 		        let socket = new SockJS('${path}/ws-stomp');
 		        stompClient = Stomp.over(socket);
 		        stompClient.connect({"token" : "발급받은 토큰" }, function (frame) {
@@ -637,262 +705,290 @@
 		            });
 	
 		            
+		            
+		            var divIcon = null;
+		            var faIcon = null;
+		            var divContent = null;
+		            var spanBlock = null;
+		            //알람 종류 분기정
+		            function handleNotification(bodyObject) {
+		            	switch (bodyObject.alarmType) {
+		                case 'Note':
+		                    $.notify({
+		                        icon: 'icon-bell',
+		                        title: '쪽지가 도착했습니다',
+		                        message: bodyObject.memberName + " " + bodyObject.jobName + "님께서 쪽지를 보내셨습니다."
+		                    }, {
+		                        type: 'primary',
+		                        placement: {
+		                            from: "bottom",
+		                            align: "right"
+		                        },
+		                        time: 1000
+		                    });
+		                    
+		                    
+		                  //쪽지 알람 목록 출력 디자인
+						  divIcon = document.createElement('div');
+	   			          divIcon.className = 'notif-icon notif-success';
+
+	   			          faIcon = document.createElement('i');
+	   			          faIcon.className = 'fa fa-envelope';
+
+	   			          divContent = document.createElement('div');
+	   			          divContent.className = 'notif-content';
+
+	   			          spanBlock = document.createElement('span');
+	   			          spanBlock.className = 'block';
+	   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
+	   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		                    
+		                    
+		                    break;
+
+		                case 'DocReferer':
+		                    $.notify({
+		                        icon: 'icon-bell',
+		                        title: '참조문서가 도착하였습니다.',
+		                        message: bodyObject.memberName + " " + bodyObject.jobName + '님이 작성한 참조문서 1건이 도착하였습니다'
+		                    }, {
+		                        type: 'primary',
+		                        placement: {
+		                            from: "bottom",
+		                            align: "right"
+		                        },
+		                        time: 1000
+		                    });
+		                    
+		                    //참조문서 알람 목록 출력 디자인
+							divIcon = document.createElement('div');
+	   			          	divIcon.className = 'notif-icon notif-primary';
+
+	   			          	faIcon = document.createElement('i');
+	   			         	faIcon.className = 'fa fa-book';
+
+		   			        divContent = document.createElement('div');
+		   			        divContent.className = 'notif-content';
+	
+	   			          	spanBlock = document.createElement('span');
+	   			            spanBlock.className = 'block';
+	   			            spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 참조문서 1건이 도착하였습니다';
+	   			  		    spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		                    
+		                    break;
+
+		                case 'DocAprover':
+		                    $.notify({
+		                        icon: 'icon-bell',
+		                        title: '결재 대기 문서가 도착하였습니다.',
+		                        message: bodyObject.memberName + " " + bodyObject.jobName + '님이 작성한 문서가 결재 대기중입니다.'
+		                    }, {
+		                        type: 'primary',
+		                        placement: {
+		                            from: "bottom",
+		                            align: "right"
+		                        },
+		                        time: 1000
+		                    });
+		                    
+			                  //결재 대기 문서 알람 목록 출력 디자인
+							  divIcon = document.createElement('div');
+		   			          divIcon.className = 'notif-icon notif-primary';
+	
+		   			          faIcon = document.createElement('i');
+		   			          faIcon.className = 'fa fa-book';
+	
+		   			          divContent = document.createElement('div');
+		   			          divContent.className = 'notif-content';
+	
+		   			          spanBlock = document.createElement('span');
+		   			          spanBlock.className = 'block';
+		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.';
+		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		                    
+		                    break;
+		                case 'DocComplete':
+		                    $.notify({
+		                        icon: 'icon-bell',
+		                        title: '기안한 문서가 승인되었습니다.',
+		                        message: bodyObject.memberName + " " + bodyObject.jobName + '님이 작성한 문서가 결재 대기중입니다.'
+		                    }, {
+		                        type: 'primary',
+		                        placement: {
+		                            from: "bottom",
+		                            align: "right"
+		                        },
+		                        time: 1000
+		                    });
+		                    
+			                  //결재 대기 문서 알람 목록 출력 디자인
+							  divIcon = document.createElement('div');
+		   			          divIcon.className = 'notif-icon notif-primary';
+	
+		   			          faIcon = document.createElement('i');
+		   			          faIcon.className = 'fa fa-book';
+	
+		   			          divContent = document.createElement('div');
+		   			          divContent.className = 'notif-content';
+	
+		   			          spanBlock = document.createElement('span');
+		   			          spanBlock.className = 'block';
+		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.';
+		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		                    
+		                    break;
+		   			  		  
+		                default:
+		                    console.error('Unknown alarm type:', bodyObject.alarmType);
+		                    break;
+		            	}
+		            
+		            }
+		            
 		            stompClient.subscribe('/sub/${loginMember.memberKey}', function (msg) {
-		                console.log('구독 중', msg);/* 얘가 깨져요 얘 구독중이 깨져요  */
+		                console.log('구독 중', msg);
 		                var bodyObject= JSON.parse(msg.body);
 		                console.log('test'+bodyObject.message);
 		                
-		             	$.notify({
-				   		 	icon: 'icon-bell',
-				   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-				   		 	message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
-				   		 },{
-				   		 	type: 'primary',
-				   		 	placement: {
-				   		 		from: "bottom",
-				   		 		align: "right"
-				   		 	},
-				   		 	time: 1000,
-				   		 });
-						 
-						 
-					
-						 
-						 // Step 1: Extract the current number from the element
-				           var notificationText = $('.notification').eq(1).text();
-				           var currentCount = parseInt(notificationText, 10);
-	
-				           // Step 2: Perform the desired operation (e.g., increment by 1)
-				           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
-	
-				           // Step 3: Update the elements with the new value
-				           $('.notification').eq(1).text(updatedCount);
-	
-				           var dropdownTitle = $('.dropdown-title').eq(1).text();
-				           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
-				           $('.dropdown-title').eq(1).text(newDropdownTitle);
-						   
-						  	 var a = document.createElement('a');
-					          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
-							  a.className='noteDeleteOne';		
-							  a.id =  bodyObject.alarmKey;
-							  
-					          var divIcon = document.createElement('div');
-					          divIcon.className = 'notif-icon notif-success';
-		
-					          var faIcon = document.createElement('i');
-					          faIcon.className = 'fa fa-envelope';
-		
-					          var divContent = document.createElement('div');
-					          divContent.className = 'notif-content';
-		
-					          var spanBlock = document.createElement('span');
-					          spanBlock.className = 'block';
-							  spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName+'님의 쪽지';
-					  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
-		
-					          var spanTime = document.createElement('span');
-					          spanTime.className = 'time';
-						   	
-							   	// 예시 ISO 8601 날짜 문자열
-							   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
-		
-							   	// ISO 8601 문자열을 Date 객체로 변환
-							   	const date = new Date(isoDateString);
-		
-							   	// Date 객체를 로컬 형식으로 변환하여 출력
-							   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
-		
-							   	// 또는 직접 포맷하여 사용할 수 있습니다.
-							   	const year = date.getFullYear();
-							   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
-							   	const day = date.getDate().toString().padStart(2, '0');
-							   	const hours = date.getHours().toString().padStart(2, '0');
-							   	const minutes = date.getMinutes().toString().padStart(2, '0');
-							   	const seconds = date.getSeconds().toString().padStart(2, '0');
-							   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
-		
-							   	// spanTime에 포맷된 날짜를 설정
-							   	spanTime.textContent = customFormattedDate + " ";
-							   	
-						          // Append the child elements
-						          divIcon.appendChild(faIcon);
-						          divContent.appendChild(spanBlock);
-						          divContent.appendChild(spanTime);
-						          a.appendChild(divIcon);
-						          a.appendChild(divContent);
-		
-						   		
+		              	//분기별 디자인 진행
+						handleNotification(bodyObject);
+		                
+	              		//공통 디자인
+					   // Step 1: Extract the current number from the element
+			           var notificationText = $('.notification').eq(1).text();
+			           var currentCount = parseInt(notificationText, 10);
 
-					      // alarmBox의 첫 번째 자식으로 추가
-					      const alarmBox = document.getElementById('alarmBox');
-					      alarmBox.insertBefore(a, alarmBox.firstChild);
-					
+			           // Step 2: Perform the desired operation (e.g., increment by 1)
+			           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
+
+			           // Step 3: Update the elements with the new value
+			           $('.notification').eq(1).text(updatedCount);
+
+			           var dropdownTitle = $('.dropdown-title').eq(1).text();
+			           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+			           $('.dropdown-title').eq(1).text(newDropdownTitle);
+					   
+					   var a = document.createElement('a');
+   			           a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+   					   a.className='noteDeleteOne';		
+   					   a.id =  bodyObject.alarmKey;
+	   					  
+	   			          
+
+   			          var spanTime = document.createElement('span');
+   			          spanTime.className = 'time';
+   				   	
+   					  // 예시 ISO 8601 날짜 문자열
+   					  const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
+
+   					   	// ISO 8601 문자열을 Date 객체로 변환
+   					  const date = new Date(isoDateString);
+
+   					  // Date 객체를 로컬 형식으로 변환하여 출력
+   					  const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
+
+   					  // 또는 직접 포맷하여 사용할 수 있습니다.
+   					  const year = date.getFullYear();
+   					  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+   					  const day = date.getDate().toString().padStart(2, '0');
+   					  const hours = date.getHours().toString().padStart(2, '0');
+   					  const minutes = date.getMinutes().toString().padStart(2, '0');
+   					  const seconds = date.getSeconds().toString().padStart(2, '0');
+   					  const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+
+   					  // spanTime에 포맷된 날짜를 설정
+   					  spanTime.textContent = customFormattedDate + " ";
+   					   	
+   				      // Append the child elements
+   				      divIcon.appendChild(faIcon);
+   				      divContent.appendChild(spanBlock);
+  				          divContent.appendChild(spanTime);
+  				          a.appendChild(divIcon);
+  				          a.appendChild(divContent);
+   				   		
+	   			      // alarmBox의 첫 번째 자식으로 추가
+	   			      const alarmBox = document.getElementById('alarmBox');
+	   			      alarmBox.insertBefore(a, alarmBox.firstChild);
+		                
 		            });
-					
+		            
+		            
 		            stompClient.subscribe('/sub/broadcast', function (msg) {
 		                console.log('구독 중', msg);
-						
 						var bodyObject= JSON.parse(msg.body);
-						
-			                if(bodyObject.alarmType=='Note'){
-				             	$.notify({
-						   		 	icon: 'icon-bell',
-						   		 	title: '쪽지가 도착했습니다', /* 얘가 깨져요 얘 */
-									message:  bodyObject.memberName+" "+bodyObject.jobName +"님께서 쪽지를 보내셨습니다."  /* 얘는 안깨져요 */
-						   		 },{
-						   		 	type: 'primary',
-						   		 	placement: {
-						   		 		from: "bottom",
-						   		 		align: "right"
-						   		 	},
-						   		 	time: 1000,
-						   		 });
-				             	
-				             	//쪽지 알람 목록 출력 디자인
- 								var divIcon = document.createElement('div');
- 			   			          divIcon.className = 'notif-icon notif-success';
+						//분기별 디자인 진행
+						handleNotification(bodyObject);
+			            
+		               //공통 디자인
+					   // Step 1: Extract the current number from the element
+			           var notificationText = $('.notification').eq(1).text();
+			           var currentCount = parseInt(notificationText, 10);
 
- 			   			          var faIcon = document.createElement('i');
- 			   			          faIcon.className = 'fa fa-envelope';
+			           // Step 2: Perform the desired operation (e.g., increment by 1)
+			           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
 
- 			   			          var divContent = document.createElement('div');
- 			   			          divContent.className = 'notif-content';
+			           // Step 3: Update the elements with the new value
+			           $('.notification').eq(1).text(updatedCount);
 
- 			   			          var spanBlock = document.createElement('span');
- 			   			          spanBlock.className = 'block';
- 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.memberName +'님의 쪽지';
- 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
-							 
- 							}else if(bodyObject.alarmType=='DocReferer'){
- 								$.notify({
-						   		 	icon: 'icon-bell',
-						   		 	title: '참조문서가 도착하였습니다.', 
-									message: bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 참조문서 1건이 도착하였습니다'
-						   		 },{
-						   		 	type: 'primary',
-						   		 	placement: {
-						   		 		from: "bottom",
-						   		 		align: "right"
-						   		 	},
-						   		 	time: 1000,
-						   		 });
- 								//전자문서 알람 목록 출력 디자인
- 								var divIcon = document.createElement('div');
- 			   			          divIcon.className = 'notif-icon notif-primary';
+			           var dropdownTitle = $('.dropdown-title').eq(1).text();
+			           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
+			           $('.dropdown-title').eq(1).text(newDropdownTitle);
+					   
+					   var a = document.createElement('a');
+   			           a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
+   					   a.className='noteDeleteOne';		
+   					   a.id =  bodyObject.alarmKey;
+	   					  
+	   			          
 
- 			   			          var faIcon = document.createElement('i');
- 			   			          faIcon.className = 'fa fa-book';
+   			          var spanTime = document.createElement('span');
+   			          spanTime.className = 'time';
+   				   	
+   					  // 예시 ISO 8601 날짜 문자열
+   					  const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
 
- 			   			          var divContent = document.createElement('div');
- 			   			          divContent.className = 'notif-content';
+   					   	// ISO 8601 문자열을 Date 객체로 변환
+   					  const date = new Date(isoDateString);
 
- 			   			          var spanBlock = document.createElement('span');
- 			   			          spanBlock.className = 'block';
- 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 참조문서 1건이 도착하였습니다';
- 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
- 								
- 							}else if(bodyObject.alarmType=='DocAprover'){
- 								$.notify({
-						   		 	icon: 'icon-bell',
-						   		 	title: '결재 대기 문서가 도착하였습니다.', 
-									message: bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.'
-						   		 },{
-						   		 	type: 'primary',
-						   		 	placement: {
-						   		 		from: "bottom",
-						   		 		align: "right"
-						   		 	},
-						   		 	time: 1000,
-						   		 });
- 								//전자문서 알람 목록 출력 디자인
- 								var divIcon = document.createElement('div');
- 			   			          divIcon.className = 'notif-icon notif-primary';
+   					  // Date 객체를 로컬 형식으로 변환하여 출력
+   					  const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
 
- 			   			          var faIcon = document.createElement('i');
- 			   			          faIcon.className = 'fa fa-book';
+   					  // 또는 직접 포맷하여 사용할 수 있습니다.
+   					  const year = date.getFullYear();
+   					  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+   					  const day = date.getDate().toString().padStart(2, '0');
+   					  const hours = date.getHours().toString().padStart(2, '0');
+   					  const minutes = date.getMinutes().toString().padStart(2, '0');
+   					  const seconds = date.getSeconds().toString().padStart(2, '0');
+   					  const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
 
- 			   			          var divContent = document.createElement('div');
- 			   			          divContent.className = 'notif-content';
-
- 			   			          var spanBlock = document.createElement('span');
- 			   			          spanBlock.className = 'block';
- 			   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.';
- 			   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
- 							}
-			                
-			                //공통 디자인
-							   // Step 1: Extract the current number from the element
-					           var notificationText = $('.notification').eq(1).text();
-					           var currentCount = parseInt(notificationText, 10);
-
-					           // Step 2: Perform the desired operation (e.g., increment by 1)
-					           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
-
-					           // Step 3: Update the elements with the new value
-					           $('.notification').eq(1).text(updatedCount);
-
-					           var dropdownTitle = $('.dropdown-title').eq(1).text();
-					           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
-					           $('.dropdown-title').eq(1).text(newDropdownTitle);
-							   
-							   var a = document.createElement('a');
-		   			          a.href = 'javascript:alarmDeleteOne(\''+ bodyObject.alarmKey+'\''+'\,\''+'${path}/'+ bodyObject.alarmPath+'\');';
-		   					  a.className='noteDeleteOne';		
-		   					  a.id =  bodyObject.alarmKey;
-		   					  
-		   			          
-
-		   			          var spanTime = document.createElement('span');
-		   			          spanTime.className = 'time';
-		   				   	
-		   					   	// 예시 ISO 8601 날짜 문자열
-		   					   	const isoDateString = bodyObject.alarmDate; // 서버에서 받아온 ISO 8601 형식의 날짜 문자열
-
-		   					   	// ISO 8601 문자열을 Date 객체로 변환
-		   					   	const date = new Date(isoDateString);
-
-		   					   	// Date 객체를 로컬 형식으로 변환하여 출력
-		   					   	const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
-
-		   					   	// 또는 직접 포맷하여 사용할 수 있습니다.
-		   					   	const year = date.getFullYear();
-		   					   	const month = (date.getMonth() + 1).toString().padStart(2, '0');
-		   					   	const day = date.getDate().toString().padStart(2, '0');
-		   					   	const hours = date.getHours().toString().padStart(2, '0');
-		   					   	const minutes = date.getMinutes().toString().padStart(2, '0');
-		   					   	const seconds = date.getSeconds().toString().padStart(2, '0');
-		   					   	const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
-
-		   					   	// spanTime에 포맷된 날짜를 설정
-		   					   	spanTime.textContent = customFormattedDate + " ";
-		   					   	
-		   				          // Append the child elements
-		   				          divIcon.appendChild(faIcon);
-		   				          divContent.appendChild(spanBlock);
-		   				          divContent.appendChild(spanTime);
-		   				          a.appendChild(divIcon);
-		   				          a.appendChild(divContent);
-
-		   				   		
-
-		   			      // alarmBox의 첫 번째 자식으로 추가
-		   			      const alarmBox = document.getElementById('alarmBox');
-		   			      alarmBox.insertBefore(a, alarmBox.firstChild);
+   					  // spanTime에 포맷된 날짜를 설정
+   					  spanTime.textContent = customFormattedDate + " ";
+   					   	
+   				      // Append the child elements
+   				      divIcon.appendChild(faIcon);
+   				      divContent.appendChild(spanBlock);
+  				          divContent.appendChild(spanTime);
+  				          a.appendChild(divIcon);
+  				          a.appendChild(divContent);
+   				   		
+	   			      // alarmBox의 첫 번째 자식으로 추가
+	   			      const alarmBox = document.getElementById('alarmBox');
+	   			      alarmBox.insertBefore(a, alarmBox.firstChild);
 						 
 		            });
 		            
 		            stompClient.subscribe('/user/queue/users', function (message) {
-		                var users = JSON.parse(message.body);
+		                 var users = JSON.parse(message.body);
 
 
-                      for (var username in users) {
-                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberId}') { // 본인의 상태는 업데이트하지 않음
-                              userStatusMap[username] = users[username];
-                              updateUserStatus(username, users[username]);
-                          }
-                      }
-                  });
+	                      for (var username in users) {
+	                          if (users.hasOwnProperty(username) && username !== '${loginMember.memberId}') { // 본인의 상태는 업데이트하지 않음
+	                              userStatusMap[username] = users[username];
+	                              updateUserStatus(username, users[username]);
+	                          }
+	                      }
+                  	 });
               });
           }
             function updateUserStatus(username, isOnline) {
