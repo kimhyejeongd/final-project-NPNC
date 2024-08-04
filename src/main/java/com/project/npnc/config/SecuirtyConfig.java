@@ -61,8 +61,8 @@ public class SecuirtyConfig{
 					.addFilterBefore(encodingFilter, UsernamePasswordAuthenticationFilter.class)
 					.authenticationProvider(provider) //인증 제공자를 설정(실제 인증 로직을 구현한 클래스를 등록해야함) 
 					.formLogin(form->form
-							.loginProcessingUrl("/logincheck")
 							.loginPage("/loginpage")
+							.loginProcessingUrl("/logincheck")
 							.successHandler(customAuthenticationSuccessHandler) // 커스텀 성공 핸들러 설정
 //							.defaultSuccessUrl("/")
 							)
