@@ -39,7 +39,7 @@
     <title>Insert title here</title>
 </head>
 <body>
-    <jsp:include page="${path}/WEB-INF/views/admin/adminsidebar.jsp"></jsp:include>
+ 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
 
     <div class="main-panel">
         <div class="container">

@@ -136,9 +136,18 @@
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
 				       </li>
-			           <li class="nav-item">
+
+			          <li class="nav-item">
 				         <a class="nav-link" href="${path}/external/list">외부주소록</a>
-				       </li>
+				        </li>
+
+				       <c:if test="${loginMember.accessKey eq 2 }">
+				       	 <a class="nav-link" href="${path}/admin/manageAdminMain">경영</a>
+				       </c:if>
+				        <c:if test="${loginMember.accessKey eq 3 }">
+				       	 <a class="nav-link" href="${path}/admin/personAdminMain">인사</a>
+				       </c:if>
+
 				     </ul>
 				   </div>
 				 </div>
@@ -264,27 +273,27 @@
 									   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 									                    
 									                    break;
-							
+									                case 'DocComplete':
+									                	//기안문서 결재완료 알람 목록 출력 디자인
+									                	  divIcon = document.createElement('div');
+									   			          divIcon.className = 'notif-icon notif-primary';
+								
+									   			          faIcon = document.createElement('i');
+									   			          faIcon.className = 'fa fa-book';
+								
+									   			          divContent = document.createElement('div');
+									   			          divContent.className = 'notif-content';
+								
+									   			          spanBlock = document.createElement('span');
+									   			          spanBlock.className = 'block';
+									                	  spanBlock.textContent = '문서 번호 : ' + response[i].docSerialKey + '  승인 완료';
+									                	
+									                	break;
 									                default:
 									                    console.error('Unknown alarm type:', response[i].alarmType);
 									                    break;
 							            	}
-								            
-							            
-							               //공통 디자인
-										   // Step 1: Extract the current number from the element
-								           var notificationText = $('.notification').eq(1).text();
-								           var currentCount = parseInt(notificationText, 10);
-					
-								           // Step 2: Perform the desired operation (e.g., increment by 1)
-								           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
-					
-								           // Step 3: Update the elements with the new value
-								           $('.notification').eq(1).text(updatedCount);
-					
-								           var dropdownTitle = $('.dropdown-title').eq(1).text();
-								           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
-								           $('.dropdown-title').eq(1).text(newDropdownTitle);
+										
 										   
 										   var a = document.createElement('a');
 					   			           a.href = 'javascript:alarmDeleteOne(\''+ response[i].alarmKey+'\''+'\,\''+'${path}/'+ response[i].alarmPath+'\');';
@@ -303,17 +312,8 @@
 					   					  // Date 객체를 로컬 형식으로 변환하여 출력
 					   					  const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
 					
-					   					  // 또는 직접 포맷하여 사용할 수 있습니다.
-					   					  const year = date.getFullYear();
-					   					  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-					   					  const day = date.getDate().toString().padStart(2, '0');
-					   					  const hours = date.getHours().toString().padStart(2, '0');
-					   					  const minutes = date.getMinutes().toString().padStart(2, '0');
-					   					  const seconds = date.getSeconds().toString().padStart(2, '0');
-					   					  const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
-					
 					   					  // spanTime에 포맷된 날짜를 설정
-					   					  spanTime.textContent = customFormattedDate + " ";
+					   					  spanTime.textContent = formattedDate + " ";
 					   					   	
 					   				      // Append the child elements
 					   				      divIcon.appendChild(faIcon);
@@ -413,7 +413,7 @@
                       aria-expanded="false"
                     >
                       <i class="fa fa-envelope"></i>
-                  <span class="notification">4</span>
+                  <span class="notification"></span>
                       
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
@@ -661,11 +661,10 @@
 						data:{ memberKey:${loginMember.memberKey}},
 						success:function(response){
 			                $('.notification').eq(1).text(response.length);
-								
 							$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+response.length+"개 있습니다.");
 						}
 					});
-			      }
+		      }
 	
 	        // 알람 숫자 표기
 	     	window.onload = onWindowLoadAlarmNum();
@@ -814,7 +813,7 @@
 		                    $.notify({
 		                        icon: 'icon-bell',
 		                        title: '기안한 문서가 승인되었습니다.',
-		                        message: bodyObject.memberName + " " + bodyObject.jobName + '님이 작성한 문서가 결재 대기중입니다.'
+		                        message: '문서 번호 : ' + bodyObject.docSerialKey + '  승인 완료'
 		                    }, {
 		                        type: 'primary',
 		                        placement: {
@@ -836,7 +835,7 @@
 	
 		   			          spanBlock = document.createElement('span');
 		   			          spanBlock.className = 'block';
-		   			          spanBlock.textContent = bodyObject.memberName+" "+bodyObject.jobName +'님이 작성한 문서가 결재 대기중입니다.';
+		   			          spanBlock.textContent = '문서 번호 : ' + bodyObject.docSerialKey + '  승인 완료';
 		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 		                    
 		                    break;

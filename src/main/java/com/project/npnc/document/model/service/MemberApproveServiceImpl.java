@@ -7,7 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.amazonaws.services.s3.AmazonS3;
+import com.project.npnc.alarm.AlarmWebsocketController;
+import com.project.npnc.alarm.dto.AlarmMessage;
 import com.project.npnc.document.member.controller.DocHtmlController;
 import com.project.npnc.document.member.controller.DocS3Controller;
 import com.project.npnc.document.model.dao.MemberDocumentDao;
@@ -24,6 +25,7 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 	private final MemberDocumentDao dao;
 	private final MemberDocumentService serv;
 	private final DocS3Controller scCon;
+	private final AlarmWebsocketController alarm;
 	
 	//결재 : 승인
 	@Override
@@ -83,7 +85,20 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 					log.debug("휴가 차감 성공");
 					break;
 				}
-	
+				
+				//승인 완료 알람 발송
+				log.debug("----- 승인 완료 알람 발송 -----");
+				int writerKey = dao.selecetDocWriter(session, serial);
+				AlarmMessage a = AlarmMessage.builder()
+							.alarmType("DocComplete")
+							.alarmPath("document/list/employee/complete")
+							.alarmReMember(writerKey) //글 작성자
+							.alarmSendMember(0)
+							.docSerialKey(serial)
+							.build();
+				log.debug(a.toString());
+				alarm.test(writerKey, a);
+				
 			}
 		}catch(Exception e) {
 			log.error("문서 결재 처리 중 예외 발생: ", e);

@@ -10,10 +10,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	<c:if test="${loginMember.accessKey eq 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/personadminsidebar.jsp" %> 
+ 	</c:if>
+ 	<c:if test="${loginMember.accessKey != 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	</c:if>
  	<div class="main-panel">
-
-	<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 	
+ 	<c:if test="${loginMember.accessKey eq 3 }">
+  		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	</c:if>
+  	 <c:if test="${loginMember.accessKey != 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+ 	</c:if>
 		<div class="col-md-12">
 		                <div class="card">
 		                  <br><br><br><br>

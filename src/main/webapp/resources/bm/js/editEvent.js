@@ -16,7 +16,8 @@ var editEvent = function(event) {
     
     currentEvent = event;
     //참조인은 수정불가, 예약은 예약페이지에서만 수정가능
-    var isCreator = (event.extendedProps.empNo == currentUser.empNo && event.extendedProps.type != '4');
+    var isCreator = (event.extendedProps.empNo == currentUser.empNo);
+    var isReservation = (event.extendedProps.type == 4);
 	var sharer = event.extendedProps.empName;
     // 각 입력 필드에 이벤트 정보 설정
     var start = moment(event.start).format('YYYY-MM-DD HH:mm');
@@ -24,7 +25,7 @@ var editEvent = function(event) {
 
     // 수정 모달 창 열기
     Swal.fire({
-        title: '일정 수정',
+        title: '일정',
         html:  `
             <div class="form-group">
                 <label for="cal-allDay">종일</label>
@@ -32,25 +33,25 @@ var editEvent = function(event) {
             </div>
             <div class="form-group">
                 <label for="cal-title">제목</label>
-                <input id="cal-title" type="text" class="form-control" required ${!isCreator ? 'disabled' : ''}>
+                <input id="cal-title" type="text" class="form-control" required ${!isCreator ? 'disabled' : ''} ${isReservation? 'disabled': ''}>
             </div>
             <div class="form-group">
                 <label for="cal-start">시작 일시</label>
-                <input id="cal-start" type="datetime-local" class="form-control" value="${start}" required ${!isCreator ? 'disabled' : ''}>
+                <input id="cal-start" type="datetime-local" class="form-control" value="${start}" required ${!isCreator ? 'disabled' : ''} ${isReservation? 'disabled': ''}>
             </div>
             <div class="form-group">
                 <label for="cal-end">종료 일시</label>
-                <input id="cal-end" type="datetime-local" class="form-control" value="${end}" required ${!isCreator ? 'disabled' : ''}>
+                <input id="cal-end" type="datetime-local" class="form-control" value="${end}" required ${!isCreator ? 'disabled' : ''} ${isReservation? 'disabled': ''}>
             </div>
             <div class="form-group">
-                <label for="cal-type">구분</label>
-                <select id="cal-type" class="form-control" ${!isCreator ? 'disabled' : ''}>
+                <label for="cal-type" style="display : ${isReservation ? 'none' : 'block'}">구분</label>
+                <select id="cal-type" class="form-control" ${!isCreator ? 'disabled' : '' }  style="display : ${isReservation ? 'none' : 'block'}">
                     <option value="1">내일정</option>
                     <option value="2">부서일정</option>
                     <option value="3">전사일정</option>
                 </select>
             </div>
-            <div class="form-group" id="reference-container" style="display: ${!isCreator ? 'none' : 'block'};">
+            <div class="form-group" id="reference-container" style="display: ${isCreator && !isReservation ? 'block' : 'none'};">
                 <div class="btn-group">
                     <button class="btn btn-secondary dropdown-toggle button-margin" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" ${!isCreator ? 'disabled' : ''}>
                         참조인
@@ -74,14 +75,14 @@ var editEvent = function(event) {
             ` : ''}
             <div class="form-group">
                 <label for="cal-desc">설명</label>
-                <textarea id="cal-desc" class="form-control" rows="3" ${!isCreator ? 'disabled' : ''}></textarea>
+                <textarea id="cal-desc" class="form-control" rows="3" ${!isReservation && isCreator ? '' : 'disabled'}></textarea>
             </div>
         `,
         showCloseButton: true,
-        showCancelButton: isCreator,
+        showCancelButton: isCreator && !isReservation,
         cancelButtonText: '삭제',
         confirmButtonText: isCreator ? '수정' : '닫기',
-        showConfirmButton: true,
+        showConfirmButton: isCreator && !isReservation,
         focusConfirm: false,
         customClass: {
             content: 'text-start',
@@ -90,31 +91,31 @@ var editEvent = function(event) {
         didOpen: () => {
 			const typeSelect = document.getElementById('cal-type');
 			const referenceContainer = document.getElementById('reference-container');
+            document.getElementById('cal-type').value = event.extendedProps.type;
 
-            // Initially hide reference container if '전사일정' is selected
-            if (typeSelect.value === '3') {
+        
+            if (typeSelect.value == '3') {
                 referenceContainer.style.display = 'none';
                 document.getElementById("selected-members2").style.display = 'none';
                 document.getElementById("selected-members").style.display = 'none';
             }
 
-            // Add event listener for changes in the type selection
+            
             typeSelect.addEventListener('change', function() {
-                if (this.value === '3') { // '전사일정' selected
+                if (this.value == '3') { 
                     referenceContainer.style.display = 'none';
                     document.getElementById("selected-members2").style.display = 'none';
                		document.getElementById("selected-members").style.display = 'none';
                 } else {
                     referenceContainer.style.display = 'block';
-                    document.getElementById("selected-members2").style.display = 'block';
-               		document.getElementById("selected-members").style.display = 'block';
+                    /*document.getElementById("selected-members2").style.display = 'block';
+               		document.getElementById("selected-members").style.display = 'block';*/
                 }
             });
             // 모달이 열린 후 실행할 코드
             document.getElementById('cal-title').value = event.title;
             document.getElementById('cal-start').value = start;
             document.getElementById('cal-end').value = end;
-            document.getElementById('cal-type').value = event.extendedProps.type;
             document.getElementById('cal-desc').value = event.extendedProps.description;
             if(!isCreator){
 				

@@ -51,7 +51,7 @@ public class AttendanceController{
 	 */
 	
 	
-	@Scheduled(cron="40 * * 10 * ?")
+	@Scheduled(cron = "0 50 23 ? * MON-FRI")
 	public void AttendanceCheck() {
 		List<Attendance> todayAttendance=selectAttendanceToday();
 		List<Integer> memberKeys=selectMemberKeyAll();

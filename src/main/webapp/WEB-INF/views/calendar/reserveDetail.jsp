@@ -74,7 +74,7 @@
     <div class="sidebar" data-background-color="dark">
       <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
-          <a href="index.html" class="logo">
+          <a href="${path }/" class="logo">
             <img src="${path}/resources/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
           </a>
           <button class="topbar-toggler more">

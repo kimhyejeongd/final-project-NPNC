@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.project.npnc.admin.department.model.dto.Department;
 import com.project.npnc.admin.department.model.service.DepartmentService;
 import com.project.npnc.admin.job.model.dto.Job;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +47,9 @@ public class DepartmentController {
 	}
 	
 	@GetMapping("/selectdeptall.do")
-	public String selectDeptAll(Model m) {
+	public String selectDeptAll(Authentication authentication,Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		List<Department> d=service.selectDeptAll();
 		m.addAttribute("depts",d);
 		return "admin/dept/deptlist";

@@ -34,4 +34,33 @@ public class AdminMainController {
 		return "admin/adminMain";
 	}
 	
+	@GetMapping("/manageAdminMain")
+	public String manageAdminMain(Model m) {
+		int memberCount=memberService.selectMemberCount();
+		List<Department> dept=memberService.selectMemberCountByDept();
+		List<Job> job=memberService.selectMemberCountByJob();
+		m.addAttribute("memberCount",memberCount);
+		m.addAttribute("job",job);
+		m.addAttribute("dept",dept);
+		
+		
+		return "admin/manageAdminMain";
+	}
+	
+	@GetMapping("/personAdminMain")
+	public String personAdminMain(Model m) {
+		int memberCount=memberService.selectMemberCount();
+		List<Department> dept=memberService.selectMemberCountByDept();
+		List<Job> job=memberService.selectMemberCountByJob();
+		m.addAttribute("memberCount",memberCount);
+		m.addAttribute("job",job);
+		m.addAttribute("dept",dept);
+		
+		
+		return "admin/personAdminMain";
+	}
+	
+	
+	
+	
 }

@@ -87,7 +87,7 @@
       <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path }/" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -382,7 +382,7 @@
                     if (result.isConfirmed) {
                         // Ajax 요청 보내기
                         $.ajax({
-                            url: '/calendar/deletecalendar',  // 실제 취소 요청을 처리할 URL로 변경해야 합니다.
+                            url: path+'/calendar/deletecalendar',  // 실제 취소 요청을 처리할 URL로 변경해야 합니다.
                             method: 'POST',
                             dataType: 'json',
                             data:  JSON.stringify(calendarKey),

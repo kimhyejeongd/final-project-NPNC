@@ -114,7 +114,7 @@
 .selectgroup-item input[type="checkbox"] {
   margin-right: 10px;
 }
-
+/* 
 .tippy-box[data-theme~='light-border'] {
     font-family: 'Roboto', sans-serif;
     background-color: #fff;
@@ -148,12 +148,39 @@
 .popover-description {
     font-size: 0.9em;
     color: #444;
-}
+} */
 
 .selected-member{
 	background-color: DarkGray;
-
 }
+.tooltip-content {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    max-width: 430px; /* 최대 너비 설정 */
+    box-sizing: border-box;
+}
+
+.popover-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 5px;
+}
+
+.popover-info, .popover-description {
+    font-size: 16px;
+    color: #333333;
+    margin: 8px 0;
+    line-height: 1.4;
+    word-break: keep-all; /* 단어 단위로 줄바꿈 */
+    white-space: normal; /* 자동 줄바꿈 허용 */
+}
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -164,7 +191,7 @@
       <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path }/" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -231,7 +258,7 @@
 
     <div class="main-panel">
       <!-- header_bar -->
-      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+       <%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
 
 		<div class="container">
 		  <div class="page-inner">
