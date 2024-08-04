@@ -28,4 +28,5 @@ public class AlarmMessage {
 	private String memberName;
 	private String jobName;
 	private String docSerialKey; //전자문서 알람 전용 필드
+	private int docKey; //전자문서 알람 전용 필드
 }
