@@ -1,11 +1,9 @@
 package com.project.npnc.document.model.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.DocFile;
@@ -13,6 +11,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.Referer;
 import com.project.npnc.document.model.dto.VacationApply;
 
 public interface MemberDocumentService {
@@ -50,6 +49,7 @@ public interface MemberDocumentService {
 	
 	int insertApproverLine(int no, String name, List<ApproverLine> list) throws Exception;
 	List<ApproverLine> selectApproverLineList(int storageKey, int memberNo);
+	List<Referer> selectReferer(String serial);
 	List<ApproverLineStorage> selectApproverLines(int memberNo);
 	int deleteApproverLine(int no);
 	

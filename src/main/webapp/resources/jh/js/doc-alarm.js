@@ -42,7 +42,7 @@ function nextAproverAlarmSend(reMemberKey1, memberKey, memberName, jobName){
 	  
 }
 
-function docCompleteAlarmSend(reMemberKey1, memberKey, memberName, jobName, serialKey){
+function docCompleteAlarmSend(reMemberKey1, memberKey, serialKey){
  console.log('승인 완료 알람 send');
 	stompClient.send("/pub/msg/"+reMemberKey1,{},
 		JSON.stringify({
