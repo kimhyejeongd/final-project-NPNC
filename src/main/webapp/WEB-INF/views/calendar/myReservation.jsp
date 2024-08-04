@@ -87,7 +87,7 @@
       <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path }/" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
