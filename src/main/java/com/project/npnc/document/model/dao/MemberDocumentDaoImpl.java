@@ -30,6 +30,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int selecetDocWriter(SqlSession session, String serial) {
+		return session.selectOne("document.selecetDocWriter", serial);
+	}
+
+	@Override
 	public List<DocumentForm> selectForms(SqlSession session, int no) {
 		return session.selectList("document.selectForms", no);
 	}

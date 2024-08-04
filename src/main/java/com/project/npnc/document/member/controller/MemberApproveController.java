@@ -45,7 +45,6 @@ public class MemberApproveController {
 		
 		int result=0;
 		try {
-			String uploadDir = session.getServletContext().getRealPath("/upload/");
 			result = serv.updateApproveDoc(no, serial, msg, formNo, html);
 			if(result <=0) {
 				response.put("status", "error");

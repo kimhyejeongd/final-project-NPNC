@@ -41,3 +41,23 @@ function nextAproverAlarmSend(reMemberKey1, memberKey, memberName, jobName){
 	);
 	  
 }
+
+function docCompleteAlarmSend(reMemberKey1, memberKey, memberName, jobName, serialKey){
+ console.log('승인 완료 알람 send');
+	stompClient.send("/pub/msg/"+reMemberKey1,{},
+		JSON.stringify({
+			
+			alarmType : 'DocComplete',
+			alarmPath : 'document/list/employee/complete',
+			alarmSendMember : memberKey,
+			alarmReMember : reMemberKey1,
+			alarmDate : new Date().toISOString(),
+			memberName: memberName,
+			jobName : jobName,
+			docSerialKey : serialKey
+			
+		})
+			
+	);
+	  
+}
