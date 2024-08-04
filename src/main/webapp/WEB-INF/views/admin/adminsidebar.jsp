@@ -56,7 +56,7 @@
             <ul class="nav nav-secondary">
               <li class="nav-item">
                 <a
-                  href="${path }/"
+                  href="${path }/admin/adminMain"
                 >
                   <i class="fas fa-home"></i><p>관리자페이지 Home</p>
                 </a>
@@ -80,11 +80,11 @@
                         <span class="sub-item">전체사원관리</span>
                       </a>
                     </li>
-                    <li>
+<%--                     <li>
                       <a href="${path }/admin/member/insertmember.do">
                         <span class="sub-item">사원등록</span>
                       </a>
-                    </li>
+                    </li> --%>
                   </ul>
                 </div>
               </li>
@@ -147,30 +147,30 @@
                 </div>
               </li>
               <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#123">
+                <a data-bs-toggle="collapse" href="#docManagement">
                   <i class="fas fa-pen-square"></i>
                   <p>전자결재 관리</p>
                   <span class="caret"></span>
                 </a>
-                <div class="collapse" id="123">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
-                        <span class="sub-item">결재 양식</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/admin/job/selectjoball.do">
-                        <span class="sub-item">결재 보관함</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="${path }/admin/job/selectjoball.do">
-                        <span class="sub-item">전체 문서 목록</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                            <div class="collapse" id="docManagement">
+                          <ul class="nav nav-collapse">
+                              <li>
+                                  <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
+                                      <span class="sub-item">결재 보관함</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="${path}/admin/documentForm/selectAdminFormAll">
+                                      <span class="sub-item">결재 양식</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="${path}/admin/job/selectjoball.do">
+                                      <span class="sub-item">전체 문서 목록</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
               </li>
                <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#reserve">
