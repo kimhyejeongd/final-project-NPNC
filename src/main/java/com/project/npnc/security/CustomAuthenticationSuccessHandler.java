@@ -22,9 +22,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		System.out.println("로그인 테스트 : "+loginMem.getAccessKey() );
 		if (loginMem != null && loginMem.getAccessKey()==1) {
-            response.sendRedirect("/admin/adminMain");
+            response.sendRedirect("/"+request.getContextPath()+"/admin/adminMain");
         } else {
-            response.sendRedirect("/");
+            response.sendRedirect("/"+request.getContextPath());
         }
 	}
 
