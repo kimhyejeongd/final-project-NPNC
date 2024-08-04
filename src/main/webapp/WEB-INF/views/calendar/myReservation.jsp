@@ -382,7 +382,7 @@
                     if (result.isConfirmed) {
                         // Ajax 요청 보내기
                         $.ajax({
-                            url: '/calendar/deletecalendar',  // 실제 취소 요청을 처리할 URL로 변경해야 합니다.
+                            url: path+'/calendar/deletecalendar',  // 실제 취소 요청을 처리할 URL로 변경해야 합니다.
                             method: 'POST',
                             dataType: 'json',
                             data:  JSON.stringify(calendarKey),
