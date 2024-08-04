@@ -62,7 +62,7 @@
         editable: false,
         expandedRows: true,
         locale: 'ko',
-        dayMaxEvents: 1,
+        dayMaxEvents: 0,
         fixedWeekCount:false,
         headerToolbar:{
 			left : 'prev',

@@ -102,13 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			offset: [0,0],
 			delay: 5,
 			distance: 15,
-			maxWidth: 150,
+			maxWidth: 170,
+			boundary:'viewport',
 			ignoreAttributes:true,
 			allowHTML:true,
 			interactive: true,
 		  })
 			console.log(info.event);
-		}
+		},
+		
+		
     });
 
     calendar.render();
@@ -206,10 +209,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			success: function(data){
 				var events = data.map(function(event){
 					if(event.memberKey!= userKey){
-						backgroundColor = '#9932CC';
+						backgroundColor = '#DDA0DD';
 					}
 					else{
-						backgroundColor = '#ff9e27';
+						backgroundColor = '#F4A460';
 					}
 					return {
 						id: event._id,

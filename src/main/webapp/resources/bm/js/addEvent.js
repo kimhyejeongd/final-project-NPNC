@@ -142,13 +142,13 @@ var newEvent = function(start, end, eventType) {
             }
             switch (type) {
                 case '1':
-                    backgroundColor = '#4285F4'; //파란색
+                    backgroundColor = '#87CEFA'; //파란색
                     break;
                 case '2':
-                    backgroundColor = '#0F9D58'; //녹색
+                    backgroundColor = '#90EE90'; //녹색
                     break;
                 case '3':
-                    backgroundColor = '#DB4437'; //빨간색
+                    backgroundColor = '#F08080'; //빨간색
                     break;
                 default:
                     backgroundColor = '#000000'; //검정색

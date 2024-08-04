@@ -32,9 +32,44 @@
         },
       });
     </script>
+    <style>
+    
+.highlighted {
+    background-color: #ffeb3b !important; /* !important로 우선 순위 지정 */
+    border: 1px solid #fbc02d !important;
+    color: #000 !important;
+}
+    </style>
+     <style>
+#calendar{
+	height:75% !important;
+}
+#timeCheckBox {
+    font-size: 16px; /* 체크박스 레이블 크기 조정 */
+    margin-top : 7%;
+}
+#timeCheckBox .selectgroup-item {
+    font-size: 23px; /* 체크박스 크기 조정 */
+}
+#timeCheckBox .selectgroup-input {
+    width: 20px;
+    height: 20px;
+}
+#timeCheckBox .selectgroup-button {
+    padding: 10px;
+}
+            </style>
+<!--     <style>
+   .fc-disabled-day .fc-daygrid-day-number {
+      color: #b0b0b0; /* 회색 텍스트 */
+      background-color: #f0f0f0; /* 연한 회색 배경 */
+      pointer-events: none; /* 클릭 비활성화 */
+    }
+    </style> -->
     <!-- sweetalert2 부트스트랩 -->
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path }/resources/bm/css/bootstrap-4.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.css">
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -144,7 +179,7 @@
                   </a>
                 </div>
                 <div class="hk-sidebar-togglable"></div>
-              </header>
+              </header>		
 
               <div class="blog-body">
                 <div class="d-flex align-items-center">
@@ -187,7 +222,7 @@
                                 </div>
                               </td>
                               <td>${r.itemMax}인</td>
-                              <td>${r.start } - ${r.end }</td>
+                              <td class="formatted-date-time-range" data-start ="${r.start }" data-end="${r.end }"></td>
                               <td>
                               	<button class="btn btn-primary btn-sm editReservation" data-item-key=${r.itemKey } data-calendar-key="${r.calendarKey }" data-item-name="${r.itemName }" data-date= "${r.date }" data-start-time ="${r.start }" data-end-time="${r.end }">수정</button>
                               	<button class="btn btn-danger btn-sm cancelReservation" data-calendar-key="${r.calendarKey}">취소</button>
@@ -263,7 +298,7 @@
   <script>
   	const path='${path}';
   </script>
-  
+
   <script>
     $(document).ready(function() {
       $('#reservationTypeSelect').change(function() {
@@ -275,6 +310,7 @@
           $('.reservation-row[data-item-type="' + selectedType + '"]').show();
         }
       });
+    
     });
   </script>
   <script>
@@ -297,6 +333,38 @@
     ]
     
   </script>
+  <script>
+  	function formatShortDateTimeRange(start, end) {
+	    // 파라미터로 받은 시작과 종료 시간을 'YYYY-MM-DD HH:mm:ss' 형식으로 파싱
+	    const parseDateTime = (dateTimeStr) => {
+	      // Replace space between date and time with 'T' for ISO string parsing
+	      return new Date(dateTimeStr.replace(' ', 'T'));
+	    };
+
+	    const dateOptions = { month: 'short', day: 'numeric' };
+	    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+
+	    const startDate = parseDateTime(start);
+	    const endDate = parseDateTime(end);
+		console.log(startDate);
+	    const formattedDate = startDate.toLocaleDateString('ko-KR', dateOptions);
+	    const formattedStartTime = startDate.toLocaleTimeString('ko-KR', timeOptions);
+	    const formattedEndTime = endDate.toLocaleTimeString('ko-KR', timeOptions);
+
+	    return `\${formattedDate} \${formattedStartTime} - \${formattedEndTime}`;
+	  }
+
+	  document.addEventListener('DOMContentLoaded', () => {
+	    document.querySelectorAll('.formatted-date-time-range').forEach(td => {
+	      const start = td.getAttribute('data-start');
+	      const end = td.getAttribute('data-end');
+	      td.innerText = formatShortDateTimeRange(start, end);
+	      console.log(td);
+	    });
+	  });
+  </script>
+  
+  
   
    <script>
         $(document).ready(function () {
@@ -334,6 +402,7 @@
                 });
             });
         });
+    
     </script>
   
   

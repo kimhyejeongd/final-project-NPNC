@@ -804,12 +804,13 @@ A HORIZONTAL event
 }
 .fc-daygrid-day-frame, .fc-daygrid-day-events, .fc-daygrid-event-harness .fc-event-time
 	{ /* for event top/bottom margins */
-/* 	display: inline-block; */
+
 }
 .fc-daygrid-day-frame, .fc-daygrid-day-events, .fc-daygrid-event-harness .fc-event-title
-	{ /* for event top/bottom margins */
-	/* display: inline-block; */
+	{
+
 }
+	
 
 .fc-daygrid-day-frame:before, .fc-daygrid-day-events:before,
 	.fc-daygrid-event-harness:before {
@@ -1081,7 +1082,7 @@ button.fc-next-button.btn.btn-primary{
 	flex-shrink: 1;
 	min-width: 0; /* important for allowing to shrink all the way */
 	overflow: hidden;
-	font-weight: bold;
+	font-weight: 700;
 }
 
 .fc-daygrid-dot-event:hover, .fc-daygrid-dot-event.fc-event-mirror {
@@ -1144,6 +1145,8 @@ A VERTICAL event
 	overflow: hidden;
 }
 
+.fc-
+
 .fc-v-event .fc-event-title-container {
 	/* a container for the sticky cushion */
 	flex-grow: 1;
@@ -1189,6 +1192,9 @@ A VERTICAL event
 	cursor: s-resize;
 }
 
+.fc-event.fc-daygrid-dot-event{
+	display: flex;
+}
 .fc-v-event {
 	/* resizer for MOUSE */
 	
