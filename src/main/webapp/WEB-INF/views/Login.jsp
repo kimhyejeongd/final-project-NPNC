@@ -15,8 +15,9 @@
 }
 
 body {
-  background: #4a90e2; /* 기본 색상 */
-  background: radial-gradient(circle, rgba(58,123,213,1) 0%, rgba(58,96,152,1) 100%);
+  background-image: url('${path}/resources/hj/—Pngtree—blue background_919872.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,20 +25,30 @@ body {
   margin: 0;
 }
 
-main {
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 컨테이너 내의 내용물을 중앙에 정렬 */
   background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 400px;
-  padding: 30px;
-  transition: all 0.3s ease;
+  padding: 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  max-width: 900px; /* 최대 너비를 900px로 설정 */
+}
+
+.logo-container {
+  margin-right: 100px; /* 로고와 폼 사이 간격 증가 */
 }
 
 .logo {
-  width: 150px;
-  margin-bottom: 20px;
+  width: 400px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* 폼 컨테이너가 전체 너비를 차지하도록 설정 */
 }
 
 fieldset {
@@ -94,25 +105,28 @@ button:hover {
 .show {
   display: block;
 }
-
 </style>
 </head>
 <body>
-<main>
-    <img class="logo" src="${path}/resources/jh/images/KakaoTalk_20240708_224711693.png" alt="I'MWARE Logo"/>
-    <form action="${pageContext.request.contextPath}/logincheck" method="post">
-        <fieldset>
-            <input name="username" id="username" type="text" placeholder="아이디" />
-        </fieldset>
-        <div class="failure-message hide">아이디는 4~12글자이어야 합니다</div>
-        <div class="failure-message2 hide">영어 또는 숫자만 가능합니다</div>
-        <fieldset>
-            <input name="password" id="password" type="password" placeholder="비밀번호" />
-        </fieldset>
-        <div class="strongPassword-message hide">8글자 이상, 영문, 숫자, 특수문자(@$!%*#?&)를 사용하세요</div>
-        <button type="submit">로그인</button>
-    </form>
-</main>
+<div class="container">
+    <div class="logo-container">
+        <img class="logo" src="${path}/resources/hj/logologin.png" alt="I'MWARE Logo"/>
+    </div>
+    <div class="form-container">
+        <form action="${pageContext.request.contextPath}/logincheck" method="post">
+            <fieldset>
+                <input name="username" id="username" type="text" placeholder="아이디" />
+            </fieldset>
+            <div class="failure-message hide">아이디는 4~12글자이어야 합니다</div>
+            <div class="failure-message2 hide">영어 또는 숫자만 가능합니다</div>
+            <fieldset>
+                <input name="password" id="password" type="password" placeholder="비밀번호" />
+            </fieldset>
+            <div class="strongPassword-message hide">8글자 이상, 영문, 숫자, 특수문자(@$!%*#?&)를 사용하세요</div>
+            <button type="submit">로그인</button>
+        </form>
+    </div>
+</div>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var elInputUsername = document.getElementById("username");
