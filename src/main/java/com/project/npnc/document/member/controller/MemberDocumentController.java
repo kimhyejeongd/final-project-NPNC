@@ -624,6 +624,18 @@ public class MemberDocumentController {
 		response.put("status", "success");
 		response.put("message", "문서 등록 완료");
 		
+		//알람을 위한 정보 전달
+		response.put("referer", doc.getReferers());
+		//다음 결재자 찾기
+		Approver nextAprover = null;
+		for (Approver approver : doc.getApprovers()) {
+		    if (approver.getOrderby() == 1) {
+		        nextAprover = approver;
+		        break; // 조건을 만족하는 첫 번째 객체를 찾으면 루프 종료
+		    }
+		}
+		response.put("nextAprover", nextAprover);
+		
 		//모두 성공시 전자결재홈으로
 		return ResponseEntity.ok(response);
 	}
@@ -714,15 +726,14 @@ public class MemberDocumentController {
 	}
 	
 	
-	
+	//TODO 결재 대기문서 수신, 기안 문서 종결(처리상태 변경알림 = 반려 || 처리완료), 참조문서 수신 알람 기능 구현
+	//rewrite
+	//TODO 일반문서 임시저장 재기안 확인 -> 회수 재기안 확인 이것만 하면 일반 문서 끝
 	
 	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
 	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
-	//일반문서 임시저장 재기안 확인 -> 회수 재기안 확인
-	//TODO 결재 대기문서 수신, 기안 문서 종결(처리상태 변경알림 = 반려 || 처리완료), 참조문서 수신 알람 기능 구현
-	//TODO 위아래 이동 기능 구현
-	//TODO 전체 문서 조회 및 상세 검색 기능
-	//TODO 결재 내역 팝업 구성 완료
+	//TODO 위아래 이동 기능 구현 (보류...)
+	//TODO 전체 문서 조회 및 상세 검색 기능 (보류???)
 	
 	
 	//추가근무 신청 기안
