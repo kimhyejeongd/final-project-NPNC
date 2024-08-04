@@ -14,7 +14,7 @@ public class ExceptionHandler implements AccessDeniedHandler { //security에서 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		request.setAttribute("msg", accessDeniedException.getMessage());
+		request.setAttribute("msg", "권한이 없습니다!");
 		request.setAttribute("loc", "/");
 		request.getRequestDispatcher("/WEB-INF/views/msg.jsp")
 		.forward(request, response);
