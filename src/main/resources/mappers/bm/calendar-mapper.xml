@@ -356,7 +356,7 @@
 			#{date}||' '||#{start},
 			#{date}||' '||#{end},
 			#{itemName},
-			'#000000',
+			'#F5DEB3',
 			'N',
 			DEFAULT,
 			DEFAULT,

@@ -64,7 +64,7 @@ var editEvent = function(event) {
             </div>
             <div class="form-group" id="selected-members-container" style="display: ${!isCreator ? 'none' : 'block'};">
                 <label for="selected-members" id="selected-members2" style="display:none;">선택된 참조인</label>
-                <div id="selected-members" class="form-control" style="height:auto; display:none };"></div>
+                <div id="selected-members" class="form-control" style="height:auto; display:none;" };"></div>
             </div>
             ${!isCreator ? `
             <div class="form-group">
@@ -88,6 +88,28 @@ var editEvent = function(event) {
             cancelButton: 'btn btn-danger'
         },
         didOpen: () => {
+			const typeSelect = document.getElementById('cal-type');
+			const referenceContainer = document.getElementById('reference-container');
+
+            // Initially hide reference container if '전사일정' is selected
+            if (typeSelect.value === '3') {
+                referenceContainer.style.display = 'none';
+                document.getElementById("selected-members2").style.display = 'none';
+                document.getElementById("selected-members").style.display = 'none';
+            }
+
+            // Add event listener for changes in the type selection
+            typeSelect.addEventListener('change', function() {
+                if (this.value === '3') { // '전사일정' selected
+                    referenceContainer.style.display = 'none';
+                    document.getElementById("selected-members2").style.display = 'none';
+               		document.getElementById("selected-members").style.display = 'none';
+                } else {
+                    referenceContainer.style.display = 'block';
+                    document.getElementById("selected-members2").style.display = 'block';
+               		document.getElementById("selected-members").style.display = 'block';
+                }
+            });
             // 모달이 열린 후 실행할 코드
             document.getElementById('cal-title').value = event.title;
             document.getElementById('cal-start').value = start;

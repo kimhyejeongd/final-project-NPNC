@@ -78,36 +78,43 @@
 	}
 	
 	/* 체크박스 컨테이너 스타일 */
-	#checkbox {
-	  border: 1px solid #ddd; /* 박스 테두리 */
-	  border-radius: 4px; /* 박스 테두리 모서리 둥글게 */
-	  padding: 15px; /* 박스 내부 여백 */
-	  background-color: #f9f9f9; /* 박스 배경색 */
-	  margin-right: 20px; /* 캘린더와의 간격 */
-	}
-	
- .checkbox-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .checkbox-category {
-        margin-bottom: 20px;
-    }
-    .color-circle {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 10px;
-    }
-    .selectgroup-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    .selectgroup-item input[type="checkbox"] {
-        margin-right: 10px;
-    }
+#checkbox {
+  border: 1px solid #ddd; /* 박스 테두리 */
+  border-radius: 4px; /* 박스 테두리 모서리 둥글게 */
+  padding: 15px; /* 박스 내부 여백 */
+  background-color: #f9f9f9; /* 박스 배경색 */
+  margin-right: 20px; /* 캘린더와의 간격 */
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 항목을 나열 */
+  flex-wrap: nowrap; /* 줄 바꿈을 하지 않도록 설정 */
+}
+
+.checkbox-category {
+  margin-bottom: 20px;
+}
+
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.selectgroup-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%; /* 각 항목이 전체 너비를 차지하도록 설정 */
+}
+
+.selectgroup-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
 .tippy-box[data-theme~='light-border'] {
     font-family: 'Roboto', sans-serif;
     background-color: #fff;
@@ -237,22 +244,22 @@
 	                <div class="form-group">
 	                    <div class="selectgroup selectgroup-pills">
 	                        <label class="selectgroup-item">
-	                            <div class="color-circle" style="background-color: #007bff;"></div>
+	                            <div class="color-circle" style="background-color: #87CEFA;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="myCalendar">
 	                            <span class="selectgroup-button">내일정</span>
 	                        </label>
 	                        <label class="selectgroup-item">
-	                            <div class="color-circle" style="background-color: #28a745;"></div>
+	                            <div class="color-circle" style="background-color: #90EE90;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="deptCalendar">
 	                            <span class="selectgroup-button">부서일정</span>
 	                        </label>
 	                        <label class="selectgroup-item">
-	                            <div class="color-circle" style="background-color: #dc3545;"></div>
+	                            <div class="color-circle" style="background-color: #F08080;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="companyCalendar">
 	                            <span class="selectgroup-button">전사일정</span>
 	                        </label>
 	                        <label class="selectgroup-item">
-	                            <div class="color-circle" style="background-color: #ffc107;"></div>
+	                            <div class="color-circle" style="background-color: #F5DEB3;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="reservationCalendar">
 	                            <span class="selectgroup-button">예약일정</span>
 	                        </label>
@@ -264,12 +271,12 @@
 	                <div class="form-group">
 	                    <div class="selectgroup selectgroup-pills">
 	                        <label class="selectgroup-item">
-	                            <div class="color-circle" style="background-color: #6f42c1;"></div>
+	                            <div class="color-circle" style="background-color: #F4A460;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="myVacationCalendar">
 	                            <span class="selectgroup-button">내 휴가일정</span>
 	                        </label>
 	                        <label class="selectgroup-item">
-	                        	<div class="color-circle" style="background-color: #6f42c1;"></div>
+	                        	<div class="color-circle" style="background-color: #DDA0DD;"></div>
 	                            <input type="checkbox" class="selectgroup-input" id="deptVacationCalendar">
 	                            <span class="selectgroup-button">부서원 휴가일정</span>
 	                        </label>
