@@ -95,5 +95,7 @@ public class AdminDocumentDao {
 	public int removeDocFolder(SqlSessionTemplate session, int draggedFolderKey) {
 		return session.delete("admindoc.removeDocFolder",draggedFolderKey);
 	}
-
+	public DocumentFormFolder selectDocFormFolderOne(SqlSessionTemplate session,int erFormFolderKey) {
+		return session.selectOne("admindoc.selectDocFormFolderOne",erFormFolderKey);
+	}
 }

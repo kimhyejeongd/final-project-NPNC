@@ -431,7 +431,7 @@
                       aria-expanded="false"
                     >
                       <i class="fa fa-envelope"></i>
-                  <span class="notification">4</span>
+                  <span class="notification"></span>
                       
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn"
