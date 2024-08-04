@@ -289,6 +289,7 @@ $("#fileDiv").off('click', '#fileDeleteBtn').on('click', '#fileDeleteBtn', funct
 });
 
 
+
 $("#storageBtn").click(function() {
     window.open('${pageContext.request.contextPath}/admin/documentForm/selectFolder', 'selectFolderWindow', 'width=900, height=700, left=500, top=100');
 });
