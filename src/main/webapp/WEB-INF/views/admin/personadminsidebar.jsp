@@ -54,9 +54,9 @@
 		    <div class="sidebar-content">
 		        <ul class="nav nav-secondary">
 		            <li class="nav-item">
-		                
-		                    <i class="fas fa-home"></i><p>관리자페이지</p>
-		                
+		                 <a href="${path}/">
+		                    <i class="fas fa-home"></i><p>HOME</p>
+		                </a>
 		            </li>
 		            <!-- 토글리스트 -->
 		            <li class="nav-section">

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.job.model.service.JobService;
 import com.project.npnc.admin.vacation.model.dto.Vacation;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +44,9 @@ public class JobController {
 	}
 	
 	@GetMapping("/selectjoball.do")
-	public String selectJobAll(Model m) {
+	public String selectJobAll(Authentication authentication,Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		m.addAttribute("jobs",service.selectJobAll());
 		return "admin/job/joblist";
 	}

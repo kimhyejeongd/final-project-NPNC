@@ -31,7 +31,7 @@
   	<div class="sidebar-logo">
        <!-- Logo Header -->
        <div class="logo-header" data-background-color="dark">
-         <a href="${path }/" class="logo">
+         <a href="${path}/admin/adminMain" class="logo">
            <img
              src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -78,11 +78,11 @@
 		                                <span class="sub-item">전체사원관리</span>
 		                            </a>
 		                        </li>
-		                        <li>
+<%-- 		                        <li>
 		                            <a href="${path}/admin/member/insertmember.do">
 		                                <span class="sub-item">사원등록</span>
 		                            </a>
-		                        </li> 
+		                        </li>  --%>
 		                    </ul>
 		                </div>
 		            </li>

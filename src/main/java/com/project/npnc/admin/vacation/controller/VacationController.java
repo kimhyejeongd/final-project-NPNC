@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.vacation.model.dto.Vacation;
 import com.project.npnc.admin.vacation.model.service.VacationService;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +28,9 @@ public class VacationController {
 	private final VacationService service;
 	
 	@GetMapping("/selectVacationAll")
-	public String selectVacationAll(Model m){
+	public String selectVacationAll(Authentication authentication,Model m){
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		List<Vacation> vacation =service.selectVacationAll();
 		m.addAttribute("vacation",vacation);
 		return "admin/vacation/vacationlist";

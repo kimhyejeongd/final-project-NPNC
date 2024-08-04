@@ -55,7 +55,7 @@
 		        <ul class="nav nav-secondary">
 		            <li class="nav-item">
 		                <a href="${path}/">
-		                    <i class="fas fa-home"></i><p>관리자페이지 Home</p>
+		                    <i class="fas fa-home"></i><p>Home</p>
 		                </a>
 		            </li>
 		            <!-- 토글리스트 -->
@@ -64,7 +64,7 @@
 		                    <i class="fa fa-ellipsis-h"></i>
 		                </span>
 		            </li>
-		            <li class="nav-item">
+		           <%--  <li class="nav-item">
 		                <a data-bs-toggle="collapse" href="#docING">
 		                    <i class="fas fa-pen-square"></i>
 		                    <p>인사관리</p>
@@ -105,7 +105,7 @@
 		                        </li>
 		                    </ul>
 		                </div>
-		            </li>
+		            </li> --%>
 		            <li class="nav-item">
 		                <a data-bs-toggle="collapse" href="#forms">
 		                    <i class="fas fa-pen-square"></i>

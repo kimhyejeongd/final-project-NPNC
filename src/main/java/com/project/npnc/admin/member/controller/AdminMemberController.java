@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,7 @@ import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +47,11 @@ public class AdminMemberController {
 	@GetMapping("/selectmemberall.do")
 	public String selectMemberAll(
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "6") int numPerpage,			
+			@RequestParam(defaultValue = "6") int numPerpage,
+			Authentication authentication,
 			Model m){
 		//페이징처리
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectMemberCount();
 		List<AdminMember> members= service.selectMemeberAll(page);
@@ -56,6 +61,7 @@ public class AdminMemberController {
 		m.addAttribute("job",job);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("members",members);
+		m.addAttribute("loginMember",loginMem);
 		m.addAttribute("totaldata",totaldata);
 		return "admin/member/memberlist";
 	
@@ -190,11 +196,12 @@ public class AdminMemberController {
 			String searchType,
 			String searchDept,
 			String searchJob,
+			Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "5") int numPerpage,			
 			Model m
 			){
-		
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		System.out.println("부서 : "+searchDept);
 		System.out.println("직급 : "+searchJob);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
@@ -215,6 +222,7 @@ public class AdminMemberController {
 			m.addAttribute("searchDept",searchDept);
 			m.addAttribute("searchJob",searchJob);
 			m.addAttribute("totaldata",totaldata);
+			m.addAttribute("loginMember",loginMem);
 		}
 		
 		List<Department> dept=deptService.selectDeptAll();
