@@ -275,7 +275,7 @@ public class ReservationController {
 		return ResponseEntity.ok(response);
 	}
 	@PostMapping("/reservation/updatereservation")
-	public ResponseEntity<Map<String,Object>> updateReservation(@RequestParam Reservation reservation){
+	public ResponseEntity<Map<String,Object>> updateReservation(@RequestBody Reservation reservation){
 		int result = service.updateReservation(reservation);
 		Map<String,Object> response = new HashMap<>();
 		if(result>0) {
