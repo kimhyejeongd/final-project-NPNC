@@ -150,6 +150,7 @@
 			display: flex;
 			flex-direction: row;
 			flex-wrap: noWrap;
+			justify-content: space-around;
 		}
 	</style>	
   <body>
@@ -175,23 +176,27 @@
 							<!-- clock widget end -->
 						</div>
 						<div class="attendanceBox">
-							<div id="attendanceResult" style="margin-top:20px;">
-								<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};" class="btn btn-dark btn-round">
+							<div style="margin-top:20px;">
+								<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'}; width: 150px; font-size: 17px;" class="btn btn-light btn-round">
 										출근
 								</button>
+								<div id="attendanceResult" style="color: white; font-size: 15px; margin-top:10px;">
 								<c:if test="${not empty checkStartTime}">
 									<%-- 출근 시간 : ${checkStartTime.substring(9, 17)}   --%>
 									출근 시간 : ${fn:substring(checkStartTime, fn:length(checkStartTime) - 8, fn:length(checkStartTime))}
-								</c:if>	
+								</c:if>
+								</div>	
 							</div>
-							<div id="attendanceEndResult" style="margin-top:20px;">
-								<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};"  class="btn btn-dark btn-round">
+							<div style="margin-top:20px;">
+								<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'}; width: 150px; font-size: 17px;"  class="btn btn-light btn-round">
 									퇴근
 								</button>
+								<div id="attendanceEndResult" style="color: white; font-size: 15px; margin-top:10px;">
 								<c:if test="${not empty checkEndTime}">
 									<%-- 퇴근 시간 : ${checkEndTime.substring(9, 17)}   --%>
 									퇴근 시간 : ${fn:substring(checkEndTime, fn:length(checkEndTime) - 8, fn:length(checkEndTime))}
 								</c:if>
+								</div>
 							</div>	
 						</div>
 					</div>
@@ -533,9 +538,7 @@
               </div>
             </div> -->
 			
-							
-		      </div>
-                <div class="card">
+			    <div class="card">
                   <div class="card-header">
                     <div class="card-title">오늘의 게시물</div>
                   </div>
@@ -548,7 +551,6 @@
                           <th scope="col">TITLE</th>
                           <th scope="col">WRITER</th>
                           <th scope="col">DATE</th>
-                          <th scope="col">VIEWS</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -557,35 +559,30 @@
                           <td>Mark</td>
                           <td>Otto</td>
                           <td>@mdo</td>
-                          <td>@mdo</td>
                         </tr>
                         <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                         <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                          <tr>
                          <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                          <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                         
                       </tbody>
@@ -594,6 +591,9 @@
                  
                   </div>
                 </div>
+							
+		      </div>
+            
           </div>
         </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

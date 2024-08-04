@@ -136,12 +136,18 @@
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
 				       </li>
+
+			          <li class="nav-item">
+				         <a class="nav-link" href="${path}/external/list">외부주소록</a>
+				        </li>
+
 				       <c:if test="${loginMember.accessKey eq 2 }">
 				       	 <a class="nav-link" href="${path}/admin/manageAdminMain">경영</a>
 				       </c:if>
 				        <c:if test="${loginMember.accessKey eq 3 }">
 				       	 <a class="nav-link" href="${path}/admin/personAdminMain">인사</a>
 				       </c:if>
+
 				     </ul>
 				   </div>
 				 </div>
