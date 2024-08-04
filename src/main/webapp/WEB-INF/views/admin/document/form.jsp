@@ -165,7 +165,7 @@ $(document).ready(function() {
 	// 특정 파라미터 값 가져오기
 	var param1Value = urlParams.get('formKey');
 	var param2Value = urlParams.get('folderName');
-	console.log(param1Value+"formKey");
+	console.log(param1Value+"formKey"+typeof param1Value);
 	console.log(param2Value+"folderName");
 	
 	
@@ -257,6 +257,20 @@ $(document).ready(function() {
             name: "htmlContent",
             value: htmlContent
         }).appendTo("#docForm");
+        
+        $("<input>").attr({
+            type: "hidden",
+            name: "storageDiv",
+            value: $('#storage input[name="erFormFolderName"]').val()
+        }).appendTo("#docForm");
+        
+        $("<input>").attr({
+            type: "hidden",
+            name: "formKey",
+            value: param1Value
+        }).appendTo("#docForm");
+        
+        
 
         // 폼을 서버로 전송
         $("#docForm").submit();

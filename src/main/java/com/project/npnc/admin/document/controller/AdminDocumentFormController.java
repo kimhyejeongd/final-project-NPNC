@@ -256,25 +256,23 @@ public class AdminDocumentFormController {
     }
     
     @PostMapping("/updateForm")
-    public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent, @RequestParam(value = "erFormFolderKey", required = false) int erFormFolderKey) {
+    public String insertForm(@RequestParam("htmlContent") String htmlContent
+    		, @RequestParam String storageDiv // 폴더이름
+    		,@RequestParam String formKey // 양식이름
+    		) {
+    	
+    	
+    	try {
+			docS3Controller.docHtmlUpload("upload/docformhtml/"+storageDiv, formKey, htmlContent);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-
-        // 저장할 경로 지정 (예: webapps 폴더 내 resources/upload/docformhtml)
-        String filePath = servletContext.getRealPath("/resources/upload/docformhtml/savedDocument.html");
-
-        // 파일에 HTML 내용 저장
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(htmlContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error saving file");
-        }
-
-        return ResponseEntity.ok("File saved successfully");
+        return "admin/document/selectAdminFormAll";
     }
     @GetMapping("/selectFolder")
     public String selectFolder(Model m){
-    	System.out.println("-----------");
     	List<DocumentFormFolder>folders= service.selectDocFormFolderAll();
     	m.addAttribute("folders", folders);
     	return "admin/document/selectFolder";
@@ -283,7 +281,6 @@ public class AdminDocumentFormController {
     public ResponseEntity<String>selectCurrentForm(@RequestBody Map<String,Object>formInfo){
     	String formKey = (String)formInfo.get("formKey");
     	String folderName = (String)formInfo.get("folderName");
-    	System.out.println(formKey + folderName);
     	String result = docS3Controller.readHtmlFile("upload/docformhtml/"+folderName,formKey+".html");
     	return ResponseEntity.ok(result);
     }
