@@ -24,6 +24,7 @@ import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
 import com.project.npnc.admin.document.model.service.AdminDocumentService;
+import com.project.npnc.document.member.controller.DocS3Controller;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.organization.dto.OrganizationDto;
@@ -41,6 +42,7 @@ public class AdminDocumentFormController {
     private final ObjectMapper objectMapper;
 	private final OrganizationService orserv;
 	private final ServletContext servletContext;
+	private final DocS3Controller docS3Controller;
 	@Value("${file.upload-dir}")
     private String uploadPath;
 
@@ -253,29 +255,30 @@ public class AdminDocumentFormController {
         return "admin/document/form";
     }
     
-    @PostMapping("/insertForm")
-    public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent, @RequestParam(value = "erFormFolderKey", required = false) int erFormFolderKey) {
-        System.out.println(erFormFolderKey + "11111111111111111");
-        System.out.println("11111111111111111");
+    @PostMapping("/updateForm")
+    public String insertForm(@RequestParam("htmlContent") String htmlContent
+    		, @RequestParam String storageDiv // 폴더이름
+    		,@RequestParam String formKey /* 양식이름*/){
+    	try {
+			docS3Controller.docHtmlUpload("upload/docformhtml/"+storageDiv, formKey, htmlContent);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        // 저장할 경로 지정 (예: webapps 폴더 내 resources/upload/docformhtml)
-        String filePath = servletContext.getRealPath("/resources/upload/docformhtml/savedDocument.html");
-
-        // 파일에 HTML 내용 저장
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(htmlContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error saving file");
-        }
-
-        return ResponseEntity.ok("File saved successfully");
+        return "admin/document/selectAdminFormAll";
     }
     @GetMapping("/selectFolder")
     public String selectFolder(Model m){
-    	System.out.println("-----------");
     	List<DocumentFormFolder>folders= service.selectDocFormFolderAll();
     	m.addAttribute("folders", folders);
     	return "admin/document/selectFolder";
+    }
+    @PostMapping("/selectCurrentForm")
+    public ResponseEntity<String>selectCurrentForm(@RequestBody Map<String,Object>formInfo){
+    	String formKey = (String)formInfo.get("formKey");
+    	String folderName = (String)formInfo.get("folderName");
+    	String result = docS3Controller.readHtmlFile("upload/docformhtml/"+folderName,formKey+".html");
+    	return ResponseEntity.ok(result);
     }
 }

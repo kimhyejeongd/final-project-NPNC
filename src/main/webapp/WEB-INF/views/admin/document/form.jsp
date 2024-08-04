@@ -95,7 +95,7 @@
               <div class=""> <!-- 컨테이너박스 -->
                 <div class="card card-round p-3">
                   <div class="card-body">
-	                <form method="post" action="${path}/admin/documentForm/insertForm" id="docForm" >
+	                <form method="post" action="${path}/admin/documentForm/updateForm" id="docForm" >
 		               	<div class="form-group d-flex">
 					      <label for="smallInput"><span class="h5 me-5">양식명</span></label>
 					      <div class="border" style="height: auto; min-height: 30px; width: 90%;" id="">
@@ -128,7 +128,7 @@
 					        </div>
 				        </div>
 						<div class="p-3 text-center">
-								<button class="btn btn-primary" id="submitbtn" type="button">기안하기</button>
+								<button class="btn btn-primary" id="submitbtn" type="button">양식저장</button>
 						</div>
 	               </form>
 		        </div>
@@ -164,8 +164,28 @@ $(document).ready(function() {
 
 	// 특정 파라미터 값 가져오기
 	var param1Value = urlParams.get('formKey');
-
-	console.log(param1Value); // value1
+	var param2Value = urlParams.get('folderName');
+	console.log(param1Value+"formKey"+typeof param1Value);
+	console.log(param2Value+"folderName");
+	
+	
+		$.ajax({
+			url:"${path}/admin/documentForm/selectCurrentForm",
+		   	type: 'POST',
+	        data: JSON.stringify({
+	        	formKey : param1Value, 
+	        	folderName : param2Value
+	        }),
+	        contentType: 'application/json;charset=utf-8',
+	        success: function(response) {
+	        	console.log(response);
+                $('#summernote').summernote('code', response);
+	        },
+	        error: function(response) {
+	            console.error('Error updating folder:', response);
+	        }
+		})
+	
 
 	/*     // 페이지가 로드될 때 모달을 표시하고 리스트를 표시
     const listItems = [
@@ -237,6 +257,20 @@ $(document).ready(function() {
             name: "htmlContent",
             value: htmlContent
         }).appendTo("#docForm");
+        
+        $("<input>").attr({
+            type: "hidden",
+            name: "storageDiv",
+            value: $('#storage input[name="erFormFolderName"]').val()
+        }).appendTo("#docForm");
+        
+        $("<input>").attr({
+            type: "hidden",
+            name: "formKey",
+            value: param1Value
+        }).appendTo("#docForm");
+        
+        
 
         // 폼을 서버로 전송
         $("#docForm").submit();
