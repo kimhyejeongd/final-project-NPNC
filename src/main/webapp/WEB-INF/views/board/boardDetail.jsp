@@ -166,7 +166,7 @@
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
 
                                 <!-- 댓글 수정 및 삭제 버튼 (작성자만 표시) -->
-                                <c:if test="${comment.MEMBER_NAME == loginMember.memberKey}">
+                                <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
                                     <div class="comment-actions">
                                         <form action="${path}/board/updateComment" method="post" class="d-inline">
                                             <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">
@@ -196,7 +196,7 @@
                                 <c:forEach var="reply" items="${commentRepliesMap[comment.BOARD_COMMENT_KEY]}">
                                     <div class="reply mt-3">
                                         <div class="meta">
-                                            <span class="author">${reply.MEMBER_KEY}</span>
+                                            <span class="author">${reply.MEMBER_NAME}</span>
                                             <span class="date"><fmt:formatDate value="${reply.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                         </div>
                                         <p>${reply.BOARD_COMMENT_DETAIL}</p>

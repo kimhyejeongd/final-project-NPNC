@@ -155,7 +155,7 @@
                                 <!-- 댓글 삭제 버튼 (관리자만 표시) -->
                                 <div class="comment-actions">
                                     <form action="${path}/admin/board/deleteComment/${comment.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                        <input type="hidden" name="boardKey" value="${boardDto.BOARD_NAME}"/>
+                                        <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
                                         <button type="submit">삭제</button>
                                     </form>
                                 </div>
@@ -172,7 +172,7 @@
                                         <!-- 대댓글 삭제 버튼 (관리자만 표시) -->
                                         <div class="reply-actions">
                                             <form action="${path}/admin/board/deleteReply/${reply.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                                <input type="hidden" name="boardKey" value="${boardDto.BOARD_NAME}"/>
+                                                <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
                                                 <button type="submit">삭제</button>
                                             </form>
                                         </div>
