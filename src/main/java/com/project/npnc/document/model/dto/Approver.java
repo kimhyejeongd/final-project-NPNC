@@ -1,6 +1,6 @@
 package com.project.npnc.document.model.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +23,6 @@ public class Approver {
 	private String state;
 	private String opinion;
 	private String erDocSerialKey;
-	private Date date;
+	private Timestamp date;
 	private int orderby;
 }

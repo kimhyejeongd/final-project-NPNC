@@ -35,7 +35,7 @@
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -43,7 +43,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -154,6 +154,7 @@
 			</div>
            </div>
           </div>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
 <script>

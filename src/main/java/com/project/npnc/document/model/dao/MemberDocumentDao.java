@@ -33,6 +33,7 @@ public interface MemberDocumentDao {
 	
 	int retrieveDoc(SqlSession session, String erDocSerialKey);
 	int retrieveDocFile(SqlSession session, String erDocSerialKey);
+	String selecetDocFileOriname(SqlSession session, String filename);
 	
 	int updateDocFilename(SqlSession session, String erDocFilename);
 	int updateDocStatefinalize(SqlSession session, String serial);
@@ -53,6 +54,7 @@ public interface MemberDocumentDao {
 	List<DocumentFormFolder> selectformFolders(SqlSession session);
 	List<DocumentForm> selectForms(SqlSession session, int no);
 	List<DocumentForm> selectFormsBySearch(SqlSession session, String target);
+	int selecetDocWriter(SqlSession session, String serial);
 	
 	DocumentForm selectFormByNo(SqlSession session, int no);
 	Document selectDocById(SqlSession session, int docId);
@@ -73,4 +75,8 @@ public interface MemberDocumentDao {
 	int insertOvertimeApply(SqlSession session, OvertimeApply ot);
 	int updateOvertimeApply(SqlSession session, String docSerial, String status);
 	int deleteOvertimeApply(SqlSession session, String serial);
+	DocFile getFileDetailByRename(SqlSession session, String filename);
+	List<Document> selectMyPendingDocs(SqlSession session, int no);
+	Approver selectApproverByKey(SqlSession session, int memberKey, String serial);
+	Document selectInprocessDocApproveNow(SqlSession session, int docId);
 }

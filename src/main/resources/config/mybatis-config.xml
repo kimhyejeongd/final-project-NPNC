@@ -58,6 +58,8 @@
 		<typeAlias type="com.project.npnc.calendar.model.dto.ReserveItem" alias="reserveItem"/>
 
 
+		<typeAlias type="com.project.npnc.document.model.dto.DocumentFormFolder" alias="DocumentFormFolder"/>   
+		<typeAlias type="com.project.npnc.document.model.dto.DocumentForm" alias="DocumentForm"/>   
 		<typeAlias type="com.project.npnc.document.model.dto.Referer" alias="referer"/>   
 		<typeAlias type="com.project.npnc.alarm.dto.AlarmMessage" alias="alarmMessage"/>   
 		<typeAlias type="com.project.npnc.admin.document.model.dto.StorageFolder" alias="storageFolder"/>

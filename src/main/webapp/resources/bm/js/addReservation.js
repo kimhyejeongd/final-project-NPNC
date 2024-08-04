@@ -37,6 +37,7 @@ $(document).ready(function() {
                     slotMinTime: '09:00:00',
                     slotMaxTime: '18:00:00',
                     weekends: false,
+                    fixedWeekCount: false,
                     views: {
                         timeGridWeek: {
                             slotMinTime: '09:00:00',
@@ -52,15 +53,48 @@ $(document).ready(function() {
                         center: 'title',
                         right: 'next'
                     },
-                    datesSet: function(info) {
-                        // 모든 날짜의 배경색을 기본 색으로 설정
-                        $(calendarEl).find('.fc-daygrid-day').css('background-color', '#ffffff'); // 기본 색상
+/*                    datesSet: function(info) {
+                        $(calendarEl).find('.fc-daygrid-day').each(function() {
+                            var date = $(this).data('date');
+                            if (moment(date).isBefore(moment(), 'day')) {
+                                $(this).addClass('fc-disabled-day');
+                            } else {
+                                $(this).removeClass('fc-disabled-day');
+                            }
+                        });
+                    },*/
 
-                        // 오늘 날짜의 배경색을 기본 색상으로 설정
-                        $(calendarEl).find('.fc-day-today').css('background-color', '#ffffff'); // 기본 색상
-                    },
                     displayEventTime: false,
+                    selectAllow: function(selectInfo) {
+						if(moment(selectInfo.start).isBefore(moment(), 'day')){
+							
+	                        return false; 
+						}
+						else{
+							return true;
+						}
+                    },
+	              /*  datesSet: function(info) {
+	                    // 모든 날짜의 배경색을 기본 색으로 설정
+	                    $(calendarEl).find('.fc-daygrid-day').css('background-color', '#ffffff'); // 기본 색상
+	
+	                    // 오늘 날짜의 배경색을 기본 색상으로 설정
+	                    $(calendarEl).find('.fc-day-today').css('background-color', '#ffffff'); // 기본 색상
+	
+	                    // 이전 날짜 클릭 불가 처리
+	                    $(calendarEl).find('.fc-daygrid-day').each(function() {
+	                        var date = $(this).data('date');
+	                        if (moment(date).isBefore(moment(), 'day')) {
+	                            $(this).addClass('fc-disabled-day');
+	                        } else {
+	                            $(this).removeClass('fc-disabled-day');
+	                        }
+	                    });
+                    },*/
                     dateClick: function(info) {
+                      if (moment(info.date).isBefore(moment(), 'day')) {
+                            return;
+                        }
                         if (previousDate) {
                             // 이전에 하이라이트된 날짜를 원래대로 되돌리기
                             $(previousDate).removeClass('highlighted');

@@ -29,13 +29,17 @@
     	#tablerow:hover{
     		cursor: pointer; 
     	}
+    	#tablerow td{
+		    padding-left: 0px !important;
+		    padding-right: 0px !important;
+		}
     </style>
   </head>
   <script src="${path}/resources/jh/js/draft.js"></script>
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -43,7 +47,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -83,7 +87,7 @@
 			               <th scope="col" class="">결재 라인</th>
 			             </tr>
 			           </thead>
-			           <tbody>
+			           <tbody id="tablerow">
 			             <c:if test="${empty completelist}">
 			              <tr class="text-center">
 			              	<td colspan="6">결재 완료된 문서가 없습니다</td>
@@ -91,7 +95,7 @@
 			             </c:if>
 			             <c:if test="${completelist ne null}">
 			             	<c:forEach items="${completelist }" var="l" varStatus="vs">
-			              <tr class="text-center" id="tablerow" data-doc-id="${l.erDocKey }">
+			              <tr class="text-center" id="" data-doc-id="${l.erDocKey }">
 			              	<td>${vs.index+1 }</td>
 			                 <td class="text-muted">${l.erDocSerialKey }</td>
 			                 <td class=""><c:if test="${l.erDocEmergencyYn eq 'Y'}"><span style="color: red;">[긴급] </span></c:if>${l.erDocTitle }</td>
@@ -154,6 +158,7 @@
 			</div>
            </div>
           </div>
+          <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
 <script>

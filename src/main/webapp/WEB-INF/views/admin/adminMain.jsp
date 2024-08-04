@@ -12,72 +12,73 @@
 
 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	<div class="main-panel">	
-			<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+			<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %> 	
+			<br><br><br><br><br>
 			
-			<div id="attendanceResult" style="margin-top:20px;">
-				<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};">
-						출근
-				</button>
-				<c:if test="${not empty checkStartTime}">
-					출근 시간 : ${checkStartTime.substring(9, 17)}  
-				</c:if>
-				
+			<div class="col-md-12">
+		    	<div class="card">
+		        	<div class="card-body">
+						<div class="card-title">
+							관리자 페이지
+						</div>	
+					</div>
 			</div>
-			<div id="attendanceEndResult" style="margin-top:20px;">
-				<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};">
-					퇴근
-				</button>
-				<c:if test="${not empty checkEndTime}">
-					퇴근 시간 : ${checkEndTime.substring(9, 17)}  
-				</c:if>
-			</div>
+		</div> 
+		
+			<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">전체 사원 수</div>
+								</div>
+								<div class="card-body">
+									<h5 style="font-weight:bold; " >${memberCount }명</h5>
+									<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${memberCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+									<div class="progress-bar" style="width: ${memberCount }%">${memberCount }</div>
+									</div>
+									<br>
+									
+								</div>
+							</div>
+						</div>
 			
+			<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">직급별</div>
+								</div>
+								<div class="card-body">
+									<c:forEach var="j" items="${job}" >
+										<h5 style="font-weight: bold;" >${j.jobName } : ${j.memberJobCount }명</h5>
+										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${j.memberJobCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+										  <div class="progress-bar" style="width: ${j.memberJobCount }%">${j.memberJobCount }</div>
+										</div>
+										<br>
+									</c:forEach>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">부서별</div>
+								</div>
+								<div class="card-body">
+									<c:forEach var="d" items="${dept}" >
+										<h5 style="font-weight: bold;" >${d.deptName } : ${d.memberDeptCount }명</h5>
+										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${d.memberDeptCount }" aria-valuemin="0" aria-valuemax="${memberCount }">
+										  <div class="progress-bar" style="width: ${d.memberDeptCount }%">${d.memberDeptCount }</div>
+										</div>
+										<br>
+									</c:forEach>
+								</div>
+							</div>
+						</div>
 
-			
-			
-			<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
+					</div>
 	</div>
 	
-	<script>
 	
-	//근태 출퇴근 버튼
-	 $(document).ready(function(){
-        $('#endAttendanceBtn').click(function(){
-            $.ajax({
-                type: 'POST',
-                url: '${path}/attendance/endattendance',
-                success: function(response) {
-                    var message = response.msg;
-                    var attendanceEnd = response.attendanceEnd;
-                    alert(message);
-                     $('#endAttendanceBtn').hide();
-                    $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
-                },
-                error: function(xhr, status, error) {
-                    alert('퇴근 처리에 실패하였습니다.');
-                }
-            });
-        });
-    }); 
-	 
-	 $(document).ready(function(){
-        $('#startAttendanceBtn').click(function(){
-            $.ajax({
-                type: 'POST',
-                url: '${path}/attendance/startattendance',
-                success: function(response) {
-                    var message = response.msg;
-                    var attendanceStart = response.attendanceStart;
-                    alert(message);
-                     $('#startAttendanceBtn').hide();
-                    $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
-                },
-                error: function(xhr, status, error) {
-                    alert('출근 처리에 실패하였습니다.');
-                }
-            });
-        });
-    }); 
-	</script>
 </body>
 </html>

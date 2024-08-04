@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.VacationApply;
 
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
@@ -233,8 +235,60 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		return session.selectOne("attendance.searchAdminAttendanceCount",searchMap);
 	}
 
+	@Override
+	public int updateAdminAttendance(SqlSession session, Attendance attendance) {
+		
+		return session.update("attendance.updateAdminAttendance",attendance);
+	}
+	
+	
+	//vacationApply
+	
+	@Override
+	public List<VacationApply> selectVacationApplyApprove(SqlSession session) {
+		
+		return session.selectList("attendance.selectVacationApplyApprove");
+	}
+
+	@Override
+	public int insertAttendanceVacation(SqlSession session, int memberKey,String status) {
+		Map m=Map.of("memberKey",memberKey,"status",status);
+		return session.insert("attendance.insertAttendanceVacation",m);
+	}
+
+	
+	//overtime
+	
+	@Override
+	public List<OvertimeApply> selectoverworkByMemberKey(SqlSession session, int memberKey,Map<String,Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.selectoverworkByMemberKey",memberKey,rb);
+	}
+
+	@Override
+	public int selectoverworkByMemberKeyCount(SqlSession session, int memberKey) {
+		
+		return session.selectOne("attendance.selectoverworkByMemberKeyCount",memberKey);
+	}
+
+	@Override
+	public List<OvertimeApply> searchoverworkByMemberKey(SqlSession session, Map<String, Object> searchMap,
+			Map<String, Integer> page) {
+		RowBounds rb=new RowBounds((page.get("cPage")-1)*page.get("numPerpage"),page.get("numPerpage"));
+		return session.selectList("attendance.searchoverworkByMemberKey",searchMap,rb);
+	}
+
+	@Override
+	public int searchoverworkByMemberKeyCount(SqlSession session, Map<String, Object> searchMap) {
+		
+		return session.selectOne("attendance.searchoverworkByMemberKeyCount",searchMap);
+	}
 
 
+
+
+	
+	
 
 
 

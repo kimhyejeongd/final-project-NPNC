@@ -7,12 +7,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
- 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-    	<div class="main-panel">
-    	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	
+	<c:if test="${loginMember.accessKey eq 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+ 	</c:if>
+ 	<c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	</c:if>
+ 	<div class="main-panel">
+ 	<c:if test="${loginMember.accessKey eq 2 }">
+  		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	</c:if>
+  	 <c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+ 	</c:if>
 		<div>	
 			<br><br><br><br>
 		    <div>
@@ -64,7 +78,7 @@
 									수정
 								</button>
 								 &ensp;&ensp;&ensp;
-								<button onclick="deleteDept('${d.deptKey}');" class="btn btn-dark btn-round">삭제</button>
+								<button onclick="deleteModal('${d.deptKey}');" class="btn btn-dark btn-round">삭제</button>
 							</td>
 						</tr>
 					</c:forEach>
@@ -106,6 +120,55 @@
 	        });
 	    });
 		
+	 
+	 function deleteModal(no){
+			console.log(no);
+			Swal.fire({
+				title: '삭제 확인',
+				html: '<h4>정말 삭제하시겠습니까?</h4>',
+				showCancelButton: true,
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger ms-2',
+				confirmButtonText: '삭제',
+				cancelButtonText: '취소',
+				buttonsStyling: false,
+				reverseButtons: false
+			}).then(result => {
+				if (result.isConfirmed) {
+					//삭제 요청 전송
+					$.ajax({
+						url: '${path}/admin/dept/deletedept.do',
+						data: {no : no},
+						dataType: "json",
+						method: "post",
+						success: data=>{
+							console.log();
+							if(data.status==="success"){
+								Swal.fire({
+									title: '삭제 완료',
+									html: '<h4>정상적으로 삭제되었습니다.</h4>',
+									showCancelButton: true,
+									confirmButtonClass: 'btn btn-success',
+									cancelButtonClass: 'btn btn-danger ms-2',
+									confirmButtonText: '확인',
+									cancelButtonText: '취소',
+									buttonsStyling: false,
+									reverseButtons: false
+								}).then(result => {
+									location.reload();
+								});
+							}else{
+					            alert("다음과 같은 에러가 발생하였습니다. (" + data.message + ")");
+					        };
+						},
+						error: (xhr, status, error) => {
+		                    console.error("Error: ", error);
+		                    alert("삭제 요청 중 오류가 발생했습니다.");
+		                }
+					});
+				}
+			});
+		};
 		
 		const deleteDept=(key)=>{
 		   if(confirm("정말 삭제 하시겠습니까?")){

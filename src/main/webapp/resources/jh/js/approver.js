@@ -257,16 +257,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-	//$("#refreshBtn").click(e=>{
-	//	window.location.reload();
-	//});
-	$("#bringBtn").click(e=>{
-		let no = $(e.target).data('id');
-		$.ajax({
-			data: no,
-			
-		});
-	});
 	 $(".toggle-btn").mouseenter(function(e) {
         e.stopPropagation(); // 이벤트 버블링 방지
         let target = $(this).data("target");
@@ -303,15 +293,12 @@ $(document).ready(function() {
 		        $("div#memberlist2>a").each(function() {
 		            let ApproverLine = {
 		                memberKey: $(this).data('id'),
-		                //memberName: $(this).data('name'),
 		                erApName: $(this).data('name'),
-		                //memberJob: $(this).data('job'),
 		                erApJobKey: $(this).data('jobkey'),
-		                //memberTeam: $(this).data('team'),
+		                erApJobName: $(this).data('job'),
 		                erApTeamKey: $(this).data('teamkey'),
-		                //orderby: $(this).find("div > span").text(),
+		                erApTeamName: $(this).data('team'),
 		                erApOrderby: $(this).find("div > span").text(),
-		                //category: $(this).children().last().val()
 		                erApCategory: $(this).children().last().val()
 		            };
 		            approvers.push(ApproverLine);

@@ -182,6 +182,12 @@
 			<if test="searchType != null and searchType !='' ">
 				AND MEMBER_STATE=#{searchType}
 			</if>
+			<if test="searchDept != null and searchDept !='' ">
+				AND DEPARTMENT_KEY=#{searchDept}
+			</if>
+			<if test="searchJob != null and searchJob !='' ">
+				AND JOB_KEY=#{searchJob}
+			</if>
 		</where>
 		ORDER BY MEMBER_ENROLL_DATE DESC
 	</select>
@@ -195,7 +201,32 @@
 		<if test="searchType != null and searchType !='' ">
 			AND MEMBER_STATE=#{searchType}
 		</if>
+		<if test="searchDept != null and searchDept !='' ">
+			AND DEPARTMENT_KEY=#{searchDept}
+		</if>
+		<if test="searchJob != null and searchJob !='' ">
+			AND JOB_KEY=#{searchJob}
+		</if>
 	</where>
 	
 	</select>
+	
+	<select id="selectMemberCountByDept" parameterType="string" resultType="_int">
+		SELECT 
+		COUNT(MEMBER_KEY)
+		FROM MEMBER
+		WHERE DEPARTMENT_KEY=#{deptKey}
+	</select>
+	
+	<select id="selectMemberCountByJob" parameterType="string" resultType="_int">
+		SELECT 
+		COUNT(MEMBER_KEY)
+		FROM MEMBER
+		WHERE JOB_KEY=#{jobKey}
+	</select>
+	
+	
+	
+	
+	
 </mapper>

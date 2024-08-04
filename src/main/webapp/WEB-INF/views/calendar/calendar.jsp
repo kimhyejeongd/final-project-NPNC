@@ -41,6 +41,10 @@
     <link rel="stylesheet" href="${path }/resources/bm/css/fullcalendar.css">
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
+	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css">
+<!-- 	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/material.css">
+	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/translucent.css"> -->
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
     <link rel="stylesheet" href="${path }/resources/bm/css/daterangepicker.css">
@@ -65,8 +69,8 @@
   }
   #calendar {
     margin: 0 auto; /* 화면 중앙 정렬을 위한 가로 여백 설정 */
-    width: 90%; /* 부모 요소의 너비를 모두 사용하도록 설정 */
-    height: 700px;
+    width: 100%; /* 부모 요소의 너비를 모두 사용하도록 설정 */
+    height: 750px;
   }
 	.d-flex {
 	  display: flex;
@@ -74,53 +78,112 @@
 	}
 	
 	/* 체크박스 컨테이너 스타일 */
-	#checkbox {
-	  border: 1px solid #ddd; /* 박스 테두리 */
-	  border-radius: 4px; /* 박스 테두리 모서리 둥글게 */
-	  padding: 15px; /* 박스 내부 여백 */
-	  background-color: #f9f9f9; /* 박스 배경색 */
-	  margin-right: 20px; /* 캘린더와의 간격 */
-	}
-	
-	/* 체크박스 항목 스타일 */
-	.selectgroup-item {
-	  display: block; /* 체크박스를 수직으로 나열 */
-	  margin-bottom: 10px; /* 항목 간격 */
-	}
-  .form-check {
-    margin-bottom: 10px;
-  }
-  .selected-member {
-        background-color: #d3f9d8; /* 선택된 멤버의 배경색을 변경 */
-  }
+#checkbox {
+  border: 1px solid #ddd; /* 박스 테두리 */
+  border-radius: 4px; /* 박스 테두리 모서리 둥글게 */
+  padding: 15px; /* 박스 내부 여백 */
+  background-color: #f9f9f9; /* 박스 배경색 */
+  margin-right: 20px; /* 캘린더와의 간격 */
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 항목을 나열 */
+  flex-wrap: nowrap; /* 줄 바꿈을 하지 않도록 설정 */
+}
+
+.checkbox-category {
+  margin-bottom: 20px;
+}
+
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.selectgroup-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%; /* 각 항목이 전체 너비를 차지하도록 설정 */
+}
+
+.selectgroup-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+/* 
+.tippy-box[data-theme~='light-border'] {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 300px;
+}
+
+.tippy-box[data-theme~='light-border'] .tippy-arrow {
+    color: #fff;
+}
+
 .tooltip-content {
-  background-color: #fff;
-  color: #000;
-  border-radius: 5px;
-  padding: 10px;
-  font-family: 'Quicksand', sans-serif;
+    padding: 10px;
 }
 
 .popover-title {
-  background-color: #f5fffa;
-  color: #000;
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 5px;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-bottom: 8px;
 }
 
 .popover-info {
-  font-size: 0.9em;
-  line-height: 1.5;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: #666;
 }
 
 .popover-description {
-  margin-top: 5px;
+    font-size: 0.9em;
+    color: #444;
+} */
+
+.selected-member{
+	background-color: DarkGray;
 }
+.tooltip-content {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    max-width: 430px; /* 최대 너비 설정 */
+    box-sizing: border-box;
+}
+
+.popover-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 5px;
+}
+
+.popover-info, .popover-description {
+    font-size: 16px;
+    color: #333333;
+    margin: 8px 0;
+    line-height: 1.4;
+    word-break: keep-all; /* 단어 단위로 줄바꿈 */
+    white-space: normal; /* 자동 줄바꿈 허용 */
+}
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+
 <body>
   <div class="wrapper">
     <!-- Sidebar -->
@@ -128,7 +191,7 @@
       <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path }/" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -195,53 +258,59 @@
 
     <div class="main-panel">
       <!-- header_bar -->
-      <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+       <%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
 
 		<div class="container">
 		  <div class="page-inner">
 		    <div class="d-flex">
 		      <!-- Checkboxes Section -->
 		
-		      <div class="checkbox-container col-md-3">
-		        <div class="checkbox-category">
-		          <h5>일정</h5>
-		          <div class="form-group">
-		            <div class="selectgroup selectgroup-pills">
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="myCalendar">
-		                <span class="selectgroup-button">내일정</span>
-		              </label>
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="deptCalendar">
-		                <span class="selectgroup-button">부서일정</span>
-		              </label>
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="companyCalendar">
-		                <span class="selectgroup-button">전사일정</span>
-		              </label>
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="reservationCalendar">
-		                <span class="selectgroup-button">예약일정</span>
-		              </label>
-		            </div>
-		          </div>
-		        </div>
-		        <div class="checkbox-category">
-		          <h5>휴가</h5>
-		          <div class="form-group">
-		            <div class="selectgroup selectgroup-pills">
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="myVacationCalendar">
-		                <span class="selectgroup-button">내 휴가일정</span>
-		              </label>
-		              <label class="selectgroup-item">
-		                <input type="checkbox" class="selectgroup-input" id="deptVacationCalendar">
-		                <span class="selectgroup-button">부서원 휴가일정</span>
-		              </label>
-		            </div>
-		          </div>
-		        </div>
-		      </div>
+		       <div class="checkbox-container col-md-3" style="width: 15%; ">
+	            <div class="checkbox-category">
+	                <h5>일정</h5>
+	                <div class="form-group">
+	                    <div class="selectgroup selectgroup-pills">
+	                        <label class="selectgroup-item">
+	                            <div class="color-circle" style="background-color: #87CEFA;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="myCalendar">
+	                            <span class="selectgroup-button">내일정</span>
+	                        </label>
+	                        <label class="selectgroup-item">
+	                            <div class="color-circle" style="background-color: #90EE90;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="deptCalendar">
+	                            <span class="selectgroup-button">부서일정</span>
+	                        </label>
+	                        <label class="selectgroup-item">
+	                            <div class="color-circle" style="background-color: #F08080;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="companyCalendar">
+	                            <span class="selectgroup-button">전사일정</span>
+	                        </label>
+	                        <label class="selectgroup-item">
+	                            <div class="color-circle" style="background-color: #F5DEB3;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="reservationCalendar">
+	                            <span class="selectgroup-button">예약일정</span>
+	                        </label>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="checkbox-category">
+	                <h5>휴가</h5>
+	                <div class="form-group">
+	                    <div class="selectgroup selectgroup-pills">
+	                        <label class="selectgroup-item">
+	                            <div class="color-circle" style="background-color: #F4A460;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="myVacationCalendar">
+	                            <span class="selectgroup-button">내 휴가일정</span>
+	                        </label>
+	                        <label class="selectgroup-item">
+	                        	<div class="color-circle" style="background-color: #DDA0DD;"></div>
+	                            <input type="checkbox" class="selectgroup-input" id="deptVacationCalendar">
+	                            <span class="selectgroup-button">부서원 휴가일정</span>
+	                        </label>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
 		      
 		      <!-- Calendar Section -->
 		      <div class="col-md-9">
@@ -320,7 +389,8 @@
  	const path = "${path}";
   </script>
   
-  
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
   <script src="${path}/resources/bm/js/dropdown-bootstrap-extended.js"></script>
   <script src="${path}/resources/bm/js/color-picker-data.js"></script>
   <script src="${path}/resources/bm/js/moment.min.js"></script>

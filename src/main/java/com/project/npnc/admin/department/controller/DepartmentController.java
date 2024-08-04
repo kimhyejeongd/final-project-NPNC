@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.project.npnc.admin.department.model.dto.Department;
 import com.project.npnc.admin.department.model.service.DepartmentService;
 import com.project.npnc.admin.job.model.dto.Job;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +35,10 @@ public class DepartmentController {
 		int result=service.insertDept(deptName);
 		String msg,loc;
 		if(result>0) {
-			msg="등록성공";
+			msg="성공";
 			loc="/admin/dept/selectdeptall.do";
 		}else {
-			msg="등록실패";
+			msg="실패";
 			loc="/admin/dept/selectdeptall.do";
 		}
 		m.addAttribute("msg",msg);
@@ -44,26 +47,29 @@ public class DepartmentController {
 	}
 	
 	@GetMapping("/selectdeptall.do")
-	public String selectDeptAll(Model m) {
+	public String selectDeptAll(Authentication authentication,Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		List<Department> d=service.selectDeptAll();
 		m.addAttribute("depts",d);
 		return "admin/dept/deptlist";
 	}
 	
 	@PostMapping("/deletedept.do")
-	public String deleteDept(String key,Model m) {
-		int result=service.deleteDept(key);
-		String msg,loc;
-		if(result>0) {
-			msg="삭제성공";
-			loc="/admin/dept/selectdeptall.do";
-		}else {
-			msg="삭제실패";
-			loc="/admin/dept/selectdeptall.do";
+	public ResponseEntity<Map<String,Object>> deleteDept(String no) {
+		Map<String,Object> response = new HashMap<>();
+		int result=0;
+		try {
+			result = service.deleteDept(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "삭제에 실패했습니다.");
+			return ResponseEntity.ok(response);
 		}
-		m.addAttribute("msg",msg);
-		m.addAttribute("loc",loc);
-		return "common/msg";
+		response.put("status", "success");
+		response.put("message", "삭제 완료");
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/updatedept")
@@ -80,10 +86,10 @@ public class DepartmentController {
 		int result=service.updateDept(d);
 		String msg,loc;
 		if(result>0) {
-			msg="수정성공";
+			msg="성공";
 			loc="/admin/dept/selectdeptall.do";
 		}else {
-			msg="수정실패";
+			msg="실패";
 			loc="/admin/dept/selectdeptall.do";
 		}
 		m.addAttribute("msg",msg);

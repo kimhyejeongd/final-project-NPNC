@@ -5,7 +5,10 @@
 	<resultMap id="calMap" type="calendar" autoMapping="true">
 		<id property="calendarKey" column="CALENDAR_KEY"/>
 		<result property="_id" column="MEMBER_KEY"/>
+		<result property="empName" column="MEMBER_NAME"/>
 		<result property="deptCode" column="DEPARTMENT_KEY"/>
+		<result property="jobName" column="JOB_NAME"/>
+		<result property="deptName" column="DEPARTMENT_NAME"/>
 		<result property="type" column="CALENDAR_TYPE"/>
 		<result property="title" column="CALENDAR_TITLE"/>
 		<result property="start" column="CALENDAR_START"/>
@@ -143,6 +146,8 @@
 			    )
 			    AND
 			    vac.VACATION_APPLY_STATUS = '승인'
+			    AND
+			    mem.MEMBER_KEY != #{empNo}
 		</if>
 	
 	</select>
@@ -151,6 +156,9 @@
 		SELECT
 			cal.CALENDAR_KEY,
 			cal.MEMBER_KEY,
+			calm.MEMBER_NAME,
+			d.DEPARTMENT_NAME,
+			jm.JOB_NAME,
 			cal.CALENDAR_TYPE,
 			cal.CALENDAR_TITLE,
 			cal.CALENDAR_START,
@@ -170,6 +178,12 @@
 		LEFT JOIN
 			MEMBER m on ref.CAL_REFERENCE_NO = m.MEMBER_KEY
 		LEFT JOIN
+			MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
+		LEFT JOIN
+		 	JOB jm on jm.JOB_KEY = calm.JOB_KEY
+		LEFT JOIN
+			DEPARTMENT d on calm.DEPARTMENT_KEY = d.DEPARTMENT_KEY
+		LEFT JOIN
 			JOB j on m.JOB_KEY = j.JOB_KEY
 		WHERE
 			1 = 2
@@ -180,6 +194,9 @@
 			SELECT
 				cal.CALENDAR_KEY,
 				cal.MEMBER_KEY,
+				calm.MEMBER_NAME,
+				d.DEPARTMENT_NAME,
+				jm.JOB_NAME,
 				cal.CALENDAR_TYPE,
 				cal.CALENDAR_TITLE,
 				cal.CALENDAR_START,
@@ -190,7 +207,7 @@
 				cal.CALENDAR_DELETE,
 				ref.CAL_REFERENCE_NO,
 				m.MEMBER_NAME as CAL_REFERENCE_NAME,
-				calm.DEPARTMENT_KEY,
+				m.DEPARTMENT_KEY,
 				j.JOB_NAME AS CAL_REFERENCE_JOB
 			FROM
 				CALENDAR cal
@@ -200,6 +217,10 @@
 				MEMBER m on ref.CAL_REFERENCE_NO = m.MEMBER_KEY
 			LEFT JOIN
 				MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
+			LEFT JOIN
+			 	JOB jm on jm.JOB_KEY = calm.JOB_KEY
+			LEFT JOIN
+				DEPARTMENT d on calm.DEPARTMENT_KEY = d.DEPARTMENT_KEY
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
@@ -212,6 +233,9 @@
 			SELECT
 				cal.CALENDAR_KEY,
 				cal.MEMBER_KEY,
+				calm.MEMBER_NAME,
+				d.DEPARTMENT_NAME,
+				jm.JOB_NAME,
 				cal.CALENDAR_TYPE,
 				cal.CALENDAR_TITLE,
 				cal.CALENDAR_START,
@@ -222,7 +246,7 @@
 				cal.CALENDAR_DELETE,
 				ref.CAL_REFERENCE_NO,
 				m.MEMBER_NAME as CAL_REFERENCE_NAME,
-				calm.DEPARTMENT_KEY,
+				m.DEPARTMENT_KEY,
 				j.JOB_NAME AS CAL_REFERENCE_JOB
 			FROM
 				CALENDAR cal
@@ -233,9 +257,13 @@
 			LEFT JOIN
 				MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
 			LEFT JOIN
+			 	JOB jm on jm.JOB_KEY = calm.JOB_KEY
+			LEFT JOIN
+				DEPARTMENT d on calm.DEPARTMENT_KEY = d.DEPARTMENT_KEY
+			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
-				cal.CALENDAR_TYPE = '2' AND calm.DEPARTMENT_KEY = #{deptCode} AND cal.CALENDAR_DELETE ='N'
+				cal.CALENDAR_TYPE = '2' AND (calm.DEPARTMENT_KEY = #{deptCode} OR ref.CAL_REFERENCE_NO =#{empNo}) AND cal.CALENDAR_DELETE ='N'
 		</if>
 		<if test="searchC !=null">
 			<if test="searchA !=null || searchB !=null">
@@ -244,6 +272,9 @@
 			SELECT
 				cal.CALENDAR_KEY,
 				cal.MEMBER_KEY,
+				calm.MEMBER_NAME,
+				d.DEPARTMENT_NAME,
+				jm.JOB_NAME,
 				cal.CALENDAR_TYPE,
 				cal.CALENDAR_TITLE,
 				cal.CALENDAR_START,
@@ -254,7 +285,7 @@
 				cal.CALENDAR_DELETE,
 				ref.CAL_REFERENCE_NO,
 				m.MEMBER_NAME as CAL_REFERENCE_NAME,
-				calm.DEPARTMENT_KEY,
+				m.DEPARTMENT_KEY,
 				j.JOB_NAME AS CAL_REFERENCE_JOB
 			FROM
 				CALENDAR cal
@@ -264,6 +295,10 @@
 				MEMBER m on ref.CAL_REFERENCE_NO = m.MEMBER_KEY
 			LEFT JOIN
 				MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
+			LEFT JOIN
+			 	JOB jm on jm.JOB_KEY = calm.JOB_KEY
+			LEFT JOIN
+				DEPARTMENT d on calm.DEPARTMENT_KEY = d.DEPARTMENT_KEY
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
@@ -276,6 +311,9 @@
 			SELECT
 				cal.CALENDAR_KEY,
 				cal.MEMBER_KEY,
+				calm.MEMBER_NAME,
+				d.DEPARTMENT_NAME,
+				jm.JOB_NAME,
 				cal.CALENDAR_TYPE,
 				cal.CALENDAR_TITLE,
 				cal.CALENDAR_START,
@@ -286,7 +324,7 @@
 				cal.CALENDAR_DELETE,
 				ref.CAL_REFERENCE_NO,
 				m.MEMBER_NAME as CAL_REFERENCE_NAME,
-				calm.DEPARTMENT_KEY,
+				m.DEPARTMENT_KEY,
 				j.JOB_NAME AS CAL_REFERENCE_JOB
 			FROM
 				CALENDAR cal
@@ -296,6 +334,10 @@
 				MEMBER m on ref.CAL_REFERENCE_NO = m.MEMBER_KEY
 			LEFT JOIN
 				MEMBER calm on cal.MEMBER_KEY = calm.MEMBER_KEY
+			LEFT JOIN
+			 	JOB jm on jm.JOB_KEY = calm.JOB_KEY
+			LEFT JOIN
+				DEPARTMENT d on calm.DEPARTMENT_KEY = d.DEPARTMENT_KEY
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
@@ -311,10 +353,10 @@
 			#{memberKey},
 			'4',
 			'예약',
-			#{date}||' '||#{start},
-			#{date}||' '||#{end},
+	        TO_TIMESTAMP(#{date} || ' ' || #{start}, 'YYYY-MM-DD HH24:MI:SS'),
+        	TO_TIMESTAMP(#{date} || ' ' || #{end}, 'YYYY-MM-DD HH24:MI:SS'),
 			#{itemName},
-			'#000000',
+			'#F5DEB3',
 			'N',
 			DEFAULT,
 			DEFAULT,

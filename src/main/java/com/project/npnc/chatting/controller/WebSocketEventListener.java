@@ -40,7 +40,6 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         Principal user = event.getUser();
-        System.out.println("PrincipalUser"+user.getName());
         if (user != null) {
             userStatusMap.put(user.getName(), true);
             sendUserStatus(user.getName(), true);
@@ -62,7 +61,6 @@ public class WebSocketEventListener {
         Gson gson = new Gson();
         UserStatus user = new UserStatus(username, isOnline);
         String message = gson.toJson(user);
-        System.out.println("Sending message: " + message); // 로그 추가
         messagingTemplate.convertAndSend("/topic/status", message);
     }
     
@@ -82,13 +80,7 @@ public class WebSocketEventListener {
 		String roomId = getNativeHeader(sha, "room");
 		String memberKey = getNativeHeader(sha, "loginMemberKey");
 
-		// 디버깅을 위한 로그 추가
-		System.out.println("Headers: " + sha.toString());
-		System.out.println("Native Headers: " + getNativeHeader(sha, "type"));
-		System.out.println("Session ID: " + sessionId);
-		System.out.println("Type: " + type);
-		System.out.println("Room ID: " + roomId);
-		System.out.println("Member Key: " + memberKey);
+
 
 		if (type == null) {
 			type = "unknown";
@@ -110,9 +102,7 @@ public class WebSocketEventListener {
 			
 			sessionMemberMap.put(sessionId, memberKey);
 
-			System.out.println("Session connected: " + sessionId + ", Type: " + type + ", Room: " + roomId
-					+ ", Member Key: " + memberKey);
-			System.out.println("Current sessions: " + roomSessions);
+
 			websocketSessions.put("memberKey", memberKey);
 			websocketSessions.put("roomId", roomId);
 			printAllSessionDetails();
@@ -123,15 +113,11 @@ public class WebSocketEventListener {
 	}
 
 	public void printAllSessionDetails() {
-		System.out.println("Current Session Details:");
 
 		roomSessions.forEach((roomId, typeMap) -> {
-			System.out.println("Room ID: " + roomId);
 			typeMap.forEach((type, sessions) -> {
-				System.out.println("\tType: " + type);
 				sessions.forEach(sessionId -> {
 					String memberKey = sessionMemberMap.get(sessionId);
-					System.out.println("\t\tSession ID: " + sessionId + " - Member Key: " + memberKey);
 				});
 			});
 		});
@@ -178,7 +164,6 @@ public class WebSocketEventListener {
 	}
 
 	public Set<String> getSessionsForRoom(String roomId) {
-		System.out.println(ConcurrentHashMap.newKeySet() + "ConcurrentHashMap.newKeySet()");
 		return roomSessions.getOrDefault(roomId, Collections.emptyMap()).getOrDefault("chat",
 				Collections.newSetFromMap(new ConcurrentHashMap<>()));
 	}
@@ -211,15 +196,13 @@ public class WebSocketEventListener {
 		broadcastData.put("memberSessions", memberSessions);
 		broadcastData.put("roomId", roomId);
 
-		System.out.println("/roomSession/" + roomId);
-		System.out.println("/roomSession/" + memberSessions.toString());
+
 		// Websocket을 통해 해당 방의 모든 클라이언트에 세션 정보를 방송
 		messagingTemplate.convertAndSend("/roomSession/" + roomId, broadcastData);
 	}
 
 	public void broadcastOpenedSession(String openedRoomId) {
 		roomSessions.forEach((roomId, typeMap) -> {
-			System.out.println("Room ID: " + roomId);
 
 			if (openedRoomId.equals(roomId)) {
 				// roomListSessions에서 session을 가져옵니다.
@@ -236,7 +219,6 @@ public class WebSocketEventListener {
 					}
 				} else {
 					// 세션이 null이거나 닫혀있는 경우 로그를 남깁니다.
-					System.out.println("Session is null or not open for Room ID: " + roomId);
 				}
 			}
 		});

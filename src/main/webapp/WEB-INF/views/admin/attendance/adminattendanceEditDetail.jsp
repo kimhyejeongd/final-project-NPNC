@@ -12,7 +12,7 @@
 	          </button>
 	        </div>
         <div class="modal-body">
-			<form action="${path}/admin/attendance/updateAttendance" method="post">
+			<form  id="attendanceForm" action="${path}/admin/attendance/updateAttendance" method="post">
 				<div class="container">
          		 <div class="page-inner">
 				<div class="form-group">
@@ -163,7 +163,10 @@
 								        <option value="조퇴" >조퇴</option>
 								        <option value="결근" >결근</option>
 								        <option value="휴가" >휴가</option>
-								        <option value="유급휴가">유급휴가</option>
+								        <option value="병가" >병가</option>
+						              	<option value="공가" >공가</option>
+						              	<option value="오전반차" >오전반차</option>
+						              	<option value="오후반차">오후반차</option>
 		                          </select>
 		                            
 		                          </div>
@@ -206,18 +209,20 @@
 		           		<input type="hidden" id="attendanceKey" name="attendanceKey">
 		           		
 		          	
-			           	<button
+<!-- 			           	<button
 			           		id="approveButton"
 						  	type="submit"
 						 	class="btn btn-success"
 			 				data-color="dark"
-						>승인</button>
+						>승인</button> -->
 			</div>
 			</div>
 		   </div>
 		</form>
+					<button id="approveButton" type="button" class="btn btn-success" data-color="dark">승인</button>
 	         		<button id="rejectButton"  onclick="rejectionAttendanceEdit();" class="btn btn-dark">
-					반려</button>
+						반려
+					</button>
 
 		</div>
         <div class="modal-footer">
@@ -231,8 +236,58 @@
 					
 					
  				<script>
+ 				
+ 				document.getElementById('approveButton').addEventListener('click', function() {
+ 				    document.getElementById('attendanceForm').submit();
+ 				});
+ 				
+ 				
+ 				
 				const rejectionAttendanceEdit=()=>{
 					   if(confirm("반려 하시겠습니까?")){
+
+				           let form = document.createElement("form");
+				           form.setAttribute("method", "post");
+				           form.setAttribute("action", "${path}/admin/attendance/updateAttendanceEdit");
+				
+				           let key = document.getElementById("attendanceEditKey").value;
+				           let $key = document.createElement("input");
+				           $key.setAttribute("type", "hidden");
+				           $key.setAttribute("name", "attendanceEditKey");
+				           $key.setAttribute("value", key);
+				 
+				           form.appendChild($key);
+							
+				           let opinion = document.getElementById("attendanceEditOpinion").value;
+				           let $opinion = document.createElement("input");
+				           $opinion.setAttribute("type", "hidden");
+				           $opinion.setAttribute("name", "attendanceEditOpinion");
+				           $opinion.setAttribute("value", opinion);
+				           form.appendChild($opinion);
+				           
+				           document.body.appendChild(form);
+				           form.submit();
+					   }else{
+						   alert("반려가 취소되었습니다.");
+						   location.replace("${path}/admin/attendance/selectAdminAttendanceEditAll");
+					   }
+					   
+					}
+				
+				
+				function deleteModal(){
+					Swal.fire({
+						title: '삭제 확인',
+						html: '<h4>정말 삭제하시겠습니까?</h4>',
+						showCancelButton: true,
+						confirmButtonClass: 'btn btn-success',
+						cancelButtonClass: 'btn btn-danger ms-2',
+						confirmButtonText: '삭제',
+						cancelButtonText: '취소',
+						buttonsStyling: false,
+						reverseButtons: false
+					}).then(result => {
+						if (result.isConfirmed) {
 
 				           let form = document.createElement("form");
 				           form.setAttribute("method", "post");

@@ -2,6 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%
+	//세션에 현재 페이지를 저장
+	session.setAttribute("lastPage", request.getRequestURL().toString());
+%>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +22,7 @@
       href="${path}/resources/assets/img/kaiadmin/favicon.ico"
       type="image/x-icon"
     />
-
+	
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -51,6 +56,10 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${path}/resources/assets/css/demo.css" />
     
+      <!-- SweetAlert2 CSS -->
+	  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+	  <!-- SweetAlert2 JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   </head>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  
@@ -104,6 +113,45 @@
 		    white-space: nowrap;
 		    text-overflow: ellipsis;
 		}
+				
+		.cityAndTem {
+		    display: flex;
+		    flex-direction: row;
+		    flex-wrap: nowrap;
+		    justify-content: space-between; /* .weather_icon을 왼쪽 정렬하고 나머지 요소를 오른쪽 정렬합니다 */
+		    align-items: flex-start; /* 항목을 상단에 정렬합니다 */
+		}
+		
+		.weather_icon {
+		    margin-right: auto; /* 다른 항목들을 오른쪽으로 밀어냅니다 */
+		}
+		
+		.right-container {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-end;
+		    margin-top: 36px;
+		    margin-right: 40px;
+		}
+		
+		.left-container {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-start;
+		    margin-top: 60px;
+		    font-size: 11pt;
+		}
+		
+		.weatherFont{
+			color: black;
+		}
+		
+		.attendanceBox{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: noWrap;
+			justify-content: space-around;
+		}
 	</style>	
   <body>
                <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
@@ -113,9 +161,10 @@
           
            
           
-            <div class="firstwidget">
+          <div class="firstwidget">
+			<!--출퇴근, 날씨-->
              <div class="col-md-6" style="width: 26%; height: 470px;">
-                <div class="card bg-primary-gradient">
+                <div class="card bg-primary-gradient" style="height: 228px;">
                   <div class="card-header">
                     <h4 class="card-title" style="color: white;">출/퇴근 버튼</h4>
                   </div>
@@ -126,28 +175,57 @@
 							<script type="text/javascript"> var css_file=document.createElement("link"); css_file.setAttribute("rel","stylesheet"); css_file.setAttribute("type","text/css"); css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-180x170r4.css?v=0.0.1"); document.getElementsByTagName("head")[0].appendChild(css_file); </script> <div id="tw_14_2058017150"><div style="width:145px; height:50px; margin: 0 auto;"><a href="https://booked.kr/time/seoul-18406">서울특별시</a><br/></div></div> <script type="text/javascript"> function setWidgetData_2058017150(data){ if(typeof(data) != 'undefined' && data.results.length > 0) { for(var i = 0; i < data.results.length; ++i) { var objMainBlock = ''; var params = data.results[i]; objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; } } } var clock_timer_2058017150 = -1; widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=593;type=14;id=2058017150;scode=;city_id=;wlangid=24;mode=2;details=0;background=ffffff;border_color=ffffff;color=e6e6e6;add_background=ffffff;add_color=e6e6e6;head_color=ffffff;border=0;transparent=0"; var widgetUrl = location.href; widgetSrc += '&ref=' + widgetUrl; var wstrackId = ""; if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } var timeBookedScript = document.createElement("script"); timeBookedScript.setAttribute("type", "text/javascript"); timeBookedScript.src = widgetSrc; document.body.appendChild(timeBookedScript); </script>
 							<!-- clock widget end -->
 						</div>
-						<div>
-							<div id="attendanceResult" style="margin-top:20px;">
-								<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'};" class="btn btn-dark btn-round">
+						<div class="attendanceBox">
+							<div style="margin-top:20px;">
+								<button id="startAttendanceBtn" style="display: ${not empty checkStartTime ? 'none' : 'inline'}; width: 150px; font-size: 17px;" class="btn btn-light btn-round">
 										출근
 								</button>
+								<div id="attendanceResult" style="color: white; font-size: 15px; margin-top:10px;">
 								<c:if test="${not empty checkStartTime}">
-									출근 시간 : ${checkStartTime.substring(9, 17)}  
-								</c:if>	
+									<%-- 출근 시간 : ${checkStartTime.substring(9, 17)}   --%>
+									출근 시간 : ${fn:substring(checkStartTime, fn:length(checkStartTime) - 8, fn:length(checkStartTime))}
+								</c:if>
+								</div>	
 							</div>
-							<div id="attendanceEndResult" style="margin-top:20px;">
-								<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'};"  class="btn btn-dark btn-round">
+							<div style="margin-top:20px;">
+								<button id="endAttendanceBtn" style="display: ${not empty checkEndTime ? 'none' : 'inline'}; width: 150px; font-size: 17px;"  class="btn btn-light btn-round">
 									퇴근
 								</button>
+								<div id="attendanceEndResult" style="color: white; font-size: 15px; margin-top:10px;">
 								<c:if test="${not empty checkEndTime}">
-									퇴근 시간 : ${checkEndTime.substring(9, 17)}  
+									<%-- 퇴근 시간 : ${checkEndTime.substring(9, 17)}   --%>
+									퇴근 시간 : ${fn:substring(checkEndTime, fn:length(checkEndTime) - 8, fn:length(checkEndTime))}
 								</c:if>
+								</div>
 							</div>	
 						</div>
 					</div>
                    
                   </div>
                 </div>
+                <!-- 날씨 위젯  -->
+				<div class="card" style=" padding : 20px; color : #fff; height : 210px">
+				 
+				  <div class="cityAndTem">			
+					  
+				      <div class="weather_icon" >
+				      </div>
+					  
+					  <div class=" right-container" ">
+					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
+					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
+					      <div class="city weatherFont" style="font-size : 13pt"></div>
+					  </div>
+					   <div class="left-container" style="float : left; margin-top: 60px; font-size : 11pt">
+					          <div class="temp_min weatherFont" style="width: 100px;"></div>
+					          <div class="temp_max weatherFont" style="width: 100px;"></div>
+					          <div class="humidity weatherFont" style="width: 100px;"></div>
+					          <div class="wind weatherFont" style="width: 100px;"></div>
+					          <div class="cloud weatherFont" style="width: 100px;"></div>
+					  </div>
+				  </div>
+				</div>
+				
               </div>
             <div class="col-md-6"  style="width: 30%;">
                 <div class="card" style="height: 470px;">
@@ -208,6 +286,7 @@
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
                       <div class="card-title">전자결재 현황</div>
+                      	<a href="${path }/document/form" class="btn-secondary btn-border btn btn-round ms-2 selectgroup-button">신규 작성</a>
                       <div class="card-tools">
                       	<div class="selectgroup selectgroup-secondary selectgroup-pills">
                             <label class="selectgroup-item">
@@ -222,6 +301,9 @@
                       </div>
                     </div>
                   </div>
+				  
+				
+				  
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <!-- Projects table -->
@@ -291,7 +373,7 @@
 			            </tbody>
 			          </table>
 			          <!-- 결재 대기 문서 -->
-			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 65vw;">
+			          <table class="table table-hover align-items-center mb-0" id="waitingTable" style="display: none; width: 100%;">
 				           <thead class="thead-light">
 				             <tr class="text-center">
 				             	<!-- <th><input type="checkbox"></th> -->
@@ -455,9 +537,10 @@
                 </div>
               </div>
             </div> -->
-                <div class="card">
+			
+			    <div class="card">
                   <div class="card-header">
-                    <div class="card-title">금주의 게시물</div>
+                    <div class="card-title">오늘의 게시물</div>
                   </div>
                   <div class="card-body">
                     
@@ -468,7 +551,6 @@
                           <th scope="col">TITLE</th>
                           <th scope="col">WRITER</th>
                           <th scope="col">DATE</th>
-                          <th scope="col">VIEWS</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -477,45 +559,41 @@
                           <td>Mark</td>
                           <td>Otto</td>
                           <td>@mdo</td>
-                          <td>@mdo</td>
                         </tr>
                         <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                         <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                          <tr>
                          <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                          <tr>
                           <td>2</td>
                           <td>Jacob</td>
                           <td>Thornton</td>
                           <td>@fat</td>
-                          <td>@mdo</td>
                         </tr>
                         
                       </tbody>
                       
                     </table>
-                    <div div class="pagination-container">
-                  	  <ul class="pagination"><li class="paginate_button page-item previous disabled" id="basic-datatables_previous"><a href="#" aria-controls="basic-datatables" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="basic-datatables" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="basic-datatables" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="basic-datatables" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="basic-datatables" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="basic-datatables" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="basic-datatables" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="basic-datatables_next"><a href="#" aria-controls="basic-datatables" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul>
-                  	</div>
+                 
                   </div>
                 </div>
+							
+		      </div>
+            
           </div>
         </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
@@ -575,19 +653,37 @@
 			                 url: '${path}/attendance/endattendance',
 			                 success: function(response) {
 			                     var message = response.msg;
+			                     console.log(message);
 			                     var attendanceEnd = response.attendanceEnd;
-			                     alert(message);
-			                     $('#endAttendanceBtn').hide();
-			                     $('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
+			                     if(message == '실패'){
+			                    	 Swal.fire({
+			                             title: '실패!',
+			                             text: '출근부터 찍어주세요!',
+			                             icon: 'error',
+			                             confirmButtonText: '확인'
+			                         }).then((result) => {
+			                             /* if (result.isConfirmed) {
+			                                 location.replace('${path}');
+			                             } */
+			                         });
+			                     }else{
+			                    	 Swal.fire({
+			                             title: '성공!',
+			                             text: '퇴근이 성공적으로 완료되었습니다.',
+			                             icon: 'success',
+			                             confirmButtonText: '확인'
+			                         })
+
+				                    	$('#endAttendanceBtn').hide();
+				                     	$('#attendanceEndResult').html('퇴근 시간 : ' + attendanceEnd);
+
+			                     }
 			                 },
 			                 error: function(xhr, status, error) {
 			                     alert('퇴근 처리에 실패하였습니다.');
 			                 }
 			             });
 			         });
-			     }); 
-				 
-				 $(document).ready(function(){
 			         $('#startAttendanceBtn').click(function(){
 			             $.ajax({
 			                 type: 'POST',
@@ -595,7 +691,12 @@
 			                 success: function(response) {
 			                     var message = response.msg;
 			                     var attendanceStart = response.attendanceStart;
-			                     alert(message);
+			                     Swal.fire({
+		                             title: '성공!',
+		                             text: '출근이 성공적으로 완료되었습니다.',
+		                             icon: 'success',
+		                             confirmButtonText: '확인'
+		                         })
 			                     $('#startAttendanceBtn').hide();
 			                     $('#attendanceResult').html('출근 시간 : ' + attendanceStart);
 			                 },
@@ -604,11 +705,72 @@
 			                 }
 			             });
 			         });
+			         
+			      	// 페이지 로드 시 저장된 값으로 라디오 버튼 체크
+			         const selectedValue = sessionStorage.getItem('selectedOptionDoc');
+			         if (selectedValue) {
+			             const radioButton = document.querySelector(`input[name="option"][value="${selectedValue}"]`);
+			             if (radioButton) {
+			                 radioButton.checked = true;
+			             }
+			         }
+			         
 			     }); 	
     </script>
     <script>
  	const path = "${path}";
-  </script>
+    </script>
+	<script>
+		// 날씨 api - fontawesome 아이콘
+		var weatherIcon = {
+		    '01' : '${path}/resources/assets/img/sun.png', /* 해 */
+		    '02' : '${path}/resources/assets/img/cloudfull.png', /* 구름 */
+		    '03' : '${path}/resources/assets/img/cloudfull.png', /* 구름 */
+		    '04' : '${path}/resources/assets/img/cloudfull.png',  /* 구름 */
+		    '09' : '${path}/resources/assets/img/rainfull.png', /* 비 */
+		    '10' : '${path}/resources/assets/img/rainfull.png', /* 비 */
+		    '11' : '${path}/resources/assets/img/rainfull.png',   /* 비 */
+		    '13' : '${path}/resources/assets/img/rainfull.png',  /* 눈 */
+		    '50' : '${path}/resources/assets/img/cloudfull.png'      /* 구름 */
+		};
+
+		
+
+
+		// 날씨 api - 서울
+	 	var apiURI = "http://api.openweathermap.org/data/2.5/weather?q="+'seoul'+"&appid="+"640e2c1052830e64ffcc65d6cd7e56f9"; 
+		$.ajax({
+		    url: apiURI,
+		    dataType: "json",
+		    type: "GET",
+		    async: "false",
+		    success: function(resp) {
+				console.log((resp.weather[0].icon).substr(0,2));
+				
+		        var $Icon = (resp.weather[0].icon).substr(0,2);
+		        var $weather_description = resp.weather[0].main;
+		        var $Temp = Math.floor(resp.main.temp- 273.15) + 'º';
+		        var $humidity = '습도&nbsp;&nbsp;&nbsp;&nbsp;' + resp.main.humidity+ ' %';
+		        var $wind = '바람&nbsp;&nbsp;&nbsp;&nbsp;' +resp.wind.speed + ' m/s';
+		        var $city = '서울';
+		        var $cloud = '구름&nbsp;&nbsp;&nbsp;&nbsp;' + resp.clouds.all +"%";
+		        var $temp_min = '최저 온도&nbsp;&nbsp;&nbsp;&nbsp;' + Math.floor(resp.main.temp_min- 273.15) + 'º';
+		        var $temp_max = '최고 온도&nbsp;&nbsp;&nbsp;&nbsp;' + Math.floor(resp.main.temp_max- 273.15) + 'º';
+		        
+
+		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'"  />');
+		        $('.weather_description').prepend($weather_description);
+		        $('.current_temp').prepend($Temp);
+		        $('.humidity').prepend($humidity);
+		        $('.wind').prepend($wind);
+		        $('.city').append($city);
+		        $('.cloud').append($cloud);
+		        $('.temp_min').append($temp_min);
+		        $('.temp_max').append($temp_max);               
+		    }
+		});
+
+	</script>
    
   </body>
 </html>

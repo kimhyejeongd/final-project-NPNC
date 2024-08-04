@@ -13,14 +13,13 @@
 	    <result column="er_doc_create_date" property="erDocCreateDate"/>
 	    <result column="er_doc_emergency_yn" property="erDocEmergencyYn"/>
 	    <result column="er_doc_delete_yn" property="erDocDeleteYn"/>
-	    <result column="er_doc_storage_key" property="erDocStorageKey"/>
+	    <result column="ER_DOC_STORAGE_KEY" property="erDocStorageKey"/>
 	    <result column="ER_STORAGE_NAME" property="erDocStorageName"/>
 	    <result column="er_doc_filename" property="erDocFilename"/>
 	    <result column="er_doc_state" property="erDocState"/>
 	    <result column="er_doc_state_update_date" property="erDocStateUpdateDate"/>
 	    <result column="er_doc_last_updater" property="erDocLastUpdater"/>
 	    <result column="er_doc_update_date" property="erDocUpdateDate"/>
-	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="er_doc_update_reason" property="erDocUpdateReason"/>
 	    <result column="ER_DOC_COMPLETE_DATE" property="erDocCompleteDate"/>
 	    <result column="ER_DOC_FORM_KEY" property="docFormKey"/>
@@ -192,6 +191,16 @@
 	</select>
 	
 	<!-- 문서 -->
+	<!-- 문서 작성자 멤버키 조회 -->
+	<select id ="selecetDocWriter" resultType = "int" parameterType="string">
+		SELECT
+			ER_DOC_WRITER
+		FROM
+			ER_DOCUMENT
+		WHERE
+			ER_DOC_SERIAL_KEY = #{erDocSerialKey}
+	</select>
+	
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
 		SELECT    
@@ -797,6 +806,110 @@
 			ER_DOC_CREATE_DATE DESC,
 			ER_APPROVAL_ORDERBY asc
 	</select>
+	<!-- 로그인 사원의 보류된 문서 조회 -->
+	<select id="selectMyPendingDocs" parameterType="int" resultMap="documentMap">
+		SELECT 
+		    fd.ER_DOC_KEY,
+		    fd.ER_DOC_SERIAL_KEY,
+		    fd.ER_DOC_WRITER,
+		    fd.department_key AS writer_dept_key,
+		    fd.department_name AS writer_dept_name,
+		    fd.job_key AS writer_job_key,
+		    fd.job_name AS writer_job_name,
+		    fd.ER_DOC_TITLE,
+		    fd.ER_DOC_CREATE_DATE,
+		    fd.ER_DOC_EMERGENCY_YN,
+		    fd.ER_DOC_DELETE_YN,
+		    fd.ER_DOC_STORAGE_KEY,
+		    fd.ER_DOC_FILENAME,
+		    fd.ER_DOC_STATE,
+		    fd.ER_DOC_STATE_UPDATE_DATE,
+		    fd.ER_DOC_LAST_UPDATER,
+		    fd.ER_DOC_LAST_UPDATE_REASON,
+		    fd.ER_DOC_COMPLETE_DATE,
+		    ea.ER_APPROVER_KEY,
+		    ea.MEMBER_KEY,
+		    ea.ER_APPROVER_NAME,
+		    ea.ER_APPROVER_TEAM_KEY,
+		    d.DEPARTMENT_NAME,
+		    ea.ER_APPROVER_JOB_KEY,
+		    j.JOB_NAME,
+		    ea.ER_APPROVAL_CATEGORY,
+		    ea.ER_APPROVAL_STATE,
+		    ea.ER_APPROVAL_OPINION,
+		    ea.ER_DOC_SERIAL_KEY,
+		    ea.ER_APPROVAL_DATE,
+		    ea.ER_APPROVAL_ORDERBY,
+		    d.DEPARTMENT_NAME,
+		    ef.ER_FILE_KEY,
+		    ef.ER_FILE_ORI_NAME,
+		    ef.ER_FILE_RENAME,
+		    ef.ER_DOC_KEY,
+		    ef.ER_DOC_SERIAL_KEY,
+		    ef.ER_FILE_SIZE,
+		    ef.ER_FILE_FORM,
+		    ef.ER_FILE_UPLOAD_DATE,
+		    ef.ER_FILE_ORDERBY,
+		    ef.ER_FILE_UPLODAER,
+		    ef.ER_FILE_UPDATE_DATE,
+		    ef.ER_FILE_UPDATER,
+		    ef.ER_FILE_UPDATE_REASON,
+		    er.ER_REFERER_KEY,
+		    er.ER_DOC_SERIAL_KEY,
+		    er.ER_REFERER_TEAM_KEY,
+		    er.ER_REFERER_JOB_KEY,
+		    er.ER_REFERER_NAME,
+		    er.MEMBER_KEY
+		FROM ER_APROVER ea 
+		JOIN (
+			    SELECT 
+			        ed.ER_DOC_KEY,
+			        ed.ER_DOC_SERIAL_KEY,
+			        ed.ER_DOC_WRITER,
+			        m.department_key,
+			        d2.department_name,
+			        m.job_key,
+			        j2.job_name,
+			        ed.ER_DOC_TITLE,
+			        ed.ER_DOC_CREATE_DATE,
+			        ed.ER_DOC_EMERGENCY_YN,
+			        ed.ER_DOC_DELETE_YN,
+			        ed.ER_DOC_STORAGE_KEY,
+			        ed.ER_DOC_FILENAME,
+			        ed.ER_DOC_STATE,
+			        ed.ER_DOC_STATE_UPDATE_DATE,
+			        ed.ER_DOC_LAST_UPDATER,
+			        ed.ER_DOC_LAST_UPDATE_REASON,
+			        ed.ER_DOC_COMPLETE_DATE
+			    FROM 
+			        ER_DOCUMENT ed 
+			    JOIN
+			        ER_APROVER ea ON ed.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+			    LEFT JOIN 
+			    	MEMBER m ON ed.ER_DOC_WRITER = m.member_key
+			    JOIN 
+			    	DEPARTMENT d2 ON d2.department_key = m.department_key
+			    JOIN 
+			    	job j2 ON j2.job_key = m.job_key
+			    WHERE
+			        ed.ER_DOC_STATE = '보류'
+			    AND    
+			        ea.member_Key = #{no}
+			) fd 
+			ON fd.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		LEFT JOIN 
+			ER_FILE ef ON ef.ER_DOC_SERIAL_KEY = fd.ER_DOC_SERIAL_KEY
+		LEFT JOIN 
+			DEPARTMENT d ON d.DEPARTMENT_KEY = ea.ER_APPROVER_TEAM_KEY 
+		LEFT JOIN 
+			job j ON j.job_KEY = ea.ER_APPROVER_JOB_KEY 
+		LEFT JOIN 
+			ER_REFERER er ON er.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		ORDER BY 
+			ER_DOC_EMERGENCY_YN DESC,
+			ER_DOC_CREATE_DATE DESC,
+			ER_APPROVAL_ORDERBY asc
+	</select>
 	<!-- 로그인 사원의 결재 승인 문서 조회 -->
 	<select id="selectCompleteDocs" parameterType="int" resultMap="documentMap">
 		SELECT 
@@ -1085,6 +1198,56 @@
 			ea.ER_APPROVAL_ORDERBY asc,
 			ER_FILE_ORDERBY
 	</select>
+	<select id="selectInprocessDocApproveNow" parameterType="int" resultMap="documentMap">
+		SELECT 
+			d.ER_DOC_KEY,
+			d.ER_DOC_SERIAL_KEY,
+			d.ER_DOC_WRITER,
+			d.ER_DOC_TITLE,
+			d.ER_DOC_CREATE_DATE,
+			d.ER_DOC_EMERGENCY_YN,
+			d.ER_DOC_DELETE_YN,
+			d.ER_DOC_STORAGE_KEY,
+			d.ER_DOC_FILENAME, 
+			d.ER_DOC_STATE, 
+			d.ER_DOC_STATE_UPDATE_DATE,
+			d.ER_DOC_LAST_UPDATER,
+			d.ER_DOC_LAST_UPDATE_REASON,
+			d.ER_DOC_COMPLETE_DATE,
+			d.ER_DOC_FORM_KEY,
+			ea.ER_APPROVER_KEY,
+			ea.MEMBER_KEY,
+			ea.ER_APPROVER_NAME,
+			ea.ER_APPROVER_TEAM_KEY,
+			d2.DEPARTMENT_NAME,
+			ea.ER_APPROVER_JOB_KEY,
+			j.JOB_NAME,
+			ea.ER_APPROVAL_CATEGORY,
+			ea.ER_APPROVAL_STATE,
+			ea.ER_APPROVAL_OPINION,
+			ea.ER_DOC_SERIAL_KEY,
+			ea.ER_APPROVAL_DATE,
+			ea.ER_APPROVAL_ORDERBY,
+			s.ER_STORAGE_NAME,
+			s.ER_STORAGE_TERM,
+			sf.ER_FOLDER_NAME
+		FROM   
+			er_document d
+        LEFT JOIN 
+       		er_aprover ea ON d.ER_DOC_SERIAL_KEY = ea.ER_DOC_SERIAL_KEY
+		LEFT JOIN
+			job j ON ea.ER_APPROVER_JOB_KEY = j.JOB_KEY
+		LEFT JOIN
+			DEPARTMENT d2 ON ea.ER_APPROVER_TEAM_KEY = d2.DEPARTMENT_KEY 
+        LEFT JOIN
+      		ER_STORAGE s ON d.ER_DOC_STORAGE_KEY = s.ER_STORAGE_KEY
+      	LEFT JOIN
+      		ER_STORAGE_FOLDER sf ON s.ER_STORAGE_FOLDER_KEY = sf.ER_FOLDER_KEY
+		WHERE  
+			d.ER_DOC_KEY = #{docId}
+		ORDER BY
+			ea.ER_APPROVAL_ORDERBY asc
+	</select>
 	<select id="selectDocBySerial" parameterType="string" resultMap="documentMap">
 		SELECT 
 			d.ER_DOC_KEY,
@@ -1245,10 +1408,7 @@
 				ER_DOC_DELETE_YN,
 				ER_DOC_STORAGE_KEY,
 				ER_DOC_FILENAME, 
-				ER_DOC_STATE, 
-				ER_DOC_STATE_UPDATE_DATE,
-				ER_DOC_LAST_UPDATER,
-				ER_DOC_LAST_UPDATE_REASON
+				ER_DOC_STATE
 			)
 		VALUES
             (
@@ -1258,7 +1418,7 @@
                         || #{erDocSerialKey}
                         || '-'
                         || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.NEXTVAL),
-              #{erDocWriter},
+              ${erDocWriter},
               #{erDocTitle},
               DEFAULT,
               #{erDocEmergencyYn},
@@ -1268,12 +1428,9 @@
                         || '-'
                         || #{erDocSerialKey}
                         || '-'
-                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.currval)
-              			|| '.html',
-              '임시저장',
-              NULL,
-              NULL,
-              NULL
+                        || To_char(SEQ_ER_DOC_SERIAL_KEY_DRAFT.CURRVAL)
+                        || '.html',
+              '임시저장'
             )
         <!-- 등록 문서의 시리얼키 반환 -->
 		<selectKey keyProperty="erDocSerialKey" resultType="String" order="AFTER">
@@ -1290,7 +1447,7 @@
 			AND
 				ROWNUM = 1
 			ORDER BY 
-				ER_DOC_KEY DESC
+				ER_DOC_KEY DESC 
 		</selectKey>
 	</insert>
 	
@@ -1377,7 +1534,36 @@
 		WHERE 
 			er_doc_serial_key = #{erDocSerialKey}
 	</delete>
-	
+	<!-- 첨부파일 원본 이름 확인 -->
+	<select id="selecetDocFileOriname" parameterType="string" resultType="string">
+		SELECT
+			ER_FILE_ORI_NAME
+		FROM
+			ER_FILE
+		WHERE
+			ER_FILE_RENAME = #{rename}
+	</select>
+	<!-- 첨부파일 전체 조회 -->
+	<select id="getFileDetailByRename" parameterType="string" resultMap="docFileMap">
+		SELECT
+			ER_FILE_KEY,
+			ER_FILE_ORI_NAME,
+			ER_FILE_RENAME,
+			ER_DOC_KEY,
+			ER_DOC_SERIAL_KEY,
+			ER_FILE_SIZE,
+			ER_FILE_FORM,
+			ER_FILE_UPLOAD_DATE,
+			ER_FILE_ORDERBY,
+			ER_FILE_UPLODAER,
+			ER_FILE_UPDATE_DATE,
+			ER_FILE_UPDATER,
+			ER_FILE_UPDATE_REASON
+		FROM
+			ER_FILE
+		WHERE
+			ER_FILE_RENAME = #{rename}
+	</select>
 	<!-- 결재자 -->
 	<!-- 문서 기안시 등록 -->
 	<insert id="insertApproval" parameterType="approver">
@@ -1398,7 +1584,7 @@
 		VALUES
             (
               seq_er_approver_key.NEXTVAL,
-              ${memberKey},
+              #{memberKey},
               #{memberName},
               #{memberTeamKey},
               #{memberJobKey},
@@ -1414,9 +1600,35 @@
               #{opinion, jdbcType=VARCHAR},
               #{erDocSerialKey},
               sysdate,
-              ${orderby}
+              #{orderby}
             )
+        <selectKey order="AFTER" resultType="string" keyProperty="erApproverKey">
+        	SELECT
+        		seq_er_approver_key.currval
+        	FROM
+        		dual
+        </selectKey>
 	</insert>
+	<select id="selectApproverByKey" parameterType="map" resultMap="approverMap">
+		SELECT
+			ER_APPROVER_KEY,
+			MEMBER_KEY,
+			ER_APPROVER_NAME,
+			ER_APPROVER_TEAM_KEY,
+			ER_APPROVER_JOB_KEY,
+			ER_APPROVAL_CATEGORY,
+			ER_APPROVAL_STATE,
+			ER_APPROVAL_OPINION,
+			ER_DOC_SERIAL_KEY,
+			ER_APPROVAL_DATE,
+			ER_APPROVAL_ORDERBY
+		FROM
+			ER_APROVER
+		WHERE
+			MEMBER_KEY = #{memberKey}
+		AND
+			ER_DOC_SERIAL_KEY = #{serial}
+	</select>
 	
 	<!-- 결재라인 신규 저장 -->
 	<insert id="insertApproverLineStorage" parameterType="map">
@@ -1611,6 +1823,14 @@
 	</insert>
 	<!-- 전자문서 임시저장 첨부파일 등록 -->
 	<insert id="insertDraftDocFile" parameterType="docFile">
+		<!-- <selectKey keyProperty="erDocSerialKey" resultType="string" order="BEFORE">
+			SELECT 
+				ER_DOC_SERIAL_KEY
+			FROM   
+				ER_DOCUMENT
+			WHERE
+				ER_DOC_KEY = #{erDocKey}
+		</selectKey> -->
 		INSERT INTO 
 			er_file
 			(
@@ -1751,7 +1971,7 @@
 			VACATION_APPLY_STATUS = #{status},
 			VACATION_UPDATE_DATE = SYSDATE
 		WHERE
-			ER_DOCUMENT_KEY = #{docSerial}
+			ER_DOCUMENT_KEY = #{serial}
 	</update>
 	<!-- 휴가신청서 삭제 -->
 	<delete id="deleteVacationApply" parameterType="string">

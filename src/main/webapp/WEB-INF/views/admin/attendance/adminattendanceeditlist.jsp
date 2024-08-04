@@ -7,12 +7,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
-	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	<c:if test="${loginMember.accessKey eq 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/personadminsidebar.jsp" %> 
+ 	</c:if>
+ 	<c:if test="${loginMember.accessKey != 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	</c:if>
  	<div class="main-panel">
-	<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 	 
+ 	<c:if test="${loginMember.accessKey eq 3 }">
+  		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	</c:if>
+  	 <c:if test="${loginMember.accessKey != 3 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+ 	</c:if>
 		<div class="col-md-12">
 		                <div class="card">
 		                  <div class="card-header">
@@ -161,6 +175,7 @@
 			                } else {
 			                    $('#attendanceEditOpinion').removeAttr('readonly');
 			                }
+			             
 
 			                // 버튼 표시/숨기기
 			                if (data.attendanceEdit.attendanceEditOpinion) {

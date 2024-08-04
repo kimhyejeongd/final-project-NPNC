@@ -12,7 +12,7 @@
 	          </button>
 	        </div>
         <div class="modal-body">
-			<form action="${path}/admin/member/updatememberend.do" method="post">
+			<form action="${path}/admin/member/updatememberend.do" method="post" onsubmit="return combineAddressesup();">
 				 <div class="container">
 		          <div class="page-inner">
 		            	<div class="form-group">
@@ -57,16 +57,39 @@
 		                            class="col-md-3 col-form-label"
 		                            >주소</label
 		                          >
-		                          <div class="col-md-9 p-0">
-		                            <input
-		                              type="text"
+		                          <div class="col-md-9 p-0">      
+		                             <div style="display:flex">
+		                          	<input type="text"
+		                          	  		id="zip_code2" 
+		                          	  		name="zip_code" 
+		                          	  		onclick="openZipSearchUp();" 
+		                          	  		readonly="readonly" 
+		                          	  		placeholder="우편번호"  
+		                          	  		class="form-control input-full">
+		                          	&ensp;
+								 	<input type="text"
+								 	 		 id="addr2" 
+								 	 		 name="addr" 
+								 	 		 onclick="openZipSearchUp();" 
+								 	 		 readonly="readonly" 
+								 	 		 placeholder="기본주소"   
+								 	 		 class="form-control input-full">
+								  	</div>
+								  <input type="text"  
+								  		id="addr_dtl2"
+								  		name="addr_dtl" 
+								  		placeholder="상세주소"   
+								  		class="form-control input-full">
+		                          </div>
+		                           <input
+		                              type="hidden"
 		                              class="form-control input-full"
 		                              id="memberAddressup"
 		                              name="memberAddress"
-									  value="${member.memberAddress}"
+									 
 		                              placeholder="주소"
+		                              readonly
 		                            />
-		                          </div>
 		               		</div>
 		               		<div class="form-group form-inline">
 		                          <label
@@ -271,7 +294,7 @@
 		 
 		                       <div class="form-group">
 		                          <label class="form-label">권한</label>
-		                          <div class="selectgroup selectgroup-pills">
+		                 <%--          <div class="selectgroup selectgroup-pills">
 		                            <label class="selectgroup-item">
 		                              <input
 		                                type="checkbox"
@@ -290,7 +313,7 @@
 		                                class="selectgroup-input"
 										<c:if test="${member.accessKey == 2}">checked</c:if>
 		                              />
-		                              <span class="selectgroup-button">사원</span>
+		                              <span class="selectgroup-button">경영</span>
 		                            </label>
 		                            <label class="selectgroup-item">
 		                              <input
@@ -302,7 +325,28 @@
 		                              />
 		                              <span class="selectgroup-button">인사</span>
 		                            </label>
-		                          </div>
+		                            <label class="selectgroup-item">
+		                              <input
+		                                type="checkbox"
+		                                name="accessKey"
+		                                value="3"
+		                                class="selectgroup-input"
+										<c:if test="${member.accessKey == 4}">checked</c:if>
+		                              />
+		                              <span class="selectgroup-button">사원</span>
+		                            </label>
+		                          </div> --%>
+				                  <select
+		                            class="form-select"
+		                            id="accessKey"
+		                            name="accessKey"
+		                          >
+		                            <option value="4">사원</option>
+		                            <option value="3">인사</option>
+		                            <option value="2">경영</option>
+		                            <option value="1">관리자</option>
+		                            
+		                          </select>
 		                        </div>
 		                          <button
 					                  type="submit"
@@ -322,3 +366,41 @@
       </div>
     </div>
   </div> 
+  
+
+<script>
+function openZipSearchUp() {
+    new daum.Postcode({
+    	oncomplete: function(data) {     
+		var addr = ''; 
+		if (data.userSelectedType === 'R') { 
+			addr = data.roadAddress;
+		} else {
+			addr = data.jibunAddress;
+		}
+
+		$("#zip_code2").val(data.zonecode);
+		$("#addr2").val(addr);
+		$("#addr_dtl2").val("");
+		$("#addr_dtl2").focus();
+		
+        }
+    }).open();
+}
+
+function combineAddressesup() {
+    // 각 입력 필드의 값 가져오기
+    var zipCode = $("#zip_code2").val();
+    var basicAddress = $("#addr2").val();
+    var detailedAddress = $("#addr_dtl2").val();
+    
+    // 값을 결합하여 하나의 문자열로 만들기 (구분자는 필요에 따라 설정)
+    var fullAddress = zipCode + ' ' + basicAddress + ' ' + detailedAddress;
+    console.log(fullAddress);
+    // 숨겨진 입력 필드에 결합된 값을 설정
+    document.getElementById('memberAddressup').value = fullAddress;
+    
+    // 폼 제출
+    return true; // 폼이 정상적으로 제출되도록 함
+}
+</script>
