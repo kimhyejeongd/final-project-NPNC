@@ -49,5 +49,16 @@
     <delete id="deleteNotice" parameterType="int">
         DELETE FROM NOTICE WHERE NOTICE_KEY = #{id}
     </delete>
-
+    
+     <select id="searchNoticesByTitle" parameterType="String" resultType="NoticeDto">
+        SELECT NOTICE_KEY as noticeKey,
+               MEMBER_KEY as memberKey,
+               NOTICE_TITLE as noticeTitle,
+               NOTICE_DETAIL as noticeDetail,
+               NOTICE_ENROLL_DATE as noticeEnrollDate,
+               NOTICE_UPDATE_DATE as noticeUpdateDate,
+               NOTICE_DELETE as noticeDelete
+        FROM NOTICE
+        WHERE NOTICE_TITLE LIKE #{title}
+    </select>
 </mapper>

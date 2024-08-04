@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-    <title>게시판 수정</title>
+    <title>게시판 목록</title>
     
     <!-- Favicon -->
     <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
@@ -55,52 +55,7 @@
     <div class="wrapper">
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="dark">
-            <div class="sidebar-logo">
-                <!-- Logo Header -->
-                <div class="logo-header" data-background-color="dark">
-                    <a href="${path}/index.html" class="logo">
-                        <img
-                            src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
-                            alt="navbar brand"
-                            class="navbar-brand"
-                            height="20"
-                        />
-                    </a>
-                    <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
-                            <i class="gg-menu-right"></i>
-                        </button>
-                        <button class="btn btn-toggle sidenav-toggler">
-                            <i class="gg-menu-left"></i>
-                        </button>
-                    </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
-                </div>
-                <!-- End Logo Header -->
-            </div>
-            <div class="sidebar-wrapper scrollbar scrollbar-inner">
-                <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
-                        <li class="mb-4 text-center">
-                            <a href="${path}/admin/board/create" class="btn btn-primary btn-round w-75">게시판 작성하기</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${path}/admin/board/list" class="collapsed">
-                                <i class="fas fa-th-list"></i>
-                                <p>게시판 목록</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${path}/notice/admin" class="collapsed">
-                                <i class="fas fa-bell"></i>
-                                <p>공지사항</p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <!-- ... Sidebar 내용 ... -->
         </div>
         <!-- End Sidebar -->
 
@@ -109,33 +64,72 @@
             <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
 
             <div class="container">
-                <h1 class="mb-4">게시판 수정</h1>
+                <h1 class="mb-4">게시판 목록</h1>
 
-                <!-- 수정 폼 -->
-                <form action="${path}/admin/board/update/${board.BOARD_KEY}" method="post">
-                    <input type="hidden" name="_method" value="put" />
-                    <div class="form-group">
-                        <label for="title">제목</label>
-                        <input type="text" id="title" name="BOARD_TITLE" class="form-control" value="${board.BOARD_TITLE}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="content">내용</label>
-                        <textarea id="content" name="BOARD_CONTENT" class="form-control" rows="5" required>${board.BOARD_CONTENT}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">카테고리</label>
-                        <select id="category" name="BOARD_CATEGORY_KEY" class="form-control" required>
-                            <option value="1" ${board.BOARD_CATEGORY_KEY == 1 ? 'selected' : ''}>게시판</option>
-                            <option value="2" ${board.BOARD_CATEGORY_KEY == 2 ? 'selected' : ''}>공지사항</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">수정 완료</button>
-                    <a href="${path}/admin/board/list" class="btn btn-secondary">취소</a>
-                </form>
+                <!-- 게시판 목록 테이블 -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>카테고리</th>
+                            <th>조치</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="board" items="${boards}">
+                            <tr>
+                                <td>${board.BOARD_TITLE}</td>
+                                <td>${board.BOARD_CONTENT}</td>
+                                <td>${board.BOARD_CATEGORY_KEY == 1 ? '게시판' : '공지사항'}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" onclick="openEditModal(${board.BOARD_KEY}, '${board.BOARD_TITLE}', '${board.BOARD_CONTENT}', ${board.BOARD_CATEGORY_KEY})">수정</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
 
             <!-- Footer -->
             <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+        </div>
+    </div>
+
+    <!-- 수정 모달 -->
+    <div class="modal fade" id="editBoardModal" tabindex="-1" aria-labelledby="editBoardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBoardModalLabel">게시판 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editBoardForm" action="${path}/admin/board/update" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <input type="hidden" id="boardKey" name="BOARD_KEY" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">제목</label>
+                            <input type="text" id="title" name="BOARD_TITLE" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">내용</label>
+                            <textarea id="content" name="BOARD_CONTENT" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">카테고리</label>
+                            <select id="category" name="BOARD_CATEGORY_KEY" class="form-control" required>
+                                <option value="1">게시판</option>
+                                <option value="2">공지사항</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">수정 완료</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -146,5 +140,20 @@
     
     <!-- Custom JS -->
     <script src="${path}/resources/assets/js/kaiadmin.js"></script>
+
+    <!-- 모달 스크립트 -->
+    <script>
+    function openEditModal(key, title, content, category) {
+        // 모달 폼의 필드에 데이터 설정
+        document.getElementById('boardKey').value = key;
+        document.getElementById('title').value = title;
+        document.getElementById('content').value = content;
+        document.getElementById('category').value = category;
+
+        // 모달 열기
+        var myModal = new bootstrap.Modal(document.getElementById('editBoardModal'));
+        myModal.show();
+    }
+    </script>
 </body>
 </html>

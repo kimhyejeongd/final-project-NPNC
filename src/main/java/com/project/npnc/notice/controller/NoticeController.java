@@ -32,13 +32,14 @@ public class NoticeController {
         model.addAttribute("noticeList", noticeList);
         return "notice/admin_notice_list";  // 관리자 페이지 JSP 파일 경로
     }
-    // 공지사항 목록 보기
     @GetMapping("/list")
-    public String listNotices(Model model) {
-        List<NoticeDto> noticeList = noticeService.getAllNotices();
+    public String listNotices(@RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword, Model model) {
+        List<NoticeDto> noticeList = noticeService.searchNoticesByTitle(searchKeyword);
         model.addAttribute("noticeList", noticeList);
-        return "notice/noticeList";  // JSP 파일 경로
+        model.addAttribute("searchKeyword", searchKeyword);
+        return "notice/noticeList"; // 이 뷰가 실제로 있는지 확인하세요
     }
+
 
     // 공지사항 상세 보기
     @GetMapping("/detail")

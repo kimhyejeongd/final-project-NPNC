@@ -15,117 +15,105 @@
 }
 
 body {
-
-  background-image: url('${path}/resources/jh/images/sea-7409361_1920.jpg');
+  background-image: url('${path}/resources/hj/—Pngtree—blue background_919872.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-main {
-  background: linear-gradient(124.47deg, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.0));
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 30rem; /* 가로 길이 증가 */
-  height: auto;
-  padding: 30px;
-  margin: 170px auto;
-  transition: all 0.3s ease;
+  height: 100vh;
+  margin: 0;
 }
 
-main:hover {
-  background: linear-gradient(124.47deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 40px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  max-width: 900px;
+  height: auto; /* ensures container height is dynamic based on content */
+}
+
+.logo-container {
+  margin-right: 50px;
 }
 
 .logo {
-  width: 170px;
-  margin: 12px auto;
+  width: 400px;
+}
+
+.separator {
+  width: 2px;
+  background-color: white;
+  height: 100%; /* full height of the container */
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 5px; /* space between label and input */
+  align-self: flex-start;
+  margin-left: 10px;
 }
 
 fieldset {
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: linear-gradient(124.47deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.2));
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(0px);
-  margin: 10px;
-  padding: 8px 12px; /* 세로 길이 감소 */
-  width: 100%; /* 필드셋 가로 길이 증가 */
-  transition: all 0.3s ease;
-}
-
-fieldset:hover {
-  background: linear-gradient(124.47deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  border: none;
+  margin: 20px 0; /* space between fieldsets */
+  padding: 0;
+  width: 100%;
 }
 
 input {
   border: none;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.3);
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 8px;
-  width: 100%;
+  color: white;
+  padding: 10px;
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  border-radius: 20px; /* rounded corners */
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 input:focus {
   outline: none;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 button {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50px;
-  color: rgba(255, 255, 255, 0.9);
+  border: none;
+  background-color: #3d97d7;
+  color: white;
   font-size: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(124.47deg, rgba(61, 151, 215, 0.2), rgba(61, 151, 215, 0.0), rgba(61, 151, 215, 0.2));
-  backdrop-filter: blur(5px);
+  padding: 10px;
+  width: 100%;
+  border-radius: 20px; /* rounded corners */
   cursor: pointer;
-  width: 100%; /* 버튼 가로 길이 증가 */
-  height: 3rem;
-  margin-top: 10px;
-  transition: all 0.3s ease;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background: linear-gradient(124.47deg, rgba(61, 151, 215, 0.8), rgba(61, 151, 215, 0.6), rgba(61, 151, 215, 0.8));
-  top: 1px;
-  margin-top: 1px;
-}
-
-button:active {
-  position: relative;
-  top: 5px;
-  margin-top: 5px;
-}
-
-main > div {
-  color: #ffffff;
-  font-size: 14px;
-  padding: 0px 30px;
-  position: relative;
-  top: -10px;
+  background-color: #357ab8;
 }
 
 .failure-message,
 .failure-message2,
 .strongPassword-message {
-  position: relative;
-  top: -10px;
   color: red;
-  display: none;
-}
-
-.hide {
   display: none;
 }
 
@@ -135,21 +123,28 @@ main > div {
 </style>
 </head>
 <body>
-<main>
-    <img class="logo" src="${path}/resources/jh/images/KakaoTalk_20240708_224711693.png" alt="NPNC Logo"/>
-    <form action="${pageContext.request.contextPath}/logincheck" method="post">
-        <fieldset>
-            <input name="username" id="username" type="text" placeholder="아이디" />
-        </fieldset>
-        <div class="failure-message hide">아이디는 4~12글자이어야 합니다</div>
-        <div class="failure-message2 hide">영어 또는 숫자만 가능합니다</div>
-        <fieldset>
-            <input name="password" id="password" type="password" placeholder="비밀번호" />
-        </fieldset>
-        <div class="strongPassword-message hide">8글자 이상, 영문, 숫자, 특수문자(@$!%*#?&)를 사용하세요</div>
-        <button type="submit">로그인</button>
-    </form>
-</main>
+<div class="container">
+    <div class="logo-container">
+        <img class="logo" src="${path}/resources/hj/npnclogin.png" alt="npnc Logo"/>
+    </div>
+    <div class="separator"></div>
+    <div class="form-container">
+        <form action="${pageContext.request.contextPath}/logincheck" method="post">
+            <fieldset>
+                <label for="username">ID</label>
+                <input name="username" id="username" type="text" placeholder="아이디" />
+            </fieldset>
+<!--             <div class="failure-message hide">아이디는 4~12글자이어야 합니다</div>
+            <div class="failure-message2 hide">영어 또는 숫자만 가능합니다</div> -->
+            <fieldset>
+                <label for="password">PASSWORD</label>
+                <input name="password" id="apassword" type="password" placeholder="비밀번호" />
+            </fieldset>
+<!--             <div class="strongPassword-message hide">8글자 이상, 영문, 숫자, 특수문자(@$!%*#?&)를 사용하세요</div> -->
+            <button type="submit">로그인</button>
+        </form>
+    </div>
+</div>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var elInputUsername = document.getElementById("username");

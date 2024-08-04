@@ -27,8 +27,8 @@
     <link rel="stylesheet" href="${path}/resources/assets/css/kaiadmin.min.css" />
 
 
-  	<div class="sidebar" data-background-color="dark">
-  	<div class="sidebar-logo">
+     <div class="sidebar" data-background-color="dark">
+     <div class="sidebar-logo">
        <!-- Logo Header -->
        <div class="logo-header" data-background-color="dark">
          <a href="${path}/admin/adminMain" class="logo">
@@ -51,166 +51,168 @@
        <!-- End Logo Header -->
      </div>
 
-		<div class="sidebar-wrapper scrollbar scrollbar-inner">
-		    <div class="sidebar-content">
-		        <ul class="nav nav-secondary">
-		            <li class="nav-item">
-		                <a href="${path}/admin/adminMain">
-		                    <i class="fas fa-home"></i><p>관리자페이지 Home</p>
-		                </a>
-		            </li>
-		            <!-- 토글리스트 -->
-		            <li class="nav-section">
-		                <span class="sidebar-mini-icon">
-		                    <i class="fa fa-ellipsis-h"></i>
-		                </span>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#docING">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>인사관리</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="docING">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/member/selectmemberall.do">
-		                                <span class="sub-item">전체사원관리</span>
-		                            </a>
-		                        </li>
-<%-- 		                        <li>
-		                            <a href="${path}/admin/member/insertmember.do">
-		                                <span class="sub-item">사원등록</span>
-		                            </a>
-		                        </li>  --%>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-		                    <i class="fas fa-th-list"></i>
-		                    <p>근태관리</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="sidebarLayouts">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/attendance/selectAdminAttendanceAll">
-		                                <span class="sub-item">전체 사원 근태</span>
-		                            </a>
-		                        </li>
-		                        <li>
-		                            <a href="${path}/admin/attendance/selectAdminAttendanceEditAll">
-		                                <span class="sub-item">수정요청관리</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#forms">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>부서/직급</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="forms">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/dept/selectdeptall.do">
-		                                <span class="sub-item">부서 관리</span>
-		                            </a>
-		                        </li>
-		                        <li>
-		                            <a href="${path}/admin/job/selectjoball.do">
-		                                <span class="sub-item">직급 관리</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#vaca">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>휴가관리</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="vaca">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/vacation/selectVacationAll">
-		                                <span class="sub-item">휴가 관리</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#docManagement">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>전자결재 관리</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="docManagement">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
-		                                <span class="sub-item">결재 보관함</span>
-		                            </a>
-		                        </li>
-		                        <li>
-		                            <a href="${path}/admin/documentForm/selectAdminFormAll">
-		                                <span class="sub-item">결재 양식</span>
-		                            </a>
-		                        </li>
-		                        <li>
-		                            <a href="${path}/admin/job/selectjoball.do">
-		                                <span class="sub-item">전체 문서 목록</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#board">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>게시판</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="board">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/board/list">
-		                                <span class="sub-item">게시판</span>
-		                            </a>
-		                        </li>
-		                        <li>
-		                            <a href="${path}/notice/admin">
-		                                <span class="sub-item">공지사항</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		            <li class="nav-item">
-		                <a data-bs-toggle="collapse" href="#reservation">
-		                    <i class="fas fa-pen-square"></i>
-		                    <p>예약물</p>
-		                    <span class="caret"></span>
-		                </a>
-		                <div class="collapse" id="reservation">
-		                    <ul class="nav nav-collapse">
-		                        <li>
-		                            <a href="${path}/admin/reservation/reservationlist">
-		                                <span class="sub-item">예약물 관리</span>
-		                            </a>
-		                        </li>
-		                    </ul>
-		                </div>
-		            </li>
-		        </ul>
-		    </div>
-		</div>
-		</div>
+     <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a
+                  href="${path }/"
+                >
+                  <i class="fas fa-home"></i><p>관리자페이지 Home</p>
+                </a>
+              </li>
+              <!-- 토글리스트 -->
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#docING">
+                  <i class="fas fa-pen-square"></i>
+                  <p>인사관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="docING">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/member/selectmemberall.do">
+                        <span class="sub-item">전체사원관리</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/member/insertmember.do">
+                        <span class="sub-item">사원등록</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                  <i class="fas fa-th-list"></i>
+                  <p>근태관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="sidebarLayouts">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/attendance/selectAdminAttendanceAll">
+                        <span class="sub-item">전체 사원 근태</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/attendance/selectAdminAttendanceEditAll">
+                        <span class="sub-item">수정요청관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#forms">
+                  <i class="fas fa-pen-square"></i>
+                  <p>부서/직급</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="forms">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/dept/selectdeptall.do">
+                        <span class="sub-item">부서 관리</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/job/selectjoball.do">
+                        <span class="sub-item">직급 관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#vaca">
+                  <i class="fas fa-pen-square"></i>
+                  <p>휴가관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="vaca">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/vacation/selectVacationAll">
+                        <span class="sub-item">휴가 관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#123">
+                  <i class="fas fa-pen-square"></i>
+                  <p>전자결재 관리</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="123">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path}/admin/documentForm/selectAdminDocumentFormAll">
+                        <span class="sub-item">결재 양식</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/job/selectjoball.do">
+                        <span class="sub-item">결재 보관함</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/admin/job/selectjoball.do">
+                        <span class="sub-item">전체 문서 목록</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+               <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#reserve">
+                  <i class="fas fa-pen-square"></i>
+                  <p>예약물</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="reserve">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="${path }/admin/reservation/reservationlist">
+                        <span class="sub-item">예약물 관리</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+                                <li class="nav-item">
+                      <a data-bs-toggle="collapse" href="#board">
+                          <i class="fas fa-pen-square"></i>
+                          <p>게시판</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse" id="board">
+                          <ul class="nav nav-collapse">
+                              <li>
+                                  <a href="${path}/admin/board/list">
+                                      <span class="sub-item">게시판</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="${path}/notice/admin">
+                                      <span class="sub-item">공지사항</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
   
   

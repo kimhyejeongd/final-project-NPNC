@@ -152,7 +152,7 @@
                                                 <p><strong>직급:</strong> <span>${member.jobKey}</span></p>
                                                 <p><strong>권한:</strong> <span>${member.accessKey}</span></p>
                                                 <p><strong>현황:</strong> <span>${member.memberState}</span></p>
-                                                <button id="saveAddressButton" class="btn btn-primary btn-custom" style="display:none;">저장</button>
+                                                <button id="saveChangesButton" class="btn btn-primary btn-custom" style="display:none;">저장</button>
                                             </div>
                                         </div>
                                     </div>
@@ -169,38 +169,35 @@
     </div>
 
     <!-- Address Modal -->
-<<!-- Address Modal -->
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addressModalLabel">주소 수정</h5>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="roadAddress">도로명 주소</label>
-                    <input type="text" class="form-control" id="roadAddress" placeholder="도로명주소">
+    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addressModalLabel">주소 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-<!--                 <div class="form-group">
-                    <label for="jibunAddress">지번 주소</label>
-                    <input type="text" class="form-control" id="jibunAddress" placeholder="지번주소">
-                </div> -->
-                <div class="form-group">
-                    <label for="postcode">우편번호</label>
-                    <input type="text" class="form-control" id="postcode" placeholder="우편번호">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="roadAddress">도로명 주소</label>
+                        <input type="text" class="form-control" id="roadAddress" placeholder="도로명주소">
+                    </div>
+                    <div class="form-group">
+                        <label for="jibunAddress">지번 주소</label>
+                        <input type="text" class="form-control" id="jibunAddress" placeholder="지번주소">
+                    </div>
+                    <div class="form-group">
+                        <label for="postcode">우편번호</label>
+                        <input type="text" class="form-control" id="postcode" placeholder="우편번호">
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="searchAddressButton">주소 검색</button>
+                    <button type="button" class="btn btn-primary" id="saveAddressButton">주소 저장</button>
                 </div>
-                <div class="form-group">
-		    <label for="detailedAddress">상세 주소</label>
-		    <input type="text" class="form-control" id="detailedAddress" placeholder="상세주소">
-		</div>
-                
-                <button type="button" class="btn btn-secondary" id="searchAddressButton">주소 검색</button>
-                <button type="button" class="btn btn-primary" id="saveAddressButtonModal">주소 저장</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <!-- Password Modal -->
     <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
@@ -260,218 +257,123 @@
 <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 <script src="${path}/resources/assets/js/setting-demo.js"></script>
 <script src="${path}/resources/assets/js/demo.js"></script>
-a
-<!-- Page Specific JS -->
+
+	<!-- Page Specific JS -->
 	<script>
-	$(document).ready(function() {
-	    // Address Modal Functionality
-	    $('#searchAddressButton').click(function() {
-	            oncomplete: function(data) {
-
-	                $('#roadAddress').val(data.roadAddress);
-	                $('#detailAddress').val(data.detailAddress);
-	                $('#postcode').val(data.zonecode);
-	            }
-	        }).open();
-	    });
-
-	    $('#saveAddressButtonModal').click(function() {
-	        var roadAddress = $('#roadAddress').val();
-	        var detailAddress = $('#detailAddress').val();
-	        var postcode = $('#postcode').val();
-
-	        $.ajax({
-	            url: "${path}/member/updateAddress",
-	            type: "POST",  // 변경: PUT -> POST
-	            contentType: "application/x-www-form-urlencoded",
-	            data: {
-	                roadAddress: roadAddress,
-	                detailAddress: detailAddress,
-	                postcode: postcode
-	            },
-	            success: function(response) {
-	                if (response.success) {
-	                    $('#memberAddressText').text(response.updatedAddress);
-	                    $('#addressModal').modal('hide'); // Hide the modal after successful update
-	                } else {
-	                    alert("주소 업데이트 실패.");
+	    $(document).ready(function() {
+	        // Address Modal Functionality
+	        $('#searchAddressButton').click(function() {
+	            new daum.Postcode({
+	                oncomplete: function(data) {
+	                    $('#postcode').val(data.zonecode);
+	                    $('#roadAddress').val(data.roadAddress);
+	                    $('#jibunAddress').val(data.jibunAddress);
 	                }
-	            },
-	            error: function(xhr, status, error) {
-	                alert("주소 업데이트 실패: " + error);
+	            }).open();
+	        });
+	
+	        $('#saveAddressButton').click(function() {
+	            const newAddress = $('#roadAddress').val();
+	            $('#memberAddressText').text(newAddress);
+	            $('#addressModal').modal('hide');
+	            $('#saveChangesButton').show();
+	        });
+	
+	        $('#sendEmailVerificationButton').click(function() {
+	            // 이메일 전송 로직
+	            $('#emailVerificationForm').show();
+	        });
+	
+	        $('#verifyCodeButton').click(function() {
+	            // 인증 코드 확인 로직
+	            $('#passwordChangeForm').show();
+	        });
+	
+	        $('#saveNewPasswordButton').click(function() {
+	            // 비밀번호 저장 로직
+	        });
+	
+	        $('#saveChangesButton').click(function() {
+	            // 변경 사항 저장 로직
+	        });
+	
+	        // Profile Image Functionality
+	        $("#editProfileImageButton").click(function() {
+	            $("#profileImageForm").toggle();
+	        });
+	
+	        $("#uploadProfileImageButton").click(function() {
+	            var formData = new FormData();
+	            var files = $("#profileImageUpload")[0].files;
+	            if (files.length > 0) {
+	                formData.append("profileImage", files[0]);
+	                $.ajax({
+	                    url: "${path}/member/uploadProfileImage",
+	                    type: "POST",
+	                    data: formData,
+	                    processData: false,
+	                    contentType: false,
+	                    success: function(response) {
+	                        $("#profileImage").attr("src", response.newImageUrl);
+	                        $("#profileImageForm").hide();
+	                    },
+	                    error: function(xhr, status, error) {
+	                        alert("파일 업로드 실패: " + error);
+	                    }
+	                });
+	            }
+	        });
+	
+	        // Address Update Functionality
+	        $("#updateAddressButton").click(function() {
+	            var roadAddress = $("#roadAddress").val();
+	            var jibunAddress = $("#jibunAddress").val();
+	            var detailedAddress = $("#detailedAddress").val();
+	            $.ajax({
+	                url: "${path}/member/updateAddress",
+	                type: "POST",
+	                data: {
+	                    roadAddress: roadAddress,
+	                    jibunAddress: jibunAddress,
+	                    detailedAddress: detailedAddress
+	                },
+	                success: function(response) {
+	                    $("#memberAddressText").text(response.updatedAddress);
+	                    $("#addressModal").modal("hide");
+	                },
+	                error: function(xhr, status, error) {
+	                    alert("주소 수정 실패: " + error);
+	                }
+	            });
+	        });
+	
+	        // Password Update Functionality
+	        $("#updatePasswordButton").click(function() {
+	            var currentPassword = $("#currentPassword").val();
+	            var newPassword = $("#newPassword").val();
+	            var confirmPassword = $("#confirmPassword").val();
+	            if (newPassword === confirmPassword) {
+	                $.ajax({
+	                    url: "${path}/member/updatePassword",
+	                    type: "POST",
+	                    data: {
+	                        currentPassword: currentPassword,
+	                        newPassword: newPassword
+	                    },
+	                    success: function(response) {
+	                        alert("비밀번호 수정 성공");
+	                        $("#passwordModal").modal("hide");
+	                    },
+	                    error: function(xhr, status, error) {
+	                        alert("비밀번호 수정 실패: " + error);
+	                    }
+	                });
+	            } else {
+	                alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
 	            }
 	        });
 	    });
-	});
-
-
-
-
-     // 이메일 전송
-        $('#sendEmailVerificationButton').click(function() {
-            var email = $('#verificationEmail').val();
-            $.ajax({
-                url: "${path}/member/sendPasswordResetEmail",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ email: email }),
-                success: function(response) {
-                    $('#emailVerificationForm').show();
-                },
-                error: function(xhr, status, error) {
-                    alert("이메일 전송 실패: " + error);
-                }
-            });
-        });
-
-        // 인증 코드 확인
-        $('#verifyCodeButton').click(function() {
-            var code = $('#emailVerificationCode').val();
-            $.ajax({
-                url: "${path}/member/verifyCode",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ code: code }),
-                success: function(response) {
-                    if (response.success) {
-                        $('#passwordChangeForm').show();
-                    } else {
-                        alert("인증 코드가 잘못되었습니다.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("인증 코드 확인 실패: " + error);
-                }
-            });
-        });
-
-        // 비밀번호 저장
-        $('#saveNewPasswordButton').click(function() {
-            var newPassword = $('#newPassword').val();
-            var email = $('#verificationEmail').val();
-            $.ajax({
-                url: "${path}/member/changePassword",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ email: email, newPassword: newPassword }),
-                success: function(response) {
-                    if (response.success) {
-                        alert("비밀번호가 성공적으로 변경되었습니다.");
-                        $('#passwordModal').modal('hide');
-                    } else {
-                        alert("비밀번호 변경 실패.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("비밀번호 변경 실패: " + error);
-                }
-            });
-        });
-
-        // 주소 업데이트
-        $('#saveAddressButton').click(function() {
-            var roadAddress = $('#roadAddress').val();
-            var detailedAddress = $('#detailedAddress').val();
-            $.ajax({
-                url: "${path}/member/updateAddress",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    roadAddress: roadAddress,
-                    detailedAddress: detailedAddress
-                }),
-                success: function(response) {
-                    if (response.success) {
-                        $('#memberAddressText').text(response.updatedAddress);
-                        $('#addressModal').modal('hide');
-                    } else {
-                        alert("주소 업데이트 실패.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("주소 업데이트 실패: " + error);
-                }
-            });
-        });
- 
-
-        // Profile Image Functionality
-        $("#editProfileImageButton").click(function() {
-            $("#profileImageForm").toggle();
-        });
-
-        $("#uploadProfileImageButton").click(function() {
-            var formData = new FormData();
-            var files = $("#profileImageUpload")[0].files;
-            if (files.length > 0) {
-                formData.append("profileImage", files[0]);
-                $.ajax({
-                    url: "${path}/member/uploadProfileImage",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        $("#profileImage").attr("src", response.newImageUrl);
-                        $("#profileImageForm").hide();
-                    },
-                    error: function(xhr, status, error) {
-                        alert("파일 업로드 실패: " + error);
-                    }
-                });
-            }
-        });
-
-        @PostMapping("/updateAddress")
-        public @ResponseBody Map<String, Object> updateAddress(
-            @RequestParam("roadAddress") String roadAddress,
-            @RequestParam("detailedAddress") String detailedAddress,
-            HttpSession session) {
-            
-            Map<String, Object> response = new HashMap<>();
-            
-            // SecurityContextHolder에서 로그인 사용자 정보를 가져옵니다.
-            Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            
-            if (loginMember != null) {
-                // 주소 업데이트 서비스 호출
-                memberService.updateAddress(loginMember.getMemberId(), roadAddress, detailedAddress);
-                response.put("success", true);
-                response.put("updatedAddress", roadAddress + " " + detailedAddress);
-            } else {
-                response.put("success", false);
-                response.put("error", "User not logged in.");
-            }
-            return response;
-        }
-
-        // Password Update Functionality
-        $("#updatePasswordButton").click(function() {
-            var currentPassword = $("#currentPassword").val();
-            var newPassword = $("#newPassword").val();
-            var confirmPassword = $("#confirmPassword").val();
-            if (newPassword === confirmPassword) {
-                $.ajax({
-                    url: "${path}/member/updatePassword",
-                    type: "POST",
-                    data: {
-                        currentPassword: currentPassword,
-                        newPassword: newPassword
-                    },
-                    success: function(response) {
-                        alert("비밀번호 수정 성공");
-                        $("#passwordModal").modal("hide");
-                    },
-                    error: function(xhr, status, error) {
-                        alert("비밀번호 수정 실패: " + error);
-                    }
-                });
-            } else {
-                alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            }
-        });
-    });
-</script>
+	</script>
 
 </body>
 </html>

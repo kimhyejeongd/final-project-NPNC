@@ -5,27 +5,33 @@
 
     <!-- Board Dto CRUD -->
     <select id="selectAllBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
         ORDER BY BOARD_KEY DESC
     </select>
 
     <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY) 
+         WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
     
     <select id="selectFilesByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardFileDto">
-        SELECT * FROM BOARD_FILE WHERE BOARD_KEY = #{boardKey}
+        SELECT * FROM BOARD_FILE WHERE BOARD_KEY = #{BOARD_KEY}
+    </select>
+    
+    <select id="searchBoardsByTitle" parameterType="string" resultType="com.project.npnc.board.model.dto.BoardDto">
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
+        WHERE BOARD_TITLE LIKE '%' || #{title} || '%'
     </select>
 
     <!-- 공지사항만 조회 -->
     <select id="selectNotices" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOAR JOIN MEMBER USING(MEMBER_KEY)
         WHERE BOARD_CATEGORY_KEY = 2
     </select>
 
     <!-- 일반 게시판만 조회 -->
     <select id="selectGeneralBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
         WHERE BOARD_CATEGORY_KEY = 1
     </select>
 
@@ -44,39 +50,41 @@
     <delete id="deleteBoard" parameterType="int">
         DELETE FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </delete>
-    
-	<insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
-  	  <selectKey keyProperty="BOARD_KEY" order="AFTER" resultType="int">
-         SELECT board_seq.CURRVAL FROM DUAL
-      </selectKey>
-	    INSERT INTO BOARD (
-	        BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE, BOARD_TITLE
-	    ) VALUES (
-	        #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, SYSDATE, SYSDATE, 'N', #{BOARD_TITLE}
-	    )
-	</insert>
+
+    <insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
+        <selectKey keyProperty="BOARD_KEY" order="AFTER" resultType="int">
+            SELECT board_seq.CURRVAL FROM DUAL
+        </selectKey>
+        INSERT INTO BOARD (
+            BOARD_CATEGORY_KEY, MEMBER_KEY, BOARD_DETAIL, BOARD_ENROLL_DATE, BOARD_UPDATE_DATE, BOARD_DELETE, BOARD_TITLE
+        ) VALUES (
+            #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, SYSDATE, SYSDATE, 'N', #{BOARD_TITLE}
+        )
+    </insert>
 
 
-	<insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
-	    INSERT INTO BOARD_FILE (
-	        BOARD_FILE_KEY, BOARD_KEY, BOARD_FILE_ORI, BOARD_FILE_POST
-	    ) VALUES (
-	        SEQ_BOARD_FILE.NEXTVAL, #{BOARD_KEY}, #{BOARD_FILE_ORI}, #{BOARD_FILE_POST}
-	    )
-	</insert>
+    <insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
+        INSERT INTO BOARD_FILE (
+            BOARD_FILE_KEY, BOARD_KEY, BOARD_FILE_ORI, BOARD_FILE_POST
+        ) VALUES (
+            SEQ_BOARD_FILE.NEXTVAL, #{BOARD_KEY}, #{BOARD_FILE_ORI}, #{BOARD_FILE_POST}
+        )
+    </insert>
 
-
-    
     <!-- Board Comment Dto CRUD -->
-    <select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
-        SELECT * FROM BOARD_COMMENT WHERE BOARD_KEY = #{BOARD_KEY}
-    </select>
+	<!-- 댓글과 대댓글을 구분하여 가져오는 쿼리 -->
+	<select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+	    SELECT * FROM BOARD_COMMENT JOIN MEMBER USING(MEMBER_KEY)
+	    WHERE BOARD_KEY = #{BOARD_KEY}
+	    ORDER BY BOARD_COMMENT_REF ASC, BOARD_COMMENT_DATE DESC
+	</select>
+
 
     <insert id="insertComment" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
         INSERT INTO BOARD_COMMENT (
             BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
         ) VALUES (
-            #{BOARD_COMMENT_KEY}, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL}, SYSDATE, #{BOARD_COMMENT_REF}, 'N'
+            SEQ_BOARD_COMMENT.NEXTVAL, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL}, SYSDATE, #{BOARD_COMMENT_REF}, 'N'
         )
     </insert>
 
@@ -98,4 +106,32 @@
     <select id="selectAllCategories" resultType="com.project.npnc.board.model.dto.BoardCategoryDto">
         SELECT * FROM BOARD_CATEGORY
     </select>
+    
+    <select id="selectCommentById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+        SELECT * FROM BOARD_COMMENT WHERE BOARD_COMMENT_KEY = #{commentKey}
+    </select>
+
+    <insert id="insertReply" parameterType="com.project.npnc.board.model.dto.BoardCommentDto">
+        INSERT INTO BOARD_COMMENT (
+            BOARD_COMMENT_KEY, BOARD_KEY, MEMBER_KEY, BOARD_COMMENT_LEVEL, BOARD_COMMENT_DETAIL, BOARD_COMMENT_DATE, BOARD_COMMENT_REF, BOARD_COMMENT_DELETE
+        ) VALUES (
+            SEQ_BOARD_COMMENT.NEXTVAL, #{BOARD_KEY}, #{MEMBER_KEY}, #{BOARD_COMMENT_LEVEL}, #{BOARD_COMMENT_DETAIL}, SYSDATE, #{BOARD_COMMENT_REF}, 'N'
+        )
+    </insert>
+
+    <select id="selectRepliesByCommentId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
+        SELECT * FROM BOARD_COMMENT JOIN MEMBER USING(MEMBER_KEY)
+        WHERE BOARD_COMMENT_REF = #{BOARD_COMMENT_KEY}
+    </select>
+    
+	    <!-- 페이지네이션을 적용한 게시글 조회 쿼리 -->
+		<select id="selectBoardsWithPagination" resultType="com.project.npnc.board.model.dto.BoardDto">
+		    SELECT * FROM (
+		        SELECT BOARD.*, ROW_NUMBER() OVER (ORDER BY BOARD_KEY DESC) AS rnum
+		        FROM BOARD
+		    ) WHERE rnum BETWEEN #{startRow} AND #{endRow}
+		</select>
+
+    
+
 </mapper>
