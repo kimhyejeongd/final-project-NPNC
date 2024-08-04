@@ -66,7 +66,7 @@
                                             <div id="panelsStayOpen-collapse${f.erFormFolderKey}" class="accordion-collapse collapse show">
                                                 <div class="accordion-body" style="padding: 0!important;">
                                                     <div class="list-group" id="memberlist">
-                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item accordion-header droppable" data-folder-key="${f.erFormFolderKey}" data-folder-group="${f.erFormKey}"> 
+                                                            <a href="#" class="list-group-item list-group-item-action align-items-center folder-item accordion-header droppable" data-folder-key="${f.erFormFolderKey}" data-folder-name="${f.erFormFolderName}" > 
                                                                 <i class="fas fa-user me-2"></i>
 																${f.erFormFolderName }
                                                             </a>
@@ -267,13 +267,14 @@
 
 <script>
 $(document).ready(function() {
-	
 	$('.folder-item').on('click', function(e) {
 	    e.preventDefault(); // 기본 클릭 동작을 막음
 	    
 	    
 	
 	    var folderKey = $(this).data('folder-key'); // 클릭된 항목의 folderId 가져오기
+
+	    var folderName = $(this).data('folder-name'); // 클릭된 항목의 folderId 가져오기
 	
 	    
 	    $.ajax({
@@ -297,7 +298,7 @@ $(document).ready(function() {
 	                        '<td class="approverNow p-3">' + updaterInfo + '</td>' +
 	                        '<td class="approverNow p-3">' + doc.erFormYn + '</td>' +
 	                        '<td class="approverNow p-3">' + 
-	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage" onclick="window.location.href=\'${path}/admin/documentForm/form?formKey='+doc.erFormKey+'\'">수정</button>'+
+	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage" onclick="window.location.href=\'${path} /admin/documentForm/form?formKey=' + doc.erFormKey + '&folderName=' + folderName + '\'">수정</button>'+
 	                        
 	              			'<input type="hidden" id="oriName" name="oriName" value="'+doc.erStorageName+'">'
 	                        + '</td>' +

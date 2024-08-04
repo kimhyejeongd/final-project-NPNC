@@ -24,6 +24,7 @@ import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
 import com.project.npnc.admin.document.model.service.AdminDocumentService;
+import com.project.npnc.document.member.controller.DocS3Controller;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.organization.dto.OrganizationDto;
@@ -41,6 +42,7 @@ public class AdminDocumentFormController {
     private final ObjectMapper objectMapper;
 	private final OrganizationService orserv;
 	private final ServletContext servletContext;
+	private final DocS3Controller docS3Controller;
 	@Value("${file.upload-dir}")
     private String uploadPath;
 
@@ -253,10 +255,9 @@ public class AdminDocumentFormController {
         return "admin/document/form";
     }
     
-    @PostMapping("/insertForm")
+    @PostMapping("/updateForm")
     public ResponseEntity<?> insertForm(@RequestParam("htmlContent") String htmlContent, @RequestParam(value = "erFormFolderKey", required = false) int erFormFolderKey) {
-        System.out.println(erFormFolderKey + "11111111111111111");
-        System.out.println("11111111111111111");
+
 
         // 저장할 경로 지정 (예: webapps 폴더 내 resources/upload/docformhtml)
         String filePath = servletContext.getRealPath("/resources/upload/docformhtml/savedDocument.html");
@@ -277,5 +278,13 @@ public class AdminDocumentFormController {
     	List<DocumentFormFolder>folders= service.selectDocFormFolderAll();
     	m.addAttribute("folders", folders);
     	return "admin/document/selectFolder";
+    }
+    @PostMapping("/selectCurrentForm")
+    public ResponseEntity<String>selectCurrentForm(@RequestBody Map<String,Object>formInfo){
+    	String formKey = (String)formInfo.get("formKey");
+    	String folderName = (String)formInfo.get("folderName");
+    	System.out.println(formKey + folderName);
+    	String result = docS3Controller.readHtmlFile("upload/docformhtml/"+folderName,formKey+".html");
+    	return ResponseEntity.ok(result);
     }
 }
