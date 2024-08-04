@@ -39,7 +39,7 @@ public class SecuirtyConfig{
 					.headers(header->header.frameOptions(frame->frame.sameOrigin()))
 					.csrf(csrf -> csrf.disable()) //csfr보호 기능 비활성화, 개발 초기 단계나 특정 요구사항이 있을 때 사용됨(람다를 매개변수로 받음)
 					.authorizeHttpRequests(request->request //()-> 요청에 대한 것을 처리
-							.requestMatchers("/loginpage/**","/logout/**").permitAll() 
+							.requestMatchers("/loginpage/**","/logout/**","/admin/documentForm/selectDoc/**").permitAll() 
 							//사원
 							.requestMatchers("/admin/personAdminMain/**") 
 							.hasAnyAuthority(MyAuthority.PERSON.name())
