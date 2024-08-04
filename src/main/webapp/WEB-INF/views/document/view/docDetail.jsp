@@ -152,7 +152,7 @@
 								</c:when>
 							</c:choose>
 								<div class="d-flex align-items-center">
-								<button class="btn btn-label-info btn-round" onclick='window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
+								<button class="btn btn-label-info btn-round" onclick='window.open(`${path}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
 										<span class="btn-label">
 											<i class="fa fa-search"></i>
 										</span>
