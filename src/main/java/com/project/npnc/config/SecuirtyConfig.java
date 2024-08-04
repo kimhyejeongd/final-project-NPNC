@@ -41,6 +41,9 @@ public class SecuirtyConfig{
 					.authorizeHttpRequests(request->request //()-> 요청에 대한 것을 처리
 							.requestMatchers("/loginpage/**","/logout/**","/admin/documentForm/selectDoc/**").permitAll() 
 							//사원
+							.requestMatchers("/","/document/**","/calendar/**","/board/**","/overwork/**","/attendance/**","/notice/**","/external/**","/notehome","/sendNoteHome","/noteSendMe","/noteBookMark","/member/**"
+									,"/chat","/organ","/schedule/**")
+							.hasAnyAuthority(MyAuthority.PERSON.name(),MyAuthority.MANAGE.name(),MyAuthority.USER.name())
 							.requestMatchers("/admin/personAdminMain/**") 
 							.hasAnyAuthority(MyAuthority.PERSON.name())
 							.requestMatchers("/admin/attendance/**","/admin/member/**") 
