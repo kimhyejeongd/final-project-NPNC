@@ -433,15 +433,6 @@ $(document).ready(function() {
 			                var loginMemberKey = "${loginMember.memberKey}";
 			                var loginMemberName = "${loginMember.memberName}";
 			                var loginMemberJobName = "${loginMember.jobName}";
-			                //참조인 있으면 발송
-			                if (data.referer && data.referer.length > 0) {
-			                	console.log(data.referer.length);
-			                	console.log('참조인 알람 send try');
-					            // 각 참조인에 대해 반복 전송
-					            $.each(data.referer, function(index, referer) {
-					            	refererAlarmSend(referer.memberKey, loginMemberKey, loginMemberName, loginMemberJobName)
-					            });
-			                }
 			                
 			                //다음 결재자 알람 발송
 			                if (data.nextAprover && data.nextAprover.memberKey) {
