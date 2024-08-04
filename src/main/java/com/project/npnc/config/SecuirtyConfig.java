@@ -63,8 +63,8 @@ public class SecuirtyConfig{
 					.formLogin(form->form
 							.loginProcessingUrl("/logincheck")
 							.loginPage("/loginpage")
-//							.successHandler(customAuthenticationSuccessHandler) // 커스텀 성공 핸들러 설정
-							.defaultSuccessUrl("/")
+							.successHandler(customAuthenticationSuccessHandler) // 커스텀 성공 핸들러 설정
+//							.defaultSuccessUrl("/")
 							)
 					.logout(logout->logout
 							.logoutUrl("/logout")
