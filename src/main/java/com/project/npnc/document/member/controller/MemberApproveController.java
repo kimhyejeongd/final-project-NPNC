@@ -80,10 +80,8 @@ public class MemberApproveController {
 				    log.debug("다음 결재자 없음, 최종 결재 승인 진행 중");
 				    // 참조인 정보 전달
 				    response.put("referer", docServ.selectReferer(serial));
-				    response.put("nextAprover", null);
 				}
 				//다음 결재자 정보 전달
-				response.put("referer", null);
 				response.put("nextAprover", nextAprover);
 				
 			}

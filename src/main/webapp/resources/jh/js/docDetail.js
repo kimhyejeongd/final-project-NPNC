@@ -145,12 +145,13 @@ function approveModal(no, serial){
 			                var writerJobName = $("#docInfo").data('doc-writer-job-name');
 			                var writerName = $("#docInfo").data('doc-writer-name');
 							
+							console.dir(data);
 							
 							 //다음 결재자 있으면 발송
 							 if (data.nextAprover && data.nextAprover.memberKey) {
 			                	console.log('결재자 알람 send try');
 			                	 console.log(data.nextAprover);
-				                nextAproverAlarmSend(data.nextAprover.memberKey,  0, writerName, writerJobName);
+				                nextAproverAlarmSend(data.nextAprover.memberKey, writerKey, writerName, writerJobName);
 			                }else{
 								if(approvalType == '승인' || approvalType == '전결'){
 									//다음결재자가 없으면서 승인인 경우
@@ -168,10 +169,10 @@ function approveModal(no, serial){
 								});
 							}
 							
-							alert('콘솔 확인용');
+							//alert('콘솔 확인용');
 							
 			                // 성공 시 페이지 리다이렉트
-			                window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
+			                //window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
 			            } else{
 							alert(data.message);
 						}
