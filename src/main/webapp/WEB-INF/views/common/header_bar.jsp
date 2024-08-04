@@ -655,7 +655,6 @@
 						data:{ memberKey:${loginMember.memberKey}},
 						success:function(response){
 			                $('.notification').eq(1).text(response.length);
-								
 							$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+response.length+"개 있습니다.");
 						}
 					});
