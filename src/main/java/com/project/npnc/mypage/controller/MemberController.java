@@ -1,10 +1,18 @@
 package com.project.npnc.mypage.controller;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
@@ -12,15 +20,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.npnc.mypage.service.MemberService;
 import com.project.npnc.security.dto.Member;
 
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -47,10 +60,11 @@ public class MemberController {
     
     @PostMapping("/sendPasswordResetEmail")
     @ResponseBody
+    	
     public Map<String, Object> sendPasswordResetEmail(@RequestBody Map<String, String> request) throws MessagingException {
-        String email = request.get("email");
+		 String email = request.get("email"); // MAP  json방식으로 key email인거 
         generatedCode = generateRandomCode();
-
+        System.out.println("ddd");
 //        // HTML 이메일 내용 생성
 //        Context context = new Context();
 //        context.setVariable("code", generatedCode);
@@ -95,7 +109,7 @@ public class MemberController {
         try {
 	        helper= new MimeMessageHelper(message, true, "UTF-8");
 	        response = new HashMap<>();
-	        helper.setTo(email);
+	        helper.setTo("heajung2665@naver.com"); // 이 값 null 
 	        helper.setSubject("비밀번호 변경을 위한 인증 코드");
 				helper.setText(htmlContent, true);
 	        helper.setFrom("heajung2665@naver.com");
@@ -141,4 +155,53 @@ public class MemberController {
     private String generateRandomCode() {
         return String.format("%06d", new Random().nextInt(999999));
     }
+    
+    @PostMapping("/updateProfileImage")
+    public String updateProfileImage(@RequestParam("profileImage") MultipartFile file, RedirectAttributes redirectAttributes) {
+        Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            memberService.updateProfileImage(loginMember.getMemberId(), file);
+            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update profile image.");
+            e.printStackTrace();
+        }
+        return "redirect:/member/mypage";
+    }
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @GetMapping("/profileImage/{memberId}")
+    @ResponseBody
+    public ResponseEntity<Resource> getProfileImage(@PathVariable String memberId) {
+        try {
+            String fileName = memberService.getProfileImageFileName(memberId);
+            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PostMapping("/updateAddress")
+    public @ResponseBody Map<String, Object> updateAddress(
+        @RequestParam("roadAddress") String roadAddress,
+        @RequestParam("detailedAddress") String detailedAddress,
+        @RequestParam("postcode") String postcode,
+        HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Member loginMember = (Member) session.getAttribute("loginMember");
+        if (loginMember != null) {
+            memberService.updateAddress(loginMember.getMemberId(),roadAddress, detailedAddress,postcode);
+            response.put("success", true);
+            response.put("updatedAddress", roadAddress + " " + detailedAddress+" "+postcode);
+        } else {
+            response.put("success", false);	
+            response.put("error", "User not logged in.");
+        }
+        return response;
+    }
+
+
 }

@@ -38,4 +38,9 @@ public class NoticeServiceImpl implements NoticeService {
     public void deleteNotice(int id) {
         noticeDao.deleteNotice(id);
     }
+    @Override
+    public List<NoticeDto> searchNoticesByTitle(String title) {
+        return noticeDao.searchNoticesByTitle(title);
+    }
+
 }

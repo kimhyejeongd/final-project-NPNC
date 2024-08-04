@@ -27,6 +27,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   <!-- html2pdf -->
   <script src="${path}/resources/assets/js/html2pdf.bundle.js"></script>
+  
   <link
     rel="icon"
     type="image/x-icon"
@@ -53,6 +54,7 @@
          text-align: center !important;
      }
  </style>
+ <script src="${path}/resources/jh/js/doc-alarm.js"></script>
  <script src="${path}/resources/jh/js/docDetail.js"></script>
  <script src="${path}/resources/jh/js/draft.js"></script>
  <script src="${path}/resources/jh/js/inprocess.js"></script>
@@ -71,6 +73,11 @@
         </div>
 		<!-- 메인 내용 -->
 		<div class="container">
+		<div id="docInfo" style="display:none;"
+	         data-writer-name="${l.erDocWriter}"
+	         data-writer-job-name="${l.writerJobName}"
+	         data-doc-serial="${l.erDocSerialKey}"></div>
+	         
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
@@ -152,7 +159,7 @@
 								</c:when>
 							</c:choose>
 								<div class="d-flex align-items-center">
-								<button class="btn btn-label-info btn-round" onclick='window.open(`${sessionStorage.getItem("path")}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
+								<button class="btn btn-label-info btn-round" onclick='window.open(`${path}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
 										<span class="btn-label">
 											<i class="fa fa-search"></i>
 										</span>

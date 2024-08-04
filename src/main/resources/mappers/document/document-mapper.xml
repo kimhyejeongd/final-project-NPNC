@@ -191,6 +191,16 @@
 	</select>
 	
 	<!-- 문서 -->
+	<!-- 문서 작성자 멤버키 조회 -->
+	<select id ="selecetDocWriter" resultType = "int" parameterType="string">
+		SELECT
+			ER_DOC_WRITER
+		FROM
+			ER_DOCUMENT
+		WHERE
+			ER_DOC_SERIAL_KEY = #{erDocSerialKey}
+	</select>
+	
 	<!-- 로그인 사원의 진행 중인 문서 조회 -->
 	<select id="selectInprocessDocs" resultMap="documentMap" parameterType="_int">
 		SELECT    
@@ -657,8 +667,7 @@
 		AND       
 			d.er_doc_state = '처리완료'
 		ORDER BY  
-			d.er_doc_emergency_yn DESC,
-			ER_DOC_CREATE_DATE DESC,
+			ER_DOC_COMPLETE_DATE DESC,
 			ea.er_approval_orderby
 	</select>
 	

@@ -216,15 +216,8 @@
 
 			                // 상태 선택 설정
 			                $('#memberStateup').val(member.memberState);
+			                $('#accessKeyup').val(member.accessKey);
 
-			                // 권한 체크박스 설정
-			                $('input[name="accessKey"]').each(function() {
-			                    if ($(this).val() == member.accessKey) {
-			                        $(this).prop('checked', true);
-			                    } else {
-			                        $(this).prop('checked', false);
-			                    }
-			                });
 			                
 			                
 			            },

@@ -2,11 +2,16 @@ package com.project.npnc.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
+import com.project.npnc.security.dto.Member;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -34,11 +46,33 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public String getAllBoards(Model model) {
-        List<BoardDto> boards = boardService.getAllBoards();
+    public String getAllBoards(@RequestParam(value = "searchKeyword", required = false) String searchKeyword, Model model) {
+        List<BoardDto> boards;
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            boards = boardService.searchBoardsByTitle(searchKeyword);
+        } else {
+            boards = boardService.getAllBoards();
+        }
         model.addAttribute("boardList", boards);
         return "board/boardList";
     }
+    
+    @GetMapping("/loadMore")
+    public void loadMoreBoards(@RequestParam("page") int page, HttpServletResponse response) throws IOException {
+        int pageSize = 10; // 한 페이지당 데이터 개수
+        List<BoardDto> boards = boardService.getBoardsWithPagination(page, pageSize);
+        
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        
+        Gson gson = new Gson();
+        String json = gson.toJson(Collections.singletonMap("data", boards));
+        out.print(json);
+        out.flush();
+    }
+
+    
+
 
     @GetMapping("/notices")
     public String getNotices(Model model) {
@@ -93,30 +127,62 @@ public class BoardController {
     public String getBoardById(int boardKey, Model model) {
         BoardDto board = boardService.getBoardById(boardKey);
         List<BoardFileDto> fileList = boardService.getFilesByBoardId(boardKey);
-        
+        List<BoardCommentDto> comments = boardService.getCommentsByBoardId(boardKey);
+
+        // 댓글에 대한 대댓글을 추가하기 위해 댓글과 대댓글을 맵에 저장
+        Map<Integer, List<BoardCommentDto>> commentRepliesMap = new HashMap<>();
+        for (BoardCommentDto comment : comments) {
+            List<BoardCommentDto> replies = boardService.getRepliesByCommentId(comment.getBOARD_COMMENT_KEY());
+            commentRepliesMap.put(comment.getBOARD_COMMENT_KEY(), replies);
+        }
+
         model.addAttribute("board", board);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentRepliesMap", commentRepliesMap);        
         model.addAttribute("fileList", fileList); // 첨부파일 목록 추가
-        
+        System.out.println("ㅎㅇ");
         return "board/boardDetail";
     }
-    // 댓글 추가
+    
+    
     @PostMapping("/addComment")
-    public String addComment(BoardCommentDto commentDto) {
+    public String addComment(BoardCommentDto commentDto, HttpSession session, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+        commentDto.setMEMBER_KEY(member.getMemberKey());
+        commentDto.setBOARD_COMMENT_LEVEL(0); // 기본 댓글 레벨 설정
         boardService.createComment(commentDto);
-        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 수정
     @PostMapping("/updateComment")
-    public String updateComment(BoardCommentDto commentDto) {
-        boardService.updateComment(commentDto);
-        return "redirect:/board/detail?boardKey=" + commentDto.getBOARD_KEY();
+    public String updateComment(BoardCommentDto commentDto, HttpSession session,Authentication authentication) {
+    	Member member=(Member)authentication.getPrincipal();
+        BoardCommentDto existingComment = boardService.getCommentById(commentDto.getBOARD_COMMENT_KEY());
+        if (existingComment.getMEMBER_KEY() == member.getMemberKey()) {
+            boardService.updateComment(commentDto);
+        }
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 
     // 댓글 삭제
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey) {
-        boardService.deleteComment(commentKey);
-        return "redirect:/board/detail?boardKey=" + boardKey;
+    public String deleteComment(@RequestParam("commentKey") int commentKey, @RequestParam("boardKey") int boardKey, HttpSession session,Authentication authentication) {
+    	Member member=(Member)authentication.getPrincipal();
+        BoardCommentDto existingComment = boardService.getCommentById(commentKey);
+        if (existingComment.getMEMBER_KEY() == member.getMemberKey()) {
+            boardService.deleteComment(commentKey);
+        }
+        return "redirect:/board/detail/boardKey?boardKey=" + boardKey;
+    }
+
+    // 대댓글 추가
+    @PostMapping("/addReply")
+    public String addReply(BoardCommentDto commentDto, HttpSession session, Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+        commentDto.setMEMBER_KEY(member.getMemberKey());
+        commentDto.setBOARD_COMMENT_LEVEL(1); // 대댓글 레벨 설정
+        boardService.createComment(commentDto);
+        return "redirect:/board/detail/boardKey?boardKey=" + commentDto.getBOARD_KEY();
     }
 }

@@ -18,10 +18,18 @@ public interface BoardService {
     void createComment(BoardCommentDto commentDto);
     void updateComment(BoardCommentDto commentDto);
     void deleteComment(int commentKey);
+    BoardCommentDto getCommentById(int commentKey);
+    void createReply(BoardCommentDto commentDto);
+    // 게시물의 댓글을 가져오는 메서드
+
+    // 댓글에 대한 대댓글을 가져오는 메서드
+    List<BoardCommentDto> getRepliesByCommentId(int commentKey);
 
     List<BoardCategoryDto> getAllCategories();
     
     List<BoardFileDto> getFilesByBoardId(int boardKey);
+    List<BoardDto> searchBoardsByTitle(String title);
+    
+    List<BoardDto> getBoardsWithPagination(int page, int pageSize);
+ 
 }
-
-

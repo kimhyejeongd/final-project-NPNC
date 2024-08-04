@@ -3,11 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>공지사항</title>
+    <title>공지사항 목록</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 
     <!-- Favicon -->
@@ -47,93 +47,73 @@
         #tablerow:hover {
             cursor: pointer; 
         }
+
+        .title-container {
+            margin-bottom: 20px; /* 제목과 테이블 사이 여백 조절 */
+        }
+
+        .search-form {
+            margin-bottom: 20px; /* 검색 폼과 제목 사이 여백 조절 */
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar" data-background-color="dark">
-            <div class="sidebar-logo">
-                <!-- Logo Header -->
-                <div class="logo-header" data-background-color="dark">
-                    <a href="${path}/index.html" class="logo">
-                        <img
-                            src="${path}/resources/assets/img/kaiadmin/logo_light.svg"
-                            alt="navbar brand"
-                            class="navbar-brand"
-                            height="20"
-                        />
-                    </a>
-                    <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
-                            <i class="gg-menu-right"></i>
-                        </button>
-                        <button class="btn btn-toggle sidenav-toggler">
-                            <i class="gg-menu-left"></i>
-                        </button>
-                    </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
-                </div>
-                <!-- End Logo Header -->
-            </div>
-            <div class="sidebar-wrapper scrollbar scrollbar-inner">
-                <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
-                        <li class="nav-item">
-                        
-                            <a href="${path}/notice/list" class="collapsed">
-                                <i class="fas fa-bell"></i>
-                                <p>공지사항</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${path}/board/list" class="collapsed">
-                                <i class="fas fa-th-list"></i>
-                                <p>게시판</p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- End Sidebar -->
+        <%@ include file="/WEB-INF/views/board/boardSidebar.jsp" %>
 
+        <!-- Main Panel -->
         <div class="main-panel">
-            <!-- Header Bar -->
             <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+            <div class="page-inner">
+                <div class="container">
+                    <div class="title-container">
+                        <h1>공지사항 목록</h1>
+                  </div>
 
-            <div class="container">
-                <div class="page-inner">
-                    <h1 class="mb-4">공지사항 목록</h1>
-                 
+                    <!-- Search Form -->
+                    <form method="get" action="${path}/notice/list" class="search-form">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text" name="searchKeyword" class="form-control" placeholder="제목 검색" value="${param.searchKeyword}">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                        </div>
+                    </form>
 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>작성일</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="notice" items="${noticeList}">
-                                <tr>
-                                    <td>${notice.noticeKey}</td>
-                                    <td><a href="${path}/notice/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
-                                    <td>${notice.memberKey}</td>
-                                    <td><fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                    <!-- Notice Table -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="multi-filter-select" class="display table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>번호</th>
+                                            <th>제목</th>
+                                            <th>작성자</th>
+                                            <th>작성일</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="notice" items="${noticeList}">
+                                            <tr>
+                                                <td>${notice.noticeKey}</td>
+                                                <td><a href="${path}/notice/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
+                                                <td>${notice.memberKey}</td>
+                                                <td><fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy년 MM월 dd일" /></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
     </div>
 
