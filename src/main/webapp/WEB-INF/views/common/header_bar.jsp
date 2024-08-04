@@ -136,6 +136,9 @@
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
 				       </li>
+			           <li class="nav-item">
+				         <a class="nav-link" href="${path}/external/list">외부주소록</a>
+				       </li>
 				     </ul>
 				   </div>
 				 </div>
