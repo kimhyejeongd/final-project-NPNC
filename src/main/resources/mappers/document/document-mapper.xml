@@ -667,8 +667,7 @@
 		AND       
 			d.er_doc_state = '처리완료'
 		ORDER BY  
-			d.er_doc_emergency_yn DESC,
-			ER_DOC_CREATE_DATE DESC,
+			ER_DOC_COMPLETE_DATE DESC,
 			ea.er_approval_orderby
 	</select>
 	

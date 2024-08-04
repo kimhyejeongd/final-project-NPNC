@@ -87,17 +87,17 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 				}
 				
 				//승인 완료 알람 발송
-				log.debug("----- 승인 완료 알람 발송 -----");
-				int writerKey = dao.selecetDocWriter(session, serial);
-				AlarmMessage a = AlarmMessage.builder()
-							.alarmType("DocComplete")
-							.alarmPath("document/list/employee/complete")
-							.alarmReMember(writerKey) //글 작성자
-							.alarmSendMember(0)
-							.docSerialKey(serial)
-							.build();
-				log.debug(a.toString());
-				alarm.test(writerKey, a);
+//				log.debug("----- 승인 완료 알람 발송 -----");
+//				int writerKey = dao.selecetDocWriter(session, serial);
+//				AlarmMessage a = AlarmMessage.builder()
+//							.alarmType("DocComplete")
+//							.alarmPath("document/list/employee/complete")
+//							.alarmReMember(writerKey) //글 작성자
+//							.alarmSendMember(0)
+//							.docSerialKey(serial)
+//							.build();
+//				log.debug(a.toString());
+//				alarm.test(writerKey, a);
 				
 			}
 		}catch(Exception e) {
