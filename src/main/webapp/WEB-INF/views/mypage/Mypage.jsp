@@ -11,6 +11,7 @@
 	    <title>Mypage</title>
 	    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
 	    <link rel="icon" href="${path}/resources/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+	    	  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
 	
 	    <!-- Fonts and icons -->
 	    <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
@@ -221,7 +222,7 @@
 	            </div>
 	        </div>
 	    </div>
-	
+
 	    <!-- JavaScript Files -->
 	    <script src="${path}/resources/assets/js/jquery.min.js"></script>
 	    <script src="${path}/resources/assets/js/bootstrap.bundle.min.js"></script>
