@@ -10,4 +10,5 @@ public interface NoticeService {
     void createNotice(NoticeDto notice);
     void updateNotice(NoticeDto notice);
     void deleteNotice(int id);
+    List<NoticeDto> searchNoticesByTitle(String title);
 }

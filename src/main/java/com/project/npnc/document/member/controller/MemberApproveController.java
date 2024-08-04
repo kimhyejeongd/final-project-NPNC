@@ -1,20 +1,18 @@
 package com.project.npnc.document.member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.amazonaws.services.s3.AmazonS3;
+import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.service.MemberApproveService;
-import com.project.npnc.security.dto.Member;
+import com.project.npnc.document.model.service.MemberDocumentService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j 
 public class MemberApproveController {
 	private final MemberApproveService serv;
+	private final MemberDocumentService docServ;
 	
 	//결재 승인
 	@PostMapping("/approve")
@@ -45,7 +44,6 @@ public class MemberApproveController {
 		
 		int result=0;
 		try {
-			String uploadDir = session.getServletContext().getRealPath("/upload/");
 			result = serv.updateApproveDoc(no, serial, msg, formNo, html);
 			if(result <=0) {
 				response.put("status", "error");
@@ -53,6 +51,41 @@ public class MemberApproveController {
 			}else {
 				response.put("status","success");
 				response.put("message", "문서 결재 완료");
+				
+				//전체 결재라인
+				List<Approver> approvers = serv.selectDocApprovers(serial);
+				
+				//현재 결재자
+				Approver me = approvers.stream()
+						.filter(e-> {
+							log.debug("Approver memberKey: " + e.getMemberKey() + ", no: " + no);
+					        return e.getMemberKey() == no;	
+						})
+						.findFirst()
+						.orElse(null);
+				
+				//다음 결재자 찾기
+				Approver nextAprover = null;
+				
+				for (Approver approver : approvers) {
+					log.debug("approver : orderby" + approver.getOrderby());
+				    if ((me.getOrderby()+1) == approver.getOrderby()) {
+				    	log.debug("다음 결재자 있음");
+				        nextAprover = approver;
+				        break; // 조건을 만족하는 첫 번째 객체를 찾으면 루프 종료
+				    }
+				}
+				// 다음 결재자가 없는 최종 결재 승인 진행 중인 경우
+				if (nextAprover == null) {
+				    log.debug("다음 결재자 없음, 최종 결재 승인 진행 중");
+				    // 참조인 정보 전달
+				    response.put("referer", docServ.selectReferer(serial));
+				    response.put("nextAprover", null);
+				}
+				//다음 결재자 정보 전달
+				response.put("referer", null);
+				response.put("nextAprover", nextAprover);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

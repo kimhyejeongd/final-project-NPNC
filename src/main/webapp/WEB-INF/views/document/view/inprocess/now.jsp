@@ -132,16 +132,16 @@
                     <c:forEach items="${doc.approvers }" var="p">
                    	<c:if test="${p.state ne '대기'}">
                    		<c:choose>
-		                   	<c:when test="${p.state eq '반려' }">
-			                      <li class="feed-item feed-item-danger">
-			                </c:when>
-		                   	<c:when test="${p.state eq '승인' }">
+		                   	<c:when test="${p.category eq '결재' or p.category eq '전결' }">
 			                      <li class="feed-item feed-item-success">
 			                </c:when>
-		                   	<c:when test="${p.state eq '보류' }">
+		                   	<c:when test="${p.category eq '검토' }">
 			                      <li class="feed-item feed-item-warning">
 			                </c:when>
-		                   	<c:when test="${p.state eq '읽음' }">
+		                   	<c:when test="${p.category eq '기안' }">
+			                      <li class="feed-item feed-item-info">
+			                </c:when>
+		                   	<c:when test="${p.category eq '협조' }">
 			                      <li class="feed-item feed-item-info">
 			                </c:when>
 		                </c:choose>

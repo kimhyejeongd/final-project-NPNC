@@ -1,8 +1,12 @@
 package com.project.npnc.board.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.project.npnc.board.model.dao.BoardDao;
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
@@ -20,7 +24,6 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.selectAllBoards();
     }
 
-    
     @Override
     public List<BoardDto> getNotices() {
         return boardDao.selectNotices(); // 공지사항 조회 메서드 호출
@@ -37,9 +40,9 @@ public class BoardServiceImpl implements BoardService {
         for (BoardFileDto fileDto : fileList) {
             fileDto.setBOARD_KEY(boardDto.getBOARD_KEY()); // 게시물 키 설정
             boardDao.insertBoardFile(fileDto);
+        }
     }
-    
-    }
+
     @Override
     public void updateBoard(BoardDto boardDto) {
         boardDao.updateBoard(boardDto);
@@ -71,13 +74,44 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public BoardCommentDto getCommentById(int commentKey) {
+        return boardDao.selectCommentById(commentKey);
+    }
+
+    @Override
+    public void createReply(BoardCommentDto commentDto) {
+        boardDao.insertReply(commentDto);
+    }
+
+    @Override
     public List<BoardCategoryDto> getAllCategories() {
         return boardDao.selectAllCategories();
     }
-    
+
     @Override
     public List<BoardFileDto> getFilesByBoardId(int boardKey) {
         return boardDao.selectFilesByBoardId(boardKey);
+    }
+
+    @Override
+    public List<BoardDto> searchBoardsByTitle(String title) {
+        return boardDao.searchBoardsByTitle(title);
+    }
+
+    @Override
+    public List<BoardCommentDto> getRepliesByCommentId(int commentKey) {
+        return boardDao.selectRepliesByCommentId(commentKey);
+    }
+    @Override
+    public List<BoardDto> getBoardsWithPagination(int page, int pageSize) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = page * pageSize;
+        
+        Map<String, Integer> params = new HashMap<>();
+        params.put("startRow", startRow);
+        params.put("endRow", endRow);
+        
+        return boardDao.selectBoardsWithPagination(params);
     }
 
 }

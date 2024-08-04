@@ -1,0 +1,1 @@
+SELECT * FROM AB_EXTERNAL ae ;

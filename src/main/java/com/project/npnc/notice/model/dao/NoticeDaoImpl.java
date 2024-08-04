@@ -40,4 +40,8 @@ public class NoticeDaoImpl implements NoticeDao {
     public void deleteNotice(int noticeKey) {
         sqlSession.delete("com.project.npnc.notice.model.dao.NoticeDao.deleteNotice", noticeKey);
     }
+    @Override
+    public List<NoticeDto> searchNoticesByTitle(String title) {
+        return sqlSession.selectList("com.project.npnc.notice.model.dao.NoticeDao.searchNoticesByTitle", "%" + title + "%");
+    }
 }

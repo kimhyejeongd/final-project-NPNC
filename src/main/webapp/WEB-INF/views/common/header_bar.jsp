@@ -136,12 +136,18 @@
 				       <li class="nav-item">
 				         <a class="nav-link" href="${path}/attendance/selectAttendanceAll">근태</a>
 				       </li>
+
+			          <li class="nav-item">
+				         <a class="nav-link" href="${path}/external/list">외부주소록</a>
+				        </li>
+
 				       <c:if test="${loginMember.accessKey eq 2 }">
 				       	 <a class="nav-link" href="${path}/admin/manageAdminMain">경영</a>
 				       </c:if>
 				        <c:if test="${loginMember.accessKey eq 3 }">
 				       	 <a class="nav-link" href="${path}/admin/personAdminMain">인사</a>
 				       </c:if>
+
 				     </ul>
 				   </div>
 				 </div>
@@ -287,22 +293,7 @@
 									                    console.error('Unknown alarm type:', response[i].alarmType);
 									                    break;
 							            	}
-								            
-							            
-							               //공통 디자인
-										   // Step 1: Extract the current number from the element
-								           var notificationText = $('.notification').eq(1).text();
-								           var currentCount = parseInt(notificationText, 10);
-					
-								           // Step 2: Perform the desired operation (e.g., increment by 1)
-								           var updatedCount = currentCount + 1; // Or currentCount - 1 for decrement
-					
-								           // Step 3: Update the elements with the new value
-								           $('.notification').eq(1).text(updatedCount);
-					
-								           var dropdownTitle = $('.dropdown-title').eq(1).text();
-								           var newDropdownTitle = dropdownTitle.replace(/\d+/, updatedCount);
-								           $('.dropdown-title').eq(1).text(newDropdownTitle);
+										
 										   
 										   var a = document.createElement('a');
 					   			           a.href = 'javascript:alarmDeleteOne(\''+ response[i].alarmKey+'\''+'\,\''+'${path}/'+ response[i].alarmPath+'\');';
@@ -321,17 +312,8 @@
 					   					  // Date 객체를 로컬 형식으로 변환하여 출력
 					   					  const formattedDate = date.toLocaleString(); // 로컬 시간 형식으로 변환
 					
-					   					  // 또는 직접 포맷하여 사용할 수 있습니다.
-					   					  const year = date.getFullYear();
-					   					  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-					   					  const day = date.getDate().toString().padStart(2, '0');
-					   					  const hours = date.getHours().toString().padStart(2, '0');
-					   					  const minutes = date.getMinutes().toString().padStart(2, '0');
-					   					  const seconds = date.getSeconds().toString().padStart(2, '0');
-					   					  const customFormattedDate = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
-					
 					   					  // spanTime에 포맷된 날짜를 설정
-					   					  spanTime.textContent = customFormattedDate + " ";
+					   					  spanTime.textContent = formattedDate + " ";
 					   					   	
 					   				      // Append the child elements
 					   				      divIcon.appendChild(faIcon);
@@ -679,11 +661,10 @@
 						data:{ memberKey:${loginMember.memberKey}},
 						success:function(response){
 			                $('.notification').eq(1).text(response.length);
-								
 							$('.dropdown-title').eq(1).text("읽지 않은 알람이 "+response.length+"개 있습니다.");
 						}
 					});
-			      }
+		      }
 	
 	        // 알람 숫자 표기
 	     	window.onload = onWindowLoadAlarmNum();

@@ -1,11 +1,11 @@
 package com.project.npnc.board.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.project.npnc.board.model.dto.BoardCategoryDto;
 import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
@@ -52,8 +52,8 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public List<BoardCommentDto> selectCommentsByBoardId(int boardKey) {
-        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectCommentsByBoardId", boardKey);
+    public BoardCommentDto selectCommentById(int commentKey) {
+        return sqlSession.selectOne("com.project.npnc.board.model.dao.BoardDao.selectCommentById", commentKey);
     }
 
     @Override
@@ -72,19 +72,46 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public void insertReply(BoardCommentDto replyDto) {
+        sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertReply", replyDto);
+    }
+
+    @Override
     public List<BoardCategoryDto> selectAllCategories() {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectAllCategories");
     }
-    
 
     @Override
     public void insertBoardFile(BoardFileDto boardFileDto) {
         sqlSession.insert("com.project.npnc.board.model.dao.BoardDao.insertBoardFile", boardFileDto);
     }
-    
+
     @Override
     public List<BoardFileDto> selectFilesByBoardId(int boardKey) {
         return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectFilesByBoardId", boardKey);
     }
 
+    @Override
+    public List<BoardDto> searchBoardsByTitle(String title) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.searchBoardsByTitle", title);
+    }
+    
+
+    @Override
+    public List<BoardCommentDto> selectCommentsByBoardId(int boardKey) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectCommentsByBoardId", boardKey);
+    }
+
+    @Override
+    public List<BoardCommentDto> selectRepliesByCommentId(int commentKey) {
+        return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectRepliesByCommentId", commentKey);
+    }
+
+	@Override
+	public List<BoardDto> selectBoardsWithPagination(Map<String, Integer> params) {
+	    return sqlSession.selectList("com.project.npnc.board.model.dao.BoardDao.selectBoardsWithPagination", params);
+	}
+
 }
+
+

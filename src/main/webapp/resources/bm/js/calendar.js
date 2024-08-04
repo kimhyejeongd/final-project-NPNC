@@ -86,29 +86,28 @@ document.addEventListener('DOMContentLoaded', function() {
         datesSet: function(info){
 			reloadCalendarEvents();
 		},
-        eventDidMount: function(info) {
-		  tippy(info.el, {
-			content:`
-		      <div class="tooltip-content">
-		        <div class="popover-title">${info.event.title}</div>
-		        <div class="popover-info">등록자 : ${info.event.extendedProps.empName}</div>
-		        <div class="popover-info">${getDisplayEventDate(info.event)}</div>
-		          <div class="popover-description"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
-		        </div>
-		      </div>
-		    `,
-			theme:'light-border',
-			placement:"bottom",
-			offset: [0,0],
-			delay: 5,
-			distance: 15,
-			maxWidth: 170,
-			boundary:'viewport',
-			ignoreAttributes:true,
-			allowHTML:true,
-			interactive: true,
-		  })
-			console.log(info.event);
+		eventDidMount: function(info) {
+		    tippy(info.el, {
+		        content: `
+		            <div class="tooltip-content">
+		                <div class="popover-title">${info.event.title}</div>
+		                <div class="popover-info">${info.event.extendedProps.empName}</div>
+		                <div class="popover-info">${getDisplayEventDate(info.event)}</div>
+		                <div class="popover-description"><strong>설명:</strong> ${info.event.extendedProps.description}</div>
+		            </div>
+		        `,
+		        theme: 'light-border',
+		        placement: "bottom",
+		        offset: [0, 10],
+		        delay: 5,
+		        maxWidth: 450, 
+		        boundary: 'viewport',
+		        ignoreAttributes: true,
+		        allowHTML: true,
+		        interactive: true,
+		        arrow: true,
+		    });
+		    console.log(info.event);
 		},
 		
 		
@@ -297,15 +296,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-      function getDisplayEventDate(event) {
+	function getDisplayEventDate(event) {
 	    var start = new Date(event.start);
 	    var end = new Date(event.end || event.start);
-	    if(event.allDay == true){
-			return '하루종일';
-		}
-	    else{
-			
-	    	return start.toLocaleString('ko-KR', { hour12: false, timeStyle: 'short', dateStyle: 'short' }) + ' - ' + end.toLocaleString('ko-KR', { hour12: false, timeStyle: 'short', dateStyle: 'short' });
-		}
+	    
+	    if (event.allDay == true) {
+	        return '하루종일';
+	    } else {
+	        var formatDate = (date) => {
+	            return `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	        };
+	        
+	        return `${formatDate(start)} ~ ${formatDate(end)}`; // 시간 사이에 띄어쓰기 추가
+	    }
 	}
 });
