@@ -131,7 +131,7 @@
                             <h4 class="card-title">${board.BOARD_TITLE}</h4>
                         </div>
                         <div class="card-body">
-                            <p><strong>작성자:</strong> ${board.MEMBER_KEY}</p>
+                            <p><strong>작성자:</strong> ${board.MEMBER_NAME}</p>
                             <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p>${board.BOARD_DETAIL}</p>
                             <c:forEach var="file" items="${fileList}">
@@ -160,13 +160,13 @@
                         <c:forEach var="comment" items="${comments}">
                             <div class="comment mt-3">
                                 <div class="meta">
-                                    <span class="author">${comment.MEMBER_KEY}</span>
+                                    <span class="author">${comment.MEMBER_NAME}</span>
                                     <span class="date"><fmt:formatDate value="${comment.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                 </div>
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
 
                                 <!-- 댓글 수정 및 삭제 버튼 (작성자만 표시) -->
-                                <c:if test="${comment.MEMBER_KEY == loginMember.memberKey}">
+                                <c:if test="${comment.MEMBER_NAME == loginMember.memberKey}">
                                     <div class="comment-actions">
                                         <form action="${path}/board/updateComment" method="post" class="d-inline">
                                             <input type="hidden" name="commentKey" value="${comment.BOARD_COMMENT_KEY}">

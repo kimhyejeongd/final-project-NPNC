@@ -33,6 +33,7 @@ import com.project.npnc.mypage.service.MemberService;
 import com.project.npnc.security.dto.Member;
 
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -182,5 +183,25 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @PostMapping("/updateAddress")
+    public @ResponseBody Map<String, Object> updateAddress(
+        @RequestParam("roadAddress") String roadAddress,
+        @RequestParam("detailedAddress") String detailedAddress,
+        @RequestParam("postcode") String postcode,
+        HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Member loginMember = (Member) session.getAttribute("loginMember");
+        if (loginMember != null) {
+            memberService.updateAddress(loginMember.getMemberId(),roadAddress, detailedAddress,postcode);
+            response.put("success", true);
+            response.put("updatedAddress", roadAddress + " " + detailedAddress+" "+postcode);
+        } else {
+            response.put("success", false);	
+            response.put("error", "User not logged in.");
+        }
+        return response;
+    }
+
 
 }

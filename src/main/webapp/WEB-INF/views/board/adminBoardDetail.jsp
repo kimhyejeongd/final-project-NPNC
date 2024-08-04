@@ -129,7 +129,7 @@
                             <h4 class="card-title">${boardDto.BOARD_TITLE}</h4>
                         </div>
                         <div class="card-body">
-                            <p><strong>작성자:</strong> ${boardDto.MEMBER_KEY}</p>
+                            <p><strong>작성자:</strong> ${boardDto.MEMBER_NAME}</p>
                             <p><strong>작성일:</strong> <fmt:formatDate value="${boardDto.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p>${boardDto.BOARD_DETAIL}</p>
                             <c:forEach var="file" items="${fileList}">
@@ -147,7 +147,7 @@
                         <c:forEach var="comment" items="${comments}">
                             <div class="comment mt-3">
                                 <div class="meta">
-                                    <span class="author">${comment.MEMBER_KEY}</span>
+                                    <span class="author">${comment.MEMBER_NAME}</span>
                                     <span class="date"><fmt:formatDate value="${comment.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                 </div>
                                 <p>${comment.BOARD_COMMENT_DETAIL}</p>
@@ -155,7 +155,7 @@
                                 <!-- 댓글 삭제 버튼 (관리자만 표시) -->
                                 <div class="comment-actions">
                                     <form action="${path}/admin/board/deleteComment/${comment.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                        <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                        <input type="hidden" name="boardKey" value="${boardDto.BOARD_NAME}"/>
                                         <button type="submit">삭제</button>
                                     </form>
                                 </div>
@@ -164,7 +164,7 @@
                                 <c:forEach var="reply" items="${commentRepliesMap[comment.BOARD_COMMENT_KEY]}">
                                     <div class="reply mt-2">
                                         <div class="meta">
-                                            <span class="author">${reply.MEMBER_KEY}</span>
+                                            <span class="author">${reply.MEMBER_NAME}</span>
                                             <span class="date"><fmt:formatDate value="${reply.BOARD_COMMENT_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
                                         </div>
                                         <p>${reply.BOARD_COMMENT_DETAIL}</p>
@@ -172,7 +172,7 @@
                                         <!-- 대댓글 삭제 버튼 (관리자만 표시) -->
                                         <div class="reply-actions">
                                             <form action="${path}/admin/board/deleteReply/${reply.BOARD_COMMENT_KEY}" method="post" class="d-inline">
-                                                <input type="hidden" name="boardKey" value="${boardDto.BOARD_KEY}"/>
+                                                <input type="hidden" name="boardKey" value="${boardDto.BOARD_NAME}"/>
                                                 <button type="submit">삭제</button>
                                             </form>
                                         </div>

@@ -24,4 +24,5 @@ public class BoardDto {
 	private Date BOARD_UPDATE_DATE;
 	private String BOARD_DELETE;
 	private String BOARD_TITLE;
+	private String MEMBER_NAME;
 }

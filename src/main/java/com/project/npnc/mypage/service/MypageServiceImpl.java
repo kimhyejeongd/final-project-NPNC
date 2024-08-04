@@ -92,4 +92,11 @@ public class MypageServiceImpl implements MemberService {
         Member member = memberDao.findById(sqlSession, memberId);
         return member != null ? member.getMemberProfileImage() : null;
     }
+    
+    @Override
+    public void updateAddress(String memberId,String postcode, String roadAddress,  String detailedAddress) {
+        // Combine the addresses into one string
+        String fullAddress = String.format("%s, %s, %s",roadAddress, detailedAddress,postcode);
+        memberDao.updateAddress(memberId, fullAddress);
+    }
 }

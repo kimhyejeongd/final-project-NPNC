@@ -2,6 +2,7 @@ package com.project.npnc.mypage.dao;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,5 +42,13 @@ public class MypageDaoImpl implements MemberDao {
     @Override
     public String getProfileImageFileName(SqlSession session, String memberId) {
         return session.selectOne("MemberMapper.getProfileImageFileName", memberId);
+    }
+    @Override
+    public void updateAddress(String memberId, String fullAddress) {
+        Map<String, Object> paramMap = Map.of(
+            "memberId", memberId,
+            "fullAddress", fullAddress
+        );
+        sqlSession.update("mypage.updateAddress", paramMap);
     }
 }

@@ -5,12 +5,13 @@
 
     <!-- Board Dto CRUD -->
     <select id="selectAllBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
         ORDER BY BOARD_KEY DESC
     </select>
 
     <select id="selectBoardById" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY) 
+         WHERE BOARD_KEY = #{BOARD_KEY}
     </select>
     
     <select id="selectFilesByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardFileDto">
@@ -18,18 +19,19 @@
     </select>
     
     <select id="searchBoardsByTitle" parameterType="string" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD WHERE BOARD_TITLE LIKE '%' || #{title} || '%'
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
+        WHERE BOARD_TITLE LIKE '%' || #{title} || '%'
     </select>
 
     <!-- 공지사항만 조회 -->
     <select id="selectNotices" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOAR JOIN MEMBER USING(MEMBER_KEY)
         WHERE BOARD_CATEGORY_KEY = 2
     </select>
 
     <!-- 일반 게시판만 조회 -->
     <select id="selectGeneralBoards" resultType="com.project.npnc.board.model.dto.BoardDto">
-        SELECT * FROM BOARD
+        SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_KEY)
         WHERE BOARD_CATEGORY_KEY = 1
     </select>
 
@@ -71,7 +73,7 @@
     <!-- Board Comment Dto CRUD -->
 	<!-- 댓글과 대댓글을 구분하여 가져오는 쿼리 -->
 	<select id="selectCommentsByBoardId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
-	    SELECT * FROM BOARD_COMMENT 
+	    SELECT * FROM BOARD_COMMENT JOIN MEMBER USING(MEMBER_KEY)
 	    WHERE BOARD_KEY = #{BOARD_KEY}
 	    ORDER BY BOARD_COMMENT_REF ASC, BOARD_COMMENT_DATE DESC
 	</select>
@@ -117,7 +119,8 @@
     </insert>
 
     <select id="selectRepliesByCommentId" parameterType="int" resultType="com.project.npnc.board.model.dto.BoardCommentDto">
-        SELECT * FROM BOARD_COMMENT WHERE BOARD_COMMENT_REF = #{BOARD_COMMENT_KEY}
+        SELECT * FROM BOARD_COMMENT JOIN MEMBER USING(MEMBER_KEY)
+        WHERE BOARD_COMMENT_REF = #{BOARD_COMMENT_KEY}
     </select>
     
 	    <!-- 페이지네이션을 적용한 게시글 조회 쿼리 -->

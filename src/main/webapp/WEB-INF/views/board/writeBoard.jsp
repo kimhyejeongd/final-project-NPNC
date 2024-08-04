@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="author">작성자</label>
-                                    <input type="text" id="author" name="MEMBER_KEY" class="form-control" required>
+                                    <input type="text" id="author" name="MEMBER_NAME" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="content">내용</label>

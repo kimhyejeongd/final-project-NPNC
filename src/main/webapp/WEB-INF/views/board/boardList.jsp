@@ -99,7 +99,7 @@
                                                 <tr>
                                                     <td>${board.BOARD_KEY}</td>
                                                     <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
-                                                    <td>${board.MEMBER_KEY}</td>
+                                                    <td>${board.MEMBER_NAME}</td>
                                                     <td>
                                                         <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy년 MM월 dd일" />
                                                     </td>
@@ -157,7 +157,7 @@
                                 <tr>
                                     <td>${board.BOARD_KEY}</td>
                                     <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
-                                    <td>${board.MEMBER_KEY}</td>
+                                    <td>${board.MEMBER_NAME}</td>
                                     <td>${board.BOARD_UPDATE_DATE}</td>
                                 </tr>
                                 

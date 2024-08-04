@@ -21,6 +21,7 @@ public class BoardCommentDto {
     private Date BOARD_COMMENT_DATE;
     private int BOARD_COMMENT_REF;
     private String BOARD_COMMENT_DELETE;
+    private String MEMBER_NAME;
 }
 
 

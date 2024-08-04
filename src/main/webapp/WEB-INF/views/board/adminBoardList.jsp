@@ -99,7 +99,7 @@
                                 <!-- 제목 클릭 시 상세 페이지로 이동 -->
                                 <a href="${path}/admin/board/detail/${board.BOARD_KEY}">${board.BOARD_TITLE}</a>
                             </td>
-                            <td>${board.MEMBER_KEY}</td>
+                            <td>${board.MEMBER_NAME}</td>
                             <td><fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                             <td>게시판</td>
                             <td>

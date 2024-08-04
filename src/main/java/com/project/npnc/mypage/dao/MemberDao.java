@@ -14,4 +14,6 @@ public interface MemberDao {
     int updatePassword(SqlSession session, Map<String, Object> paramMap);
     int updateProfileImage(Map<String, Object> paramMap);
     String getProfileImageFileName(SqlSession session, String memberId);
+    void updateAddress(@Param("memberId") String memberId, 
+            @Param("fullAddress") String fullAddress);
 }

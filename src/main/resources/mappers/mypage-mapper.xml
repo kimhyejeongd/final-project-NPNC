@@ -53,5 +53,12 @@
         FROM member
         WHERE MEMBER_ID = #{memberId}
     </select>
+    
+        <!-- 주소 업데이트 -->
+    <update id="updateAddress">
+        UPDATE member
+        SET member_address = #{fullAddress}
+        WHERE member_id = #{memberId};
+    </update>
 
 </mapper>
