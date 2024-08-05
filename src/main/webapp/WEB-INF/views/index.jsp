@@ -303,6 +303,7 @@
 			    </div>
 			    <div class="card-body" style="overflow-y: auto; max-height: 470px;">
 			      <ol class="activity-feed" style="padding-right: 15px;">
+<%-- 			      <c:if  test = "${!empty weekCal }">
 			        <c:forEach var="event" items="${weekCal}">
 			          <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
 			            <time class="date" datetime="<fmt:formatDate value="${event.startDate}" pattern="yyyy-MM-dd"/>">
@@ -321,6 +322,10 @@
 			            </span>
 			          </li>
 			        </c:forEach>
+			      </c:if>
+			      <c:if test= "${empty weekCal }">
+			     	<span> 금주의 일정이 없습니다.</span>
+			      </c:if> --%>
 			      </ol>
 			    </div>
 			  </div>

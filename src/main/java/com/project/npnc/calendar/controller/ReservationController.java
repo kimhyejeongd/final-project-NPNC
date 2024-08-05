@@ -35,7 +35,9 @@ public class ReservationController {
 	@GetMapping("/admin/reservation/reservationlist")
 	public String reserve(Model m) {
 		List<OrganizationDto> organlist = organService.selectOrganAll();
-		List<Reservation> reservations =  service.selectReservationAll();	
+		List<Reservation> reservations =  service.selectReservationAll();
+		Member member = (Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember", member);
 		m.addAttribute("organlist", organlist);
 		m.addAttribute("reservations", reservations);
 		return "calendar/reservation";
