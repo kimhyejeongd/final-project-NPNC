@@ -46,7 +46,7 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-<c:import url="/WEB-INF/views/admin/adminsidebar.jsp"/> 
+<c:import url="/WEB-INF/views/board/boardSidebar.jsp"/> 
         <!-- End Sidebar -->
 
         <div class="main-panel">
@@ -70,7 +70,7 @@
                         </div>
                         <div class="card-footer">
  
-                            <a href="${path}/admin/notice" class="btn btn-primary">목록으로 돌아가기</a>
+                            <a href="${path}/notice/list" class="btn btn-primary">목록으로 돌아가기</a>
                         </div>
                     </div>
                 </div>

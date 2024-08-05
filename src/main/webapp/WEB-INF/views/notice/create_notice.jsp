@@ -103,7 +103,7 @@
                 <div class="page-inner">
                     <h1 class="mb-4">공지사항 작성</h1>
 
-                    <form action="${path}/notice" method="post">
+                    <form action="${path}/admin/create1" method="post">
                         <div class="form-group">
                             <label for="noticeTitle">제목</label>
                             <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" required>

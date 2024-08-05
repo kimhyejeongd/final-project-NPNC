@@ -43,7 +43,7 @@ public class AdminNoticeController {
         }
     }
     // 공지사항 수정 폼 보기
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit1/{id}")
     public String editNoticeForm(@PathVariable int id, Model model) {
         NoticeDto notice = noticeService.getNoticeById(id);
         if (notice != null) {
@@ -54,12 +54,13 @@ public class AdminNoticeController {
         }
     }
     // 공지사항 수정 처리
-    @PostMapping("/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String updateNotice(@PathVariable int id, @ModelAttribute NoticeDto notice) {
         notice.setNoticeKey(id);
         noticeService.updateNotice(notice);
         return "redirect:/admin/notice"; // 수정 후 목록으로 리다이렉트
     }
+    
     // 공지사항 삭제
     @GetMapping("/delete/{id}")
     public String deleteNotice(@PathVariable int id) {
@@ -67,10 +68,15 @@ public class AdminNoticeController {
         return "redirect:/admin/notice"; // 삭제 후 목록으로 리다이렉트
     }
     // 공지사항 작성 처리
-    @PostMapping("/create")
-    public String createNotice(@ModelAttribute NoticeDto notice) {
-        noticeService.createNotice(notice);
-        return "redirect:/admin/notice"; // 생성 후 목록으로 리다이렉트
+    @GetMapping("/create")
+    public String createNotice() {
+	
+        return "notice/create_notice"; // 생성 후 목록으로 리다이렉트
+    }
+    @PostMapping("/create1")
+    public String createNotice1(@ModelAttribute NoticeDto notice) {
+    	 noticeService.createNotice(notice); 
+    	return "redirect:/admin/notice"; // 생성 후 목록으로 리다이렉트
     }
     
 }
