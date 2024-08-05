@@ -51,11 +51,22 @@
     </style>
 </head>
 <body>
-<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-    <div class="main-panel">
-        <!-- Header Bar -->
-        <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
-        <div class="page-inner">
+
+ 		<c:if test="${loginMember.accessKey eq 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+ 	</c:if>
+ 	<c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	</c:if>
+ 	<div class="main-panel">
+ 	<c:if test="${loginMember.accessKey eq 2 }">
+  		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	</c:if>
+  	 <c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+ 	</c:if>	
+
+
             <div class="container">
                 <div class="title-container">
                     <h1 class="mb-4">공지사항 목록(관리자)</h1>

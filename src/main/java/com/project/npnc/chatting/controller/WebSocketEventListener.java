@@ -189,6 +189,8 @@ public class WebSocketEventListener {
 		// 현재 방의 모든 세션을 가져와서 memberKey별로 세션 ID를 리스트로 매핑합니다.
 		Map<String, List<String>> memberSessions = roomSessions.getOrDefault(roomId, new ConcurrentHashMap<>()).values()
 				.stream().flatMap(Set::stream)
+				.filter(sessionId -> sessionMemberMap.get(sessionId) != null) // null 값 필터링
+
 				.collect(Collectors.groupingBy(sessionId -> sessionMemberMap.get(sessionId), Collectors.toList()));
 
 		// 데이터 구조를 {memberKey: [sessionId, sessionId, ...], roomId: roomId} 형식으로 조정

@@ -66,21 +66,25 @@
 	    LEFT JOIN
 	        MEMBER m ON m.MEMBER_KEY = cal.MEMBER_KEY
 	    WHERE
-	        (cal.MEMBER_KEY = #{memberKey}
-	        OR m.DEPARTMENT_KEY = (
+	    	((CALENDAR_TYPE = 3
+	    OR
+	        ((cal.MEMBER_KEY = #{memberKey} AND CALENDAR_TYPE = 1)
+	    OR  (m.DEPARTMENT_KEY = (
 	            SELECT
 	                mem.DEPARTMENT_KEY
 	            FROM
 	                MEMBER mem
 	            WHERE
 	                mem.MEMBER_KEY = #{memberKey}
-	        ))
+	        )) AND CALENDAR_TYPE = 2))
 	    AND
-	        cal.CALENDAR_DELETE = 'N'
+	        cal.CALENDAR_DELETE = 'N')
 	    AND
-	        cal.CALENDAR_START BETWEEN
-	            TRUNC(NEXT_DAY(SYSDATE - 7, '일요일')) AND
-	            TRUNC(NEXT_DAY(SYSDATE, '토요일')) - 1
+	        (cal.CALENDAR_START BETWEEN
+	       <!--  TRUNC(NEXT_DAY(SYSDATE - 7, '일요일')) AND
+	            TRUNC(NEXT_DAY(SYSDATE, '토요일')) - 1 -->
+	         		TO_TIMESTAMP('2024-08-04 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+       				AND TO_TIMESTAMP('2024-08-10 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
 	    ORDER BY
 	        cal.CALENDAR_START ASC
 			
@@ -114,8 +118,21 @@
 		LEFT JOIN
 			JOB j on m.JOB_KEY = j.JOB_KEY
 		WHERE
-			cal.MEMBER_KEY = ${memberKey} AND cal.CALENDAR_DELETE ='N'  
-			 <!--  select * from calendar where member_key = ${memberKey} AND calendar_delete ='N' -->
+		    	(cal.CALENDAR_TYPE = 3
+		  	OR
+		    	(cal.MEMBER_KEY = #{memberKey} AND cal.CALENDAR_TYPE = 1)
+		 	OR
+			    (m.DEPARTMENT_KEY = (
+			        SELECT
+			            mem.DEPARTMENT_KEY
+			        FROM
+			            MEMBER mem
+			        WHERE
+			            mem.MEMBER_KEY = #{memberKey}
+			    )AND cal.CALENDAR_TYPE = 2))
+			AND
+			    cal.CALENDAR_DELETE = 'N'
+
 	</select>
 	
 	<select id="checkVacation" resultMap = "vacMap" parameterType="map">

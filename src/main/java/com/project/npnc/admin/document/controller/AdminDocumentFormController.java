@@ -1,8 +1,6 @@
 package com.project.npnc.admin.document.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,7 @@ import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
@@ -53,11 +54,13 @@ public class AdminDocumentFormController {
 		List<OrganizationDto> members = orserv.selectOrganAll();
 		model.addAttribute("folders",folders);
 		model.addAttribute("members",members);
+		model.addAttribute("loginMember",getCurrentUser());
 		return "admin/document/docStorage";
 		
 	}
 	@GetMapping("selectAdminFormAll")
 	public String selectAdminFormAll(Model model) {
+		model.addAttribute("loginMember",getCurrentUser());
 		List<DocumentFormFolder>folders = service.selectDocFormFolderAll();
 		model.addAttribute("folders",folders);
 		return "admin/document/docForm";
@@ -251,22 +254,38 @@ public class AdminDocumentFormController {
     	return ResponseEntity.ok(result);
     }
     @GetMapping("/form")
-    public String showForm() {
+    public String showForm(Model model) {
+    	model.addAttribute("loginMember",getCurrentUser());
         return "admin/document/form";
     }
     
     @PostMapping("/updateForm")
     public String insertForm(@RequestParam("htmlContent") String htmlContent
     		, @RequestParam String storageDiv // 폴더이름
-    		,@RequestParam String formKey /* 양식이름*/){
-    	try {
-			docS3Controller.docHtmlUpload("upload/docformhtml/"+storageDiv, formKey, htmlContent);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    		,@RequestParam String formKey /* 양식이름*/
+    		,@RequestParam String erFormName /* 수정 양식이름 */
+    		,@RequestParam String folderKey /*수정 전 폴더키*/
+    		,@RequestParam String erFormFolderKey /*수정 후 폴더 키*/
+    		){
+    	HashMap<String, Object> formInfo = new HashMap<>();
+    	formInfo.put("storageDiv", storageDiv);
+    	formInfo.put("formKey", Integer.parseInt(formKey));
+    	formInfo.put("memberKey", getCurrentUser().getMemberKey());
+    	formInfo.put("erFormName",erFormName);
+    	formInfo.put("folderKey",folderKey);
+    	formInfo.put("erFormFolderKey",erFormFolderKey);
+    	System.err.println(erFormFolderKey + " 스토리지");
+    		int result = service.updateForm(formInfo);
+    		if(result >0) {    			
+    			try {
+    				docS3Controller.docHtmlUpload("upload/docformhtml/"+storageDiv, formKey, htmlContent);
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    		}
 
-        return "admin/document/selectAdminFormAll";
+        return "redirect:/admin/documentForm/selectAdminFormAll";
     }
     @GetMapping("/selectFolder")
     public String selectFolder(Model m){
@@ -281,4 +300,9 @@ public class AdminDocumentFormController {
     	String result = docS3Controller.readHtmlFile("upload/docformhtml/"+folderName,formKey+".html");
     	return ResponseEntity.ok(result);
     }
+    private Member getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Member) authentication.getPrincipal();
+    }
+    
 }

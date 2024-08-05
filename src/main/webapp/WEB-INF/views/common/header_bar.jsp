@@ -68,7 +68,39 @@
 			    position: fixed;
 			    
 			}
-	
+			
+			/* 줄 넘어가면 찌그러지는 것 해결 */
+			#alertBoxLi .navbar-expand-lg .navbar-nav .dropdown-menu {
+			    left: auto;
+			    right: 0;
+			    z-index: 1001;
+			    width: max-content;
+		    }
+			.notif-center {
+			    display: flex;
+			    flex-direction: column;
+			    align-items: start; /* 아이콘과 텍스트 수직 정렬 */
+			}
+			.notif-center a{
+				width: 100%;
+			}
+			.notif-icon {
+			    flex-shrink: 0; /* 아이콘이 줄어들지 않도록 설정 */
+			    margin-right: 10px; /* 아이콘과 텍스트 사이의 여백 */
+			    min-width: 40px; /* 아이콘의 최소 너비를 지정 */
+			}
+			
+			#alertBoxLi .notif-content {
+			    flex-grow: 1; /* 내용이 가능한 한 공간을 차지하도록 설정 */
+			}
+			
+			#alertBoxLi .block {
+			    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+			    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+			    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+			}
+						
+			
 	  </style>
 
 	  
@@ -237,7 +269,7 @@
 								   			          spanBlock = document.createElement('span');
 								   			          spanBlock.className = 'block';
 								   			          spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님의 쪽지';
-								   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+								   			  		  spanBlock.style.fontSize = '13px'; // 원하는 폰트 크기로 설정
 									                    
 									                    
 									                    break;
@@ -256,7 +288,7 @@
 								   			          	spanBlock = document.createElement('span');
 								   			            spanBlock.className = 'block';
 								   			            spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님이 작성한 참조문서 1건 도착';
-								   			  		    spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+								   			  		    spanBlock.style.fontSize = '13px'; // 원하는 폰트 크기로 설정
 									                    
 									                    break;
 							
@@ -274,11 +306,11 @@
 									   			          spanBlock = document.createElement('span');
 									   			          spanBlock.className = 'block';
 									   			          spanBlock.textContent = response[i].memberName+" "+response[i].jobName +'님의 결재 대기 문서 1건 도착';
-									   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+									   			  		  spanBlock.style.fontSize = '13px'; // 원하는 폰트 크기로 설정
 									                    
 									                    break;
 									                case 'DocComplete':
-									                	//기안문서 결재완료 알람 목록 출력 디자인
+									                		//기안문서 결재완료 알람 목록 출력 디자인
 									                	  divIcon = document.createElement('div');
 									   			          divIcon.className = 'notif-icon notif-primary';
 								
@@ -425,6 +457,7 @@
                       <li>
                         <div class="dropdown-title d-flex justify-content-between align-items-center">
                           메신저
+                          <button class="menu-button">☰</button>
                           <!-- <a href="#" class="small">Mark all as read</a> -->
                         </div>
                       </li>
@@ -457,7 +490,7 @@
                       class="dropdown-menu notif-box animated fadeIn"
                       aria-labelledby="notifDropdown"
                     >
-                      <li>
+                      <li id="alertBoxLi">
                         <div class="dropdown-title">
                           읽지 않은 알람이 4개 있습니다.
                         </div>

@@ -82,6 +82,7 @@ public class ChatDao {
         return roomId;
     }
 	public List<Member> selectMyRoomMemberList(SqlSessionTemplate session, int roomId){
+		System.out.println(roomId+"테스트용");
 		return session.selectList("chat.selectMyRoomMemberList",roomId);
 	}
 	public List<Integer> selectMyRoomId(SqlSessionTemplate session, int memberNo){

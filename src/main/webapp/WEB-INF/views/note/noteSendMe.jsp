@@ -339,7 +339,7 @@
 							</div>
 				           	  
 				           	  <div class="form-group">
-				           	    <div class="namebox" >
+				           	    <div class="namebox" style="width : 513px;">
 				           		  <!--  <h2>전체 쪽지</h2> -->
 				           		</div>
 				           	</div>   
@@ -470,7 +470,10 @@
 						downloadButtonBox.innerHTML="";
 						
 						var recMember=response.recMember;
+						console.log(recMember);
+						
 						if(recMember.length>10){
+							
 							namebox[0].innerHTML='<h2>전체 쪽지<h2>';
 						}else{
 							for(let i=0;i<recMember.length;i++){

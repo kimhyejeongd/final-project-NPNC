@@ -12,8 +12,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 	<c:set var="path" value="${pageContext.request.contextPath}"/>
 	
 	<meta charset="UTF-8">
@@ -266,9 +266,6 @@
 }
 
 .menu-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
     border: none;
     background: none;
     color: #fff;
@@ -312,10 +309,10 @@
 <body>
 <div class="container" id="chat-container">
 
-    <div class="header">채팅방</div>
+    <div class="header">채팅방
+    	<button id="menuButton" class="menu-button">☰</button>
+    </div>
     
-    <!-- 메뉴 버튼 -->
-    <button id="menuButton" class="menu-button">&#9776;</button>
 
     <div id="conversation">
         <div id="chatting">
@@ -350,11 +347,25 @@
     </div>
 </div>
 
+
+
 <div class="sidebar" style="display:none;">
-    <ul id="roomMemberList"></ul>
+<div class="card-body pb-0">
+	<div class="d-flex" id="roomMemberList" style="
+    display: flex;
+    flex-direction: column;
+">
+
+		
+	</div>
+	
+</div>
+    <ul ></ul>
     <!-- 기타 메뉴 항목들 -->
-    <div class="invite-button">초대하기</div>
-    <div class="exit-button">나가기</div>
+    <div>
+	    <div class="invite-button">초대하기</div>
+	    <div class="exit-button">나가기</div>
+    </div>
 </div>
 <!-- Invite Modal -->
 <div id="inviteModal" class="modal">
@@ -365,8 +376,8 @@
         <ul class="friend-list" id="inviteFriendList">
             <c:forEach var="user" items="${allMembers}">
                 <c:if test="${user.memberId != loginMember.memberId && !fn:contains(roomMemberKeys, user.memberKey)}">
-                    <li class="friend-item" data-member-no="${user.memberKey}">
-                        <img src="profile1.jpg" alt="프로필 사진">
+                    <li class="friend-item" data-member-no="${user.memberKey}" style="display: flex;align-items: center;     margin-bottom: 5%;">
+                        <img src="${path}/resources/assets/img/unname.png" alt="프로필 사진" style="height: 20%;width: 20%;margin-right: 30%;">
                         <div class="friend-info">
                             <div class="friend-name">${user.memberName}</div>
                             <div class="friend-status">${user.departmentName}</div>
@@ -375,7 +386,9 @@
                 </c:if>
             </c:forEach>
         </ul>
-        <button type="button" id="inviteSelectedUsersButton">초대</button>
+        <button  type="button" id="inviteSelectedUsersButton">초대</button>
+        <button type="button" class="btn btn-primary">Primary</button>
+        
     </div>
 </div>
 
@@ -389,7 +402,7 @@ var roomId = ${roomId};
 var chatList = ${chatList};
 var countRoomMember = ${countRoomMember};
 var fileMetaData = null;
-
+console.log(roomId+"1665151561894");
 $('#fileButton').click(function() {
     $('#fileInput').click(); // fileInput 클릭을 트리거
 });
@@ -551,7 +564,18 @@ $(document).ready(function() {
 
 	 var roomMembers = ${roomMembers}; // JSP EL을 사용하여 서버에서 받은 유저 리스트를 할당
      roomMembers.forEach(function(member) {
-         $('#roomMemberList').append('<li>' + member.memberName + '</li>'); // 각 멤버 이름을 리스트 아이템으로 추가
+         $('#roomMemberList').append( 		
+        		 '<div style="margin-top: 10px;margin-bottom: 10px;">'+
+        		 '<div class="avatar" >'+
+        			'<img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="margin-left:10px;width:20%">'+
+        			'</div>'+
+        			'<div class="flex-1 pt-1 ms-2"style="display: flex;flex-direction: column;flex-wrap: wrap;">'+
+        				'<small class="text-muted" style="margin: 0;">'+member.memberName+'</small>'+
+        				'<small class="fw-bold mb-1">'+member.departmentName+'</small>'+
+        		'</div>'+
+        		'</div>'); // 각 멤버 이름을 리스트 아이템으로 추가
+
+        		
      });
     // 메뉴 버튼 클릭 이벤트
     $('#menuButton').click(function() {
@@ -608,6 +632,7 @@ $('.exit-button').click(function() {
 
     function connect() {
         var socket = new SockJS('${path}/ws-stomp');
+        console.log(roomId+"테스트용");
         stompClient = Stomp.over(socket);
         stompClient.connect({"type":"chat","room":roomId,"loginMemberKey":${loginMember.memberKey}}, function (frame) {
             setConnected(true);
@@ -741,7 +766,7 @@ $('.exit-button').click(function() {
 
                     var messageDetail = chatList[chat].chatMsgDetail !== undefined ? chatList[chat].chatMsgDetail : '';
                     console.log(messageClass);
-                    var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
+                    var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
 					var sender = messageClass === 'received' ? '<div class="sender">' + chatList[chat].memberName + '</div>' : '';
 					var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
 					var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse;     margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
@@ -807,7 +832,7 @@ $('.exit-button').click(function() {
 
         var messageDetail = message.chatMsgDetail !== undefined ? message.chatMsgDetail : '';
         console.log(messageClass);
-        var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>' : '';
+        var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>' : '';
         var sender = messageClass === 'received' ? '<div class="sender">' + message.memberName + '</div>' : '';
         var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
         var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse; margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';

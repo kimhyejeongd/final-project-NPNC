@@ -13,6 +13,7 @@ public class ChattingGroup {
     private int chatGroupKey;
     private int memberKey;
     private int chatRoomKey;
+    private String departmentName;
 
     public static ChattingGroup createChattingGruop(int chatGroupKey,int memberKey,int chatRoomKey) {
     	return ChattingGroup.builder()

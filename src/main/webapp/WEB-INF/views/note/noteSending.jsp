@@ -338,7 +338,7 @@
 								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
 							</div>
 				           	  
-				           	  <div class="form-group">
+				           	  <div class="form-group" style="width : 513px;">
 				           	    <div class="namebox" >
 				           		  <!--  <h2>전체 쪽지</h2> -->
 				           		</div>

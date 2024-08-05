@@ -1,6 +1,7 @@
 package com.project.npnc.document.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,4 +64,6 @@ public interface MemberDocumentService {
 	int updateVacationApply(String docSerial, String status);
 	int updateOvertiemApply(String docSerial, String status);
 	DocFile getFileDetailByRename(String filename);
+	
+	Map<String, String> selectStorageAndFolder(int erDocStorageKey);
 }

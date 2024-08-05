@@ -145,6 +145,11 @@
 .feed-item-success::after {
   background: #90EE90 !important;
 }
+.date-display {
+    font-weight: bold;
+    color: #333;
+    /* 추가적인 스타일 */
+}
 	     .main-header {
 		    background: #fff;
 		    min-height: 60px;
@@ -170,7 +175,7 @@
 		 .pagination-container {
             display: flex;
             justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
-           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
+           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ 
         }
         /* 전자결재 위젯 css */
     	#tablerow:hover{
@@ -219,6 +224,12 @@
 			flex-direction: row;
 			flex-wrap: noWrap;
 			justify-content: space-around;
+		}
+		
+		#boardMainTable th{
+		
+			font-weight: normal !important;
+			
 		}
 	</style>	
   <body>
@@ -281,7 +292,7 @@
 					  
 					  <div class=" right-container">
 					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
-					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
+					      <div class="weather_description weatherFont" style="font-size : 20pt; "></div>
 					      <div class="city weatherFont" style="font-size : 13pt"></div>
 					  </div>
 					   <div class="left-container" style="float : left; margin-top: 60px; font-size : 11pt">
@@ -303,24 +314,39 @@
 			    </div>
 			    <div class="card-body" style="overflow-y: auto; max-height: 470px;">
 			      <ol class="activity-feed" style="padding-right: 15px;">
-			        <c:forEach var="event" items="${weekCal}">
-			          <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
-			            <time class="date" datetime="<fmt:formatDate value="${event.startDate}" pattern="yyyy-MM-dd"/>">
-			              <fmt:formatDate value="${event.startDate}" pattern="M월 d일 (E)"/>
-			            </time>
-			            <span class="text">
-			              ${event.title}
-			              <c:if test="${event.allDay == 'N'}">
-			                (<fmt:formatDate value="${event.startDate}" pattern="HH:mm"/> - <fmt:formatDate value="${event.endDate}" pattern="HH:mm"/>)
-			              </c:if>
-			              <c:if test="${event.allDay == 'Y'}">
-			              	(하루종일)
-			              </c:if>
-			              <br>
-			              <small>${event.description}</small>
-			            </span>
-			          </li>
-			        </c:forEach>
+				<c:if test="${!empty weekCal}">
+				  <c:forEach var="event" items="${weekCal}">
+				    <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
+				    <span class="date-display">
+					    ${fn:substring(event.start, 5, 7)}월 ${fn:substring(event.start, 8, 10)}일
+					    <c:choose>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '01'}"> (월)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '02'}"> (화)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '03'}"> (수)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '04'}"> (목)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '05'}"> (금)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '06'}"> (토)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '07'}"> (일)</c:when>
+					    </c:choose>
+					</span>
+					<br>
+				      <span class="text">
+				        ${event.title}
+				        <c:if test="${event.allDay == 'N'}">
+				          (${fn:substring(event.start, 11, 16)} - ${fn:substring(event.end, 11, 16)})
+				        </c:if>
+				        <c:if test="${event.allDay == 'Y'}">
+				          (하루종일)
+				        </c:if>
+				        <br>
+				        <small>${event.description}</small>
+				      </span>
+				    </li>
+				  </c:forEach>
+				</c:if>
+				<c:if test="${empty weekCal}">
+				  <span>금주의 일정이 없습니다.</span>
+				</c:if>
 			      </ol>
 			    </div>
 			  </div>
@@ -634,53 +660,36 @@
                 </div>
               </div>
             </div> -->
-			
+            
+			<!-- 게시물 위젯 -->
 			    <div class="card">
                   <div class="card-header">
-                    <div class="card-title">오늘의 게시물</div>
+                    <div class="card-title">최신 게시물</div>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body" >
                     
-                    <table class="table table-head-bg-primary mt-4">
+                    <table class="table table-head-bg-primary mt-4" id="boardMainTable" style="margin-top: 0px!important;">
                       <thead>
                         <tr>
                           <th scope="col">NUMBER</th>
                           <th scope="col">TITLE</th>
                           <th scope="col">WRITER</th>
-                          <th scope="col">DATE</th>
+                          <th scope="col" style="width:300px;">DATE</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                         <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
+                      <c:forEach items="${boards}" var="board" varStatus="status">
+						    <c:if test="${status.index < 5}">
+						        <tr>
+						            <th>${board.BOARD_KEY}</th>
+						            <th><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}" style="color:black;">${board.BOARD_TITLE} </a></th>
+						            <th>${board.MEMBER_NAME}</th>
+						            <th>
+						                <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss" />
+						            </th>
+						        </tr>
+						    </c:if>
+					  </c:forEach>
                         
                       </tbody>
                       
@@ -842,7 +851,7 @@
 		    type: "GET",
 		    async: "false",
 		    success: function(resp) {
-				console.log((resp.weather[0].icon).substr(0,2));
+				console.log(resp.weather[0].main);
 				
 		        var $Icon = (resp.weather[0].icon).substr(0,2);
 		        var $weather_description = resp.weather[0].main;
@@ -856,7 +865,11 @@
 		        
 
 		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'"  />');
-		        $('.weather_description').prepend($weather_description);
+		        if($weather_description=='Thunderstorm'){
+		        	$('.weather_description').prepend('Storm');
+		        }else{
+		        	$('.weather_description').prepend($weather_description);
+		        }
 		        $('.current_temp').prepend($Temp);
 		        $('.humidity').prepend($humidity);
 		        $('.wind').prepend($wind);
