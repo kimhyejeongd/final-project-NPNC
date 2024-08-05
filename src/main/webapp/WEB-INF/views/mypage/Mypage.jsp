@@ -217,7 +217,7 @@
                         <label for="verificationEmail">이메일 입력</label>
                         <input type="email" class="form-control" id="verificationEmail" placeholder="이메일 입력">
                     </div>
-                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton_hj">이메일 인증 보내기</button>
+                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
                     <div id="emailVerificationForm" class="mt-3" style="display: none;">
                         <div class="form-group">
                             <label for="emailVerificationCode">인증 코드 입력</label>
@@ -261,20 +261,20 @@
 <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 <script src="${path}/resources/assets/js/setting-demo.js"></script>
 <script src="${path}/resources/assets/js/demo.js"></script>
-a
+
 <!-- Page Specific JS -->
 	<script>
-	$(document).ready(function() {
-	    // Address Modal Functionality
-	    $('#searchAddressButton').click(function() {
-	            oncomplete: function(data) {
-
-	                $('#roadAddress').val(data.roadAddress);
-	                $('#detailAddress').val(data.detailAddress);
-	                $('#postcode').val(data.zonecode);
-	            }
-	        }).open();
-	    });
+	   $(document).ready(function() {
+	        // Address Modal Functionality
+	        $('#searchAddressButton').click(function() {
+	            new daum.Postcode({
+	                oncomplete: function(data) {
+	                    $('#postcode').val(data.zonecode);
+	                    $('#roadAddress').val(data.roadAddress);
+	                    $('#detailAddress').val(data.detailAddress);
+	                }
+	            }).open();
+	        });
 
 	    $('#saveAddressButtonModal').click(function() {
 	        var roadAddress = $('#roadAddress').val();
@@ -303,14 +303,14 @@ a
 	            }
 	        });
 	    });
-	});
+
 
 
 
 
      // 이메일 전송
-        $('#sendEmailVerificationButton_hj').click(function() {
-        	alert("test");
+        $('#sendEmailVerificationButton').click(function() {
+        	alert()
             var email = $('#verificationEmail').val();
             $.ajax({
                 url: "${path}/member/sendPasswordResetEmail",
@@ -369,25 +369,27 @@ a
                 }
             });
         });
-
-        // 주소 업데이트
+        
         $('#saveAddressButton').click(function() {
             var roadAddress = $('#roadAddress').val();
             var detailedAddress = $('#detailedAddress').val();
+            var postcode = $('#postcode').val();
+
             $.ajax({
                 url: "${path}/member/updateAddress",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify({
+                type: "POST",
+                contentType: "application/json", // JSON 형식으로 전송
+                data: JSON.stringify({ // JSON 형식으로 변환
                     roadAddress: roadAddress,
-                    detailedAddress: detailedAddress
+                    detailedAddress: detailedAddress,
+                    postcode: postcode
                 }),
                 success: function(response) {
                     if (response.success) {
                         $('#memberAddressText').text(response.updatedAddress);
                         $('#addressModal').modal('hide');
                     } else {
-                        alert("주소 업데이트 실패.");
+                        alert("주소 업데이트 실패: " + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -395,9 +397,18 @@ a
                 }
             });
         });
- 
 
-        // Profile Image Functionality
+
+
+
+
+
+
+
+
+
+
+     // Profile Image Functionality
         $("#editProfileImageButton").click(function() {
             $("#profileImageForm").toggle();
         });
@@ -408,14 +419,19 @@ a
             if (files.length > 0) {
                 formData.append("profileImage", files[0]);
                 $.ajax({
-                    url: "${path}/member/uploadProfileImage",
+                    url: "/member/updateProfileImage",
                     type: "POST",
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $("#profileImage").attr("src", response.newImageUrl);
-                        $("#profileImageForm").hide();
+                        if (response.newImageUrl) {
+                            var timestamp = new Date().getTime(); // 캐시 방지용 타임스탬프 추가
+                            $("#profileImage").attr("src", response.newImageUrl + "?t=" + timestamp);
+                            $("#profileImageForm").hide();
+                        } else {
+                            alert("파일 업로드 실패: " + response.error);
+                        }
                     },
                     error: function(xhr, status, error) {
                         alert("파일 업로드 실패: " + error);
@@ -424,7 +440,8 @@ a
             }
         });
 
-        @PostMapping("/updateAddress")
+
+        /* @PostMapping("/updateAddress")
         public @ResponseBody Map<String, Object> updateAddress(
             @RequestParam("roadAddress") String roadAddress,
             @RequestParam("detailedAddress") String detailedAddress,
@@ -445,7 +462,7 @@ a
                 response.put("error", "User not logged in.");
             }
             return response;
-        }
+        } */
 
         // Password Update Functionality
         $("#updatePasswordButton").click(function() {

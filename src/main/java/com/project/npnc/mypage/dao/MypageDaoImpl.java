@@ -51,4 +51,5 @@ public class MypageDaoImpl implements MemberDao {
         );
         sqlSession.update("mypage.updateAddress", paramMap);
     }
+    
 }
