@@ -140,10 +140,10 @@ function approveModal(no, serial){
 			                alert(data.message);
 							// 로컬 스토리지에서 데이터를 삭제
 							sessionStorage.removeItem("formNo");
-			                var writerKey = $("#docInfo").data('writer-key');
-			                var serialKey = $("#docInfo").data('doc-serial');
-			                var writerJobName = $("#docInfo").data('doc-writer-job-name');
-			                var writerName = $("#docInfo").data('doc-writer-name');
+			                const writerKey = $("#docInfo").data('writer-key');
+			                const serialKey = $("#docInfo").data('doc-serial');
+			                const writerJobName = $("#docInfo").data('writer-job-name');
+			                const writerName = $("#docInfo").data('writer-name');
 							
 							console.dir(data);
 							
@@ -151,25 +151,23 @@ function approveModal(no, serial){
 							 if (data.nextAprover != null) {
 			                	console.log('결재자 알람 send try');
 			                	 console.log(data.nextAprover);
-				                nextAproverAlarmSend(data.nextAprover.memberKey, writerKey, writerName, writerJobName);
-			                }else{
+				                nextAproverAlarmSend(data.nextAprover.memberKey, writerKey, writerName, writerJobName, serialKey);
+			                 }else{
 								console.log('마지막 결재자');
 								console.log(approvalType);
 								if(approvalType == 'approve'){
 									//다음결재자가 없으면서 승인인 경우
-									//실행 안됨
-									console.log(writerName+"에게 최종승인 알람 send try");
-									docCompleteAlarmSend(writerKey, 0, writerName, writerJobName, serialKey);
+									console.log(writerName + "에게 최종승인 알람 send try");
+									docCompleteAlarmSend(writerKey, writerKey, writerName, writerJobName, serialKey);
 								}
 							
-								//실행 안됨
 								 //참조인 있으면 발송
 								if (data.referer != null && data.referer.length > 0) {
 									console.log(data.referer.length);
 									console.log('참조인 알람 send try');
 									// 각 참조인에 대해 반복 전송
 									$.each(data.referer, function(index, referer) {
-										refererAlarmSend(referer.memberKey,  writerKey, writerName, writerJobName)
+										refererAlarmSend(referer.memberKey, writerKey, writerName, writerJobName, serialKey)
 									});
 								}
 							}

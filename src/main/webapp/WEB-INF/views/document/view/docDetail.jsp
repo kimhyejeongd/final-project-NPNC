@@ -75,8 +75,8 @@
 		<div class="container">
 		<div id="docInfo" style="display:none;"
 	         data-writer-key="${l.erDocWriter}"
-	         data-writer-name="${l.writer}"
-	         data-writer-job-name="${l.writerJobName}"
+	         data-writer-name="${writerName}"
+	         data-writer-job-name="${writerJobName}"
 	         data-doc-serial="${l.erDocSerialKey}"></div>
 	         
           <div class="page-inner">
