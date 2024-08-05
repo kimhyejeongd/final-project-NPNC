@@ -92,8 +92,8 @@ public class AdminMemberController {
 		//패스워드 암호화
 		SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
 		String monthDay = sdf.format(mem.getMemberBirthdate());
-//		String pw="NPNC"+monthDay;
-		String pw="1234";
+		String pw="N"+monthDay;
+//		String pw="1234";
 		System.out.println(pw);
 		String encodePw=pwencoder.encode(pw);
 		mem.setMemberPw(encodePw);
