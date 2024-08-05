@@ -405,10 +405,10 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}">
-						<img src="profile1.jpg" alt="프로필 사진">
+						<img src="/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
-								<div class="friend-name">${m.memberId}</div>
-								<div class="friend-status">부서이름</div>
+								<div class="friend-name">${m.memberName}</div>
+								<div class="friend-status">${m.departmentName }</div>
 							</div></li>
 					</c:if>
 				</c:forEach>
@@ -419,6 +419,13 @@ body{
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
+    window.onload = function() {
+        var popupWidth = 800;
+        var popupHeight = 600;
+        var left = (screen.width - popupWidth) / 2;
+        var top = (screen.height - popupHeight) / 2;
+        window.open('/popupChat', 'chatPopup', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+    }
 
     //친구검색기능
     $('#searchFriend').on('input', function() {
@@ -521,9 +528,7 @@ body{
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 const index = selectedMembers.indexOf(memberNo);
-                if (index > -1) {
-                    selectedMembers.splice(index, 1);
-                }
+         
             } else {
                 $(this).addClass('selected');
                 selectedMembers.push(memberNo);
@@ -534,11 +539,22 @@ body{
         // 새로운 채팅방 만들기
         $('#createNewChatButton').click(function() {
           	 event.stopPropagation(); 
+             // 팝업 창의 옵션 설정
+           var popupWidth = 400;
+            var popupHeight = 520;
+             var left = (screen.width - popupWidth) / 2;
+             var top = (screen.height - popupHeight) / 2;
+
+             // 팝업 창 생성
+   			 var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + top + ',left=' + left;
+             var popup = window.open('', 'newChatPopup', popupOptions);
 
         	
             var form = $('<form>', {
                 'method': 'post',
-                'action': '${path}/chat'
+                'action': '${path}/chat',
+                'target': 'newChatPopup'
+
             });
 
             // 선택한 멤버들을 히든 필드로 추가
@@ -747,7 +763,7 @@ body{
     });
 
 
-
+/* 
         // 친구 클릭 이벤트
         $('.friend-list').on('click', '.friend-item', function() {
           	 event.stopPropagation(); 
@@ -764,7 +780,7 @@ body{
             
             // 모달 표시
             $('#profileModal').show();
-        });
+        }); */
 
         // "채팅 시작" 버튼 클릭 이벤트
         $('#profileModal .start-chat-btn').click(function() {

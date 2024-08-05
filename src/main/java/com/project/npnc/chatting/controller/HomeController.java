@@ -39,7 +39,7 @@ public class HomeController {
 		if(memberNo!=null) {
 			model.addAttribute("roomId",roomId);
 		}
-		
+		System.out.println(" 널이 찍히나요???>"+roomId);
 		if(roomId==null) {
 			Map<String, Object> param = new HashMap<>();
 			param.put("memberNos", memberNo);
@@ -65,6 +65,7 @@ public class HomeController {
 		Gson gson = new Gson();
 		model.addAttribute("chatList",gson.toJson(chats));
 		model.addAttribute("roomId",roomId);
+		System.out.println(roomId+"516156165165165516");
 		model.addAttribute("countRoomMember",countRoomMember);
 		model.addAttribute("roomMembers", gson.toJson(roomMembers));
 		model.addAttribute("allMembers",allMembers);
