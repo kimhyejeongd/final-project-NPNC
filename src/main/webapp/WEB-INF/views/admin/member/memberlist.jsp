@@ -147,6 +147,17 @@
 		                </div>
 		              </div>
 			</div>
+			
+<%-- 			<div>
+				<h3>비밀번호 암호화 1234</h3>
+				<form action="${path }/admin/member/updatememberpw" method="post">
+					멤버키 <input type="text" name="memberKey">
+					<button type="submit">전송</button>
+				</form>
+			</div> --%>
+			
+			
+			
 				<%@ include file="/WEB-INF/views/common/footer.jsp" %> 	
 				
 	 		<!-- 사원 등록 모달 정의 -->

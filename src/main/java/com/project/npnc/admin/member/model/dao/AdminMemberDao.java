@@ -26,4 +26,6 @@ public interface AdminMemberDao {
 	int selectMemberCountByDept(SqlSession session,String deptKey);
 	int selectMemberCountByJob(SqlSession session,String jobKey);
 	
+	int updatePw(SqlSession session,int memberKey,String encodePw);
+	
 }

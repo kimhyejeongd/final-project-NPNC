@@ -23,4 +23,6 @@ public interface AdminMemberService {
 	
 	List<Department> selectMemberCountByDept();
 	List<Job> selectMemberCountByJob();
+	
+	int updatePw(int memberKey,String encodePw);
 }
