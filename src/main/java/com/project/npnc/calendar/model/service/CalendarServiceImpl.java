@@ -11,6 +11,7 @@ import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.Reservation;
 import com.project.npnc.calendar.model.dto.ReserveItem;
 import com.project.npnc.calendar.model.dto.Vacation;
+import com.project.npnc.calendar.model.dto.WeekCalendar;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,6 +95,14 @@ public class CalendarServiceImpl implements CalendarService {
 	@Override
 	public List<Vacation> checkVacation(Map<String, Object> param) {
 		return dao.checkVacation(session, param);
+	}
+	@Override
+	public int deleteReferenceCalendar(int calKey, int memberKey) {
+		return dao.deleteReferenceCalendar(session, calKey, memberKey);
+	}
+	@Override
+	public List<WeekCalendar> selectWeekCalendarByMemberKey(int memberKey) {
+		return dao.selectWeekCalendarByMemberKey(session, memberKey);
 	}
 
 

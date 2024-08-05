@@ -1,5 +1,6 @@
 package com.project.npnc.common.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.calendar.model.dto.Calendar;
+import com.project.npnc.calendar.model.dto.WeekCalendar;
 import com.project.npnc.calendar.model.service.CalendarService;
 import com.project.npnc.chatting.model.dto.ChattingRoom;
 import com.project.npnc.chatting.model.service.ChatService;
@@ -45,6 +47,19 @@ public class MainController {
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(member.getMemberKey());
 		model.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		model.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<WeekCalendar> weekCal = calservice.selectWeekCalendarByMemberKey(member.getMemberKey());
+		for(WeekCalendar event : weekCal) {
+			try {
+				  event.setStartDate(sdf.parse(event.getStart()));
+	              event.setEndDate(sdf.parse(event.getEnd()));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		System.out.println("weekCal = "+weekCal);
+		model.addAttribute("weekCal",weekCal);
 		
 		//전자문서 위젯
 		model.addAttribute("doclist", docserv.selectInprocessDocs(member.getMemberKey()));
