@@ -168,7 +168,20 @@ public class ChatService {
 		public int selectUnreadCurrent(int memberKey) {
 			return dao.selectUnreadCurrent(session,memberKey);
 		}
-		
-		   
-
+		public int insertAiChatRoom(int memberKey) {
+			return dao.insertAiChatRoom(session, memberKey);
+		}
+		public int selectAiRoomNo(int memberKey) {
+			Integer result = dao.selectAiRoomNo(session,memberKey);
+			if(result ==null) {
+				result = dao.insertAiChatRoom(session,memberKey);
+			}
+			return result;
+		}
+		public List<ChattingMessage> selectAiChat(int roomNo){
+			return dao.selectAiChat(session,roomNo);
+		}
+		public void insertAiMessage(ChattingMessage message) {
+			dao.insertAiMessage(session,message);
+		}
 }

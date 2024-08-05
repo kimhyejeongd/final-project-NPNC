@@ -39,7 +39,6 @@ public class HomeController {
 		if(memberNo!=null) {
 			model.addAttribute("roomId",roomId);
 		}
-		System.out.println(" 널이 찍히나요???>"+roomId);
 		if(roomId==null) {
 			Map<String, Object> param = new HashMap<>();
 			param.put("memberNos", memberNo);

@@ -184,6 +184,43 @@
 	<select id="selectUnreadCurrent" parameterType="int" resultType="int">
     	SELECT COUNT(*) FROM CHATTING_IS_READ cir WHERE MEMBER_KEY = #{memberKey}
     </select>
+    
+    <insert id="insertAiChatRoom" parameterType="map">
+    	INSERT INTO CHATTING_GROUP 
+    	VALUES(
+    		SEQ_CHAT_GROUP_KEY.nextval,
+    		#{memberKey},
+    		-1,
+    		'Y',
+    		SYSDATE
+    	)
+    </insert>
+    
+    <select id="selectAiRoomNo" parameterType="int" resultType="int">
+    	SELECT CHAT_ROOM_KEY
+    	FROM CHATTING_GROUP
+    	WHERE MEMBER_KEY = #{memberKey} AND CHAT_ROOM_KEY = -1
+    </select>
+    
+    <select id="selectAiChat" parameterType="int" resultMap="chattingMessageResultMap">
+    	SELECT *
+    	FROM CHATTING_MESSAGE
+    	WHERE CHAT_ROOM_KEY = #{roomKey}
+    </select>
+    
+    <insert id="insertAiMessage" parameterType="ChattingMessage">
+    	INSERT INTO CHATTING_MESSAGE
+    	VALUES (
+    		SEQ_CHAT_MESSAGE_KEY.NEXTVAL,
+    		#{memberKey},
+    		-1,
+    		#{chatMsgDetail},
+    		SYSDATE,
+    		'N',
+    		'0'
+    	)
+    	
+    </insert>
 
     <resultMap id="chattingMessageResultMap" type="chattingMessage">
         <id property="chatMsgKey" column="CHAT_MSG_KEY"/>

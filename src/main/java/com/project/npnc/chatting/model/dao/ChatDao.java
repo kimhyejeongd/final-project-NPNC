@@ -82,7 +82,6 @@ public class ChatDao {
         return roomId;
     }
 	public List<Member> selectMyRoomMemberList(SqlSessionTemplate session, int roomId){
-		System.out.println(roomId+"테스트용");
 		return session.selectList("chat.selectMyRoomMemberList",roomId);
 	}
 	public List<Integer> selectMyRoomId(SqlSessionTemplate session, int memberNo){
@@ -126,5 +125,18 @@ public class ChatDao {
 		return session.selectOne("chat.selectUnreadCurrent",memberKey);
 				
 	}
+	public int insertAiChatRoom(SqlSessionTemplate session, int memberKey) {
+		return session.insert("chat.insertAiChatRoom",memberKey);
+	}
+	public Integer selectAiRoomNo(SqlSessionTemplate session, int memberKey) {
+		return session.selectOne("chat.selectAiRoomNo",memberKey);
+	}
 
+	public List<ChattingMessage>selectAiChat(SqlSessionTemplate session, int roomNo){
+		return session.selectList("chat.selectAiChat",roomNo);
+	}
+	public void insertAiMessage(SqlSessionTemplate session, ChattingMessage message) {
+		System.out.println(message.getChatRoomKey()+"테스트테스트테스트테스트"); 
+		session.insert("chat.insertAiMessage",message);
+	}
 }

@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <sec:authentication var="loginMember" property="principal"/>
 
 <!DOCTYPE html>
@@ -366,6 +368,7 @@ body{
 		<div id="chat" class="content active">
 			<ul class="room-list" id="roomList">
 				<c:forEach var="room" items="${mychatRoomList}">
+					<c:if test="${room.chatRoomKey!=-1 }">
 					<li class="room-item" id="room-${room.chatRoomKey}">
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
@@ -384,7 +387,16 @@ body{
 							</div>
 						</form>
 					</li>
+					</c:if>
 				</c:forEach>
+				<div id="aiChat">
+					<div class="demo-icon" style="margin-bottom: 0px;justify-content: center;">
+						 <div class="icon-preview">
+						 	<i class="fas fa-robot"></i>
+					 	</div> 
+				 		<div class="icon-class">Ai 챗봇</div> 
+				 	</div>
+				</div>
 			</ul>
 		</div>
 	</div>
@@ -417,7 +429,7 @@ body{
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
-
+	
 
     //친구검색기능
     $('#searchFriend').on('input', function() {
@@ -433,9 +445,7 @@ body{
 
         var selectedMembers = [];
         var myRoomMemberList = JSON.parse('${myRoomMemberListJ}');
-        console.log("1fhnsdlfdanklsnmdklnklndlk");
-        console.log(myChatRoomList);
-        console.log(myRoomMemberList);
+
 
         function getRoomMemberImages(members,thisEle) {
             var memberImagesHtml = '';
@@ -590,13 +600,13 @@ body{
 
             // 팝업 창 생성
             var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop;
-            var popup = window.open('', 'chatPopup', popupOptions);
+            var popup = window.open('', 'aiPopup', popupOptions);
 
             // 폼 생성 및 전송
             var form = $('<form>', {
                 'method': 'post',
                 'action': '${path}/chat',
-                'target': 'chatPopup'
+                'target': 'aiPopup'
 
             }).append($('<input>', {
                 'type': 'hidden',
@@ -609,6 +619,34 @@ body{
 
             form.appendTo('body').submit();
         });
+     
+        $('#aiChat').click(e=>{
+        	e.stopPropagation();
+        });
+        $('#aiChat').dblclick(function() {
+            console.log("test");
+
+            // 팝업 창의 옵션 설정
+            var popupWidth = 400;
+            var popupHeight = 520;
+            var popupLeft = (screen.width - popupWidth) / 2;
+            var popupTop = (screen.height - popupHeight) / 2;
+
+            // 팝업 창 생성
+            var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop;
+            var popup = window.open('', 'chatPopup', popupOptions);
+
+            // 폼 생성 및 전송
+            var form = $('<form>', {
+                'method': 'post',
+                'action': '${path}/aiChat',
+                'target': 'chatPopup'
+            });
+
+            form.appendTo('body').submit();
+            form.remove(); // 폼 제거
+        });
+    	
 
         // 탭 전환 기능
         $('.tab').click(function() {
@@ -680,13 +718,8 @@ body{
                     var roomItem = $("#room-" + roomId);
                     roomItem.prependTo("#roomList");
                     
-                    console.log("==================")
                     	
                     if(currentSession != null){
-	                    console.log(currentSession);
-	                    console.log("=============currentSession================");
-	                    console.log(currentSession.roomId);
-	                    console.log(Object.keys(currentSession.memberSessions));
 	                    deleteReadBadge(currentSession.roomId,Object.keys(currentSession.memberSessions));
                     }
                     
