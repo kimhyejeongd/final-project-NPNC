@@ -151,6 +151,12 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		
 		return job;
 	}
+
+	@Override
+	public int updatePw(int memberKey, String encodePw) {
+		
+		return dao.updatePw(session, memberKey, encodePw);
+	}
 	
 	
 	

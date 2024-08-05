@@ -198,7 +198,7 @@ public class AdminMemberController {
 			String searchJob,
 			Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "5") int numPerpage,			
+			@RequestParam(defaultValue = "6") int numPerpage,			
 			Model m
 			){
 		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -234,7 +234,25 @@ public class AdminMemberController {
 	
 	
 	
-	
+	@PostMapping("/updatememberpw")
+	public String updatememberpw(int memberKey,Model m) {
+		String pw="1234";
+		String encodePw=pwencoder.encode(pw);
+		
+		int result=service.updatePw(memberKey, encodePw);
+		String msg,loc;
+		if(result>0) {
+			msg="성공";
+			loc="/admin/member/selectmemberall.do";
+		}else {
+			msg="실패";
+			loc="/admin/member/selectmemberall.do";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		
+		return "common/msg";
+	}
 	
 	
 	

@@ -226,6 +226,9 @@
 	</select>
 	
 	
+	<update id="updatePw" parameterType="map">
+		UPDATE MEMBER SET MEMBER_PW=#{encodePw} WHERE MEMBER_KEY=#{memberKey}
+	</update>
 	
 	
 	

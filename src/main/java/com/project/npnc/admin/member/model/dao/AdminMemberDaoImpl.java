@@ -84,6 +84,12 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 		
 		return session.selectOne("adminmember.selectMemberCountByJob",jobKey);
 	}
+
+	@Override
+	public int updatePw(SqlSession session, int memberKey, String encodePw) {
+		Map pm=Map.of("encodePw",encodePw,"memberKey",memberKey);
+		return session.update("adminmember.updatePw",pm);
+	}
 	
 	
 	
