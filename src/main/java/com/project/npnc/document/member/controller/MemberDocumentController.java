@@ -41,6 +41,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.Referer;
 import com.project.npnc.document.model.dto.VacationApply;
 import com.project.npnc.document.model.service.MemberApproveService;
 import com.project.npnc.document.model.service.MemberDocumentService;
@@ -324,9 +325,18 @@ public class MemberDocumentController {
 		log.debug("----전자문서 재작성----");
 		//기존 작성 내용 불러오기
 		Document d = serv.selectDocBySerial(serial);
+		
+		//참조인 내용 전달
+		List<Referer> ref = serv.selectReferer(serial);
+		d.setReferers(ref);
+		
+		//보관함 내용 전달
+		Map<String, String> ad = serv.selectStorageAndFolder(d.getErDocStorageKey());
+		m.addAttribute("storage", ad);
+		
 		m.addAttribute("doc", d);
 		log.debug("{}", d);
-		
+	
 		//양식번호
 		//날짜- 제거
 		String afterF = serial.substring(serial.indexOf("F"));
@@ -381,7 +391,14 @@ public class MemberDocumentController {
 		//기안자
 		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
 		
-		log.debug(html);
+		//시리얼 있으면 초기화, 값전달
+		if(html.contains(d.getErDocSerialKey())) {
+			html = html.replace(d.getErDocSerialKey(), "[문서번호]");
+			m.addAttribute("oriSerialKey", d.getErDocSerialKey());
+		}
+		
+		
+		log.debug(html); 
 		m.addAttribute("html", html);
 		return jsp;
 	}

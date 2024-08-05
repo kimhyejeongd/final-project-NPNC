@@ -374,9 +374,9 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		//전자결재 테이블 삭제
 		int result = dao.deleteDraftDoc(session, d.getErDocSerialKey());
 		if(result<=0) {
-			throw new Exception("[1]임시보관 문서 삭제 실패");
+			throw new Exception("[1] 문서 삭제 실패");
 		}
-		log.debug("[1]임시보관 문서 삭제 완료");
+		log.debug("[1] 문서 삭제 완료");
 		
 		
 		//첨부파일 있는지 확인
@@ -590,6 +590,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public List<Referer> selectReferer(String serial) {
 		return dao.selectReferer(session, serial);
+	}
+	@Override
+	public Map<String, String> selectStorageAndFolder(int erDocStorageKey) {
+		return dao.selectStorageAndFolder(session, erDocStorageKey);
 	}
 	
 	

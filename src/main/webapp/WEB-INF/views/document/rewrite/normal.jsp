@@ -145,6 +145,9 @@
 		<!-- 메인 내용 -->
 		
 		<div class="container">
+		<div id="docInfo" style="display:none;"
+			data-ori-serial-key= "${oriSerialKey}">
+		</div>
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
@@ -180,6 +183,8 @@
 				    <div class="form-group d-flex align-items-center gap-3">
 				      <label for="smallInput"><span class="h5" style="margin-right: 1.9rem !important;" >보관함</span></label>
 				      <div class="border d-flex flex-wrap" style="height: auto; min-height: 30px; width: 90%;" id="storageDiv">
+				      		<input name="erDocStorageKey" value="${storage.ER_STORAGE_KEY }" type="hidden" style="border: none; width: auto; max-width: 80px;">
+				      		<span style="padding: 7px;" data-folder-key="${storage.ER_FOLDER_KEY }">${storage.ER_FOLDER_NAME} > ${storage.ER_STORAGE_NAME} (${storage.ER_STORAGE_TERM }년)</span>
 				      </div>
 				      <button class="btn btn-sm btn-info btn-block" style="width: 70px; height: 30px" type="button" id="storageBtn">선택</button>
 				    </div>
@@ -220,7 +225,7 @@
 						      			<input name="referers[${vs.index }].memberTeamKey" value="${ap.memberTeamKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
 						      			<input name="referers[${vs.index }].memberJobKey" value="${ap.memberJobKey }" readonly="readonly" style="display: none; border: none; width: auto; max-width: 80px;">
 						      			<input name="referers[${vs.index }].memberTeam" value="${ap.memberTeamName }" readonly="readonly" style="border: none; width: 5.5ch; max-width: 80px; background-color: white;">
-						      			<input name="referers[${vs.index }].memberJob" value="${ap.memberJobName }" readonly="readonly" style="border: none; width: 4ch; max-width: 80px; background-color: white;">
+						      			<input name="referers[${vs.index }].memberJob" value="${ap.memberJobName }" readonly="readonly" style="border: none; width: 6.5ch; max-width: 80px; background-color: white;">
 						      			<input name="referers[${vs.index }].memberName" value="${ap.memberName }" readonly="readonly" style="border: none; width: 5.5ch; max-width: 80px; background-color: white;">
 						      			<button class="badge rounded-pill text-bg-secondary Xbtn" type="button" style="width: 3.2ch;">X</button>
 					      			</div>
@@ -264,7 +269,7 @@
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
 				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center"> </span> 
 					          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
 					      </div>
 				     </div>
@@ -355,10 +360,21 @@ $(document).ready(function() {
         });
     });
  
-	 var ui = $.summernote.ui;
-	//기안 작성
-	var table = `<c:out value="${html}" escapeXml="false"/>`;
+     var ui = $.summernote.ui;
+	 // 기안 작성
+	 let html = `<c:out value="${html}" escapeXml="false"/>`;
+	
+	 // 결재선 초기화 로직
+	 let tempDiv = document.createElement('div');
+	 $(tempDiv).html(html);
+	
+	 var td = tempDiv.querySelector('#outer-cell');
+	 if (td) {
+	     $(td).html('[결재선]');
+	 }
+	 html = $(tempDiv).html();
 
+	
 	// Initialize Summernote
 	$('#summernote').summernote({
 	    height: '100%', 
@@ -366,7 +382,7 @@ $(document).ready(function() {
 	    focus: false, 
 	    callbacks: {
 	        onInit: function() {
-	            $('#summernote').summernote('code', table);
+	            $('#summernote').summernote('code', html);
 	        }
 	    },
 	    toolbar: [
@@ -417,7 +433,7 @@ $(document).ready(function() {
         } 
 		
       //보관함 선택 여부 확인
-        if($("#storageDiv").html() === '' || $("#storageDiv").html() === null){
+        if ($("#storageDiv").children().length == 0) {
         	console.log('보관함 미선택');
         	await Swal.fire({
                 title: '확인 요청',
@@ -527,8 +543,27 @@ $(document).ready(function() {
 			        .then(data => {
 			            if (data.status === "success") {
 			                alert(data.message);
-			                // 성공 시 페이지 리다이렉트
-			                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
+			                // 성공 시 로직
+			                var loginMemberKey = ${loginMember.memberKey};
+			                var loginMemberName = "${loginMember.memberName}";
+			                var loginMemberJobName = "${loginMember.jobName}";
+			                
+			                //다음 결재자 알람 발송
+			                if (data.nextAprover && data.nextAprover.memberKey) {
+			                	console.log('결재자 알람 send try');
+			                	 console.log(data.nextAprover);
+				                nextAproverAlarmSend(parseInt(data.nextAprover.memberKey), loginMemberKey, loginMemberName, loginMemberJobName);
+			                }
+			                //참조인 있으면 발송
+							if (data.referer != null && data.referer.length > 0) {
+								console.log(data.referer.length);
+								console.log('참조인 알람 send try');
+								// 각 참조인에 대해 반복 전송
+								$.each(data.referer, function(index, referer) {
+									refererAlarmSend(referer.memberKey, loginMemberKey, loginMemberName, loginMemberJobName, data.serialKey)
+								});
+							}
+			                //리다이렉트
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);

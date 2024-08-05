@@ -213,7 +213,7 @@
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
 				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="fileinputDiv">
-								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center"> </span> 
 					          	<input type="file" class="form-control" id="formFile" name="upfile" multiple style="display:none;">
 					          	<!-- 추가된 파일 출력 위치 -->
 					      </div>
@@ -447,6 +447,7 @@ $(document).ready(function() {
 		            	formData.append('upfile', fileInput.files[i]);
 		            }  */
 
+		            
 		            // FormData의 내용 확인
 					formData.entries().forEach(e=>{
 		            	console.log(e);
