@@ -47,20 +47,20 @@ public class MainController {
 		Attendance attendCheck=attendanceService.selectAttendanceByMemberKey(member.getMemberKey());
 		model.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		model.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		List<WeekCalendar> weekCal = calservice.selectWeekCalendarByMemberKey(member.getMemberKey());
-		for(WeekCalendar event : weekCal) {
-			try {
-				  event.setStartDate(sdf.parse(event.getStart()));
-	              event.setEndDate(sdf.parse(event.getEnd()));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		System.out.println("weekCal = "+weekCal);
-		model.addAttribute("weekCal",weekCal);
-		
+//		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		List<WeekCalendar> weekCal = calservice.selectWeekCalendarByMemberKey(member.getMemberKey());
+//		for(WeekCalendar event : weekCal) {
+//			try {
+//				  event.setStartDate(sdf.parse(event.getStart()));
+//	              event.setEndDate(sdf.parse(event.getEnd()));
+//			}catch(Exception e){
+//				e.printStackTrace();
+//			}
+//		}
+//		System.out.println("weekCal = "+weekCal);
+//		model.addAttribute("weekCal",weekCal);
+//		
 		//전자문서 위젯
 		model.addAttribute("doclist", docserv.selectInprocessDocs(member.getMemberKey()));
 		log.debug("{}", model.getAttribute("doclist"));
