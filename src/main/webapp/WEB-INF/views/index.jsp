@@ -225,6 +225,12 @@
 			flex-wrap: noWrap;
 			justify-content: space-around;
 		}
+		
+		#boardMainTable th{
+		
+			font-weight: normal !important;
+			
+		}
 	</style>	
   <body>
                <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
@@ -654,53 +660,36 @@
                 </div>
               </div>
             </div> -->
-			
+            
+			<!-- 게시물 위젯 -->
 			    <div class="card">
                   <div class="card-header">
-                    <div class="card-title">오늘의 게시물</div>
+                    <div class="card-title">최신 게시물</div>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body" >
                     
-                    <table class="table table-head-bg-primary mt-4">
+                    <table class="table table-head-bg-primary mt-4" id="boardMainTable" style="margin-top: 0px!important;">
                       <thead>
                         <tr>
                           <th scope="col">NUMBER</th>
                           <th scope="col">TITLE</th>
                           <th scope="col">WRITER</th>
-                          <th scope="col">DATE</th>
+                          <th scope="col" style="width:300px;">DATE</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                         <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
+                      <c:forEach items="${boards}" var="board" varStatus="status">
+						    <c:if test="${status.index < 5}">
+						        <tr>
+						            <th>${board.BOARD_KEY}</th>
+						            <th><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}" style="color:black;">${board.BOARD_TITLE} </a></th>
+						            <th>${board.MEMBER_NAME}</th>
+						            <th>
+						                <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss" />
+						            </th>
+						        </tr>
+						    </c:if>
+					  </c:forEach>
                         
                       </tbody>
                       
