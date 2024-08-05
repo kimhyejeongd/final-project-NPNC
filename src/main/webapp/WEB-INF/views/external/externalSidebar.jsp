@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <sec:authentication var="loginMember" property="principal"/>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 <%@ page session="true" %>
     <!-- Fonts and icons -->
     <script src="${path}/resources/assets/js/plugin/webfont/webfont.min.js"></script>
