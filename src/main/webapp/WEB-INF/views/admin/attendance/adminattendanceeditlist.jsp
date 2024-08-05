@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
@@ -203,7 +204,7 @@
 			 	    
 			 	}	
 				
-				const adminAttendanceEditDetail=(key)=> {
+				/* const adminAttendanceEditDetail=(key)=> {
 					 let form = document.createElement("form");
 			            form.setAttribute("method", "post");
 			            form.setAttribute("action", "${path}/admin/attendance/adminAttendanceEditDetail");
@@ -217,7 +218,7 @@
 
 			            document.body.appendChild(form);
 			            form.submit();
-				}
+				} */
 		</script>	
 		
 		

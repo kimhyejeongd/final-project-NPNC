@@ -33,6 +33,9 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+  
+  <script src="${path}/resources/jh/js/docwrite.js"></script>
+  <script src="${path}/resources/jh/js/doc-alarm.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -67,6 +70,64 @@
 	#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block{
 		display: flex;
 		justify-content: center;
+	}
+	.outer-cell {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 0;
+		vertical-align: top;
+		background: white; 
+		border: currentColor; 
+		text-align: right; 
+		color: black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: top;
+	}
+
+	#approverTable {
+		border-collapse: collapse;
+		margin-left: auto; /* 오른쪽에 붙이기 위해 사용 */
+		font-family: "malgun gothic", dotum, arial, tahoma;
+		text-align: center !important;
+		border: 0px solid rgb(0, 0, 0); 
+		width: auto; 
+		margin-top: 1px; 
+		border-collapse: collapse;
+	}
+
+	#approverTable th,
+	#approverTable td {
+		border: 1px solid black;
+		padding: 5px;
+		text-align: center !important;
+		vertical-align: middle;
+		font-size: 14px;
+	}
+
+	#approverTable th {
+		background: #ddd;
+		font-weight: bold;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		height: 18px; 
+		text-align: center; 
+		font-size: 14px; 
+		font-weight: bold; 
+		vertical-align: middle;
+	}
+
+	#approverTable td {
+		background: #fff;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: middle; 
+		width: auto;
 	}
   </style>
  </head>
@@ -152,7 +213,7 @@
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
 				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="fileinputDiv">
-								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center"> </span> 
 					          	<input type="file" class="form-control" id="formFile" name="upfile" multiple style="display:none;">
 					          	<!-- 추가된 파일 출력 위치 -->
 					      </div>
@@ -211,39 +272,10 @@ $(document).ready(function() {
 		$("#dragspan").removeClass('d-flex').css('display', 'none');
 		// 현재 파일 리스트에서 이미 추가된 파일의 개수를 계산
 	    let existingCount = $('#fileinputDiv .file-name').length;
+	    console.log('이미 추가된 파일 개수 : ' + existingCount);
         
-     // 선택한 파일 이름을 표시하기 위한 내용 추가
-        Array.from(files).forEach((file, index) => {
-	       	let adjustedIndex = existingCount + index + 1;
-        	let files=this.files;
-        	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
-									.css({
-										'width': '100%',
-										'min-height': '30px',
-										'font-size' : 'larger',
-										'text-align': 'left',
-										'border-radius': '15px',
-										'background-color': 'white !important'
-									});
-		  	
-			let $box = $("<div>").addClass('d-flex align-items-center')
-								.css({
-									'color': 'black',
-									'background-color': 'white !important',
-									'border': 'none !important',
-									'width': '500px'
-								});
-			
-			 $box.html('<input name="files[' + adjustedIndex + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
-                     '<input name="files[' + adjustedIndex + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
-			
-			let $buttonbox=$("<div>").addClass('d-flex');
-			$buttonbox.html(`<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-								<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
-								<button class="btn btn-sm btn-outline-primary ml-2 bringBtn ms-2" id="fileDeleteBtn" type="button">삭제</button>`);
-			$div.append($box).append($buttonbox);
-			$('#fileinputDiv').append($div);
-        });
+     	// 선택한 파일 이름을 표시하기 위한 내용 추가
+	    fn_arrayFiles(files, existingCount);
     });
 	
 	 var ui = $.summernote.ui;
@@ -285,8 +317,84 @@ $(document).ready(function() {
 	});
 	// 기안하기 버튼 클릭 시
 	$("#submitbtn").click(function() {
+		
+		// 폼 유효성 검사
+        if ($("#docForm")[0].checkValidity() === false) {
+        	console.log('유효성 검사 false');
+        	await Swal.fire({
+    			title: '확인 요청',
+    			html: '제목을 입력해주세요.',
+    			showCancelButton: false,
+    			confirmButtonClass: 'btn btn-success',
+    			confirmButtonText: '확인',
+    			buttonsStyling: false,
+    			reverseButtons: false,
+    			didOpen: () => {
+                    document.querySelector('#htmlDiv').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#htmlDiv').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+            });
+            $("#docForm")[0].reportValidity();
+           	return;
+        } 
+		
+     	 //보관함 선택 여부 확인
+        if($("#storageDiv").html() === '' || $("#storageDiv").html() === null){
+        	console.log('보관함 미선택');
+        	await Swal.fire({
+                title: '확인 요청',
+                html: '보관함을 선택해주세요.',
+                icon: 'warning', 
+                showCancelButton: false,
+                confirmButtonClass: 'btn btn-success',
+                confirmButtonText: '확인',
+                buttonsStyling: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            }).then((result) => {
+	            $("#storageBtn").click();
+            });
+            return; 
+        }
+
+        // 결재자 선택 여부 검사
+        if ($("#approvalDiv span").text() === '결재자를 선택하세요') {
+            console.log('결재자 없음');
+            
+            const result = await Swal.fire({
+                title: '확인 요청',
+                html: '결재자가 없습니다. 그래도 진행하시겠습니까?',
+                icon: 'warning', 
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger ms-2',
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                buttonsStyling: false,
+                reverseButtons: false,
+                didOpen: () => {
+                    document.querySelector('#summernote').setAttribute('inert', ''); // 모달 외부 비활성화
+                },
+                willClose: () => {
+                    document.querySelector('#summernote').removeAttribute('inert'); // 모달 닫힐 때 비활성화 해제
+                }
+            });
+            if(!result.isConfirmed) {
+               $("#approverBtn").click();
+             return;
+            }
+        }
+		
+		
 		// SweetAlert2 모달 띄우기
-		Swal.fire({
+		const docResult = await Swal.fire({
 			title: '결재',
 			html: '<textarea class="form-control" id="input-field" placeholder="결재 의견을 작성하세요" style="resize:none"></textarea>',
 			showCancelButton: true,
@@ -296,7 +404,8 @@ $(document).ready(function() {
 			cancelButtonText: '취소',
 			buttonsStyling: false,
 			reverseButtons: false
-		}).then((result) => {
+		});
+		
 			if (result.isConfirmed) {
 				// 결재 버튼이 클릭되었을 때 처리할 로직
 				console.log('결재하기');
@@ -308,6 +417,7 @@ $(document).ready(function() {
 				if(dochtml != null){
 					//결재 정보
 					let opinion = $('#input-field').val();
+					$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 					$("<input>").val(opinion).css('display', 'none').attr('name', 'msg').prependTo($("#docForm"));
 					$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 					
@@ -318,6 +428,9 @@ $(document).ready(function() {
 					// 폼 데이터를 수집
 			        let formData = new FormData(document.getElementById("docForm"));
 			        formData.delete("files");
+			        
+			      	//문서 내용 세션 임시 저장
+					session.setStorage('ckBeforeDoc', dochtml);
 					
 					//문서 내용 정리
 					$("#workType").text($("#overworkTypeSpan").text());
@@ -334,11 +447,48 @@ $(document).ready(function() {
 		            	formData.append('upfile', fileInput.files[i]);
 		            }  */
 
+		            
 		            // FormData의 내용 확인
 					formData.entries().forEach(e=>{
 		            	console.log(e);
 	            	});
 					
+		            //신청자의 기존 휴가 신청 내역 중 중복 일정이 있는지 확인
+		            /* fetch(sessionStorage.getItem("path")+'/document/vacation/check', {
+			            method: 'POST',
+			            body: formData,
+			        }).then(response => response.json())
+			        .then(data => {
+			            if (data.status === "success") {
+			                alert(data.message);
+			                // 성공 시 계속 진행
+			                Swal.fire({
+			        			title: '신청 가능',
+			        			html: `<p>${data.message}</p>`,
+			        			showCancelButton: false,
+			        			confirmButtonClass: 'btn btn-success',
+			        			confirmButtonText: '확인',
+			        			buttonsStyling: false,
+			        			reverseButtons: false
+			        		});
+			            } else {
+			                alert(data.message);
+			                Swal.fire({
+			        			title: '신청 불가능',
+			        			icon: 'warning',
+			        			html: `<p>${data.message}</p>`,
+			        			showCancelButton: false,
+			        			confirmButtonClass: 'btn btn-success',
+			        			confirmButtonText: '확인',
+			        			buttonsStyling: false,
+			        			reverseButtons: false
+			        		});
+				            //저장내용으로 다시 문서 내용 리셋
+				            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
+			            }
+			        }) */
+		            
+		            
 			     	// AJAX로 폼 데이터를 전송
 					fetch(sessionStorage.getItem("path")+'/document/writeend/overtimework', {
 			            method: 'POST',
@@ -352,10 +502,14 @@ $(document).ready(function() {
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
 			            } else {
 			                alert(data.message);
+			                //저장내용으로 다시 문서 내용 리셋
+				            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
 			            }
 			        })
 			        .catch(error => {
 			            alert("다음과 같은 에러가 발생하였습니다. (" + error.message + ")");
+			            //저장내용으로 다시 문서 내용 리셋
+			            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
 			        }); 
 			    } else{
 			        alert('문서 양식 불러오기 오류');

@@ -15,6 +15,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.service.AttendanceService;
+import com.project.npnc.board.model.dto.BoardDto;
+import com.project.npnc.board.model.service.BoardService;
 import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.WeekCalendar;
 import com.project.npnc.calendar.model.service.CalendarService;
@@ -35,6 +37,8 @@ public class MainController {
 	private final AttendanceService attendanceService;	
 	private final MemberDocumentService docserv;
 	private final CalendarService calservice;
+	private final BoardService boardService;
+	
 	@GetMapping("/")
     public String home(Model model) {
 		Member member = getCurrentUser();
@@ -48,18 +52,22 @@ public class MainController {
 		model.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		model.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<WeekCalendar> weekCal = calservice.selectWeekCalendarByMemberKey(member.getMemberKey());
-		for(WeekCalendar event : weekCal) {
-			try {
-				  event.setStartDate(sdf.parse(event.getStart()));
-	              event.setEndDate(sdf.parse(event.getEnd()));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		System.out.println("weekCal = "+weekCal);
+//		for(WeekCalendar event : weekCal) {
+//			try {
+//				  event.setStartDate(sdf.parse(event.getStart()));
+//	              event.setEndDate(sdf.parse(event.getEnd()));
+//			}catch(Exception e){
+//				e.printStackTrace();
+//			}
+//		}
 		model.addAttribute("weekCal",weekCal);
+		
+//		게시판 위젯 조회 구문. 전체 가져오기 떄문에 화면단에서 파싱할 예정.
+		List<BoardDto> board=boardService.getAllBoards();
+		model.addAttribute("boards",board);
+		
 		
 		//전자문서 위젯
 		model.addAttribute("doclist", docserv.selectInprocessDocs(member.getMemberKey()));

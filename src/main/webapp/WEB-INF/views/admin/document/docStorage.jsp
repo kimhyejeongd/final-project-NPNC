@@ -39,8 +39,12 @@
     <title>Insert title here</title>
 </head>
 <body>
- 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-
+       <c:if test="${loginMember.accessKey eq 2 }">
+	       <%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+	    </c:if>
+	    <c:if test="${loginMember.accessKey != 2 }">
+	       <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	    </c:if> 
     <div class="main-panel">
         <div class="container">
             <div class="page-inner" style="display: flex">

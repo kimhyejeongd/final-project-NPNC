@@ -209,6 +209,12 @@ $(document).ready(function() {
 	});
 	$("#okBtn").click(e=>{
 		let $selectedItems = $("div#memberlist2>a");
+		console.log($selectedItems.length);
+		if($selectedItems.length <= 0){
+			alert('결재자를 선택하세요.');
+			return;
+		}
+		
 		let data = [];
 		//순회하며 객체 배열에 값 추가
 		$selectedItems.each(function(index){

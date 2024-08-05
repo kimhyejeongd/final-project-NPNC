@@ -304,5 +304,10 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		map.put("serial", serial);
 		return session.selectOne("document.selectApproverByKey", map);
 	}
+
+	@Override
+	public Map<String, String> selectStorageAndFolder(SqlSession session, int erDocStorageKey) {
+		return session.selectOne("document.selectStorageAndFolder", erDocStorageKey);
+	}
 	
 }

@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 public class Referer {
 	private int erRefererKey;
 	private String erDocSerialKey;
-	private String memberTeamKey;
-	private String memberTeamName;
-	private String memberJobKey;
-	private String memberJobName;
-	private String memberName;
+	private String memberTeamKey; //ER_REFERER_TEAM_KEY
+	private String memberTeamName; //ER_REFERER_TEAM_NAME
+	private String memberJobKey; //ER_REFERER_JOB_KEY
+	private String memberJobName; //ER_REFERER_JOB_NAME
+	private String memberName; //ER_REFERER_NAME
 	private int memberKey;
 }

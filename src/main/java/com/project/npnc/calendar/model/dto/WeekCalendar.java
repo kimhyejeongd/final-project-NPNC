@@ -21,6 +21,6 @@ public class WeekCalendar {
 	private String description;
 	private String backgroundColor;
 	private String allDay;
-	private Date startDate;
-	private Date endDate;
+//	private Date startDate;
+//	private Date endDate;
 }
