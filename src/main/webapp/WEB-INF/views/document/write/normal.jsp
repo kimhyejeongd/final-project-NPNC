@@ -430,7 +430,7 @@ $(document).ready(function() {
 			        .then(data => {
 			            if (data.status === "success") {
 			                alert(data.message);
-			                var loginMemberKey = "${loginMember.memberKey}";
+			                var loginMemberKey = ${loginMember.memberKey};
 			                var loginMemberName = "${loginMember.memberName}";
 			                var loginMemberJobName = "${loginMember.jobName}";
 			                
@@ -438,7 +438,7 @@ $(document).ready(function() {
 			                if (data.nextAprover && data.nextAprover.memberKey) {
 			                	console.log('결재자 알람 send try');
 			                	 console.log(data.nextAprover);
-				                nextAproverAlarmSend(data.nextAprover.memberKey, loginMemberKey, loginMemberName, loginMemberJobName);
+				                nextAproverAlarmSend(parseInt(data.nextAprover.memberKey), loginMemberKey, loginMemberName, loginMemberJobName);
 			                }
 			                alert('콘솔 확인용');
 			                
