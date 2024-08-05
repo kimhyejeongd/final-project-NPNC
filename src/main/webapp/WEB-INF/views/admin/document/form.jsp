@@ -72,16 +72,19 @@
  </head>
 <body>
 	<div class="wrapper">
-      <!-- Sidebar -->
- 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-      <!-- End Sidebar -->
-	  <div class="main-panel">
-        <div class="main-header">
-          <div class="main-header-logo">
-          </div>
-          <!--  header Navbar 넣을 곳 -->
-          <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
-        </div>
+       <c:if test="${loginMember.accessKey eq 2 }">
+	       <%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+	    </c:if>
+	    <c:if test="${loginMember.accessKey != 2 }">
+	       <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+	    </c:if>
+	    <div class="main-panel">
+	    <c:if test="${loginMember.accessKey eq 2 }">
+	        <%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+	     </c:if>
+	      <c:if test="${loginMember.accessKey != 2 }">
+	       <%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+	    </c:if>   
 		<!-- 메인 내용 -->
 		
 		<div class="container">
@@ -509,7 +512,6 @@ function sendRefererToParent(data) {
             let $div = $(e.target).closest('div.col');
             let savedData = JSON.parse(localStorage.getItem('selectedReferer'));
             let index = parseInt($div.attr('id').replace('referer', '')); 
-            console.log(index);
             savedData.splice(index, 1);
             localStorage.setItem('selectedReferer', JSON.stringify(savedData));
             $(e.target).parent().remove();
@@ -564,6 +566,9 @@ function sendFolderToParent(data){
      
      $div.appendTo($("#storageDiv"));
      $("#storageBtn").text('재선택');
+
+
+
 }
 
 </script>

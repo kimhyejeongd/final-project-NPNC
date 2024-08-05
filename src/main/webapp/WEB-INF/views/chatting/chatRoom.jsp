@@ -357,7 +357,7 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="/resources/assets/img/unname.png" alt="프로필 사진">
+							src="${path}/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">${m.departmentName }</div>
@@ -405,7 +405,7 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}">
-						<img src="/resources/assets/img/unname.png" alt="프로필 사진">
+						<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberName}</div>
 								<div class="friend-status">${m.departmentName }</div>
@@ -453,7 +453,7 @@ body{
             if (memberCount === 2) {
                 for (var i = 0; i < memberCount; i++) {
                     if (members[i].memberKey !== ${loginMember.memberKey}) {  // 현재 사용자가 아닌 경우만 추가
-                        memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진" style="width: 18%;height: 100%;margin-top: 0;margin-right: 6%;">';
+                        memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진" style="width: 18%;height: 100%;margin-top: 0;margin-right: 6%;">';
                         thisEle.find('.roomForm').prepend(memberImagesHtml);
                         thisEle.find('.room-icon').remove();
                     }
@@ -462,12 +462,12 @@ body{
 
             } else if  (memberCount <= 4) {
                 for (var i = 0; i < memberCount; i++) {
-                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">';
                     thisEle.find('.room-icon').html(memberImagesHtml);
                 }
             } else {
                 for (var i = 0; i < 4; i++) {
-                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">';
                     thisEle.find('.room-icon').html(memberImagesHtml);
 
                 }

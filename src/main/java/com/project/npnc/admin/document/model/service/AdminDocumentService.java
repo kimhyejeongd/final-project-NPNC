@@ -200,4 +200,8 @@ public class AdminDocumentService {
 	public DocumentFormFolder selectDocFormFolderOne(int erFormFolderKey) {
 		return dao.selectDocFormFolderOne(session,erFormFolderKey);
 	}
+	public int updateForm(Map<String,Object>formInfo) {
+		return dao.updateForm(session,formInfo);
+	}
+
 }

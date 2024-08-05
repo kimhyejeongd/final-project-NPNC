@@ -98,4 +98,7 @@ public class AdminDocumentDao {
 	public DocumentFormFolder selectDocFormFolderOne(SqlSessionTemplate session,int erFormFolderKey) {
 		return session.selectOne("admindoc.selectDocFormFolderOne",erFormFolderKey);
 	}
+	public int updateForm(SqlSessionTemplate session, Map<String,Object>formInfo) {
+		return session.update("admindoc.updateForm",formInfo);
+	}
 }
