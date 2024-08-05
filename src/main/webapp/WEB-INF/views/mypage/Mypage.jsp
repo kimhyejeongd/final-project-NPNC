@@ -397,7 +397,7 @@
         });
  
 
-        // Profile Image Functionality
+     // Profile Image Functionality
         $("#editProfileImageButton").click(function() {
             $("#profileImageForm").toggle();
         });
@@ -408,14 +408,19 @@
             if (files.length > 0) {
                 formData.append("profileImage", files[0]);
                 $.ajax({
-                    url: "${path}/member/uploadProfileImage",
+                    url: "/member/updateProfileImage",
                     type: "POST",
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $("#profileImage").attr("src", response.newImageUrl);
-                        $("#profileImageForm").hide();
+                        if (response.newImageUrl) {
+                            var timestamp = new Date().getTime(); // 캐시 방지용 타임스탬프 추가
+                            $("#profileImage").attr("src", response.newImageUrl + "?t=" + timestamp);
+                            $("#profileImageForm").hide();
+                        } else {
+                            alert("파일 업로드 실패: " + response.error);
+                        }
                     },
                     error: function(xhr, status, error) {
                         alert("파일 업로드 실패: " + error);
@@ -423,6 +428,7 @@
                 });
             }
         });
+
 
         /* @PostMapping("/updateAddress")
         public @ResponseBody Map<String, Object> updateAddress(
