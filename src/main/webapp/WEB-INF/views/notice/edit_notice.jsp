@@ -103,7 +103,7 @@
                 <div class="page-inner">
                     <h1 class="mb-4">공지사항 수정</h1>
 
-                    <form action="${path}/notice/edit/${notice.noticeKey}" method="post">
+                    <form action="${path}/admin/edit/${notice.noticeKey}" method="get">
                         <div class="form-group">
                             <label for="noticeTitle">제목</label>
                             <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" value="${notice.noticeTitle}" required>

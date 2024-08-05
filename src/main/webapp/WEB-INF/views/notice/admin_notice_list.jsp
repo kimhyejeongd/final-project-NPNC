@@ -48,6 +48,14 @@
         #tablerow:hover {
             cursor: pointer; 
         }
+
+        .title-container {
+            margin-bottom: 20px; /* 제목과 테이블 사이 여백 조절 */
+        }
+
+        .search-form {
+            margin-bottom: 20px; /* 검색 폼과 제목 사이 여백 조절 */
+        }
     </style>
 </head>
 <body>
@@ -71,7 +79,10 @@
                 <div class="title-container">
                     <h1 class="mb-4">공지사항 목록(관리자)</h1>
                     
-
+                    <!-- 작성하기 버튼 -->
+                    <div class="mb-3">
+                        <a href="${path}/admin/create" class="btn btn-primary">작성하기</a>
+                    </div>
 
                     <!-- Search Form -->
                     <form method="get" action="${path}/admin/notice" class="search-form">
@@ -84,12 +95,11 @@
                             </div>
                         </div>
                     </form>
-                                        <!-- 작성하기 버튼 -->
-                    <div class="mb-3">
-                        <a href="${path}/admin/create" class="btn btn-primary">작성하기</a>
-                    </div>
                     
-                    <table class="table table-bordered">
+                        <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="multi-filter-select" class="display table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -107,15 +117,17 @@
                                     <td><a href="${path}/admin/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
                                     <td>${notice.memberKey}</td>
                                     <td><fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                    <td><a href="${path}/admin/edit/${notice.noticeKey}" class="btn btn-warning">수정</a></td>
+                                    <td><a href="${path}/admin/edit1/${notice.noticeKey}" class="btn btn-warning">수정</a></td>
                                     <td><a href="${path}/admin/delete/${notice.noticeKey}" class="btn btn-danger">삭제</a></td>
                                 </tr>
                             </c:forEach>
-                        </tbody>
-                    </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <!-- Footer -->
             <c:import url="/WEB-INF/views/common/footer.jsp"/>
         </div>

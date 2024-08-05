@@ -55,7 +55,7 @@
     </select>
     
         <!-- 주소 업데이트 -->
-    <update id="updateAddress">
+    <update id="updateAddress" parameterType="map">
         UPDATE member
         SET member_address = #{fullAddress}
         WHERE member_id = #{memberId};
