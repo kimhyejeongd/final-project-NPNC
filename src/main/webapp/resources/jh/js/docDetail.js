@@ -159,6 +159,9 @@ function approveModal(no, serial){
 									//다음결재자가 없으면서 승인인 경우
 									console.log(writerName + "에게 최종승인 알람 send try");
 									docCompleteAlarmSend(writerKey, writerKey, writerName, writerJobName, serialKey);
+								}else if(approvalType == 'reject'){
+									console.log(writerName + '에게 반려 알람 send try');
+									docRejectedAlarmSend(writerKey, writerKey, writerName, writerJobName, serialKey);
 								}
 							
 								 //참조인 있으면 발송

@@ -71,3 +71,22 @@ function docCompleteAlarmSend(reMemberKey1, memberKey, memberName, jobName, seri
 	);
 	  
 }
+function docRejectedAlarmSend(reMemberKey1, memberKey, memberName, jobName, serialKey){
+ console.log('반려 알람 send');
+	stompClient.send("/pub/msg/"+reMemberKey1,{},
+		JSON.stringify({
+			
+			alarmType : 'DocRejected',
+			alarmPath : 'document/list/employee/rejected',
+			alarmSendMember : memberKey,
+			alarmReMember : reMemberKey1,
+			alarmDate : new Date().toISOString(),
+			memberName: memberName,
+			jobName : jobName,
+			docSerialKey : serialKey
+			
+		})
+			
+	);
+	  
+}

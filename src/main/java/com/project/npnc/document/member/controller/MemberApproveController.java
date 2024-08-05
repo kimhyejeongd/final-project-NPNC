@@ -115,6 +115,9 @@ public class MemberApproveController {
 			}else {
 				response.put("status","success");
 				response.put("message", "문서 결재 완료");
+				
+				//최종 알림 발송
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

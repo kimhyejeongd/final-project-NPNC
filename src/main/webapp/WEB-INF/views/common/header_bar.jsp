@@ -325,6 +325,22 @@
 									                	  spanBlock.textContent = '문서 번호 : ' + response[i].docSerialKey + '  승인 완료';
 									                	
 									                	break;
+									                case 'DocRejected':
+								                		//기안문서 반려 알람 목록 출력 디자인
+								                	  divIcon = document.createElement('div');
+								   			          divIcon.className = 'notif-icon notif-primary';
+							
+								   			          faIcon = document.createElement('i');
+								   			          faIcon.className = 'fa fa-book';
+							
+								   			          divContent = document.createElement('div');
+								   			          divContent.className = 'notif-content';
+							
+								   			          spanBlock = document.createElement('span');
+								   			          spanBlock.className = 'block';
+								                	  spanBlock.textContent = '문서 번호 : ' + response[i].docSerialKey + '  반려됨';
+								                	
+								                	break;
 									                default:
 									                    console.error('Unknown alarm type:', response[i].alarmType);
 									                    break;
@@ -872,6 +888,36 @@
 		   			          spanBlock = document.createElement('span');
 		   			          spanBlock.className = 'block';
 		   			          spanBlock.textContent = '문서 번호 : ' + bodyObject.docSerialKey + '  승인 완료';
+		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
+		                    
+		                    break;
+		                case 'DocRejected':
+		                    $.notify({
+		                        icon: 'icon-bell',
+		                        title: '기안한 문서가 반려되었습니다.',
+		                        message: '문서 번호 : ' + bodyObject.docSerialKey + '  반려'
+		                    }, {
+		                        type: 'primary',
+		                        placement: {
+		                            from: "bottom",
+		                            align: "right"
+		                        },
+		                        time: 1000
+		                    });
+		                    
+			                  //결재 대기 문서 알람 목록 출력 디자인
+							  divIcon = document.createElement('div');
+		   			          divIcon.className = 'notif-icon notif-primary';
+	
+		   			          faIcon = document.createElement('i');
+		   			          faIcon.className = 'fa fa-book';
+	
+		   			          divContent = document.createElement('div');
+		   			          divContent.className = 'notif-content';
+	
+		   			          spanBlock = document.createElement('span');
+		   			          spanBlock.className = 'block';
+		   			          spanBlock.textContent = '문서 번호 : ' + bodyObject.docSerialKey + '  반려';
 		   			  		  spanBlock.style.fontSize = '11px'; // 원하는 폰트 크기로 설정
 		                    
 		                    break;
