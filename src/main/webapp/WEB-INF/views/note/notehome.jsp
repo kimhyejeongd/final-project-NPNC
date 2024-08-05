@@ -1674,6 +1674,7 @@
           <i class="icon-settings"></i>
         </div>
       </div>
+      
       <!-- End Custom template -->
     </div>
     <!--   Core JS Files   -->
