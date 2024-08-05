@@ -51,7 +51,7 @@ public class SecuirtyConfig{
 							//경영
 							.requestMatchers("/admin/manageAdminMain/**") 
 							.hasAnyAuthority(MyAuthority.MANAGE.name())
-							.requestMatchers("/admin/dept/**","/admin/job/**","/admin/vacation/**","/admin/reservation/**","/admin/documentForm/**","/admin/board/**","/admin/manageAdminMain/**") 
+							.requestMatchers("/admin/dept/**","/admin/job/**","/admin/vacation/**","/admin/reservation/**","/admin/documentForm/**","/admin/board/**","/admin/manageAdminMain/**","/admin/notice/**") 
 							.hasAnyAuthority(MyAuthority.MANAGE.name(),MyAuthority.ADMIN.name())
 							//관리자
 							.requestMatchers("/admin/**") ///admin으로 시작하는 모든 경로에게 ADMIN권한을 가진 사용자만 접근 할 수 있게 함

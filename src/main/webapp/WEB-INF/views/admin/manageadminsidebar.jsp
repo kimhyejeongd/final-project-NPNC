@@ -183,7 +183,7 @@
 		                            </a>
 		                        </li>
 		                        <li>
-		                            <a href="${path}/notice/admin">
+		                            <a href="${path}/admin/notice">
 		                                <span class="sub-item">공지사항</span>
 		                            </a>
 		                        </li>
