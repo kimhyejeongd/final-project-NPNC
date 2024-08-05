@@ -1390,7 +1390,7 @@
 					              },
 					              success: function(response) {
 					                starElement.removeClass('far').addClass('fas'); 
-									
+					                starElement.removeClass('bookmarkN').addClass('bookmarkY');
 									var SweetAlert2Demo = (function () {
 								        //== 검색창이 비어있습니다 얼럿창
 								        var initDemos = function () {
@@ -1439,7 +1439,8 @@
 				              },
 				              success: function(response) {
 				                starElement.removeClass('fas').addClass('far'); 
-								
+				                starElement.removeClass('bookmarkY').addClass('bookmarkN');
+				                
 								var SweetAlert2Demo = (function () {
 									//== 검색창이 비어있습니다 얼럿창
 							        var initDemos = function () {

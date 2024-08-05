@@ -60,11 +60,11 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        <c:import url="${path}/WEB-INF/views/board/boardSidebar.jsp" />
+        <c:import url="/WEB-INF/views/board/boardSidebar.jsp" />
 
         <!-- Main Panel -->
         <div class="main-panel">
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
           <div class="page-inner">
             
             <div class="container">
@@ -118,12 +118,13 @@
                 </div>
             </div>
           </div>
-          <c:import url="${path}/WEB-INF/views/common/footer.jsp" />
+          <c:import url="/WEB-INF/views/common/footer.jsp" />
         </div>
     </div>
     
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
     <script>
     $(document).ready(function() {
         let page = 1;
@@ -152,10 +153,11 @@
                                 <tr>
                                     <td>${board.BOARD_KEY}</td>
                                     <td><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}">${board.BOARD_TITLE}</a></td>
-                                    <td>${board.MEMBER_KEY}</td>
-                                    <td>${board.BOARD_UPDATE_DATE}</td>
+                                    <td>${board.MEMBER_NAME}</td>
+                                    <td>
+                                        ${board.BOARD_ENROLL_DATE}
+                                    </td>
                                 </tr>
-                                
                             `;
                         });
                         $('#multi-filter-select tbody').append(rows);
@@ -176,9 +178,9 @@
             if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
                 loadMoreData();
             }
-            
         });
     });
     </script>
+
 </body>
 </html>

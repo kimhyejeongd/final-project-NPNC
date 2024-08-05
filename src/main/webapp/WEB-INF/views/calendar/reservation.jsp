@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then((result) => {
             if (result.isConfirmed) {
  				$.ajax({
- 					url: '/reservation/insertreservation',
+ 					url: path+'/reservation/insertreservation',
  					method: 'POST',
  					contentType: 'application/json',
  					data: JSON.stringify(result.value),
@@ -304,6 +304,9 @@ document.addEventListener('DOMContentLoaded', function() {
   	var userName = "${loginMember.memberName}";
   	var userDeptCode = "${loginMember.departmentKey}";
   </script>
+  <script>
+  var path = "${path}";
+  </script>
      <script>
         $(document).ready(function() {
             $(document).on('click', '#updateItem', function() {
@@ -368,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/reservation/updatereservation',
+                            url: path+'/reservation/updatereservation',
                             method: 'POST',
                             contentType: 'application/json',
                             data: JSON.stringify(result.value),
@@ -406,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/reservation/deletereservation',
+                        url: path+'/reservation/deletereservation',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(itemKey),

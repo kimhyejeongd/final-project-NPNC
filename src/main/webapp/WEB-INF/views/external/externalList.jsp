@@ -102,15 +102,14 @@
 
     <div class="main-panel">
             <!-- Header Bar -->
-            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+            <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
             <div class="page-inner">
                 <div class="container">
-                    <h1 class="mb-4">외부 주소록 목록</h1>
 
                     <!-- 검색 폼 -->
 			  <form id="searchForm" action="${path}/external/search" method="get" class="mb-4">
-			    <div class="form-row">
-			        <div class="col">
+			    <div class="row wt-4">
+			        <div class="col-md-8">
 			            <input type="text" name="query" class="form-control" placeholder="검색어">
 			        </div>
 			        <div class="col">
@@ -284,6 +283,16 @@
                     if (response === 'success') {
                         icon.data('bookmark', newStatus);
                         icon.css('color', newStatus === 'Y' ? 'gold' : 'gray');
+
+                        var row = icon.closest('tr');
+
+                        if (newStatus === 'Y') {
+                            // 즐겨찾기 추가: 행을 테이블의 맨 위로 이동
+                            row.prependTo(row.parent());
+                        } else {
+                            // 즐겨찾기 제거: 행을 테이블의 맨 아래로 이동
+                            row.appendTo(row.parent());
+                        }
                     } else {
                         alert('즐겨찾기 토글에 실패했습니다.');
                     }
@@ -294,6 +303,8 @@
             });
         });
     });
+
+
 </script>
 
 </body>

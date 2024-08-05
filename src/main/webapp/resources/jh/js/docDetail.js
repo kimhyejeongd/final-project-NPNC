@@ -85,7 +85,7 @@ function approveModal(no, serial){
 	Swal.fire({
 		title: '결재',
 		html: `
-		<div class="approve-group">
+		<div class="approve-group form-group d-flex align-items-center justify-content-center gap-2">
 	      	<label>
             <input type="radio" name="approve" value="approve">
         	승인
@@ -136,7 +136,7 @@ function approveModal(no, serial){
 					success : function(data){
 			            console.log(data);
 						
-			            if (data.status === "success") {
+			            if (data.status == "success") {
 			                alert(data.message);
 							// 로컬 스토리지에서 데이터를 삭제
 							sessionStorage.removeItem("formNo");
@@ -145,33 +145,38 @@ function approveModal(no, serial){
 			                var writerJobName = $("#docInfo").data('doc-writer-job-name');
 			                var writerName = $("#docInfo").data('doc-writer-name');
 							
+							console.dir(data);
 							
 							 //다음 결재자 있으면 발송
-							 if (data.nextAprover && data.nextAprover.memberKey) {
+							 if (data.nextAprover != null) {
 			                	console.log('결재자 알람 send try');
 			                	 console.log(data.nextAprover);
-				                nextAproverAlarmSend(data.nextAprover.memberKey,  0, writerName, writerJobName);
+				                nextAproverAlarmSend(data.nextAprover.memberKey, writerKey, writerName, writerJobName);
 			                }else{
-								if(approvalType == '승인' || approvalType == '전결'){
+								console.log('마지막 결재자');
+								console.log(approvalType);
+								if(approvalType == 'approve'){
 									//다음결재자가 없으면서 승인인 경우
-									console.log(writer+"에게 최종승인 알람 send try");
-									docCompleteAlarmSend(writerKey, 0, serialKey);
+									//실행 안됨
+									console.log(writerName+"에게 최종승인 알람 send try");
+									docCompleteAlarmSend(writerKey, 0, writerName, writerJobName, serialKey);
+								}
+							
+								//실행 안됨
+								 //참조인 있으면 발송
+								if (data.referer != null && data.referer.length > 0) {
+									console.log(data.referer.length);
+									console.log('참조인 알람 send try');
+									// 각 참조인에 대해 반복 전송
+									$.each(data.referer, function(index, referer) {
+										refererAlarmSend(referer.memberKey,  writerKey, writerName, writerJobName)
+									});
 								}
 							}
-							 //참조인 있으면 발송
-							if (data.referer && data.referer.length > 0) {
-								console.log(data.referer.length);
-								console.log('참조인 알람 send try');
-								// 각 참조인에 대해 반복 전송
-								$.each(data.referer, function(index, referer) {
-									refererAlarmSend(referer.memberKey,  writerKey, writerName, writerJobName)
-								});
-							}
-							
-							alert('콘솔 확인용');
+							//alert('콘솔 확인용');
 							
 			                // 성공 시 페이지 리다이렉트
-			                window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
+			                //window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
 			            } else{
 							alert(data.message);
 						}

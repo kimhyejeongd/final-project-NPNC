@@ -61,7 +61,9 @@
 
         <div class="main-panel">
             <!-- Header Bar -->
-            <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
+
+            <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
+
 
             <div class="container">
                 <h1 class="mb-4">게시판 목록</h1>
