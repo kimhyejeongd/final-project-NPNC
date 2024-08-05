@@ -148,6 +148,7 @@
 .date-display {
     font-weight: bold;
     color: #333;
+    /* 추가적인 스타일 */
 }
 	     .main-header {
 		    background: #fff;
@@ -298,7 +299,7 @@
 				  </div>
 				</div>
               </div>
-<%-- 			<div class="col-md-6" style="width: 30%;">
+			<div class="col-md-6" style="width: 30%;">
 			  <div class="card" style="height: 470px;">
 			    <div class="card-header">
 			      <div class="card-head-row card-tools-still-right">
@@ -342,7 +343,7 @@
 			      </ol>
 			    </div>
 			  </div>
-			</div> --%>
+			</div>
                <div class="col-md-7"  style="width: 40%;">
                 <div class="card" style="height: 470px;">
                   <div class="card-body">
