@@ -115,7 +115,7 @@
 </head>
 <body>
     <div class="wrapper">
-          <c:import url="${path}/WEB-INF/views/admin/adminsidebar.jsp"/> 
+          <c:import url="/WEB-INF/views/admin/adminsidebar.jsp"/> 
         <div class="main-panel">
             <!-- Header Bar -->
             <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
@@ -184,7 +184,7 @@
                     </div>
 
             <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+            <c:import url="/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
 
