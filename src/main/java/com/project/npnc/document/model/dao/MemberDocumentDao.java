@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -81,4 +82,5 @@ public interface MemberDocumentDao {
 	Approver selectApproverByKey(SqlSession session, int memberKey, String serial);
 	Document selectInprocessDocApproveNow(SqlSession session, int docId);
 	Map<String, String> selectStorageAndFolder(SqlSession session, int erDocStorageKey);
+	int selectVacApply(SqlSession session, int memberKey, Timestamp start, Timestamp end);
 }

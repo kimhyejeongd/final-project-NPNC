@@ -33,7 +33,6 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-  <script src="${path}/resources/jh/js/docwrite.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -68,6 +67,64 @@
 	#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block{
 		display: flex;
 		justify-content: center;
+	}
+	.outer-cell {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 0;
+		vertical-align: top;
+		background: white; 
+		border: currentColor; 
+		text-align: right; 
+		color: black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: top;
+	}
+
+	#approverTable {
+		border-collapse: collapse;
+		margin-left: auto; /* 오른쪽에 붙이기 위해 사용 */
+		font-family: "malgun gothic", dotum, arial, tahoma;
+		text-align: center !important;
+		border: 0px solid rgb(0, 0, 0); 
+		width: auto; 
+		margin-top: 1px; 
+		border-collapse: collapse;
+	}
+
+	#approverTable th,
+	#approverTable td {
+		border: 1px solid black;
+		padding: 5px;
+		text-align: center !important;
+		vertical-align: middle;
+		font-size: 14px;
+	}
+
+	#approverTable th {
+		background: #ddd;
+		font-weight: bold;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		height: 18px; 
+		text-align: center; 
+		font-size: 14px; 
+		font-weight: bold; 
+		vertical-align: middle;
+	}
+
+	#approverTable td {
+		background: #fff;
+		color: #000;
+		padding: 5px; 
+		border: 1px solid black; 
+		font-size: 14px; 
+		font-weight: normal; 
+		vertical-align: middle; 
+		width: auto;
 	}
   </style>
  </head>
@@ -191,7 +248,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <!-- Summernote JS -->
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-
+  <script src="${path}/resources/jh/js/docwrite.js"></script>
+   <script src="${path}/resources/jh/js/doc-alarm.js"></script>
 <script>
 $(document).ready(function() {
 	
@@ -212,39 +270,10 @@ $(document).ready(function() {
 		$("#dragspan").removeClass('d-flex').css('display', 'none');
 		// 현재 파일 리스트에서 이미 추가된 파일의 개수를 계산
 	    let existingCount = $('#fileinputDiv .file-name').length;
+		console.log('이미 추가된 파일 개수 : ' + existingCount);
         
      // 선택한 파일 이름을 표시하기 위한 내용 추가
-        Array.from(files).forEach((file, index) => {
-	       	let adjustedIndex = existingCount + index + 1;
-        	let files=this.files;
-        	let $div = $("<div>").addClass('m-0 p-2 d-flex align-items-center justify-content-between file-name')
-									.css({
-										'width': '100%',
-										'min-height': '30px',
-										'font-size' : 'larger',
-										'text-align': 'left',
-										'border-radius': '15px',
-										'background-color': 'white !important'
-									});
-		  	
-			let $box = $("<div>").addClass('d-flex align-items-center')
-								.css({
-									'color': 'black',
-									'background-color': 'white !important',
-									'border': 'none !important',
-									'width': '500px'
-								});
-			
-			 $box.html('<input name="files[' + adjustedIndex + '].fileOrderby" class="badge rounded-pill text-bg-secondary ms-0" value="' + (adjustedIndex) + '" style="border-radius: 15px; width: 23px; display: inline; background-color: white;">' +
-                     '<input name="files[' + adjustedIndex + '].fileOriName" class="fileInput form-control" style="color: black; background: white !important; border: none; width: 500px;" value="' + file.name + '" readonly>');
-			
-			let $buttonbox=$("<div>").addClass('d-flex');
-			$buttonbox.html(`<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-								<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button">다운로드</button>
-								<button class="btn btn-sm btn-outline-primary ml-2 bringBtn ms-2" id="fileDeleteBtn" type="button">삭제</button>`);
-			$div.append($box).append($buttonbox);
-			$('#fileinputDiv').append($div);
-        });
+	    fn_arrayFiles(files, existingCount);
     });
 	
 	 var ui = $.summernote.ui;
@@ -396,7 +425,27 @@ $(document).ready(function() {
 					.css('display', 'none').attr('name', 'vacationReason').prependTo($("#docForm"));
 				
 				//문서 내용 세션 임시 저장
-				session.setStorage('ckBeforeDoc', dochtml);
+				sessionStorage.setItem('ckBeforeDoc', dochtml);
+				
+				
+				//문서파일 저장을 위한 전달
+				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
+				
+				var startDate = $("#vacationStartDate").val();
+			    var startTime = $("#vacationStartTime").val();
+				var endDate = $("#vacationEndDate").val();
+			    var endTime = $("#vacationEndTime").val();
+			    $("<input>").val(startDate).css('display', 'none')
+				.attr('name', 'vacationStartDate').prependTo($("#docForm"));
+			    $("<input>").val(startTime).css('display', 'none')
+				.attr('name', 'vacationStartTime').prependTo($("#docForm"));
+			    $("<input>").val(endDate).css('display', 'none')
+				.attr('name', 'vacationEndDate').prependTo($("#docForm"));
+			    $("<input>").val(endTime).css('display', 'none')
+				.attr('name', 'vacationEndTime').prependTo($("#docForm"));
+			    $("<input>").val($("#minusPointArea").val()).css('display', 'none')
+				.attr('name', 'vacationUseCount').prependTo($("#docForm"));
+				
 				
 				//문서 내용 정리
 				$("#minusPointP").text("차감 연차 : " + $("#minusPointArea").val());
@@ -405,14 +454,13 @@ $(document).ready(function() {
 				$("#vacationTerm").html($("#vacationStartDate").val()+" "+$("#vacationStartTime").val() + 
 						" ~ " + $("#vacationEndDate").val() + " " + $("#vacationEndTime").val())
 				dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
-				//문서파일 저장을 위한 전달
-				$("<input>").val(dochtml).css('display', 'none').attr('name', 'html').prependTo($("#docForm"));
 				
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
 		        formData.delete("files");
 		        
-	            let files = fileInput.files;
+				
+				let files = fileInput.files;
 
 	            // 다중 파일 추가
 	            for (let i = 0; i < files.length; i++) {
@@ -425,7 +473,7 @@ $(document).ready(function() {
             	});
 	            
 				//신청자의 기존 신청 내역 중 중복 휴가 일정이 있는 지 확인
-				fetch(sessionStorage.getItem("path")+'/document/vacation/check', {
+				/* fetch(sessionStorage.getItem("path")+'/document/vacation/check', {
 		            method: 'POST',
 		            body: formData,
 		        }).then(response => response.json())
@@ -463,7 +511,7 @@ $(document).ready(function() {
 		            //저장내용으로 다시 문서 내용 리셋
 		            $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html(sessionStorage.getItem('ckBeforeDoc'));
 		        });  
-				
+				*/
 		     	// AJAX로 폼 데이터를 전송
 		        fetch(sessionStorage.getItem("path")+'/document/writeend/vacation', {
 		            method: 'POST',

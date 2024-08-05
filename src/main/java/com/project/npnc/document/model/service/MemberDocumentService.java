@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -66,4 +67,5 @@ public interface MemberDocumentService {
 	DocFile getFileDetailByRename(String filename);
 	
 	Map<String, String> selectStorageAndFolder(int erDocStorageKey);
+	int selectVacApply(int memberKey, Timestamp start, Timestamp end);
 }

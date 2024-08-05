@@ -529,6 +529,38 @@ public class MemberDocumentController {
 		return ResponseEntity.ok(response);
 	}
 	
+	//휴가 기존 신청 내용 조회
+	@PostMapping("/vacation/check")
+	public ResponseEntity<Map<String,Object>> selectVacApply(
+			Model m, 
+			@RequestParam(required = false) String vacationUseCount,
+	        @RequestParam(required = false) String vacationReason,
+	        @RequestParam(required = false) String vacationKey,
+			@RequestParam(name="vacationStartDate", required = false) String startDate, 
+			@RequestParam(name = "vacationEndDate", required = false) String endDate,
+	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
+	        @RequestParam(name= "vacationEndTime", required = false) String endTime){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey() + "휴가 신청 내역 조회 -----");
+		log.debug(startDate + " " + startTime);
+		log.debug(endDate + " " + endTime);
+		
+		Map<String,Object> response = new HashMap<>();
+		
+		//일자 변환
+		Timestamp start = convertToTimestamp(startDate, startTime);
+		Timestamp end = convertToTimestamp(endDate, endTime);
+		
+		int result = serv.selectVacApply(user.getMemberKey(), start, end);
+		if(result<= 0) {
+			response.put("status", "fail");
+			response.put("message", "선택하신 일자를 기준으로 이미 신청한 휴가가 있습니다.");
+			return ResponseEntity.ok(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
+	}
+	
 	
 	//휴가 신청 문서 임시저장
 	@PostMapping(path="/savedraft/vacation", consumes = {"multipart/form-data"})
@@ -757,8 +789,6 @@ public class MemberDocumentController {
 	}
 	
 	
-	//TODO 기안 문서 종결(처리상태 변경알림 = 반려), 참조문서 수신 알람 기능 구현
-		//rewrite
 	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
 		///document/vacation/check
 	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인

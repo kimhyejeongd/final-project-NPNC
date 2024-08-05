@@ -1895,6 +1895,26 @@
 		AND
 			MEMBER_KEY = #{memberKey}
 	</select>
+	
+	<!-- 해당 사원 특정 일 휴가 신청 내역 조회 -->
+	<select id="selectVacApply" resultType="int" parameterType="map">
+		<!-- SELECT 
+			*
+	    FROM 
+	    	vacation_requests
+	    WHERE 
+	    	employee_id = #{employeeId}
+     	AND (start_date <![CDATA[<]]>= #{newEndDate} AND end_date >= #{newStartDate}) -->
+     	SELECT
+     		COUNT(*)
+    	FROM
+    		VACATION_APPLY
+    	WHERE
+    		VACATION_MEMBER_KEY = #{memberKey}
+    	AND
+    		AND (vacation_start_date <![CDATA[<]]>= #{end} AND vacation_end_date >= #{start}) 
+	</select>
+	
 	<!-- 해당 사원 휴가 신청 등록 -->
 	<insert id="insertVacationApply" parameterType="vacationApply">
 		<!-- 해당 사원의 휴가 계산 테이블 조회 -->

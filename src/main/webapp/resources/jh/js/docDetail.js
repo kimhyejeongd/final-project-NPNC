@@ -159,6 +159,9 @@ function approveModal(no, serial){
 									//다음결재자가 없으면서 승인인 경우
 									console.log(writerName + "에게 최종승인 알람 send try");
 									docCompleteAlarmSend(writerKey, writerKey, writerName, writerJobName, serialKey);
+								}else if(approvalType == 'reject'){
+									console.log(writerName + '에게 반려 알람 send try');
+									docRejectedAlarmSend(writerKey, writerKey, writerName, writerJobName, serialKey);
 								}
 							
 								 //참조인 있으면 발송
@@ -174,7 +177,7 @@ function approveModal(no, serial){
 							//alert('콘솔 확인용');
 							
 			                // 성공 시 페이지 리다이렉트
-			                //window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
+			                window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
 			            } else{
 							alert(data.message);
 						}
