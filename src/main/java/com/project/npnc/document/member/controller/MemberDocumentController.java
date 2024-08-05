@@ -197,6 +197,9 @@ public class MemberDocumentController {
 		
 		//로그인 유저가 결재자에 해당하는지 확인할 수 있는 데이터 생성
 		List<Approver> aps = document.getApprovers();
+		m.addAttribute("writerName", aps.get(0).getMemberName());
+		m.addAttribute("writerJobName", aps.get(0).getMemberJobName());
+		
 		aps.removeIf(e-> e.getCategory().equals("기안"));
 		log.debug(aps.toString());
 		m .addAttribute("approverStr", Arrays.asList(aps).toString());
