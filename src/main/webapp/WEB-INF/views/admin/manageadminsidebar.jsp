@@ -161,11 +161,6 @@
 		                                <span class="sub-item">결재 보관함</span>
 		                            </a>
 		                        </li>
-		                        <li>
-		                            <a href="${path}/admin/job/selectjoball.do">
-		                                <span class="sub-item">전체 문서 목록</span>
-		                            </a>
-		                        </li>
 		                    </ul>
 		                </div>
 		            </li>
