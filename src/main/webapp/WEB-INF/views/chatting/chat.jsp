@@ -362,8 +362,10 @@
 </div>
     <ul ></ul>
     <!-- 기타 메뉴 항목들 -->
-    <div class="invite-button">초대하기</div>
-    <div class="exit-button">나가기</div>
+    <div>
+	    <div class="invite-button">초대하기</div>
+	    <div class="exit-button">나가기</div>
+    </div>
 </div>
 <!-- Invite Modal -->
 <div id="inviteModal" class="modal">
@@ -567,12 +569,13 @@ $(document).ready(function() {
         		 '<div class="avatar" >'+
         			'<img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="margin-left:10px;width:20%">'+
         			'</div>'+
-        			'<div class="flex-1 pt-1 ms-2">'+
-        				'<h6 class="fw-bold mb-1">'+member.memberName+'</h6>'+
-        				'<small class="text-muted">'+member.departmentName+'</small>'+
+        			'<div class="flex-1 pt-1 ms-2"style="display: flex;flex-direction: column;flex-wrap: wrap;">'+
+        				'<small class="text-muted" style="margin: 0;">'+member.memberName+'</small>'+
+        				'<small class="fw-bold mb-1">'+member.departmentName+'</small>'+
         		'</div>'+
         		'</div>'); // 각 멤버 이름을 리스트 아이템으로 추가
 
+        		
      });
     // 메뉴 버튼 클릭 이벤트
     $('#menuButton').click(function() {

@@ -80,7 +80,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
         </div>
 		<!-- 메인 내용 -->
 		

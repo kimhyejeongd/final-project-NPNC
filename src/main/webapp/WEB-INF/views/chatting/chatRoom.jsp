@@ -539,11 +539,22 @@ body{
         // 새로운 채팅방 만들기
         $('#createNewChatButton').click(function() {
           	 event.stopPropagation(); 
+             // 팝업 창의 옵션 설정
+           var popupWidth = 400;
+            var popupHeight = 520;
+             var left = (screen.width - popupWidth) / 2;
+             var top = (screen.height - popupHeight) / 2;
+
+             // 팝업 창 생성
+   			 var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + top + ',left=' + left;
+             var popup = window.open('', 'newChatPopup', popupOptions);
 
         	
             var form = $('<form>', {
                 'method': 'post',
-                'action': '${path}/chat'
+                'action': '${path}/chat',
+                'target': 'newChatPopup'
+
             });
 
             // 선택한 멤버들을 히든 필드로 추가
@@ -752,7 +763,7 @@ body{
     });
 
 
-
+/* 
         // 친구 클릭 이벤트
         $('.friend-list').on('click', '.friend-item', function() {
           	 event.stopPropagation(); 
@@ -769,7 +780,7 @@ body{
             
             // 모달 표시
             $('#profileModal').show();
-        });
+        }); */
 
         // "채팅 시작" 버튼 클릭 이벤트
         $('#profileModal .start-chat-btn').click(function() {
