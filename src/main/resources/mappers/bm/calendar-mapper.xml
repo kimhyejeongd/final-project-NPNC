@@ -79,10 +79,7 @@
 	        )) AND CALENDAR_TYPE = 2))
 	    AND
 	        cal.CALENDAR_DELETE = 'N')
-	    AND
-	        cal.CALENDAR_START BETWEEN
-	            TRUNC(NEXT_DAY(SYSDATE - 7, '일요일')) AND
-	            TRUNC(NEXT_DAY(SYSDATE, '토요일')) - 1
+
 	    ORDER BY
 	        cal.CALENDAR_START ASC
 			
