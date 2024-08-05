@@ -48,7 +48,7 @@ public class MainController {
 		model.addAttribute("checkStartTime", attendCheck.getAttendanceStart());
 		model.addAttribute("checkEndTime", attendCheck.getAttendanceEnd());
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<WeekCalendar> weekCal = calservice.selectWeekCalendarByMemberKey(member.getMemberKey());
 		/*
 		 * for(WeekCalendar event : weekCal) { try {
