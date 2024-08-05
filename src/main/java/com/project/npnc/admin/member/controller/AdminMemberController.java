@@ -140,7 +140,7 @@ public class AdminMemberController {
 	public String updateMember(AdminMember mem,String jobKey,String deptKey,Model m) {
 		mem.setJob(Job.builder().jobKey(jobKey).build());
 		mem.setDepartment(Department.builder().deptKey(deptKey).build());
-		System.out.println("sdasdasdasda"+mem.getMemberLeaveDate());
+		System.out.println("sdasdasdasda"+mem.getMemberGender());
 		int result=service.updateMember(mem);
 		String msg,loc;
 		if(result>0) {
