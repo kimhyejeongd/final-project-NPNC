@@ -127,7 +127,6 @@
 	border: none;
 	cursor: pointer;
 	font-size: 1.5em;
-	position: relative;
 	left: 230px;	
 }
 
@@ -135,7 +134,6 @@
 	display: none;
 	position: absolute;
 	right: 0;
-	top: 40px;
 	background-color: white;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
@@ -341,7 +339,6 @@ body{
 	
 
 	<div class="container1">
-			<button class="menu-button">&#9776;</button>
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
@@ -395,12 +392,13 @@ body{
 
 
 	<!-- 모달 -->
-	<div id="newChatModal" class="modal">
-		<div class="modal-content">
+	<div id="newChatModal" class="modal" style="display: hidden;">
+		<div class="modal-content"style="height: 80%;width: 15%;overflow: scroll;">
 			<span class="close">&times;</span>
 			<h2>새로운 채팅</h2>
 			<input type="text" id="searchUser" class="search-bar"
 				placeholder="유저 검색">
+				
 			<ul class="friend-list" id="modalFriendList">
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
@@ -413,19 +411,13 @@ body{
 					</c:if>
 				</c:forEach>
 			</ul>
-			<button type="button" id="createNewChatButton">채팅방 만들기</button>
+			<button class="btn btn-primary" type="button" id="createNewChatButton">채팅방 만들기</button>
 		</div>
 	</div>
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
-    window.onload = function() {
-        var popupWidth = 800;
-        var popupHeight = 600;
-        var left = (screen.width - popupWidth) / 2;
-        var top = (screen.height - popupHeight) / 2;
-        window.open('/popupChat', 'chatPopup', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
-    }
+
 
     //친구검색기능
     $('#searchFriend').on('input', function() {
