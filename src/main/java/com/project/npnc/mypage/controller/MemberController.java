@@ -195,22 +195,37 @@ public class MemberController {
     
     @PostMapping("/updateAddress")
     public @ResponseBody Map<String, Object> updateAddress(
-        @RequestParam("roadAddress") String roadAddress,
-        @RequestParam("detailedAddress") String detailedAddress,
-        @RequestParam("postcode") String postcode,
+        @RequestBody Map<String, String> addressData, 
         HttpSession session) {
+
         Map<String, Object> response = new HashMap<>();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        // JSON에서 받은 데이터
+        String roadAddress = addressData.get("roadAddress");
+        String detailedAddress = addressData.get("detailedAddress");
+        String postcode = addressData.get("postcode");
+
+        // SecurityContextHolder에서 로그인 사용자 정보를 가져옵니다.
+        Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (loginMember != null) {
-            memberService.updateAddress(loginMember.getMemberId(),roadAddress, detailedAddress,postcode);
+            // 주소 업데이트 서비스 호출
+            memberService.updateAddress(loginMember.getMemberId(), roadAddress, detailedAddress,postcode);
             response.put("success", true);
             response.put("updatedAddress", roadAddress + " " + detailedAddress+" "+postcode);
         } else {
-            response.put("success", false);	
+            response.put("success", false);
             response.put("error", "User not logged in.");
         }
         return response;
     }
+
+
+
+
+
+
+
 
 
 }

@@ -369,25 +369,27 @@
                 }
             });
         });
-
-        // 주소 업데이트
+        
         $('#saveAddressButton').click(function() {
             var roadAddress = $('#roadAddress').val();
             var detailedAddress = $('#detailedAddress').val();
+            var postcode = $('#postcode').val();
+
             $.ajax({
                 url: "${path}/member/updateAddress",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify({
+                type: "POST",
+                contentType: "application/json", // JSON 형식으로 전송
+                data: JSON.stringify({ // JSON 형식으로 변환
                     roadAddress: roadAddress,
-                    detailedAddress: detailedAddress
+                    detailedAddress: detailedAddress,
+                    postcode: postcode
                 }),
                 success: function(response) {
                     if (response.success) {
                         $('#memberAddressText').text(response.updatedAddress);
                         $('#addressModal').modal('hide');
                     } else {
-                        alert("주소 업데이트 실패.");
+                        alert("주소 업데이트 실패: " + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -395,7 +397,16 @@
                 }
             });
         });
- 
+
+
+
+
+
+
+
+
+
+
 
      // Profile Image Functionality
         $("#editProfileImageButton").click(function() {
