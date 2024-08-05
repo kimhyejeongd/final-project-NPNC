@@ -323,6 +323,7 @@
 					        <c:when test="${fn:substring(event.start, 11, 13) == '07'}"> (일)</c:when>
 					    </c:choose>
 					</span>
+					<br>
 				      <span class="text">
 				        ${event.title}
 				        <c:if test="${event.allDay == 'N'}">
