@@ -217,7 +217,7 @@
                         <label for="verificationEmail">이메일 입력</label>
                         <input type="email" class="form-control" id="verificationEmail" placeholder="이메일 입력">
                     </div>
-                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
+                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton_hj">이메일 인증 보내기</button>
                     <div id="emailVerificationForm" class="mt-3" style="display: none;">
                         <div class="form-group">
                             <label for="emailVerificationCode">인증 코드 입력</label>
@@ -309,7 +309,8 @@ a
 
 
      // 이메일 전송
-        $('#sendEmailVerificationButton').click(function() {
+        $('#sendEmailVerificationButton_hj').click(function() {
+        	alert("test");
             var email = $('#verificationEmail').val();
             $.ajax({
                 url: "${path}/member/sendPasswordResetEmail",
