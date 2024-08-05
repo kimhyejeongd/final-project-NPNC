@@ -142,10 +142,14 @@
 				        </li>
 
 				       <c:if test="${loginMember.accessKey eq 2 }">
+				       	 <li class="nav-item">
 				       	 <a class="nav-link" href="${path}/admin/manageAdminMain">경영</a>
+				       	 </li>
 				       </c:if>
 				        <c:if test="${loginMember.accessKey eq 3 }">
+				         <li class="nav-item">
 				       	 <a class="nav-link" href="${path}/admin/personAdminMain">인사</a>
+				       	 </li>
 				       </c:if>
 
 				     </ul>
