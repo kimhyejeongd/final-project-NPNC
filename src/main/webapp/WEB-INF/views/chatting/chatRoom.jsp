@@ -405,10 +405,10 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}">
-						<img src="profile1.jpg" alt="프로필 사진">
+						<img src="/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
-								<div class="friend-name">${m.memberId}</div>
-								<div class="friend-status">부서이름</div>
+								<div class="friend-name">${m.memberName}</div>
+								<div class="friend-status">${m.departmentName }</div>
 							</div></li>
 					</c:if>
 				</c:forEach>
@@ -419,6 +419,13 @@ body{
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
+    window.onload = function() {
+        var popupWidth = 800;
+        var popupHeight = 600;
+        var left = (screen.width - popupWidth) / 2;
+        var top = (screen.height - popupHeight) / 2;
+        window.open('/popupChat', 'chatPopup', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+    }
 
     //친구검색기능
     $('#searchFriend').on('input', function() {
@@ -521,9 +528,7 @@ body{
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 const index = selectedMembers.indexOf(memberNo);
-                if (index > -1) {
-                    selectedMembers.splice(index, 1);
-                }
+         
             } else {
                 $(this).addClass('selected');
                 selectedMembers.push(memberNo);
