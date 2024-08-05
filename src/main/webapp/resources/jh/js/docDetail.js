@@ -142,9 +142,8 @@ function approveModal(no, serial){
 							sessionStorage.removeItem("formNo");
 			                var writerKey = $("#docInfo").data('writer-key');
 			                var serialKey = $("#docInfo").data('doc-serial');
-			                //var writerJobName = $("#docInfo").data('doc-writer-job-name');
-			                var writerJobName = $("#")
-			                //var writerName = $("#docInfo").data('doc-writer-name');
+			                var writerJobName = $("#docInfo").data('doc-writer-job-name');
+			                var writerName = $("#docInfo").data('doc-writer-name');
 							
 							console.dir(data);
 							
