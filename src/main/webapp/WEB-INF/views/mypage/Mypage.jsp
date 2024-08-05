@@ -130,6 +130,7 @@
                                         </div>
                                     </div>
                                     <!-- Profile Information -->
+                                    
                                     <div class="profile-info">
                                         <h4>My Profile</h4>
                                         <div class="row">
