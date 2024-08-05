@@ -58,7 +58,7 @@ public class MainController {
 		 */
 //		}
 		System.out.println("weekCal = "+weekCal);
-		model.addAttribute("weekCal",weekCal);
+//		model.addAttribute("weekCal",weekCal);
 		
 		//전자문서 위젯
 		model.addAttribute("doclist", docserv.selectInprocessDocs(member.getMemberKey()));
