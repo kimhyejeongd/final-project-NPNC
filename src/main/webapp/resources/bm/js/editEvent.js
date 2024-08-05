@@ -79,16 +79,27 @@ var editEvent = function(event) {
             </div>
         `,
         showCloseButton: true,
-        showCancelButton: isCreator && !isReservation,
+        showCancelButton: !isReservation,
         cancelButtonText: '삭제',
+        showConfirmButton: !isReservation,
         confirmButtonText: isCreator ? '수정' : '닫기',
-        showConfirmButton: isCreator && !isReservation,
         focusConfirm: false,
         customClass: {
             content: 'text-start',
             cancelButton: 'btn btn-danger'
         },
         didOpen: () => {
+			const cancelButton = Swal.getCancelButton();
+			console.log(cancelButton);
+			cancelButton.addEventListener('click',() =>{
+				if(isCreator){
+					deleteEvent();
+				}
+				else{
+					deleteReferenceEvent();
+				}
+			})
+
 			const typeSelect = document.getElementById('cal-type');
 			const referenceContainer = document.getElementById('reference-container');
             document.getElementById('cal-type').value = event.extendedProps.type;
@@ -202,7 +213,62 @@ var editEvent = function(event) {
         }
     });
 };
-
+var deleteReferenceEvent = function(){
+	Swal.fire({
+		title: '일정을 삭제하시겠습니까?',
+		icon: 'warning',
+	    showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '확인',
+        cancelButtonText: '취소'
+	}).then((result)=>{
+		if(result.isConfirmed){
+			if(currentEvent){
+				var events = calendar.getEvents();
+				events.forEach((ev) =>{
+					if(ev.extendedProps.calendarKey == currentEvent.extendedProps.calendarKey){
+						ev.remove();
+					}
+				});
+			}
+		}
+		var calendarKey = currentEvent.extendedProps.calendarKey;
+		$.ajax({
+			type:"post",
+			url: path+"/calendar/deleterefcalendar",
+			data: JSON.stringify(calendarKey),
+			dataType:'json',
+			contentType: 'application/json; charset=utf-8',
+			success : function(response){
+				    if (response.status === "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: true,
+                            timer: 1500
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: response.message,
+                            showConfirmButton: true,
+                            timer: 1500
+                        });
+                }
+			},
+			    error: function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '오류가 발생했습니다: ' + error,
+                        showConfirmButton: true,
+                        timer: 1500
+                    });
+                }
+			
+		})
+	})
+}
 var deleteEvent = function() {
     Swal.fire({
         title: '일정을 삭제하시겠습니까?',
