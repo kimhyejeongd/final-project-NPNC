@@ -36,6 +36,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	private final SqlSession session;
 	private final MemberDocumentDao dao;
 	private final DocS3Controller scCon;
+	private final MemberApproveService apserv;
 	
 	@Override
 	public List<DocumentFormFolder> selectformFolders() {
@@ -82,6 +83,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		//등록된 문서키 정보로 넘겨주기
 		log.debug("insertApprovers : " + d.getErDocSerialKey());
 		d.getApprovers().forEach(e -> e.setErDocSerialKey(d.getErDocSerialKey()));
+		
 		return dao.insertApprovers(session, d.getApprovers());
 	}
 	@Override
@@ -172,13 +174,14 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    	log.debug("참조인 없음");
 	    }
 	    
+	    
 	    //시리얼번호 문서 내 등록
 	    html=html.replace("[문서번호]", d.getErDocSerialKey());
 	    
 		//문서 html 내 결재자 세팅
 		String finalTableHtml = DocHtmlController.generateApproverTableHtml(d.getApprovers());
 		html = html.replace("[결재선]", finalTableHtml);
-	    
+		
 	    result = scCon.docHtmlUpload("upload/dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");

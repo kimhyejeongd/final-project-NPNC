@@ -612,6 +612,15 @@ public class MemberDocumentController {
 		try { 
 			log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 			serv.insertDoc(doc, file, html);
+			
+			//결재자 한명이면 바로 승인처리
+			if(doc.getApprovers().size() <= 1) {
+				log.debug("결재자 한명인 문서로 바로 처리완료 됩니다.");
+				apserv.updateApproveDoc(doc.getErDocWriter(), doc.getErDocSerialKey(), msg, doc.getDocFormKey(), html);
+				
+			}
+		    
+			
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();

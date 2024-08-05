@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberApproveServiceImpl implements MemberApproveService {
 	private final SqlSession session;
 	private final MemberDocumentDao dao;
-	private final MemberDocumentService serv;
 	private final DocS3Controller scCon;
 	private final AlarmWebsocketController alarm;
 	
@@ -69,13 +68,13 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 				switch(formNo) {
 				case 2:
 					//추가근무 문서라면 승인상태 적용
-					result = serv.updateOvertiemApply(serial, "승인");
+					result = dao.updateOvertimeApply(session, serial, "승인");
 					if(result <= 0) throw new Exception("추가근무 신청 상태 승인으로 변경 실패");
 					log.debug("추가근무 신청 상태 -> 승인");
 					break;
 				case 3:
 					//휴가 문서라면 승인상태 적용
-					result = serv.updateVacationApply(serial, "승인");
+					result = dao.updateVacationApply(session, serial, "승인");
 					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
 					log.debug("휴가 신청 상태 -> 승인");
 					
