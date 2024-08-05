@@ -145,6 +145,10 @@
 .feed-item-success::after {
   background: #90EE90 !important;
 }
+.date-display {
+    font-weight: bold;
+    color: #333;
+}
 	     .main-header {
 		    background: #fff;
 		    min-height: 60px;
@@ -306,18 +310,18 @@
 				<c:if test="${!empty weekCal}">
 				  <c:forEach var="event" items="${weekCal}">
 				    <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
-				      <time class="date" datetime="${fn:substring(event.start, 0, 10)}">
-				        ${fn:substring(event.start, 5, 7)}월 ${fn:substring(event.start, 8, 10)}일
-				        <c:choose>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '01'}"> (월)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '02'}"> (화)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '03'}"> (수)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '04'}"> (목)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '05'}"> (금)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '06'}"> (토)</c:when>
-				          <c:when test="${fn:substring(event.start, 11, 13) == '07'}"> (일)</c:when>
-				        </c:choose>
-				      </time>
+				    <span class="date-display">
+					    ${fn:substring(event.start, 5, 7)}월 ${fn:substring(event.start, 8, 10)}일
+					    <c:choose>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '01'}"> (월)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '02'}"> (화)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '03'}"> (수)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '04'}"> (목)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '05'}"> (금)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '06'}"> (토)</c:when>
+					        <c:when test="${fn:substring(event.start, 11, 13) == '07'}"> (일)</c:when>
+					    </c:choose>
+					</span>
 				      <span class="text">
 				        ${event.title}
 				        <c:if test="${event.allDay == 'N'}">
