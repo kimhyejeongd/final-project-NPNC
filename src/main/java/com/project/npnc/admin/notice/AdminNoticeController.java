@@ -37,7 +37,7 @@ public class AdminNoticeController {
         NoticeDto notice = noticeService.getNoticeById(noticeKey);
         if (notice != null) {
             model.addAttribute("notice", notice);
-            return "notice/notice_detail";  // JSP 파일 경로
+            return "notice/admin_notice_detail";  // JSP 파일 경로
         } else {
             return "redirect:/admin/notice"; // 공지사항을 찾을 수 없을 때
         }

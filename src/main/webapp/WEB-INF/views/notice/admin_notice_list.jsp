@@ -48,6 +48,14 @@
         #tablerow:hover {
             cursor: pointer; 
         }
+
+        .title-container {
+            margin-bottom: 20px; /* 제목과 테이블 사이 여백 조절 */
+        }
+
+        .search-form {
+            margin-bottom: 20px; /* 검색 폼과 제목 사이 여백 조절 */
+        }
     </style>
 </head>
 <body>
@@ -77,7 +85,10 @@
                         </div>
                     </form>
                     
-                    <table class="table table-bordered">
+                        <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="multi-filter-select" class="display table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -99,11 +110,13 @@
                                     <td><a href="${path}/admin/delete/${notice.noticeKey}" class="btn btn-danger">삭제</a></td>
                                 </tr>
                             </c:forEach>
-                        </tbody>
-                    </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <!-- Footer -->
             <c:import url="/WEB-INF/views/common/footer.jsp"/>
         </div>

@@ -7,6 +7,32 @@
 <%@ page session="true" %>
 <!DOCTYPE html>
 <html>
+<style>
+    .profile-card {
+        display: flex;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background-color: #fff;
+        padding: 20px;
+        /* Add some margin to the bottom to push the image down */
+        margin-bottom: 20px;
+    }
+    .profile-image {
+        flex: 0 0 150px;
+        margin-right: 20px;
+        /* Push the image down */
+        margin-top: 30px; /* Adjust this value as needed */
+    }
+    .profile-image img {
+        border-radius: 8px;
+        width: 150px;
+        height: 150px;
+    }
+    .profile-info {
+        flex: 1;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
