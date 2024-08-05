@@ -72,7 +72,9 @@
                     <div class="title-container">
                         <h1>공지사항 목록</h1>
                   </div>
-
+           		<li>
+                  <a href="${path }/notice/create" class="btn btn-primary btn-round w-75">공지사항 작성하기</a>
+               </li>
                     <!-- Search Form -->
                     <form method="get" action="${path}/notice/list" class="search-form">
                         <div class="row">

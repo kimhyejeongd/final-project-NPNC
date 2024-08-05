@@ -52,17 +52,32 @@
 </head>
 <body>
 <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
-        <div class="main-panel">
-            <!-- Header Bar -->
-
-            <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
-
-
+    <div class="main-panel">
+        <!-- Header Bar -->
+        <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
+        <div class="page-inner">
             <div class="container">
-                <div class="page-inner">
+                <div class="title-container">
                     <h1 class="mb-4">공지사항 목록(관리자)</h1>
                     
 
+
+                    <!-- Search Form -->
+                    <form method="get" action="${path}/admin/notice" class="search-form">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text" name="searchKeyword" class="form-control" placeholder="제목 검색" value="${param.searchKeyword}">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                        </div>
+                    </form>
+                                        <!-- 작성하기 버튼 -->
+                    <div class="mb-3">
+                        <a href="${path}/admin/create" class="btn btn-primary">작성하기</a>
+                    </div>
+                    
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -78,11 +93,11 @@
                             <c:forEach var="notice" items="${noticeList}">
                                 <tr>
                                     <td>${notice.noticeKey}</td>
-                                    <td><a href="${path}/notice/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
+                                    <td><a href="${path}/admin/detail?noticeKey=${notice.noticeKey}">${notice.noticeTitle}</a></td>
                                     <td>${notice.memberKey}</td>
                                     <td><fmt:formatDate value="${notice.noticeEnrollDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                    <td><a href="${path}/notice/edit/${notice.noticeKey}" class="btn btn-warning">수정</a></td>
-                                    <td><a href="${path}/notice/delete/${notice.noticeKey}" class="btn btn-danger">삭제</a></td>
+                                    <td><a href="${path}/admin/edit/${notice.noticeKey}" class="btn btn-warning">수정</a></td>
+                                    <td><a href="${path}/admin/delete/${notice.noticeKey}" class="btn btn-danger">삭제</a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
