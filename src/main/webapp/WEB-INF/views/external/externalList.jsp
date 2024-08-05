@@ -284,10 +284,14 @@
                         icon.data('bookmark', newStatus);
                         icon.css('color', newStatus === 'Y' ? 'gold' : 'gray');
 
-                        // 즐겨찾기 상태가 'Y'인 경우 항목을 리스트 위로 이동
+                        var row = icon.closest('tr');
+
                         if (newStatus === 'Y') {
-                            var row = icon.closest('tr'); // contact-row로부터 가장 가까운 tr을 찾음
+                            // 즐겨찾기 추가: 행을 테이블의 맨 위로 이동
                             row.prependTo(row.parent());
+                        } else {
+                            // 즐겨찾기 제거: 행을 테이블의 맨 아래로 이동
+                            row.appendTo(row.parent());
                         }
                     } else {
                         alert('즐겨찾기 토글에 실패했습니다.');
@@ -299,6 +303,7 @@
             });
         });
     });
+
 
 </script>
 
