@@ -303,29 +303,38 @@
 			    </div>
 			    <div class="card-body" style="overflow-y: auto; max-height: 470px;">
 			      <ol class="activity-feed" style="padding-right: 15px;">
-<%-- 			      <c:if  test = "${!empty weekCal }">
-			        <c:forEach var="event" items="${weekCal}">
-			          <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
-			            <time class="date" datetime="<fmt:formatDate value="${event.startDate}" pattern="yyyy-MM-dd"/>">
-			              <fmt:formatDate value="${event.startDate}" pattern="M월 d일 (E)"/>
-			            </time>
-			            <span class="text">
-			              ${event.title}
-			              <c:if test="${event.allDay == 'N'}">
-			                (<fmt:formatDate value="${event.startDate}" pattern="HH:mm"/> - <fmt:formatDate value="${event.endDate}" pattern="HH:mm"/>)
-			              </c:if>
-			              <c:if test="${event.allDay == 'Y'}">
-			              	(하루종일)
-			              </c:if>
-			              <br>
-			              <small>${event.description}</small>
-			            </span>
-			          </li>
-			        </c:forEach>
-			      </c:if>
-			      <c:if test= "${empty weekCal }">
-			     	<span> 금주의 일정이 없습니다.</span>
-			      </c:if> --%>
+				<c:if test="${!empty weekCal}">
+				  <c:forEach var="event" items="${weekCal}">
+				    <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
+				      <time class="date" datetime="${fn:substring(event.start, 0, 10)}">
+				        ${fn:substring(event.start, 5, 7)}월 ${fn:substring(event.start, 8, 10)}일
+				        <c:choose>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '01'}"> (월)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '02'}"> (화)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '03'}"> (수)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '04'}"> (목)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '05'}"> (금)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '06'}"> (토)</c:when>
+				          <c:when test="${fn:substring(event.start, 11, 13) == '07'}"> (일)</c:when>
+				        </c:choose>
+				      </time>
+				      <span class="text">
+				        ${event.title}
+				        <c:if test="${event.allDay == 'N'}">
+				          (${fn:substring(event.start, 11, 16)} - ${fn:substring(event.end, 11, 16)})
+				        </c:if>
+				        <c:if test="${event.allDay == 'Y'}">
+				          (하루종일)
+				        </c:if>
+				        <br>
+				        <small>${event.description}</small>
+				      </span>
+				    </li>
+				  </c:forEach>
+				</c:if>
+				<c:if test="${empty weekCal}">
+				  <span>금주의 일정이 없습니다.</span>
+				</c:if>
 			      </ol>
 			    </div>
 			  </div>
