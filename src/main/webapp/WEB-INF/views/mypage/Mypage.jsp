@@ -217,7 +217,7 @@
                         <label for="verificationEmail">이메일 입력</label>
                         <input type="email" class="form-control" id="verificationEmail" placeholder="이메일 입력">
                     </div>
-                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton_hj">이메일 인증 보내기</button>
+                    <button type="button" class="btn btn-secondary" id="sendEmailVerificationButton">이메일 인증 보내기</button>
                     <div id="emailVerificationForm" class="mt-3" style="display: none;">
                         <div class="form-group">
                             <label for="emailVerificationCode">인증 코드 입력</label>
@@ -261,20 +261,20 @@
 <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 <script src="${path}/resources/assets/js/setting-demo.js"></script>
 <script src="${path}/resources/assets/js/demo.js"></script>
-a
+
 <!-- Page Specific JS -->
 	<script>
-	$(document).ready(function() {
-	    // Address Modal Functionality
-	    $('#searchAddressButton').click(function() {
-	            oncomplete: function(data) {
-
-	                $('#roadAddress').val(data.roadAddress);
-	                $('#detailAddress').val(data.detailAddress);
-	                $('#postcode').val(data.zonecode);
-	            }
-	        }).open();
-	    });
+	   $(document).ready(function() {
+	        // Address Modal Functionality
+	        $('#searchAddressButton').click(function() {
+	            new daum.Postcode({
+	                oncomplete: function(data) {
+	                    $('#postcode').val(data.zonecode);
+	                    $('#roadAddress').val(data.roadAddress);
+	                    $('#detailAddress').val(data.detailAddress);
+	                }
+	            }).open();
+	        });
 
 	    $('#saveAddressButtonModal').click(function() {
 	        var roadAddress = $('#roadAddress').val();
@@ -303,14 +303,14 @@ a
 	            }
 	        });
 	    });
-	});
+
 
 
 
 
      // 이메일 전송
-        $('#sendEmailVerificationButton_hj').click(function() {
-        	alert("test");
+        $('#sendEmailVerificationButton').click(function() {
+        	alert()
             var email = $('#verificationEmail').val();
             $.ajax({
                 url: "${path}/member/sendPasswordResetEmail",
@@ -424,7 +424,7 @@ a
             }
         });
 
-        @PostMapping("/updateAddress")
+        /* @PostMapping("/updateAddress")
         public @ResponseBody Map<String, Object> updateAddress(
             @RequestParam("roadAddress") String roadAddress,
             @RequestParam("detailedAddress") String detailedAddress,
@@ -445,7 +445,7 @@ a
                 response.put("error", "User not logged in.");
             }
             return response;
-        }
+        } */
 
         // Password Update Functionality
         $("#updatePasswordButton").click(function() {

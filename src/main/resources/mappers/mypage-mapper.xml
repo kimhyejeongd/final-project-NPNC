@@ -60,5 +60,10 @@
         SET member_address = #{fullAddress}
         WHERE member_id = #{memberId};
     </update>
+    
+    <select id="findByEmail" resultMap="membermap" parameterType="string">
+    SELECT * FROM member WHERE MEMBER_EMAIL = #{email}
+	</select>
+    
 
 </mapper>

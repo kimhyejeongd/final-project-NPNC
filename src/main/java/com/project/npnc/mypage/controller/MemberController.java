@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,22 +35,25 @@ import com.project.npnc.security.dto.Member;
 
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 
 
 @Controller
 @RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
     private final JavaMailSender mailSender;
     private String generatedCode;
+    private final BCryptPasswordEncoder pwencoder;
 
-    @Autowired
-    public MemberController(MemberService memberService, JavaMailSender mailSender) {
-        this.memberService = memberService;
-        this.mailSender = mailSender;
-    }
+	/*
+	 * @Autowired public MemberController(MemberService memberService,
+	 * JavaMailSender mailSender) { this.memberService = memberService;
+	 * this.mailSender = mailSender; }
+	 */
     
     @GetMapping("/mypage")
     public String mypage(Model m) {
@@ -140,11 +144,11 @@ public class MemberController {
     public Map<String, Object> changePassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String newPassword = request.get("newPassword");
-
+        String encodePw=pwencoder.encode(newPassword);
         Member member = memberService.getMemberByEmail(email);
         Map<String, Object> response = new HashMap<>();
         if (member != null) {
-            memberService.changePassword(member.getMemberId(), newPassword);
+            memberService.changePassword(member.getMemberId(), encodePw);
             response.put("success", true);
         } else {
             response.put("success", false);
