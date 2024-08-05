@@ -284,19 +284,18 @@
 	        $.ajax({
 	            url: "${path}/member/updateAddress",
 	            type: "POST",  // 변경: PUT -> POST
-	            contentType: "application/x-www-form-urlencoded",
-	            data: {
+	            contentType: "application/json",
+	            data:JSON.stringify({
 	                roadAddress: roadAddress,
 	                detailAddress: detailAddress,
 	                postcode: postcode
-	            },
+	            }) ,
 	            success: function(response) {
-	                if (response.success) {
+	             
 	                    $('#memberAddressText').text(response.updatedAddress);
 	                    $('#addressModal').modal('hide'); // Hide the modal after successful update
-	                } else {
-	                    alert("주소 업데이트 실패.");
-	                }
+	       
+	         
 	            },
 	            error: function(xhr, status, error) {
 	                alert("주소 업데이트 실패: " + error);

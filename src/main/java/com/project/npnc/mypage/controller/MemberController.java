@@ -207,16 +207,9 @@ public class MemberController {
 
         // SecurityContextHolder에서 로그인 사용자 정보를 가져옵니다.
         Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (loginMember != null) {
             // 주소 업데이트 서비스 호출
             memberService.updateAddress(loginMember.getMemberId(), roadAddress, detailedAddress,postcode);
-            response.put("success", true);
-            response.put("updatedAddress", roadAddress + " " + detailedAddress+" "+postcode);
-        } else {
-            response.put("success", false);
-            response.put("error", "User not logged in.");
-        }
+            
         return response;
     }
 
