@@ -105,12 +105,11 @@
             <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
             <div class="page-inner">
                 <div class="container">
-                    <h1 class="mb-4">외부 주소록 목록</h1>
 
                     <!-- 검색 폼 -->
 			  <form id="searchForm" action="${path}/external/search" method="get" class="mb-4">
-			    <div class="form-row">
-			        <div class="col">
+			    <div class="row wt-4">
+			        <div class="col-md-8">
 			            <input type="text" name="query" class="form-control" placeholder="검색어">
 			        </div>
 			        <div class="col">
@@ -284,6 +283,12 @@
                     if (response === 'success') {
                         icon.data('bookmark', newStatus);
                         icon.css('color', newStatus === 'Y' ? 'gold' : 'gray');
+
+                        // 즐겨찾기 상태가 'Y'인 경우 항목을 리스트 위로 이동
+                        if (newStatus === 'Y') {
+                            var row = icon.closest('tr'); // contact-row로부터 가장 가까운 tr을 찾음
+                            row.prependTo(row.parent());
+                        }
                     } else {
                         alert('즐겨찾기 토글에 실패했습니다.');
                     }
@@ -294,6 +299,7 @@
             });
         });
     });
+
 </script>
 
 </body>
