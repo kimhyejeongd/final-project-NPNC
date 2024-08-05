@@ -25,7 +25,7 @@
 		ON a.ALARM_SEND_MEMBER=m.MEMBER_KEY 
 		JOIN JOB j 
 		ON m.JOB_KEY =j.JOB_KEY 
-		WHERE a.ALARM_READ='N' AND a.ALARM_RE_MEMBER=#{memberKey} ORDER BY a.ALARM_KEY DESC
+		WHERE a.ALARM_READ='N' AND a.ALARM_RE_MEMBER=#{memberKey} ORDER BY a.ALARM_KEY 
 	</select>
 	<insert id="alarmInsert"  parameterType="alarmMessage">
  		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N')

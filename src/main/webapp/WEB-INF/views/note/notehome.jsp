@@ -187,7 +187,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path}" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -409,7 +409,7 @@
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
-	                      	  	<button class="btn btn-round btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      	  	<button class="btn btn-round btn-info" onclick="delalert();">삭제하기</button>
 	                      </div>
 	                      <div id="pageBarList">${pageBar}</div>
                       </div>
@@ -789,7 +789,102 @@
 	            });
 	        });
           	
-         	/* 체크되어있는 체크박스의 값을 구해오는 로직 */
+          	/* 알람 띄우고 삭제 함수 실행하는 로직 */
+          	function delalert(){
+       	    var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+            var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+          	if(checkedCount==0){
+          		
+          		 //== Class definition
+			      var SweetAlert2Demo = (function () {
+			        //== Demos
+			        var initDemos = function () {
+			          
+			            swal("삭제할 쪽지를 선택해주세요.", "쪽지가 선택되어있지 않아 삭제할 수 없습니다.", {
+			              icon: "error",
+			              buttons: {
+			                confirm: {
+			                  className: "btn btn-danger",
+			                },
+			              },
+			            });
+			          
+			        };
+			
+			        return {
+			          //== Init
+			          init: function () {
+			            initDemos();
+			          },
+			        };
+			      })();
+			
+			      //== Class Initialization
+			      jQuery(document).ready(function () {
+			        SweetAlert2Demo.init();
+			      });
+			      
+          	}else if(checkedCount>0){
+	            //== Class definition
+			      var SweetAlert2Demo = (function () {
+			        //== Demos
+			        var initDemos = function () {
+			          
+			        	swal({
+							title: '정말로 삭제하시겠습니까??',
+							text: "삭제를 원하신다면 네를 눌러주세요",
+							icon: 'warning',
+							buttons:{
+								confirm: {
+									text : '네',
+									className : 'btn btn-success'
+								},
+								cancel: {
+									visible: true,
+									text : '아니오',
+									className: 'btn btn-danger'
+								}
+							}
+						}).then((Delete) => {
+							console.log(Delete);
+							if (Delete) {
+								deleteSendGo();
+	
+								swal({
+									title: '삭제되었습니다.',
+									text: '화면이 기본페이지로 돌아갑니다.',
+									icon: 'success',
+									buttons : {
+										confirm: {
+											className : 'btn btn-success'
+										}
+									}
+								});
+							} else {
+								swal.close();
+							}
+							
+							
+						});
+			          
+			        };
+			
+			        return {
+			          //== Init
+			          init: function () {
+			            initDemos();
+			          },
+			        };
+			      })();
+			
+			      //== Class Initialization
+			      jQuery(document).ready(function () {
+			        SweetAlert2Demo.init();
+			      });
+         	  }
+          	}
+          	
+         	/* 체크되어있는 체크박스의 값을 구해오고 삭제하는 로직 */
           	function deleteSendGo(){
 			
           		 var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
@@ -1295,7 +1390,7 @@
 					              },
 					              success: function(response) {
 					                starElement.removeClass('far').addClass('fas'); 
-									
+					                starElement.removeClass('bookmarkN').addClass('bookmarkY');
 									var SweetAlert2Demo = (function () {
 								        //== 검색창이 비어있습니다 얼럿창
 								        var initDemos = function () {
@@ -1344,7 +1439,8 @@
 				              },
 				              success: function(response) {
 				                starElement.removeClass('fas').addClass('far'); 
-								
+				                starElement.removeClass('bookmarkY').addClass('bookmarkN');
+				                
 								var SweetAlert2Demo = (function () {
 									//== 검색창이 비어있습니다 얼럿창
 							        var initDemos = function () {

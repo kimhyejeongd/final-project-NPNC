@@ -25,13 +25,6 @@ public class NoticeController {
     public NoticeController(NoticeService noticeService) {
         this.noticeService = noticeService;
     }
-    // 관리자 페이지 - 공지사항 목록
-    @GetMapping("/admin")
-    public String listNoticesAdmin(Model model) {
-        List<NoticeDto> noticeList = noticeService.getAllNotices();
-        model.addAttribute("noticeList", noticeList);
-        return "notice/admin_notice_list";  // 관리자 페이지 JSP 파일 경로
-    }
     @GetMapping("/list")
     public String listNotices(@RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword, Model model) {
         List<NoticeDto> noticeList = noticeService.searchNoticesByTitle(searchKeyword);

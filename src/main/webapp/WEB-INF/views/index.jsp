@@ -77,6 +77,74 @@
   width: 100%;
   height: 100%; /* 부모 요소의 높이와 맞추기 */
 }
+.activity-feed {
+  padding: 15px;
+  list-style: none;
+}
+
+.activity-feed .feed-item {
+  position: relative;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  border-left: 2px solid #e4e8eb;
+}
+
+.activity-feed .feed-item:last-child {
+  border-color: transparent;
+}
+
+.activity-feed .feed-item::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #f37167;
+}
+
+.activity-feed .feed-item .date {
+  display: block;
+  position: relative;
+  top: -5px;
+  color: #8c96a3;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.activity-feed .feed-item .text {
+  position: relative;
+  top: -3px;
+}
+
+.activity-feed .feed-item .text small {
+  display: block;
+  font-size: 12px;
+  color: #999;
+}
+
+.feed-item-info::after {
+  background: #87CEFA !important;
+}
+
+.feed-item-secondary::after {
+  background: #87CEFA !important;
+}
+
+.feed-item-danger::after {
+  background: #F08080 !important;
+}
+
+.feed-item-warning::after {
+  background: #F5DEB3 !important;
+}
+
+.feed-item-success::after {
+  background: #90EE90 !important;
+}
 	     .main-header {
 		    background: #fff;
 		    min-height: 60px;
@@ -211,7 +279,7 @@
 				      <div class="weather_icon" >
 				      </div>
 					  
-					  <div class=" right-container" ">
+					  <div class=" right-container">
 					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
 					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
 					      <div class="city weatherFont" style="font-size : 13pt"></div>
@@ -225,51 +293,38 @@
 					  </div>
 				  </div>
 				</div>
-				
               </div>
-            <div class="col-md-6"  style="width: 30%;">
-                <div class="card" style="height: 470px;">
-                  <div class="card-header">
-                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">금주의 일정</div>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <ol class="activity-feed">
-                      <li class="feed-item feed-item-secondary">
-                        <time class="date" datetime="9-25">Sep 25</time>
-                        <span class="text">Responded to need
-                          <a href="#">"Volunteer opportunity"</a></span>
-                      </li>
-                      <li class="feed-item feed-item-success">
-                        <time class="date" datetime="9-24">Sep 24</time>
-                        <span class="text">Added an interest
-                          <a href="#">"Volunteer Activities"</a></span>
-                      </li>
-                      <li class="feed-item feed-item-info">
-                        <time class="date" datetime="9-23">Sep 23</time>
-                        <span class="text">Joined the group
-                          <a href="single-group.php">"Boardsmanship Forum"</a></span>
-                      </li>
-                      <li class="feed-item feed-item-warning">
-                        <time class="date" datetime="9-21">Sep 21</time>
-                        <span class="text">Responded to need
-                          <a href="#">"In-Kind Opportunity"</a></span>
-                      </li>
-                      <li class="feed-item feed-item-danger">
-                        <time class="date" datetime="9-18">Sep 18</time>
-                        <span class="text">Created need
-                          <a href="#">"Volunteer Opportunity"</a></span>
-                      </li>
-                      <li class="feed-item">
-                        <time class="date" datetime="9-17">Sep 17</time>
-                        <span class="text">Attending the event
-                          <a href="single-event.php">"Some New Event"</a></span>
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-              </div>
+			<div class="col-md-6" style="width: 30%;">
+			  <div class="card" style="height: 470px;">
+			    <div class="card-header">
+			      <div class="card-head-row card-tools-still-right">
+			        <div class="card-title">금주의 일정</div>
+			      </div>
+			    </div>
+			    <div class="card-body" style="overflow-y: auto; max-height: 470px;">
+			      <ol class="activity-feed" style="padding-right: 15px;">
+			        <c:forEach var="event" items="${weekCal}">
+			          <li class="feed-item" style="border-left-color: ${event.backgroundColor};">
+			            <time class="date" datetime="<fmt:formatDate value="${event.startDate}" pattern="yyyy-MM-dd"/>">
+			              <fmt:formatDate value="${event.startDate}" pattern="M월 d일 (E)"/>
+			            </time>
+			            <span class="text">
+			              ${event.title}
+			              <c:if test="${event.allDay == 'N'}">
+			                (<fmt:formatDate value="${event.startDate}" pattern="HH:mm"/> - <fmt:formatDate value="${event.endDate}" pattern="HH:mm"/>)
+			              </c:if>
+			              <c:if test="${event.allDay == 'Y'}">
+			              	(하루종일)
+			              </c:if>
+			              <br>
+			              <small>${event.description}</small>
+			            </span>
+			          </li>
+			        </c:forEach>
+			      </ol>
+			    </div>
+			  </div>
+			</div>
                <div class="col-md-7"  style="width: 40%;">
                 <div class="card" style="height: 470px;">
                   <div class="card-body">
@@ -334,7 +389,15 @@
 			                  	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 			                  </td>
 			                  <td class="truncate approverNow p-3">
-			                  	<c:forEach items="${l.approvers }" var="ap">
+			                       <div class="progress progress-sm w-75 mx-auto">
+			                 			<c:set var="count" value="0" />
+			                  	<c:forEach items="${l.approvers}" var="ap">
+								    <c:if test="${ap.state eq '승인'}">
+								        <c:set var="count" value="${count + 1}" />
+								    </c:if>
+								</c:forEach>
+			                  	<div class="progress-bar bg-danger" style="width: ${count/l.approvers.size()*100}%;" role="progressbar" aria-valuenow="${count }" aria-valuemin="0" aria-valuemax="${l.approvers.size() }"></div>
+			                  	<%-- <c:forEach items="${l.approvers }" var="ap">
 			                  		<c:if test="${ap.state eq '승인' }">
 			                  			<div class="badge badge-success" style="min-width: 60px;">
 			                  				<small class="">${ap.memberTeamName }</small><br>
@@ -365,7 +428,41 @@
 			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
 			                  			</div>
 			                 		</c:if>
-			                    </c:forEach>
+			                    </c:forEach> --%>
+			                    </div>
+			                  </td>
+			                  	<%-- <c:forEach items="${l.approvers }" var="ap">
+			                  		<c:if test="${ap.state eq '승인' }">
+			                  			<div class="badge badge-success" style="min-width: 60px;">
+			                  				<small class="">${ap.memberTeamName }</small><br>
+			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
+			                  			</div>
+			                  		</c:if>
+			                		<c:if test="${ap.state eq '대기' }">
+			                  			<div class="badge badge-count" style="min-width: 60px;">
+			                  				<small class="">${ap.memberTeamName }</small><br>
+			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
+			                  			</div>
+			                  		</c:if>
+			                		<c:if test="${ap.state eq '읽음' }">
+			                  			<div class="badge badge-info" style="min-width: 60px;">
+			                  				<small class="">${ap.memberTeamName }</small><br>
+			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
+			                  			</div>
+			                  		</c:if>
+			                		<c:if test="${ap.state eq '보류' }">
+			                  			<div class="badge badge-danger" style="min-width: 60px;">
+			                  				<small class="">${ap.memberTeamName }</small><br>
+			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
+			                  			</div>
+			                  		</c:if>
+			                  		<c:if test="${ap.state eq '반려' }">
+			                  			<div class="badge badge-danger" style="min-width: 60px;">
+			                  				<small class="">${ap.memberTeamName }</small><br>
+			                  				<small class="">${ap.memberJobName} ${ap.memberName}</small>
+			                  			</div>
+			                 		</c:if>
+			                    </c:forEach> --%>
 			                  </td>
 			                </tr>
 			                </c:forEach>

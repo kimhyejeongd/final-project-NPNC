@@ -31,7 +31,7 @@
 		                <div class="card">
 		                  <div class="card-header">
 		                  <br><br><br><br>
-		                    <h4 class="card-title">관리자 수정요청목록</h4>
+		                    <h4 class="card-title">근태 수정요청목록</h4>
 		                  </div>
 		                  <div class="card-body">
 		           	<form action="${path }/admin/attendance/searchAdminAttendanceEdit">       

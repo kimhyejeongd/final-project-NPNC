@@ -26,6 +26,17 @@
 			<result property="refJobName" column="CAL_REFERENCE_JOB"/>
 		</collection> 
 	</resultMap>
+	<resultMap id="weekCalMap" type="com.project.npnc.calendar.model.dto.WeekCalendar">
+		<id property="calendarKey" column="CALENDAR_KEY"/>
+		<result property="memberKey" column="MEMBER_KEY"/>
+		<result property="type" column="CALENDAR_TYPE"/>
+		<result property="title" column="CALENDAR_TITLE"/>
+		<result property="start" column="CALENDAR_START"/>
+		<result property="end" column="CALENDAR_END"/>
+		<result property="description" column="CALENDAR_CONTENT"/>
+		<result property="backgroundColor" column="CALENDAR_BACKGROUND_COLOR"/>
+		<result property="allDay" column="CALENDAR_ALLDAY"/>
+	</resultMap>
 	
 	<resultMap id="vacMap" type="calendarVacation">
 		<id property="vacationKey" column="vacation_use_key"/>
@@ -38,6 +49,42 @@
 	</resultMap>
 	
 	
+	
+	<select id="selectWeekCalendarByMemberKey" parameterType="_int" resultMap="weekCalMap">
+ 	    SELECT
+	        cal.CALENDAR_KEY,
+	        cal.MEMBER_KEY,
+	        cal.CALENDAR_TYPE,
+	        cal.CALENDAR_TITLE,
+	        cal.CALENDAR_START,
+	        cal.CALENDAR_END,
+	        cal.CALENDAR_CONTENT,
+	        cal.CALENDAR_BACKGROUND_COLOR,
+	        cal.CALENDAR_ALLDAY
+	    FROM
+	        CALENDAR cal
+	    LEFT JOIN
+	        MEMBER m ON m.MEMBER_KEY = cal.MEMBER_KEY
+	    WHERE
+	        (cal.MEMBER_KEY = #{memberKey}
+	        OR m.DEPARTMENT_KEY = (
+	            SELECT
+	                mem.DEPARTMENT_KEY
+	            FROM
+	                MEMBER mem
+	            WHERE
+	                mem.MEMBER_KEY = #{memberKey}
+	        ))
+	    AND
+	        cal.CALENDAR_DELETE = 'N'
+	    AND
+	        cal.CALENDAR_START BETWEEN
+	            TRUNC(NEXT_DAY(SYSDATE - 7, '일요일')) AND
+	            TRUNC(NEXT_DAY(SYSDATE, '토요일')) - 1
+	    ORDER BY
+	        cal.CALENDAR_START ASC
+			
+	</select>
 
 	<insert id="insertCalendar" parameterType="calendar">
 		INSERT INTO CALENDAR VALUES(SEQ_CALENDAR.NEXTVAL,#{empNo},#{type},#{title},TO_TIMESTAMP(#{start},'YYYY-MM-DD HH24:MI'),TO_TIMESTAMP(#{end},'YYYY-MM-DD HH24:MI'),#{description},#{backgroundColor},#{allDay},DEFAULT,DEFAULT,DEFAULT)
@@ -224,7 +271,7 @@
 			LEFT JOIN
 				JOB j on m.JOB_KEY = j.JOB_KEY
 			WHERE
-				cal.CALENDAR_TYPE = '1' AND cal.CALENDAR_DELETE ='N' AND (cal.MEMBER_KEY = #{empNo} OR ref.CAL_REFERENCE_NO =#{empNo})
+				cal.CALENDAR_TYPE = '1' AND cal.CALENDAR_DELETE ='N' AND (cal.MEMBER_KEY = #{empNo} OR (ref.CAL_REFERENCE_NO =#{empNo} AND ref.CAL_DELETE ='N'))
 		</if>
 		<if test="searchB !=null">
 			<if test="searchA !=null">
@@ -362,18 +409,25 @@
 			DEFAULT,
 			DEFAULT
 		)
-		
-		
-	
 	</insert>
+	
 	<delete id="deleteCalendarRef" parameterType="_int">
 		DELETE
 		FROM
 			CAL_REFERENCE
 		WHERE
-			CALENDAR_KEY = ${calenarKey}	
+			CALENDAR_KEY = ${calenarKey}
 	
 	</delete>
+	
+	<update id="deleteReferenceCalendar" parameterType="map">
+		UPDATE
+			CAL_REFERENCE
+		SET
+			CAL_DELETE = 'Y'
+		WHERE
+			CALENDAR_KEY = #{calKey} AND CAL_REFERENCE_NO = #{memberKey}
+	</update>
 	
 	<select id="selectLastInsertKey" resultType="_int">
 		SELECT SEQ_CALENDAR.CURRVAL FROM DUAL

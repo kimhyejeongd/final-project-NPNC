@@ -185,7 +185,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path}" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -338,108 +338,100 @@
 
 						<script>
 							// 즐겨찾기 추가 로직
-						    document.addEventListener("DOMContentLoaded", function() {
-						        const bookmarkElements = document.querySelectorAll('.bookmarkN');
-								var memberKey = document.getElementById('memberKey').value;
-						        bookmarkElements.forEach(function(element) {
-						            element.addEventListener('click', function(event) {
-						                const postMsgRecKey = this.getAttribute('data-key');
-						                
-						                // 여기에 원하는 동작을 추가하십시오. 예: 북마크 상태 변경, AJAX 호출 등.
-										
-										$.ajax({
-											url : '${path}/noteBookMarkInsert',
-											type : 'POST',
-											data : {postMsgRecKey : postMsgRecKey,
-													memberKey : memberKey
-													},
-											success : function(response){
-												$(event.target).removeClass('far').addClass('fas');
-												var SweetAlert2Demo = (function () {
-											        //== 검색창이 비어있습니다 얼럿창
-											        var initDemos = function () {
-											          
-														swal("즐겨찾기에 추가되었습니다.", "", {
-														          icon: "success",
-														          buttons: {
-														            confirm: {
-														              className: "btn btn-info",
-														            },
-														          },
-														        });
-											          
-											        };
-											
-											        return {
-											          //== Init
-											          init: function () {
-											            initDemos();
+							$(document).on('click', '.bookmarkN', function() {
+					          const postMsgRecKey = $(this).data('key');
+					          var memberKey = $('#memberKey').val();
+							  var starElement = $(this);
+					          $.ajax({
+					              url: '${path}/noteBookMarkInsert',
+					              type: 'POST',
+					              data: {
+					                  postMsgRecKey: postMsgRecKey,
+					                  memberKey: memberKey
+					              },
+					              success: function(response) {
+					                starElement.removeClass('far').addClass('fas'); 
+					                starElement.removeClass('bookmarkN').addClass('bookmarkY');
+									var SweetAlert2Demo = (function () {
+								        //== 검색창이 비어있습니다 얼럿창
+								        var initDemos = function () {
+								          
+											swal("즐겨찾기에 추가되었습니다.", "", {
+											          icon: "success",
+											          buttons: {
+											            confirm: {
+											              className: "btn btn-info",
+											            },
 											          },
-											        };
-											      })();
-											
-											      //== Class Initialization
-											      jQuery(document).ready(function () {
-											        SweetAlert2Demo.init();
-											      });
-											}
-										});
-										
-										       });
+											        });
+								          
+								        };
+								
+								        return {
+								          //== Init
+								          init: function () {
+								            initDemos();
+								          },
+								        };
+								      })();
+								
+								      //== Class Initialization
+								      jQuery(document).ready(function () {
+								        SweetAlert2Demo.init();
+								      });
+					              }
+					          });
+					      });
+					
+					
+					// 즐겨찾기 삭제 로직
+				
+					
+					$(document).on('click', '.bookmarkY', function() {
+				          const postMsgRecKey = $(this).data('key');
+				          var memberKey = $('#memberKey').val();
+						  var starElement = $(this);
+				          $.ajax({
+				              url: '${path}/noteBookMarkDelete',
+				              type: 'POST',
+				              data: {
+				                  postMsgRecKey: postMsgRecKey,
+				                  memberKey: memberKey
+				              },
+				              success: function(response) {
+				                starElement.removeClass('fas').addClass('far'); 
+				                starElement.removeClass('bookmarkY').addClass('bookmarkN');
+				                
+								var SweetAlert2Demo = (function () {
+									//== 검색창이 비어있습니다 얼럿창
+							        var initDemos = function () {
+							          
+									swal("즐겨찾기에 삭제되었습니다.", "", {
+									          icon: "success",
+									          buttons: {
+									            confirm: {
+									              className: "btn btn-info",
+									            },
+									          },
 								        });
-								    });
-									
-									// 즐겨찾기 삭제 로직
-								    document.addEventListener("DOMContentLoaded", function() {
-								        const bookmarkElements = document.querySelectorAll('.bookmarkY');
-										var memberKey = document.getElementById('memberKey').value;
-							        bookmarkElements.forEach(function(element) {
-							            element.addEventListener('click', function(event) {
-							                const postMsgRecKey = this.getAttribute('data-key');
-							                
-							                // 여기에 원하는 동작을 추가하십시오. 예: 북마크 상태 변경, AJAX 호출 등.
-											
-											$.ajax({
-												url : '${path}/noteBookMarkDelete',
-												type : 'POST',
-												data : {postMsgRecKey : postMsgRecKey,
-														memberKey : memberKey
-														},
-												success : function(response){
-													$(event.target).removeClass('fas').addClass('far');
-													var SweetAlert2Demo = (function () {
-												        //== 검색창이 비어있습니다 얼럿창
-												        var initDemos = function () {
-												          
-														swal("즐겨찾기에 삭제되었습니다.", "", {
-														          icon: "success",
-														          buttons: {
-														            confirm: {
-														              className: "btn btn-info",
-														            },
-														          },
-													        });
-											          
-												        };
-												
-												        return {
-												          //== Init
-												          init: function () {
-												            initDemos();
-												          },
-												        };
-												      })();
-												
-												      //== Class Initialization
-												      jQuery(document).ready(function () {
-												        SweetAlert2Demo.init();
-												      });
-												}
-											});
-											
-											       });
-									        });
-									    });
+						          
+							        };
+							
+							        return {
+							          //== Init
+							          init: function () {
+							            initDemos();
+							          },
+							        };
+							      })();
+							
+							      //== Class Initialization
+							      jQuery(document).ready(function () {
+							        SweetAlert2Demo.init();
+							      });
+				              }
+				          });
+				      });
 							</script>
 
 

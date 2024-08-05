@@ -10,6 +10,7 @@ import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.Reservation;
 import com.project.npnc.calendar.model.dto.ReserveItem;
 import com.project.npnc.calendar.model.dto.Vacation;
+import com.project.npnc.calendar.model.dto.WeekCalendar;
 
 @Repository
 public class CalendarDaoImpl implements CalendarDao {
@@ -27,6 +28,11 @@ public class CalendarDaoImpl implements CalendarDao {
 	@Override
 	public int deleteReservation(SqlSession session, int itemKey) {
 		return session.update("reservation.deleteReservation",itemKey);
+	}
+
+	@Override
+	public List<WeekCalendar> selectWeekCalendarByMemberKey(SqlSession session, int memberKey) {
+		return session.selectList("calendar.selectWeekCalendarByMemberKey",memberKey);
 	}
 
 	@Override
@@ -101,6 +107,12 @@ public class CalendarDaoImpl implements CalendarDao {
 	@Override
 	public int updateCalendar(SqlSession session, Calendar calendar) {
 		return session.update("calendar.updateByKey",calendar);
+	}
+
+	@Override
+	public int deleteReferenceCalendar(SqlSession session, int calKey, int memberKey) {
+		Map<String,Object> param = Map.of("calKey",calKey,"memberKey",memberKey);
+		return session.update("calendar.deleteReferenceCalendar",param);
 	}
 
 	@Override

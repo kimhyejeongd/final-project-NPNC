@@ -74,7 +74,8 @@
 		<!-- 메인 내용 -->
 		<div class="container">
 		<div id="docInfo" style="display:none;"
-	         data-writer-name="${l.erDocWriter}"
+	         data-writer-key="${l.erDocWriter}"
+	         data-writer-name="${l.writer}"
 	         data-writer-job-name="${l.writerJobName}"
 	         data-doc-serial="${l.erDocSerialKey}"></div>
 	         
@@ -149,7 +150,7 @@
 									</button>
 								</c:when>
 								<c:when test="${fn:contains(approverStr, aptarget) and !fn:contains(lastPage, 'complete')
-												and !fn:contains(lastPage, 'reject')}">
+												and !fn:contains(lastPage, 'reject') and !fn:contains(lastPage, 'refer')}">
 									<button class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
@@ -165,8 +166,8 @@
 										</span>
 										결재 내역
 									</button>
-									<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
-	           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button>
+									<!-- <button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
+	           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button> -->
            						</div>
 							</div>
 						</div>

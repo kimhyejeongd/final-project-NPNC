@@ -30,8 +30,8 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 		System.out.println();
 		Member loginMember=mapper.selectMemberById(userId);
 		System.out.println(loginMember);
-		//if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
-		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
+		if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
+//		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
 			System.out.println("이우석");
 			
 			return new UsernamePasswordAuthenticationToken(loginMember,loginMember.getPassword(),loginMember.getAuthorities());
@@ -44,6 +44,7 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 	public boolean supports(Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class
 					.isAssignableFrom(authentication);
+		
 	}
 
 }
