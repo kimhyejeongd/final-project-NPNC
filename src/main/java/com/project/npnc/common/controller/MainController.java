@@ -15,6 +15,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.service.AttendanceService;
+import com.project.npnc.board.model.dto.BoardDto;
+import com.project.npnc.board.model.service.BoardService;
 import com.project.npnc.calendar.model.dto.Calendar;
 import com.project.npnc.calendar.model.dto.WeekCalendar;
 import com.project.npnc.calendar.model.service.CalendarService;
@@ -35,6 +37,8 @@ public class MainController {
 	private final AttendanceService attendanceService;	
 	private final MemberDocumentService docserv;
 	private final CalendarService calservice;
+	private final BoardService boardService;
+	
 	@GetMapping("/")
     public String home(Model model) {
 		Member member = getCurrentUser();
@@ -59,6 +63,11 @@ public class MainController {
 //			}
 //		}
 		model.addAttribute("weekCal",weekCal);
+		
+//		게시판 위젯 조회 구문. 전체 가져오기 떄문에 화면단에서 파싱할 예정.
+		List<BoardDto> board=boardService.getAllBoards();
+		model.addAttribute("boards",board);
+		
 		
 		//전자문서 위젯
 		model.addAttribute("doclist", docserv.selectInprocessDocs(member.getMemberKey()));
