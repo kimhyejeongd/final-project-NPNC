@@ -1,8 +1,6 @@
 package com.project.npnc.admin.document.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -266,14 +264,17 @@ public class AdminDocumentFormController {
     		, @RequestParam String storageDiv // 폴더이름
     		,@RequestParam String formKey /* 양식이름*/
     		,@RequestParam String erFormName /* 수정 양식이름 */
+    		,@RequestParam String folderKey /*수정 전 폴더키*/
+    		,@RequestParam String erFormFolderKey /*수정 후 폴더 키*/
     		){
     	HashMap<String, Object> formInfo = new HashMap<>();
     	formInfo.put("storageDiv", storageDiv);
-    	formInfo.put("formKey", formKey);
+    	formInfo.put("formKey", Integer.parseInt(formKey));
     	formInfo.put("memberKey", getCurrentUser().getMemberKey());
     	formInfo.put("erFormName",erFormName);
-    	System.out.println(formKey + "updateFormFormKey param");
-    	
+    	formInfo.put("folderKey",folderKey);
+    	formInfo.put("erFormFolderKey",erFormFolderKey);
+    	System.err.println(erFormFolderKey + " 스토리지");
     		int result = service.updateForm(formInfo);
     		if(result >0) {    			
     			try {
@@ -284,7 +285,7 @@ public class AdminDocumentFormController {
     			}
     		}
 
-        return "admin/document/selectAdminFormAll";
+        return "redirect:/admin/documentForm/selectAdminFormAll";
     }
     @GetMapping("/selectFolder")
     public String selectFolder(Model m){

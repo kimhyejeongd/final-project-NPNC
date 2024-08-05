@@ -299,7 +299,7 @@ $(document).ready(function() {
 	                        '<td class="approverNow p-3">' + updaterInfo + '</td>' +
 	                        '<td class="approverNow p-3">' + doc.erFormYn + '</td>' +
 	                        '<td class="approverNow p-3">' + 
-	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage" onclick="window.location.href=\'${path}/admin/documentForm/form?formKey=' + doc.erFormKey + '&folderName=' + folderName + '\'">수정</button>'+
+	                        '<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#updateStorage" onclick="window.location.href=\'${path}/admin/documentForm/form?formKey=' + doc.erFormKey + '&folderName=' + folderName + '&erFormFolderKey=' + doc.erFormFolderKey+'\'">수정</button>'+
 	                        
 	              			'<input type="hidden" id="oriName" name="oriName" value="'+doc.erStorageName+'">'
 	                        + '</td>' +

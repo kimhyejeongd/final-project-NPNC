@@ -457,6 +457,7 @@
                       <li>
                         <div class="dropdown-title d-flex justify-content-between align-items-center">
                           메신저
+                          <button class="menu-button">☰</button>
                           <!-- <a href="#" class="small">Mark all as read</a> -->
                         </div>
                       </li>

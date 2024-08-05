@@ -313,10 +313,11 @@
 		WHERE ER_FORM_FOLDER_KEY = #{draggedFolderKey}
 	</delete>
 	<update id="updateForm" parameterType="map">
-		UPDATE ER_FORM_FOLDER
-		SET ER_FORM_NAME = #{erFormName},
-		ER_FORM_UPDATER = #{memberKey},
-		ER_FORM_UPDATE_DATE = SYSDATE
+		UPDATE ER_FORM
+			SET ER_FORM_NAME = #{erFormName},
+			ER_FORM_UPDATER = #{memberKey},
+			ER_FORM_UPDATE_DATE = SYSDATE,
+			ER_FORM_FOLDER_KEY = #{erFormFolderKey}
 		WHERE ER_FORM_KEY = #{formKey}
 	</update>
     <resultMap id="DocumentForm" type="DocumentForm">
