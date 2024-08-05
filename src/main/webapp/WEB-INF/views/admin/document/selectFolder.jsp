@@ -123,7 +123,7 @@
 		            </div>
 						<c:forEach var="f" items="${folders}">
 					        <a href="#" class="border rounded list-group-item list-group-item-action align-items-center justify-content-between"
-					           data-key="${f.erFormFolderKey}"
+					           data-folder-key="${f.erFormFolderKey}"
 					           data-folder="${f.erFormFolderName}">
 					            <div>
 					                <span class="badge rounded-pill text-bg-secondary me-2 ms-0"></span>
@@ -177,7 +177,6 @@ $(document).ready(function() {
     $("#strageBtnBox>#okBtn").click(e=>{
 		
 		let $selectedItems = $("div#storagelist>a.selected");
-		console.log($selectedItems);
 		if($selectedItems.length == 0){
 			e.preventDefault(); // 기본 동작 방지
 			e.stopPropagation(); // 이벤트 전파 방지

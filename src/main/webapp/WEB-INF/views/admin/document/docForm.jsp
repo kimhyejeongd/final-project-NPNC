@@ -37,10 +37,14 @@
     <title>Insert title here</title>
 </head>
 <body>
- 	<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
  	
-
-    <div class="main-panel">
+       <c:if test="${loginMember.accessKey eq 2 }">
+       <%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+    </c:if>
+    <c:if test="${loginMember.accessKey != 2 }">
+       <%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+    </c:if>
+    <div class="main-panel">   
         <div class="container">
             <div class="page-inner" style="display: flex">
                 <div class="col w-45" style="width:20%">
@@ -111,9 +115,6 @@
                         </thead>
                         <tbody id="docTableBody"></tbody>
                     </table>
-                    <div style="display: ruby-text; margin-top: 10px;">
-							<button class="btn btn-primary btn-xs" onclick="window.location.href='${path}/admin/documentForm/form'">양식 추가</button>
-                    </div>
                 </div>
             </div>
         </div>

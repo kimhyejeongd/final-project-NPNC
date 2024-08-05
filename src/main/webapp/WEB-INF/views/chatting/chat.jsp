@@ -377,7 +377,7 @@
             <c:forEach var="user" items="${allMembers}">
                 <c:if test="${user.memberId != loginMember.memberId && !fn:contains(roomMemberKeys, user.memberKey)}">
                     <li class="friend-item" data-member-no="${user.memberKey}" style="display: flex;align-items: center;     margin-bottom: 5%;">
-                        <img src="/resources/assets/img/unname.png" alt="프로필 사진" style="height: 20%;width: 20%;margin-right: 30%;">
+                        <img src="${path}/resources/assets/img/unname.png" alt="프로필 사진" style="height: 20%;width: 20%;margin-right: 30%;">
                         <div class="friend-info">
                             <div class="friend-name">${user.memberName}</div>
                             <div class="friend-status">${user.departmentName}</div>
@@ -567,7 +567,7 @@ $(document).ready(function() {
          $('#roomMemberList').append( 		
         		 '<div style="margin-top: 10px;margin-bottom: 10px;">'+
         		 '<div class="avatar" >'+
-        			'<img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="margin-left:10px;width:20%">'+
+        			'<img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="margin-left:10px;width:20%">'+
         			'</div>'+
         			'<div class="flex-1 pt-1 ms-2"style="display: flex;flex-direction: column;flex-wrap: wrap;">'+
         				'<small class="text-muted" style="margin: 0;">'+member.memberName+'</small>'+
@@ -766,7 +766,7 @@ $('.exit-button').click(function() {
 
                     var messageDetail = chatList[chat].chatMsgDetail !== undefined ? chatList[chat].chatMsgDetail : '';
                     console.log(messageClass);
-                    var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
+                    var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>':'';
 					var sender = messageClass === 'received' ? '<div class="sender">' + chatList[chat].memberName + '</div>' : '';
 					var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
 					var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse;     margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
@@ -832,7 +832,7 @@ $('.exit-button').click(function() {
 
         var messageDetail = message.chatMsgDetail !== undefined ? message.chatMsgDetail : '';
         console.log(messageClass);
-        var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>' : '';
+        var imgTag = messageClass === 'received' ?  '<div class="avatar"><img src="${path}/resources/assets/img/unname.png" alt="..." class="avatar-img rounded-circle" style="width:34px;"></div>' : '';
         var sender = messageClass === 'received' ? '<div class="sender">' + message.memberName + '</div>' : '';
         var unreadReceived = messageClass === 'received' ? '<div style="display:flex; flex-direction: column-reverse; "><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
         var unreadSent = messageClass === 'sent' ? '<div style="display:flex; flex-direction: column-reverse; margin-right: 12px"><div class="sendDate" style="margin-bottom: 8px; margin-left: 10px;">' + formattedTime + '</div><div class="unreadCount">' + unreadCount + '</div></div>' : '';
