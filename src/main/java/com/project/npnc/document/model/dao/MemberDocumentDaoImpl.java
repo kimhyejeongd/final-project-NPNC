@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.dao;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,16 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	@Override
 	public int selectRemainingVac(SqlSession session, int memberKey) {
 		return session.selectOne("document.selectRemainingVac", memberKey);
+	}
+
+	@Override
+	public int selectVacApply(SqlSession session, int memberKey, Timestamp start, Timestamp end) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("memberKey", memberKey);
+		log.debug("{}", map);
+		return session.selectOne("document.selectVacApply", map);
 	}
 
 	@Override

@@ -177,7 +177,7 @@ function approveModal(no, serial){
 							//alert('콘솔 확인용');
 							
 			                // 성공 시 페이지 리다이렉트
-			                //window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
+			                window.location.href = sessionStorage.getItem("path")+"/document/list/approver/waiting";
 			            } else{
 							alert(data.message);
 						}

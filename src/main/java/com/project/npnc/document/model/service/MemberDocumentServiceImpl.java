@@ -2,6 +2,7 @@ package com.project.npnc.document.model.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -572,6 +573,10 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	public int updateVacationApply(String docSerial, String status) {
 		return dao.updateVacationApply(session, docSerial, status);
+	}
+	@Override
+	public int selectVacApply(int memberKey, Timestamp start, Timestamp end) {
+		return  dao.selectVacApply(session, memberKey, start, end);
 	}
 	
 // 추가근무
