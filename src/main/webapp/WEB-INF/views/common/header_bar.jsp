@@ -76,15 +76,15 @@
 			    z-index: 1001;
 			    width: max-content;
 		    }
-			#alertBoxLi .notif-center {
+			.notif-center {
 			    display: flex;
 			    flex-direction: column;
 			    align-items: start; /* 아이콘과 텍스트 수직 정렬 */
 			}
-			#alertBoxLi .notif-center a{
+			.notif-center a{
 				width: 100%;
 			}
-			#alertBoxLi .notif-icon {
+			.notif-icon {
 			    flex-shrink: 0; /* 아이콘이 줄어들지 않도록 설정 */
 			    margin-right: 10px; /* 아이콘과 텍스트 사이의 여백 */
 			    min-width: 40px; /* 아이콘의 최소 너비를 지정 */
