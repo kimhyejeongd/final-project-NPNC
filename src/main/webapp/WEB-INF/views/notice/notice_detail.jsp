@@ -46,7 +46,7 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-<c:import url="${path}/WEB-INF/views/admin/adminsidebar.jsp"/> 
+<c:import url="/WEB-INF/views/admin/adminsidebar.jsp"/> 
         <!-- End Sidebar -->
 
         <div class="main-panel">
