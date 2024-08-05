@@ -17,6 +17,40 @@ CREATE TABLE ALARM(
     
 );
 
+	    SELECT
+	        cal.CALENDAR_KEY,
+	        cal.MEMBER_KEY,
+	        cal.CALENDAR_TYPE,
+	        cal.CALENDAR_TITLE,
+	        cal.CALENDAR_START,
+	        cal.CALENDAR_END,
+	        cal.CALENDAR_CONTENT,
+	        cal.CALENDAR_BACKGROUND_COLOR,
+	        cal.CALENDAR_ALLDAY
+	    FROM
+	        CALENDAR cal
+	    LEFT JOIN
+	        MEMBER m ON m.MEMBER_KEY = cal.MEMBER_KEY
+	    WHERE
+	        (cal.MEMBER_KEY = 1
+	        OR m.DEPARTMENT_KEY = (
+	            SELECT
+	                mem.DEPARTMENT_KEY
+	            FROM
+	                MEMBER mem
+	            WHERE
+	                mem.MEMBER_KEY = 1
+	        ))
+	    AND
+	        cal.CALENDAR_DELETE = 'N'
+	    AND
+	        cal.CALENDAR_START BETWEEN
+	            TRUNC(NEXT_DAY(SYSDATE - 7, '일요일')) AND
+	            TRUNC(NEXT_DAY(SYSDATE, '토요일')) - 1
+	    ORDER BY
+	        cal.CALENDAR_START ASC;
+
+SELECT * FROM CALENDAR c ;
 SELECT *
     FROM POST_MESSAGE_RECEPTION R
     JOIN POST_MESSAGE_RECEIVER V ON R.POST_MSG_REC_KEY = V.POST_MSG_REC_KEY
