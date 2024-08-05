@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import com.project.npnc.calendar.model.dto.ReserveItem;
 import com.project.npnc.calendar.model.service.CalendarService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,18 +35,15 @@ public class ReservationController {
 	@GetMapping("/admin/reservation/reservationlist")
 	public String reserve(Model m) {
 		List<OrganizationDto> organlist = organService.selectOrganAll();
-		List<Reservation> reservations =  service.selectReservationAll();
-		
-
-		
+		List<Reservation> reservations =  service.selectReservationAll();	
 		m.addAttribute("organlist", organlist);
 		m.addAttribute("reservations", reservations);
 		return "calendar/reservation";
 	}
 	@GetMapping("/reservation/myreservation")
 	public String myreservation(Model m) {
-		int memberKey = 1; //임시로 멤버키설정
-		List<ReserveItem> myreserveAll = service.selectMyReserve(memberKey);
+		Member member = (Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<ReserveItem> myreserveAll = service.selectMyReserve(member.getMemberKey());
 		List<ReserveItem> reserveAll = service.selectReserveAll();
 		for(int i=0;i<reserveAll.size();i++) {
 			String[] example = reserveAll.get(i).getStart().split(" ");
@@ -275,7 +275,7 @@ public class ReservationController {
 		return ResponseEntity.ok(response);
 	}
 	@PostMapping("/reservation/updatereservation")
-	public ResponseEntity<Map<String,Object>> updateReservation(@RequestParam Reservation reservation){
+	public ResponseEntity<Map<String,Object>> updateReservation(@RequestBody Reservation reservation){
 		int result = service.updateReservation(reservation);
 		Map<String,Object> response = new HashMap<>();
 		if(result>0) {

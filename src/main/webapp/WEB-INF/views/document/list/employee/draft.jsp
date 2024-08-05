@@ -35,7 +35,7 @@
   <body>
     <div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -43,7 +43,7 @@
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
         <div class="container">
@@ -93,8 +93,8 @@
 			                  	<fmt:formatDate value="${l.erDocCreateDate}" type="date" pattern="yyyy/MM/dd HH:mm:ss"/>
 			                  </td>
 			               		<td colspan="">
-			               			<input type="button" value="재작성" class="btn btn-outline-secondary" id="rewriteBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
-			               			<input type="button" value="삭제" class="btn btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}');">
+			               			<input type="button" value="재작성" class="btn-sm btn-outline-secondary" id="rewriteBtn" onclick="rewriteModal('${l.erDocSerialKey}');">
+			               			<input type="button" value="삭제" class="btn-sm btn-outline-secondary" id="deleteBtn" onclick="deleteModal('${l.erDocKey}','employee/draft');">
 			              		</td>
 			                </tr>
 			                </c:forEach>
@@ -108,6 +108,7 @@
 			</div>
            </div>
           </div>
+    <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         </div>
       </div>
 <script>

@@ -3,6 +3,8 @@ package com.project.npnc.document.model.dto;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

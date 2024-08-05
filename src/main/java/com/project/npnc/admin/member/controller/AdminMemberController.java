@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,7 @@ import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.admin.member.model.service.AdminMemberService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +47,11 @@ public class AdminMemberController {
 	@GetMapping("/selectmemberall.do")
 	public String selectMemberAll(
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "5") int numPerpage,			
+			@RequestParam(defaultValue = "6") int numPerpage,
+			Authentication authentication,
 			Model m){
 		//페이징처리
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectMemberCount();
 		List<AdminMember> members= service.selectMemeberAll(page);
@@ -56,6 +61,7 @@ public class AdminMemberController {
 		m.addAttribute("job",job);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
 		m.addAttribute("members",members);
+		m.addAttribute("loginMember",loginMem);
 		m.addAttribute("totaldata",totaldata);
 		return "admin/member/memberlist";
 	
@@ -95,10 +101,10 @@ public class AdminMemberController {
 		int result=service.insertMember(mem);
 		String msg,loc;
 		if(result>0) {
-			msg="등록성공";
+			msg="성공";
 			loc="/admin/member/selectmemberall.do";
 		}else {
-			msg="등록실패";
+			msg="실패";
 			loc="/admin/member/selectmemberall.do";
 		}
 		m.addAttribute("msg",msg);
@@ -138,10 +144,10 @@ public class AdminMemberController {
 		int result=service.updateMember(mem);
 		String msg,loc;
 		if(result>0) {
-			msg="수정성공";
+			msg="성공";
 			loc="/admin/member/selectmemberall.do";
 		}else {
-			msg="수정실패";
+			msg="실패";
 			loc="/admin/member/selectmemberall.do";
 		}
 		m.addAttribute("msg",msg);
@@ -150,34 +156,57 @@ public class AdminMemberController {
 		return "common/msg";
 	}
 	
+//	@PostMapping("/deletemember.do")
+//	public String deleteMember(int memberKey,Model m) {
+//		int result=service.deleteMember(memberKey);
+//		String msg,loc;
+//		if(result>0) {
+//			msg="삭제성공";
+//			loc="/admin/member/selectmemberall.do";
+//		}else {
+//			msg="삭제실패";
+//			loc="/admin/member/selectmemberall.do";
+//		}
+//		m.addAttribute("msg",msg);
+//		m.addAttribute("loc",loc);
+//		
+//		return "common/msg";
+//	}
+	
 	@PostMapping("/deletemember.do")
-	public String deleteMember(int memberKey,Model m) {
-		int result=service.deleteMember(memberKey);
-		String msg,loc;
-		if(result>0) {
-			msg="삭제성공";
-			loc="/admin/member/selectmemberall.do";
-		}else {
-			msg="삭제실패";
-			loc="/admin/member/selectmemberall.do";
+	public ResponseEntity<Map<String,Object>> deleteMember(int no) {
+		Map<String,Object> response = new HashMap<>();
+		int result=0;
+		try {
+			result = service.deleteMember(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "사원 삭제에 실패했습니다.");
+			return ResponseEntity.ok(response);
 		}
-		m.addAttribute("msg",msg);
-		m.addAttribute("loc",loc);
-		
-		return "common/msg";
+		response.put("status", "success");
+		response.put("message", "사원 삭제 완료");
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/searchMember")
 	public String searchMember(
 			String searchKey,
 			String searchType,
+			String searchDept,
+			String searchJob,
+			Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam(defaultValue = "5") int numPerpage,			
+			@RequestParam(defaultValue = "6") int numPerpage,			
 			Model m
 			){
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println("부서 : "+searchDept);
+		System.out.println("직급 : "+searchJob);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
-		Map searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
-		if((searchKey.equals("")||searchKey==null) &&(searchType.equals("")||searchType==null)) {
+		Map searchMap=Map.of("searchKey",searchKey,"searchType",searchType,"searchDept",searchDept,"searchJob",searchJob);
+		if((searchKey.equals("")||searchKey==null) &&(searchType.equals("")||searchType==null)&&(searchDept.equals("")||searchDept==null)&&(searchJob.equals("")||searchJob==null)) {
 			int totaldata=service.selectMemberCount();
 			List<AdminMember> members= service.selectMemeberAll(page);
 			m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectmemberall.do"));
@@ -186,11 +215,14 @@ public class AdminMemberController {
 		}else {
 			int totaldata=service.searchMemberCount(searchMap);
 			List<AdminMember> members= service.searchMember(searchMap, page);
-			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,null,null,"searchMember"));
+			m.addAttribute("pagebar",searchPageFactory.getPage(cPage, numPerpage, totaldata,searchKey,searchType,searchDept,searchJob,"searchMember"));
 			m.addAttribute("members",members);
 			m.addAttribute("searchK",searchKey);
 			m.addAttribute("searchT",searchType);
+			m.addAttribute("searchDept",searchDept);
+			m.addAttribute("searchJob",searchJob);
 			m.addAttribute("totaldata",totaldata);
+			m.addAttribute("loginMember",loginMem);
 		}
 		
 		List<Department> dept=deptService.selectDeptAll();
@@ -199,5 +231,32 @@ public class AdminMemberController {
 		m.addAttribute("job",job);
 		return "admin/member/memberlist";
 	}
+	
+	
+	
+	@PostMapping("/updatememberpw")
+	public String updatememberpw(int memberKey,Model m) {
+		String pw="1234";
+		String encodePw=pwencoder.encode(pw);
+		
+		int result=service.updatePw(memberKey, encodePw);
+		String msg,loc;
+		if(result>0) {
+			msg="성공";
+			loc="/admin/member/selectmemberall.do";
+		}else {
+			msg="실패";
+			loc="/admin/member/selectmemberall.do";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		
+		return "common/msg";
+	}
+	
+	
+	
+	
+	
 	
 }

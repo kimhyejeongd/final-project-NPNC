@@ -88,13 +88,13 @@
 			}
 			.modal .modal_popup .close_btn {
 			  /*   display: block; */
-			    padding: 10px 20px;
+			 /* padding: 10px 20px;
 			    background-color: rgb(116, 0, 0);
 			    border: none;
 			    border-radius: 5px;
 			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
+			    transition: box-shadow 0.2s; */
 			}
 			.modal.on {
 			    display: block;
@@ -143,6 +143,32 @@
 	}
 	
 	</style>
+	<style>
+	#pagingtbody th{
+		font-weight: normal !important;
+	}
+	.downloadNoteBtn{
+		display: inline-block;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    text-align: center;
+	    width: 100px; /* 버튼의 너비를 설정 */
+	    white-space: nowrap; /* 텍스트가 줄 바꿈 없이 한 줄로 유지 */
+	    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	    text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+	    box-sizing: border-box;
+		margin-right: 10px;
+	}
+	
+	#downloadButtonBox{
+		
+	}	
+	
+	</style>
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -159,7 +185,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path}" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -175,136 +201,69 @@
                 <i class="gg-menu-left"></i>
               </button>
             </div>
-            <button class="topbar-toggler more">
-              <i class="gg-more-vertical-alt"></i>
-            </button>
-          </div>
-          <!-- End Logo Header -->
-        </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
-          <div class="sidebar-content">
-            <ul class="nav nav-secondary">
+			<button class="topbar-toggler more">
+			             <i class="gg-more-vertical-alt"></i>
+			           </button>
+			         </div>
+			         <!-- End Logo Header -->
+			    </div>
+			    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+			      <div class="sidebar-content">
+			        <ul class="nav nav-secondary">
+			        
+			          <li class="nav-section">
+			            <span class="sidebar-mini-icon">
+			              <i class="fa fa-ellipsis-h"></i>
+			            </span>
+			            <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
+			          </li>
+			  	  
+			          <li class="nav-item" >
+			            <a data-bs-toggle="collapse" href="${path}/notehome">
+			              <i class="fas fa-file-upload"></i>
+			              <p>받은 쪽지함</p>
+			            </a>
+			           
+			          </li>
+			          <li class="nav-item">
+			            <a data-bs-toggle="collapse" href="${path}/sendNoteHome">
+			              <i class="fas fa-file-download"></i>
+			              <p>보낸 쪽지함</p>
+			            </a>
+			            
+			          </li>
+			  	 
+			  	   <li class="nav-item">
+			              <a data-bs-toggle="collapse" href="${path}/noteSendMe">
+			                <i class="fas fa-street-view"></i>
+			                <p>내게 쓴 쪽지함</p>
+			              </a>
+			              
+			            </li>
+			  		<li class="nav-item">
+			                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
+			  			  <i class="fas fa-folder-open"></i>
+			                  <p>즐겨찾기</p>
+			                </a>
+			              </li>       
+			  		
+			        </ul>
+			      </div>
+			    </div>
+			  </div>
+			  <script>
+			     document.addEventListener("DOMContentLoaded", function() {
+			         document.querySelectorAll('.nav-item').forEach(function(li) {
+			             li.addEventListener('click', function() {
+			                 var anchor = li.querySelector('a');
+			                 if (anchor) {
+			                     window.location.href = anchor.href;
+			                 }
+			             });
+			         });
+			     });
+			  </script>
 
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section" style="font-size: 20px; color: white;">쪽지</h4>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-file-upload"></i>
-                  <p>받은 쪽지함</p>
-                </a>
-
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-file-download"></i>
-                  <p>보낸 쪽지함</p>
-                </a>
-
-              </li>
-
-			   <li class="nav-item">
-                  <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                    <i class="fas fa-street-view"></i>
-                    <p>내게 쓴 메일함</p>
-                  </a>
-
-                </li>
-				<li class="nav-item">
-	                <a data-bs-toggle="collapse" href="#base">
-					  <i class="fas fa-folder-open"></i>
-	                  <p>보관 메일함</p>
-	                  <span class="caret"></span>
-	                </a>
-	                <div class="collapse" id="base">
-	                  <ul class="nav nav-collapse">
-
-	                    <li>
-	                      <a href="components/avatars.html">
-	                        <span class="sub-item">Avatars</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/buttons.html">
-	                        <span class="sub-item">Buttons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/gridsystem.html">
-	                        <span class="sub-item">Grid System</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/panels.html">
-	                        <span class="sub-item">Panels</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/notifications.html">
-	                        <span class="sub-item">Notifications</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/sweetalert.html">
-	                        <span class="sub-item">Sweet Alert</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/font-awesome-icons.html">
-	                        <span class="sub-item">Font Awesome Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/simple-line-icons.html">
-	                        <span class="sub-item">Simple Line Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/typography.html">
-	                        <span class="sub-item">Typography</span>
-	                      </a>
-	                    </li>
-	                  </ul>
-	                </div>
-	              </li>       
-				 <li class="nav-item">
-	                 <a data-bs-toggle="collapse" href="#trash">
-						<i class="fas fa-trash-alt"></i>
-	                   <p>휴지통</p>
-	                   <span class="caret"></span>
-	                 </a>
-	                 <div class="collapse" id="trash">
-	                   <ul class="nav nav-collapse">
-
-	                     <li>
-	                       <a href="components/avatars.html">
-	                         <span class="sub-item">받은 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/buttons.html">
-	                         <span class="sub-item">보낸 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/gridsystem.html">
-	                         <span class="sub-item">내게 쓴 메일함</span>
-	                       </a>
-	                     </li>
-
-
-	                   </ul>
-	                 </div>
-	               </li>
-
-
-            </ul>
-          </div>
-        </div>
-      </div>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -323,96 +282,27 @@
                 <h3 class="fw-bold mb-3">즐겨찾기</h3>
                 <h6 class="op-7 mb-2" id="noteTotalData">총 ${totalData}건의 쪽지가 있습니다.</h6>
               </div>
-              <div class="ms-md-auto py-2 py-md-0">
-               <button type="button" class="modal_btn btn btn-label-info btn-round me-2">쪽지 발송</button>
-               <button type="button" class="modal_btn btn btn-primary btn-round">전체 쪽지 발송</button> 
-                <!-- <a href="javascript:openOrgan();" class="btn btn-primary btn-round">조직도 예시</a> -->
-              </div>
+              
             </div>
 
           	<div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-					<div class="noteSearchBar">
-						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
-							<select id="searchCheck" name="searchCheck">
-						           <option value="name">이름</option>
-						           <option value="title">제목</option>
+					<h4 class="card-title">목록</h4>
 
-							</select>
-					        <div class="input-group">
-					          <div class="input-group-prepend">
-					            <button type="button" class="btn btn-search pe-1" onclick="searchNoteKeyword();">
-					              <i class="fa fa-search search-icon"></i>
-					            </button>
-					          </div>
-
-					          <input
-					            type="text"
-					            placeholder=""
-					            class="form-control"
-								id="searchNoteBarText"
-					          />
-					        </div>
-							<script>
-								function searchNoteKeyword(){
-									var selectBox = document.getElementById('searchCheck');
-							        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-									var searchNoteBarText = document.getElementById('searchNoteBarText');
-									
-								    if(searchNoteBarText.value==""){
-										var SweetAlert2Demo = (function () {
-									        //== 검색창이 비어있습니다 얼럿창
-									        var initDemos = function () {
-									          
-												swal("검색창이 비어있습니다.", "기본 화면으로 돌아갑니다.", {
-												          icon: "info",
-												          buttons: {
-												            confirm: {
-												              className: "btn btn-info",
-												            },
-												          },
-												        });
-									          
-									        };
-									
-									        return {
-									          //== Init
-									          init: function () {
-									            initDemos();
-									          },
-									        };
-									      })();
-									
-									      //== Class Initialization
-									      jQuery(document).ready(function () {
-									        SweetAlert2Demo.init();
-									      });
-										  
-										fn_paging(1);			
-										
-									}else if(searchNoteBarText.value!=""){
-										fn_paging2(1);
-									}
-									
-								}
-								
-							</script>
-
-					    </nav>
-					</div>	
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class="display table table-striped table-hover"
+						class="table table-head-bg-primary mt-4"
+						style="margin-top: 0px!important;"
                       >
                         <thead>
                           <tr>
                           	<th> 
                           		<input type="checkbox" id="deleteCheckAll" value="">
-                          			전체선택 
+                          			 
 
                           	</th>
                             <th>즐겨찾기</th>
@@ -437,10 +327,10 @@
 
 										</c:otherwise>	
 									</c:choose>	
-								<p>
-           	  					<th>${d.memberName} ${d.jobName}<p>
-           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-           	  					<th>${d.formattedPostMsgTime}<p>
+								</th>
+           	  					<th>${d.memberName} ${d.jobName}</th>
+           	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}</th>
+           	  					<th>${d.formattedPostMsgTime}</th>
            	  				</tr>
           		 	  </c:forEach>
 
@@ -448,115 +338,107 @@
 
 						<script>
 							// 즐겨찾기 추가 로직
-						    document.addEventListener("DOMContentLoaded", function() {
-						        const bookmarkElements = document.querySelectorAll('.bookmarkN');
-								var memberKey = document.getElementById('memberKey').value;
-						        bookmarkElements.forEach(function(element) {
-						            element.addEventListener('click', function(event) {
-						                const postMsgRecKey = this.getAttribute('data-key');
-						                
-						                // 여기에 원하는 동작을 추가하십시오. 예: 북마크 상태 변경, AJAX 호출 등.
-										
-										$.ajax({
-											url : '${path}/noteBookMarkInsert',
-											type : 'POST',
-											data : {postMsgRecKey : postMsgRecKey,
-													memberKey : memberKey
-													},
-											success : function(response){
-												$(event.target).removeClass('far').addClass('fas');
-												var SweetAlert2Demo = (function () {
-											        //== 검색창이 비어있습니다 얼럿창
-											        var initDemos = function () {
-											          
-														swal("즐겨찾기에 추가되었습니다.", "", {
-														          icon: "success",
-														          buttons: {
-														            confirm: {
-														              className: "btn btn-info",
-														            },
-														          },
-														        });
-											          
-											        };
-											
-											        return {
-											          //== Init
-											          init: function () {
-											            initDemos();
+							$(document).on('click', '.bookmarkN', function() {
+					          const postMsgRecKey = $(this).data('key');
+					          var memberKey = $('#memberKey').val();
+							  var starElement = $(this);
+					          $.ajax({
+					              url: '${path}/noteBookMarkInsert',
+					              type: 'POST',
+					              data: {
+					                  postMsgRecKey: postMsgRecKey,
+					                  memberKey: memberKey
+					              },
+					              success: function(response) {
+					                starElement.removeClass('far').addClass('fas'); 
+					                starElement.removeClass('bookmarkN').addClass('bookmarkY');
+									var SweetAlert2Demo = (function () {
+								        //== 검색창이 비어있습니다 얼럿창
+								        var initDemos = function () {
+								          
+											swal("즐겨찾기에 추가되었습니다.", "", {
+											          icon: "success",
+											          buttons: {
+											            confirm: {
+											              className: "btn btn-info",
+											            },
 											          },
-											        };
-											      })();
-											
-											      //== Class Initialization
-											      jQuery(document).ready(function () {
-											        SweetAlert2Demo.init();
-											      });
-											}
-										});
-										
-										       });
+											        });
+								          
+								        };
+								
+								        return {
+								          //== Init
+								          init: function () {
+								            initDemos();
+								          },
+								        };
+								      })();
+								
+								      //== Class Initialization
+								      jQuery(document).ready(function () {
+								        SweetAlert2Demo.init();
+								      });
+					              }
+					          });
+					      });
+					
+					
+					// 즐겨찾기 삭제 로직
+				
+					
+					$(document).on('click', '.bookmarkY', function() {
+				          const postMsgRecKey = $(this).data('key');
+				          var memberKey = $('#memberKey').val();
+						  var starElement = $(this);
+				          $.ajax({
+				              url: '${path}/noteBookMarkDelete',
+				              type: 'POST',
+				              data: {
+				                  postMsgRecKey: postMsgRecKey,
+				                  memberKey: memberKey
+				              },
+				              success: function(response) {
+				                starElement.removeClass('fas').addClass('far'); 
+				                starElement.removeClass('bookmarkY').addClass('bookmarkN');
+				                
+								var SweetAlert2Demo = (function () {
+									//== 검색창이 비어있습니다 얼럿창
+							        var initDemos = function () {
+							          
+									swal("즐겨찾기에 삭제되었습니다.", "", {
+									          icon: "success",
+									          buttons: {
+									            confirm: {
+									              className: "btn btn-info",
+									            },
+									          },
 								        });
-								    });
-									
-									// 즐겨찾기 삭제 로직
-								    document.addEventListener("DOMContentLoaded", function() {
-								        const bookmarkElements = document.querySelectorAll('.bookmarkY');
-										var memberKey = document.getElementById('memberKey').value;
-							        bookmarkElements.forEach(function(element) {
-							            element.addEventListener('click', function(event) {
-							                const postMsgRecKey = this.getAttribute('data-key');
-							                
-							                // 여기에 원하는 동작을 추가하십시오. 예: 북마크 상태 변경, AJAX 호출 등.
-											
-											$.ajax({
-												url : '${path}/noteBookMarkDelete',
-												type : 'POST',
-												data : {postMsgRecKey : postMsgRecKey,
-														memberKey : memberKey
-														},
-												success : function(response){
-													$(event.target).removeClass('fas').addClass('far');
-													var SweetAlert2Demo = (function () {
-												        //== 검색창이 비어있습니다 얼럿창
-												        var initDemos = function () {
-												          
-														swal("즐겨찾기에 삭제되었습니다.", "", {
-														          icon: "success",
-														          buttons: {
-														            confirm: {
-														              className: "btn btn-info",
-														            },
-														          },
-													        });
-											          
-												        };
-												
-												        return {
-												          //== Init
-												          init: function () {
-												            initDemos();
-												          },
-												        };
-												      })();
-												
-												      //== Class Initialization
-												      jQuery(document).ready(function () {
-												        SweetAlert2Demo.init();
-												      });
-												}
-											});
-											
-											       });
-									        });
-									    });
+						          
+							        };
+							
+							        return {
+							          //== Init
+							          init: function () {
+							            initDemos();
+							          },
+							        };
+							      })();
+							
+							      //== Class Initialization
+							      jQuery(document).ready(function () {
+							        SweetAlert2Demo.init();
+							      });
+				              }
+				          });
+				      });
 							</script>
 
 
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
-	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      	  	<button class="btn btn-round btn-info" onclick="deleteSendGo();">삭제하기</button>
 	                      </div>
 	                      <div id="pageBarList">${pageBar}</div>
                       </div>
@@ -746,16 +628,15 @@
 			   <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
+							<div class="form-group">
+								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
+							</div>
 
 				           	  <div class="form-group">
-				           	    <div class="namebox" >
-				           		  <!--  <h2>전체 쪽지</h2> -->
-				           		</div>
-				           	</div>   
+					           	    <div class="namebox" >
+					           		  <!--  <h2>전체 쪽지</h2> -->
+					           		</div>
+				           		</div>   
 				           		    <div class="form-group">
 			                          <div class="input-group">
 			                            <span class="input-group-text">제목</span>
@@ -764,6 +645,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleRecOne"
 			                              rows="1" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -775,20 +657,26 @@
 			                              aria-label="With textarea"
 			                              id="postMsgDetailRecOne"
 			                              rows="8" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group" id="downloadButtonBox">
-
-                    			   </div>	           	   
-								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" >닫기</button>
-								</div>
+								   <div class="form-group">
+   	                    			   <div class="form-group" id="downloadButtonBox">
+   	                    			   	
+   	                    			   </div>	           	   
+   								  </div>	           	   
 				          </div>
 				    </div>
 			  </div>
-
+			  <style>
+	  	  	     /* Disabled and readonly 스타일 재정의 */
+	  	  	     .form-control:disabled, .form-control[readonly] {
+	  	  	         opacity: 1 !important; /* 불투명도 설정 */
+	  	  			 background-color: #fff !important; /* 배경색 하얀색으로 설정 */
+	  	  	         color: #000 !important; /* 글자색 검정색으로 설정 */
+	  	  	     }
+	  	  	  </style>
 			<!-- 첨부파일 -->
 			 <script>
 			 /* 개별발송 파일 추가 로직*/
@@ -959,7 +847,8 @@
 								 var newElement=document.createElement("button");
 					                newElement.classList.add("btn");
 					                newElement.classList.add("btn-success");
-					                
+									newElement.classList.add("downloadNoteBtn");
+
 					               	newElement.textContent=files[i].postMessageFileOri;
 					                
 					               	newElement.onclick = function() {
@@ -1252,14 +1141,32 @@
 						  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
 						  $.each(response.notepagelist, function(index, item) {
 							
-				                    var row = `<tr >
-				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-										<th>\${item.postMsgRecKey}<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+							if(item.bookMarkStatus=="N"){
+
+				                    var row = `<tr>
+										<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+
+										<th>
+											<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 				                    </tr>`;
-				                    tbody.append(row);
+				                  	  tbody.append(row);
+									  
+							}else if(item.bookMarkStatus=="Y"){
+									var row = `<tr>
+				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+										<th>
+											<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
+										</tr>`;
+					                  	  tbody.append(row);	
+						  	}
 				                }); 
 						  	var pageBarList=$('#pageBarList');
 						  	pageBarList.empty();
@@ -1293,14 +1200,32 @@
 										  var noteTotalData=document.getElementById('noteTotalData');
 										  noteTotalData.innerHTML="총 "+response.totalData+"건의 쪽지가 있습니다.";
 										  $.each(response.notepagelist, function(index, item) {
-								                    var row = `<tr >
-														<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
-														<th>\${item.postMsgRecKey}<p>
-														<th>\${item.memberName} \${item.jobName}<p>
-								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
-								                    </tr>`;
-								                    tbody.append(row);
+											if(item.bookMarkStatus=="N"){
+
+									                    var row = `<tr>
+															<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+
+															<th>
+																<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
+															<p>
+															<th>\${item.memberName} \${item.jobName}<p>
+									                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
+									                        <th>\${item.formattedPostMsgTime}<p>
+									                    </tr>`;
+									                  	  tbody.append(row);
+														  
+												}else if(item.bookMarkStatus=="Y"){
+														var row = `<tr>
+									                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
+															<th>
+																<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
+															<p>
+															<th>\${item.memberName} \${item.jobName}<p>
+									                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
+									                        <th>\${item.formattedPostMsgTime}<p>
+															</tr>`;
+										                  	  tbody.append(row);	
+											  	}
 								                }); 
 										  	var pageBarList=$('#pageBarList');
 										  	pageBarList.empty();

@@ -73,14 +73,14 @@
 <body>
 	<div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 	  <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
 		
@@ -179,9 +179,9 @@
          </div>
          </div>
        </div>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
       </div>
     </div>
-
 <!-- SweetAlert2 초기화 및 모달 관련 스크립트 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
   <!-- jQuery -->
@@ -325,13 +325,14 @@ $(document).ready(function() {
 					$("#selectArea").text($("#overworkDateSpan").text() + " " + time);
 					dochtml = $("#htmlDiv > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block").html();
 			        formData.append('html', dochtml);
-
+					
+			        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
 					let files = fileInput.files;
 
 		            // 다중 파일 추가
-		            for (let i = 0; i < files.length; i++) {
+		            /* for (let i = 0; i < files.length; i++) {
 		            	formData.append('upfile', fileInput.files[i]);
-		            } 
+		            }  */
 
 		            // FormData의 내용 확인
 					formData.entries().forEach(e=>{

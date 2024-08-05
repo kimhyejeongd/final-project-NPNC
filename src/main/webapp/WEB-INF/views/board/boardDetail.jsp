@@ -120,7 +120,9 @@
 
         <div class="main-panel">
             <!-- Header Bar -->
+
             <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
+
 
             <div class="container">
                 <div class="page-inner">
@@ -134,6 +136,7 @@
                             <p><strong>작성자:</strong> ${board.MEMBER_NAME}</p>
                             <p><strong>작성일:</strong> <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p>${board.BOARD_DETAIL}</p>
+
                             <c:forEach var="file" items="${fileList}">
                                 <c:if test="${not empty file.BOARD_FILE_ORI}">
                                     <div class="image-container">

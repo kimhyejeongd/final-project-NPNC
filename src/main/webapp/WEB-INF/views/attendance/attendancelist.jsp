@@ -88,7 +88,7 @@
                           <p class="card-category">${currentMonth}월 휴가</p>
                           <h4 class="card-title"><c:if test="${empty attendanceCount.vaca }">0</c:if>${attendanceCount.vaca}</h4>
                           <p class="card-category">남은 휴가</p>
-                          <h4 class="card-title">${memberVacation.memberVacRemaining}</h4>
+                          <h4 class="card-title"><c:if test="${empty memberVacation.memberVacRemaining }">0</c:if>${memberVacation.memberVacRemaining}</h4>
                         </div>
                       </div>
                     </div>
@@ -108,8 +108,10 @@
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
-                          <p class="card-category">${currentMonth}월 초과근무</p>
-                          <h4 class="card-title">0</h4>
+                          <p class="card-category">${currentMonth}월 병가</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.sick }">0</c:if>${attendanceCount.sick}</h4>
+                          <p class="card-category">${currentMonth}월 공가</p>
+                          <h4 class="card-title"><c:if test="${empty attendanceCount.gongga }">0</c:if>${attendanceCount.gongga}</h4>
                         </div>
                       </div>
                     </div>
@@ -128,7 +130,11 @@
 			              	<option value="결근" <c:if test="${searchT eq '결근'}">selected</c:if>>결근</option>
 			              	<option value="출근" <c:if test="${searchT eq '출근'}">selected</c:if>>출근</option>
 			              	<option value="휴가" <c:if test="${searchT eq '휴가'}">selected</c:if>>휴가</option>
-			              	<option value="유급휴가" <c:if test="${searchT eq '유급휴가'}">selected</c:if>>유급휴가</option>
+			              	<option value="병가" <c:if test="${searchT eq '병가'}">selected</c:if>>병가</option>
+			              	<option value="공가" <c:if test="${searchT eq '공가'}">selected</c:if>>공가</option>
+			              	<option value="오전반차" <c:if test="${searchT eq '오전반차'}">selected</c:if>>오전반차</option>
+			              	<option value="오후반차" <c:if test="${searchT eq '오후반차'}">selected</c:if>>오후반차</option>
+			              	
 			              </select>
                   				<input type="date" class="form-control" name="searchStartDate" id="searchStartDate" value="${searchSD }">
                   				<h3>~</h3>
@@ -148,7 +154,6 @@
                             <th>근무날짜</th>
                             <th>출근시간</th>
                             <th>퇴근시간</th>
-                            <th>초과근무시간</th>
                             <th>상태</th>
                           </tr>
                         </thead>
@@ -156,10 +161,9 @@
                         <c:if test="${not empty attendances }">
                         	<c:forEach var="a" items="${attendances }">
 		                          <tr>
-		                            <td>${a.attendanceDate}</td>
+		                            <td>${fn:substring(a.attendanceDate, 0, 10)}</td>
 		                            <td>${fn:substring(a.attendanceStart, fn:length(a.attendanceStart) - 8, fn:length(a.attendanceStart))}</td>
           							<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
-		                            <td>${a.overtimeKey }</td>
 		                            <td>${a.attendanceState}</td>
 		                            <td>
 		                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">

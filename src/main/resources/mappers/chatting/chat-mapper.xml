@@ -5,7 +5,9 @@
 		DELETE FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId}
 	</delete>
 	<update id="exitChatRoom" parameterType = "map">
-		UPDATE CHATTING_GROUP SET CHAT_GROUP_STATUS = 'N' WHERE MEMBER_KEY = ${memberId}
+		UPDATE CHATTING_GROUP 
+		SET CHAT_GROUP_STATUS = 'N' 
+		WHERE MEMBER_KEY = ${memberId} AND CHAT_ROOM_KEY = #{roomId}
 	</update>
 	<select id="selectGroupStatus" parameterType="map" resultType="int">
 		SELECT COUNT(*) FROM CHATTING_GROUP WHERE CHAT_ROOM_KEY = ${roomId} AND CHAT_GROUP_STATUS = 'Y'
@@ -58,7 +60,7 @@
 		ON cr.CHAT_ROOM_key = cg.CHAT_ROOM_key
 		LEFT JOIN CHATTING_MESSAGE cm on cr.CHAT_RECENT_MSG_KEY = cm.CHAT_MSG_KEY 
 		WHERE cg.MEMBER_key = #{memberId} AND CG.CHAT_GROUP_STATUS='Y'
-			ORDER BY chat_msg_time desc
+		ORDER BY COALESCE(chat_msg_time, cg.CHAT_GROUP_DATE) DESC
 	</select>
 	<update id="updateRecentChat" parameterType="map">
 		UPDATE CHATTING_ROOM SET CHAT_RECENT_MSG_KEY = #{seq} WHERE CHAT_ROOM_KEY = #{chat.chatRoomKey}

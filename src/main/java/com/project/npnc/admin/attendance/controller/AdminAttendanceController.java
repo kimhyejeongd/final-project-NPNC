@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +22,8 @@ import com.project.npnc.attendance.model.dto.AttendanceEdit;
 import com.project.npnc.attendance.model.service.AttendanceService;
 import com.project.npnc.common.PageFactory;
 import com.project.npnc.common.SearchPageFactory;
-import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,12 +41,15 @@ public class AdminAttendanceController {
 	public String selectAdminAttendanceAll(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,
+			Authentication authentication,
 			Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectAdminAttendanceAllCount();
 		List<Attendance> attendance=service.selectAdminAttendanceAll(page);
 		m.addAttribute("pagebar",pageFactory.getPage(cPage, numPerpage, totaldata, "selectAdminAttendanceAll"));
 		m.addAttribute("attendance",attendance);
+		m.addAttribute("loginMember",loginMem);
 		return "admin/attendance/adminattendancelist";
 	}
 
@@ -52,7 +57,10 @@ public class AdminAttendanceController {
 	public String selectAdminAttendanceEditAll(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,	
+			Authentication authentication,
 			Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		int totaldata=service.selectAdminAttendanceEditCount();
 		List<AttendanceEdit> attendanceEdit=service.selectAdminAttendanceEditAll(page);
@@ -78,10 +86,10 @@ public class AdminAttendanceController {
 		int result=service.updateAttendanceEdit(attendanceEdit);
 		String msg,loc;
 		if(result>0) {
-			msg="반려성공";
+			msg="성공";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}else {
-			msg="반려실패";
+			msg="실패";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}
 		m.addAttribute("msg",msg);
@@ -96,10 +104,10 @@ public class AdminAttendanceController {
 		int result=service.updateAttendance(attendanceEdit);
 		String msg,loc;
 		if(result>0) {
-			msg="승인성공";
+			msg="성공";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}else {
-			msg="승인실패";
+			msg="실패";
 			loc="/admin/attendance/selectAdminAttendanceEditAll";
 		}
 		m.addAttribute("msg",msg);
@@ -128,9 +136,12 @@ public class AdminAttendanceController {
 	public String searchAdminAttendanceEdit(
 			String searchKey,
 			String searchType,
+			Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,
 			Model m) {
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		Map<String,Object> searchMap=Map.of("searchKey",searchKey,"searchType",searchType);
 		Map page=Map.of("cPage",cPage,"numPerpage",numPerpage);
 		List<AttendanceEdit> attendanceEdit=service.searchAdminAttendanceEdit(searchMap,page);
@@ -148,11 +159,13 @@ public class AdminAttendanceController {
 			String searchType,
 			String searchStartDate,
 			String searchEndDate,
+			Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "10") int numPerpage,		
 			Model m
 			) {
-		
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("loginMember",loginMem);
 		if(!searchEndDate.equals("")) {	
 			LocalDate searchEndLocalDate = LocalDate.parse(searchEndDate).plusDays(1);
 			searchEndDate = searchEndLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -177,6 +190,39 @@ public class AdminAttendanceController {
 		m.addAttribute("searchSD",searchStartDate);
 		m.addAttribute("searchED",searchEndDate);
 		return "admin/attendance/adminattendancelist";
+	}
+	
+	@GetMapping("/adminAttendanceDetail")
+	public ResponseEntity<Map<String,Attendance>> adminAttendanceDetail(int attendanceKey,String memberId) {
+		Attendance attendance=service.selectAttendanceByAttendanceKey(attendanceKey);
+		System.out.println("admin : "+attendance);
+		System.out.println("memberKey : "+memberId);
+		attendance.setMember(AdminMember.builder().memberId(memberId).build());
+		Map<String,Attendance> response =new HashMap<>();
+		response.put("attendance", attendance);
+		System.out.println("test");
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	@PostMapping("/updateAdminAttendance")
+	public String updateAdminAttendance(Attendance attendance,Model m) {
+		System.out.println("attendance : "+attendance);
+		int result=service.updateAdminAttendance(attendance);
+		
+		String msg,loc;
+		if(result>0) {
+			msg="성공";
+			loc="/admin/attendance/selectAdminAttendanceAll";
+		}else {
+			msg="실패";
+			loc="/admin/attendance/selectAdminAttendanceAll";
+		}
+		m.addAttribute("msg",msg);
+		m.addAttribute("loc",loc);
+		return "common/msg";
+		
 	}
 	
 	

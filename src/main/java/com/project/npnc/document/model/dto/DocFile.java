@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DocFile {
+public class DocFile { //ER_FILE
 	private int fileKey;
 	private String fileOriName;
 	private String fileRename;

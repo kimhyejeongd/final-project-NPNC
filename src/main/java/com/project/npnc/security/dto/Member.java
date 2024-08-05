@@ -59,9 +59,18 @@ public class Member implements UserDetails {
 	/* 권한 설정 */
 	 @Override public Collection<? extends GrantedAuthority> getAuthorities() {
 	 Set<GrantedAuthority> auth=new HashSet();
-	 if(memberId.equals("admin")) {
-	 auth.add(new SimpleGrantedAuthority(MyAuthority.ADMIN.name())); }
-	 auth.add(new SimpleGrantedAuthority(MyAuthority.USER.name())); return auth; }
+	 if(accessKey==1) {
+		 auth.add(new SimpleGrantedAuthority(MyAuthority.ADMIN.name()));
+	 }else if(accessKey==2) {
+		 auth.add(new SimpleGrantedAuthority(MyAuthority.MANAGE.name()));  
+	 }else if(accessKey==3) {
+		 auth.add(new SimpleGrantedAuthority(MyAuthority.PERSON.name())); 
+	 }else {
+		 auth.add(new SimpleGrantedAuthority(MyAuthority.USER.name())); 
+	 }
+	 return auth; 
+	 }
+	 
 	 
 
 	@Override

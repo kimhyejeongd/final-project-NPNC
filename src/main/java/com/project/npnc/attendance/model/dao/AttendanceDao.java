@@ -5,9 +5,10 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.VacationApply;
 
 
 public interface AttendanceDao {
@@ -61,6 +62,18 @@ public interface AttendanceDao {
 	List<Attendance> searchAdminAttendance(SqlSession session,Map<String,Object> searchMap, Map<String,Integer> page);
 	int searchAdminAttendanceCount(SqlSession session,Map<String,Object> searchMap);
 	
+	int updateAdminAttendance(SqlSession session,Attendance attendance);
 	
+	
+	//vacation Apply
+	List<VacationApply> selectVacationApplyApprove(SqlSession session);
+	int insertAttendanceVacation(SqlSession session,int memberKey,String status);
+	
+	//overtime
+	List<OvertimeApply> selectoverworkByMemberKey(SqlSession session,int memberKey,Map<String,Integer> page);
+	int selectoverworkByMemberKeyCount(SqlSession session,int memberKey);
+	
+	List<OvertimeApply> searchoverworkByMemberKey(SqlSession session,Map<String,Object> searchMap, Map<String,Integer> page);
+	int searchoverworkByMemberKeyCount(SqlSession session,Map<String,Object> searchMap);
 	
 }

@@ -70,7 +70,7 @@
                 <div class="container">
                     <div class="title-container">
                         <h1>공지사항 목록</h1>
-                    </div>
+                  </div>
 
                     <!-- Search Form -->
                     <form method="get" action="${path}/notice/list" class="search-form">

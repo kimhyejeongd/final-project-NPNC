@@ -1,5 +1,7 @@
 package com.project.npnc.note.dto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +25,16 @@ public class NoteSendDto {
 	private int sendMemberKey;
 	private String postMsgSendTitle;
 	private String postMsgSendDetail;
-	private Date postMsgSendTime;
+	private LocalDateTime postMsgSendTime;
 	private Date postMsgSendReservation;
+	private String memberName;
+	private String jobName;
 	private List<SrMember> recMember;
 	private List<NoteFileDto> files;
+	
+	public String getFormattedPostMsgTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return postMsgSendTime.format(formatter);
+    }
 	
 }

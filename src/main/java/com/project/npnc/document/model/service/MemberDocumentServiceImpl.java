@@ -1,27 +1,21 @@
 package com.project.npnc.document.model.service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.npnc.document.model.dao.MemberDocumentDaoImpl;
-import com.project.npnc.document.model.dto.Approver;
+import com.project.npnc.document.member.controller.DocHtmlController;
+import com.project.npnc.document.member.controller.DocS3Controller;
+import com.project.npnc.document.model.dao.MemberDocumentDao;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
 import com.project.npnc.document.model.dto.DocFile;
@@ -40,9 +34,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberDocumentServiceImpl implements MemberDocumentService {
 	private final SqlSession session;
-	private final MemberDocumentDaoImpl dao;
-	@Value("${file.upload-dir}")
-    private String uploadDir;
+	private final MemberDocumentDao dao;
+	private final DocS3Controller scCon;
+	
 	@Override
 	public List<DocumentFormFolder> selectformFolders() {
 		return dao.selectformFolders(session);
@@ -107,7 +101,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if (result <= 0) {
 	        throw new Exception("[1]문서 insert 실패");
 	    }
-		log.debug("[1]문서 insert 성공 : " + d.getErDocKey());
+		log.debug("[1]문서 insert 성공 : " + d.getErDocSerialKey());
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
@@ -125,22 +119,18 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	            // 고유한 파일 이름 생성 (UUID 사용)
 	            String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
 	
-	            // 절대 경로 설정
-	            String upload = Paths.get(uploadDir+"/docfile").toAbsolutePath().toString();
-	
-	            // 파일 저장 경로 설정
-	            Path filePath = Paths.get(upload, fileName);
-	            // 부모 디렉토리가 존재하지 않으면 생성
-	            File parentDir = filePath.getParent().toFile();
-	            if (!parentDir.exists()) {
-	                parentDir.mkdirs(); // 디렉토리 생성
-	            }	            
-	            // 파일 저장
-	            Files.copy(f.getInputStream(), filePath);
-	            log.debug("파일 업로드 : " + filePath);
+	            //upload
+				try {
+		            InputStream fileInputStream = f.getInputStream();
+		            scCon.uploadBinaryFile("upload/docfile", fileName, fileInputStream);
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+				
+	            log.debug("파일 업로드 성공 ");
 	            // 파일 메타 데이터 생성
 	//    		// 파일을 DocFile 객체로 변환
-	    		docFile = docFile.builder()
+	    		docFile = DocFile.builder()
 	    				.fileOriName(f.getOriginalFilename())
 	    				.fileRename(fileName)
 	    				.erDocKey(d.getErDocKey())
@@ -185,7 +175,11 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	    //시리얼번호 문서 내 등록
 	    html=html.replace("[문서번호]", d.getErDocSerialKey());
 	    
-	    result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
+		//문서 html 내 결재자 세팅
+		String finalTableHtml = DocHtmlController.generateApproverTableHtml(d.getApprovers());
+		html = html.replace("[결재선]", finalTableHtml);
+	    
+	    result = scCon.docHtmlUpload("upload/dochtml",d.getErDocSerialKey(), html);
     	if(result <= 0) {
     		throw new Exception("[4] 문서 html 등록 실패");
     	}
@@ -196,7 +190,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	
 	@Override
 	@Transactional
-	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac) throws Exception {
+	public int insertVacDoc(Document d, MultipartFile[] file, String html, VacationApply vac, String uploadDir) throws Exception {
 		int result = insertDoc(d, file, html);
 		vac.setVacationDocSerialKey(d.getErDocSerialKey());
 		
@@ -211,7 +205,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	}
 	@Override
 	@Transactional
-	public int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot) throws Exception {
+	public int insertOvertimeDoc(Document d, MultipartFile[] file, String html, OvertimeApply ot, String uploadDir) throws Exception {
 		//문서 등록
 		int result = insertDoc(d, file, html);
 		ot.setErDocSerialKey(d.getErDocSerialKey());
@@ -230,6 +224,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return dao.insertVacationApply(session, vac);
 	}
 	
+	//임시저장
 	@Override
 	@Transactional	
 	public int insertDraftDoc(Document d, MultipartFile[] file, String html) throws Exception {
@@ -240,7 +235,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		if (result <= 0) {
 			throw new Exception("[1]draft 문서 insert 실패");
 		}
-		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocKey());
+		log.debug("[1]draft 문서 insert 성공 : " + d.getErDocSerialKey());
 		
 		//첨부파일 있으면 파일 insert 및 업로드
 		if (file.length > 0 || file != null) {
@@ -255,21 +250,16 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 				// 고유한 파일 이름 생성 (UUID 사용)
 				String fileName = UUID.randomUUID().toString() + "_" + f.getOriginalFilename();
 				
-				// 절대 경로 설정
-				String upload = Paths.get(uploadDir+"/docfile").toAbsolutePath().toString();
+				//upload
+				try {
+		            InputStream fileInputStream = f.getInputStream();
+		            scCon.uploadBinaryFile("upload/docfile", fileName, fileInputStream);
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
 				
-				// 파일 저장 경로 설정
-				Path filePath = Paths.get(upload, fileName);
-				// 부모 디렉토리가 존재하지 않으면 생성
-				File parentDir = filePath.getParent().toFile();
-				if (!parentDir.exists()) {
-					parentDir.mkdirs(); // 디렉토리 생성
-				}	            
-				// 파일 저장
-				Files.copy(f.getInputStream(), filePath);
-				// 파일 메타 데이터 생성
 				// 파일을 DocFile 객체로 변환
-				docFile = docFile.builder()
+				docFile = DocFile.builder()
 						.fileOriName(f.getOriginalFilename())
 						.fileRename(fileName)
 						.erDocKey(d.getErDocKey())
@@ -308,7 +298,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			log.debug("[3] 참조인 insert 성공");
 		}
 		
-		result = htmlFileUpload("dochtml",d.getErDocSerialKey(), html);
+		//TODO 보관함 경로 연결 필요
+		result = scCon.docHtmlUpload("upload/dochtml",d.getErDocSerialKey(), html);
 		if(result <= 0) {
 			throw new Exception("[4] 문서 html 등록 실패");
 		}
@@ -330,11 +321,13 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		
 		return result;
 	}
+	
+	//문서 회수
 	@Override
 	@Transactional	
-	public int retrieveDoc(String docKey) throws Exception {
+	public int retrieveDoc(String docSerialKey) throws Exception {
 		//전자문서 테이블 상태변경 (처리중 -> 회수)
-		int result = dao.retrieveDoc(session, docKey); 
+		int result = dao.retrieveDoc(session, docSerialKey); 
 		//selectKey "fileRename"
 		if(result<=0) {
 			throw new Exception("[1]문서 회수 실패");
@@ -342,22 +335,32 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		log.debug("[1]문서 회수 완료");
 		
 		//추가근무 신청서인 경우
-		if(docKey.contains("F2")) {
+		if(docSerialKey.contains("F2")) {
 			log.debug("추가근무 신청 문서입니다");
-			result = dao.deleteOvertimeApply(session, docKey);
+			result = dao.deleteOvertimeApply(session, docSerialKey);
 			if(result <= 0) throw new Exception("[2]추가근무 신청 삭제 실패");
 			log.debug("[2]추가근무 신청 삭제 완료");
 		}
 		//휴가 신청서인 경우
-		if(docKey.contains("F3")) {
+		if(docSerialKey.contains("F3")) {
 			log.debug("휴가 신청 문서입니다");
-			result = dao.deleteVacationApply(session, docKey);
+			result = dao.deleteVacationApply(session, docSerialKey);
 			if(result <= 0) throw new Exception("[2]휴가 신청 삭제 실패");
 			log.debug("[2]휴가 신청 삭제 완료");
 		}
 		
+		String html = scCon.readHtmlFile("upload/dochtml", docSerialKey+".html");
+		if(html.contains(docSerialKey)) {
+			html.replace(docSerialKey, "");
+			//업데이트한 내용 반영하여 업로드
+			scCon.docHtmlUpload("upload/dochtml", docSerialKey, html);
+			log.debug("[3]문서 내 시리얼코드 삭제 완료");
+		}
+		
 		return result;
 	}
+	
+	//임시보관 문서 삭제
 	@Override
 	@Transactional	
 	public int deleteDraftDoc(int docKey) throws Exception {
@@ -387,7 +390,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			//서버에서 삭제
 			for(DocFile f : files) {
 				count++;
-				result=fileRemove("docfile", f.getFileRename());
+				result=scCon.fileRemove("upload/docfile", f.getFileRename());
 				if(result<=0) {
 					throw new Exception("[2]첨부파일 삭제 실패" + count + "/" + files.size());
 				}
@@ -397,7 +400,7 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 			log.debug("첨부파일 없음");
 		}
 		
-		result = fileRemove("dochtml", d.getErDocSerialKey()+ ".html");
+		result = scCon.fileRemove("upload/dochtml", d.getErDocSerialKey()+ ".html");
 		if(result<=0) {
 			throw new Exception("[3]임시보관 문서 html 삭제 실패");
 		}
@@ -456,15 +459,8 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	@Override
 	@Transactional
 	public List<ApproverLineStorage> selectApproverLines(int memberNo) {
-		Map<String,Integer> map = new HashMap<>();
 		//저장된 결재라인 조회
 		List<ApproverLineStorage> result = dao.selectApproverLines(session, memberNo);
-//		for(ApproverLineStorage r : result) {
-//			map.put("storageKey", r.getErApLineStorageKey());
-//			map.put("memberNo", memberNo);
-//			//해당 결재라인에 해당하는 결재자들 매칭
-//			r.setApprovers(dao.selectApproverLineList(session, map)); 
-//		}
 		return result;
 	}
 	@Override
@@ -518,42 +514,11 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 
 		return dao.deleteDocFile(session, docSerial);
 	}
-	//html파일로 문서 저장 메소드
-	private int htmlFileUpload(String dir, String title, String content) throws IOException {
-		String path = uploadDir+ dir + "/" +title + ".html";
-		log.debug("문서 저장 경로 : " + path);
-			File file = new File(path);
-			// 필요한 경우, 부모 디렉토리가 존재하지 않으면 생성
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            }
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, false))) {
-				log.debug(content);
-	            writer.write(content);
-	            writer.close();
-	            return 1;
-            }
-	}
-	//파일 삭제 메소드
-	private int fileRemove(String dir, String title) throws IOException {
-		String path = uploadDir + dir + "/" +title;
-		log.debug("문서 경로 : " + path);
-		File file = new File(path);
-		
-		if (file.exists()) {
-	        if (file.delete()) {
-	            log.debug("파일 삭제 성공: " + path);
-	            return 1; // 성공
-	        } else {
-	            log.debug("파일 삭제 실패: " + path);
-	            throw new IOException("파일 삭제 실패: " + path);
-	        }
-	    } else {
-	        log.debug("파일이 존재하지 않음: " + path);
-	        return -1; // 파일 없음
-	    }
-	}
+	
+	
+	
+	
+	//시리얼키로 문서 조회
 	@Override
 	public Document selectDocBySerial(String serial) {
 		log.debug("-----" + serial + "조회-----");
@@ -567,146 +532,13 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 		return d;
 	}
 	
-	//결재 : 승인
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveDoc(int memberKey, String serial, String msg, int formNo) throws Exception {
-		int result = 0;
-		int lastApCk = 0;
-		
-		try {
-			
-			//결재 상태 변경
-			result = dao.updateApprovalState(session, serial, memberKey, msg, "승인");
-			if(result <= 0) {
-				throw new Exception("결재 상태 승인으로 변경 실패");
-			}
-			log.debug("결재 상태 -> 승인");
-			
-			//마지막 결재자인지 확인
-			lastApCk = lastApproverCk(memberKey, serial);
-			
-			//마지막 결재자 승인일 때 문서 처리 완료 등록
-			if(lastApCk > 0) {
-				result = dao.updateDocStatefinalize(session, serial);
-				if(result <= 0) {
-					throw new Exception("문서 상태 처리완료로 변경 실패");
-				}
-				log.debug("문서 상태 -> 처리 완료");
-				
-				switch(formNo) {
-				case 2:
-					//추가근무 문서라면 승인상태 적용
-					result = updateOvertiemApply(serial, "승인");
-					if(result <= 0) throw new Exception("추가근무 신청 상태 승인으로 변경 실패");
-					log.debug("추가근무 신청 상태 -> 승인");
-					break;
-				case 3:
-					//휴가 문서라면 계산 진행
-					result = updateVacationApply(serial, "승인");
-					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
-					log.debug("휴가 신청 상태 -> 승인");
-					
-					//차감 진행
-					result = dao.updateVacationCalc(session, memberKey, serial);
-					if(result <= 0) throw new Exception("휴가 차감 실패");
-					log.debug("휴가 차감 성공");
-					break;
-				}
-	
-			}
-		}catch(Exception e) {
-			log.error("문서 결재 처리 중 예외 발생: ", e);
-			throw e;
-		}
-		return result;
-	}
-	@Override
-	public List<Approver> selectDocApprovers(String serial){
-		log.debug("----- "+ serial + " 문서 전체 결재자 조회 -----");
-		return dao.selectDocApprovers(session, serial);
-	}
-	@Transactional(rollbackFor = Exception.class)
-	public int lastApproverCk(int memberKey, String serial) throws Exception {
-		//문서 결재자 정보 조회
-		try {
-			List<Approver> apList = selectDocApprovers(serial);
-			if(apList == null || apList.isEmpty()) {
-				throw new Exception("결재자 조회 실패");
-			}
-			log.debug("결재자 -> " + apList.toString());
-			
-			//마지막 결재자 탐색
-			Optional<Approver> lastAp = apList.stream().max((ap1, ap2) -> 
-											Integer.compare(ap1.getOrderby(), ap2.getOrderby()));
-//										.filter(ap -> ap.getOrderby() == apList.size())
-//										.findFirst();
-			log.debug(lastAp.toString());
-			//체크
-			if(lastAp.isPresent() && lastAp.get().getMemberKey() == memberKey) {
-				log.debug("마지막 결재자입니다.(" + lastAp.toString() + ")");
-				return 1;
-			}else {
-				return 0;
-			}
-		}catch(Exception e) {
-			log.error("문서 결재 처리 중 예외 발생: ", e);
-			throw e;
-		}
-		
-	}
-	//결재 : 반려
-	@Override
-	@Transactional
-	public int updateRejectDoc(int memberKey, String serial, String msg) throws Exception {
-		int result = 0;
-		
-		try {
-			
-			//결재 상태 변경
-			result = dao.updateApprovalState(session, serial, memberKey, msg, "반려");
-			if(result <= 0) {
-				throw new Exception("결재 상태 반려로 변경 실패");
-			}
-			log.debug("결재 상태 -> 반려(문서 종결)");
-			
-			result = dao.updateDocStateReject(session, serial);
-			if(result <= 0) {
-				throw new Exception("문서 상태 반려로 변경 실패");
-			}
-			log.debug("문서 상태 -> 반려");
-			
-		}catch(Exception e) {
-			log.error("문서 결재 처리 중 예외 발생: ", e);
-			throw e;
-		}
-		return result;
-	}
-	//결재 : 보류
-	@Override
-	@Transactional
-	public int updatePendDoc(int memberKey, String serial, String msg) throws Exception {
-		int result = 0;
-		
-		try {
-			
-			//결재 상태 변경
-			result = dao.updateApprovalState(session, serial, memberKey, msg, "보류");
-			if(result <= 0) {
-				throw new Exception("결재 상태 보류로 변경 실패");
-			}
-			log.debug("결재 상태 -> 보류");
-			
-			
-		}catch(Exception e) {
-			log.error("문서 결재 처리 중 예외 발생: ", e);
-			throw e;
-		}
-		return result;
-	}
 	@Override
 	public List<Document> selectPendingDocs(int no) {
 		return dao.selectPendingDocs(session, no);
+	}
+	@Override
+	public List<Document> selectMyPendingDocs(int no) {
+		return dao.selectMyPendingDocs(session, no);
 	}
 	@Override
 	public List<Document> selectMyCompleteDocs(int no) {
@@ -744,5 +576,44 @@ public class MemberDocumentServiceImpl implements MemberDocumentService {
 	public int updateOvertiemApply(String docSerial, String status) {
 		return dao.updateOvertimeApply(session, docSerial, status);
 	}
+	@Override
+	public String selecetDocFileOriname(String filename) {
+		return dao.selecetDocFileOriname(session, filename);
+	}
+	@Override
+	public DocFile getFileDetailByRename(String filename) {
+		return dao.getFileDetailByRename(session, filename);
+	}
+	@Override
+	public List<Referer> selectReferer(String serial) {
+		return dao.selectReferer(session, serial);
+	}
+	
+	
+//	//파일 자세히보기
+//	@GetMapping("/files/detail/{filename:.+}")
+//	@ResponseBody
+//	public ResponseEntity<DocFile> getFileDetail(
+//			@PathVariable String filename) {
+//		log.debug("파일 자세히보기 요청 -> " + filename);
+//		try {
+//			
+//			//db에서 파일 정보 조회
+//	        String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
+//	        DocFile fileDetail = getFileDetailByRename(decodedFilename);
+//	        log.debug("{}", fileDetail);
+//	        
+//	        if (fileDetail != null) {
+//	            return ResponseEntity.ok(fileDetail);
+//	        } else {
+//	        	log.debug("----파일 정보 없음----");
+//	            return ResponseEntity.status(404).build();
+//	        }
+//	        
+//	    } catch (UnsupportedEncodingException e) {
+//	        log.error("Error decoding filename: ", e);
+//	        return ResponseEntity.status(500).build();
+//	    }
+//	}
 	
 }

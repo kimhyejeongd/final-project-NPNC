@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import com.project.npnc.calendar.model.dto.Vacation;
 import com.project.npnc.calendar.model.service.CalendarService;
 import com.project.npnc.organization.dto.OrganizationDto;
 import com.project.npnc.organization.service.OrganizationService;
+import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,6 +84,23 @@ public class CalendarController {
 	@PostMapping("/calendar/deletecalendar")
 	public ResponseEntity<Map<String,Object>> deleteCalendar(@RequestBody int calendarKey){
 		int result = service.deleteCalendar(calendarKey);
+		Map<String,Object> response = new HashMap<>();
+		
+		if(result>0) {
+			response.put("status", "success");
+			response.put("message", "일정이 삭제되었습니다.");
+		}
+		else {
+			response.put("status", "error");
+			response.put("message", "일정 삭제를 실패했습니다.");
+		}
+		return ResponseEntity.ok(response);
+	}
+	@PostMapping("/calendar/deleterefcalendar")
+	public ResponseEntity<Map<String,Object>> deleteReferenceCalendar(@RequestBody int calendarKey){
+		System.out.println("들어옴?");
+		Member member = (Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int result = service.deleteReferenceCalendar(calendarKey,member.getMemberKey());
 		Map<String,Object> response = new HashMap<>();
 		
 		if(result>0) {

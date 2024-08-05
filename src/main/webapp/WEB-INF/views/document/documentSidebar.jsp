@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<c:set var="path" value="${pageContext.request.contextPath }"/>
 <sec:authentication var="loginMember" property="principal"/>
 <%@ page session="true" %>
     <!-- Fonts and icons -->
@@ -88,7 +89,12 @@
                     </li>
                     <li>
                       <a href="${path }/document/list/employee/complete">
-                        <span class="sub-item">승인 문서</span>
+                        <span class="sub-item">승인 완료 문서</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="${path }/document/list/employee/pending">
+                        <span class="sub-item">수정 요청 문서</span>
                       </a>
                     </li>
                     <li>
@@ -199,8 +205,9 @@
     <script src="${path}/resources/assets/js/kaiadmin.min.js"></script>
 
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-    <script src="${path}/resources/assets/js/setting-demo.js"></script>
-    <script src="${path}/resources/assets/js/demo.js"></script>
+     <%-- <script src="${path}/resources/assets/js/setting-demo.js"></script>
+    <script src="${path}/resources/assets/js/demo.js"></script> --%>
+    
     <script>
       $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
         type: "line",

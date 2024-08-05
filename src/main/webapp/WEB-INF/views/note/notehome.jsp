@@ -87,13 +87,13 @@
 			}
 			.modal .modal_popup .close_btn {
 			  /*   display: block; */
-			    padding: 10px 20px;
-			    background-color: rgb(116, 0, 0);
+		/*	    padding: 10px 20px;
+		    	background-color: rgb(116, 0, 0);
 			    border: none;
 			    border-radius: 5px;
 			    color: #fff;
 			    cursor: pointer;
-			    transition: box-shadow 0.2s;
+			    transition: box-shadow 0.2s; */
 			}
 			.modal.on {
 			    display: block;
@@ -144,6 +144,33 @@
 	}
 	
 	</style>
+	<style>
+	#pagingtbody th{
+		font-weight: normal !important;
+	}
+	.downloadNoteBtn{
+		display: inline-block;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 10px 20px;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    text-align: center;
+	    width: 100px; /* 버튼의 너비를 설정 */
+	    white-space: nowrap; /* 텍스트가 줄 바꿈 없이 한 줄로 유지 */
+	    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	    text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+	    box-sizing: border-box;
+		margin-right: 10px;
+	}
+	
+	#downloadButtonBox{
+		
+	}	
+	
+	</style>
+	
     <!-- CSS Files -->
     <link rel="stylesheet" href="${path}/resources/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${path}/resources/assets/css/plugins.min.css" />
@@ -160,7 +187,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="${path}" class="logo">
               <img
                 src="${path}/resources/assets/img/KakaoTalk_Photo_2024-07-08-14-27-11.png"
                 alt="navbar brand"
@@ -211,7 +238,7 @@
 			   <li class="nav-item">
                   <a data-bs-toggle="collapse" href="${path}/noteSendMe">
                     <i class="fas fa-street-view"></i>
-                    <p>내게 쓴 메일함</p>
+                    <p>내게 쓴 쪽지함</p>
                   </a>
                   
                 </li>
@@ -219,90 +246,9 @@
 	                <a data-bs-toggle="collapse" href="${path}/noteBookMark">
 					  <i class="fas fa-folder-open"></i>
 	                  <p>즐겨찾기</p>
-	                  <span class="caret"></span>
 	                </a>
-	                <div class="collapse" id="base">
-	                  <ul class="nav nav-collapse">
-	               
-	                    <li>
-	                      <a href="components/avatars.html">
-	                        <span class="sub-item">Avatars</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/buttons.html">
-	                        <span class="sub-item">Buttons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/gridsystem.html">
-	                        <span class="sub-item">Grid System</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/panels.html">
-	                        <span class="sub-item">Panels</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/notifications.html">
-	                        <span class="sub-item">Notifications</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/sweetalert.html">
-	                        <span class="sub-item">Sweet Alert</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/font-awesome-icons.html">
-	                        <span class="sub-item">Font Awesome Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/simple-line-icons.html">
-	                        <span class="sub-item">Simple Line Icons</span>
-	                      </a>
-	                    </li>
-	                    <li>
-	                      <a href="components/typography.html">
-	                        <span class="sub-item">Typography</span>
-	                      </a>
-	                    </li>
-	                  </ul>
-	                </div>
 	              </li>       
-				 <li class="nav-item">
-	                 <a data-bs-toggle="collapse" href="#trash">
-						<i class="fas fa-trash-alt"></i>
-	                   <p>휴지통</p>
-	                   <span class="caret"></span>
-	                 </a>
-	                 <div class="collapse" id="trash">
-	                   <ul class="nav nav-collapse">
-	                
-	                     <li>
-	                       <a href="components/avatars.html">
-	                         <span class="sub-item">받은 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/buttons.html">
-	                         <span class="sub-item">보낸 메일함</span>
-	                       </a>
-	                     </li>
-	                     <li>
-	                       <a href="components/gridsystem.html">
-	                         <span class="sub-item">내게 쓴 메일함</span>
-	                       </a>
-	                     </li>
-	                     
-	                     
-	                   </ul>
-	                 </div>
-	               </li>
-              
-            
+				
             </ul>
           </div>
         </div>
@@ -318,7 +264,7 @@
                  });
              });
          });
-	     </script>
+	  </script>
       <!-- End Sidebar -->
 
       <div class="main-panel">
@@ -348,20 +294,20 @@
                 <div class="card">
                   <div class="card-header">
 					<div class="noteSearchBar">
-						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 25%;">
-							<select id="searchCheck" name="searchCheck">
-						           <option value="name">이름</option>
-						           <option value="title">제목</option>
+						<nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex" style="width: 26%; ">
+							<select id="searchCheck" name="searchCheck" style="height: 34px; margin-right:10px;">
+						           <option value="name">이름으로 검색</option>
+						           <option value="title">제목으로 검색</option>
 													           
 							</select>
-					        <div class="input-group">
-					          <div class="input-group-prepend">
+					        <div class="input-group"  style="height: 35px;">
+					          <div class="input-group-prepend" >
 					            <button type="button" class="btn btn-search pe-1" onclick="searchNoteKeyword();">
 					              <i class="fa fa-search search-icon"></i>
 					            </button>
 					          </div>
 							 
-					          <input
+					          <input 
 					            type="text"
 					            placeholder=""
 					            class="form-control"
@@ -419,13 +365,14 @@
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class="display table table-striped table-hover"
+                        class="table table-head-bg-primary mt-4"
+						style="margin-top: 0px!important;"
                       >
                         <thead>
                           <tr>
                           	<th> 
                           		<input type="checkbox" id="deleteCheckAll" value="">
-                          			전체선택 
+                          			 
                           
                           	</th>
                             <th>즐겨찾기</th>
@@ -450,10 +397,10 @@
 
 									</c:otherwise>	
 								</c:choose>	
-							<p>
-       	  					<th>${d.memberName} ${d.jobName}<p>
-       	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}<p>
-       	  					<th>${d.formattedPostMsgTime}<p>
+							</th>
+       	  					<th>${d.memberName} ${d.jobName}</th>
+       	  					<th class="modalDetailGo" onclick="modalDetailGo(${d.postMsgRecKey},${d.memberKey})">${d.postMsgTitle}</th>
+       	  					<th>${d.formattedPostMsgTime}</th>
        	  				</tr>
           		 	  </c:forEach>
           		 	
@@ -462,7 +409,7 @@
                       </table>
                       <div class="noteTableFooter">
 	                      <div id="deleteButton"> 
-	                      	  	<button class="btn btn-info" onclick="deleteSendGo();">삭제하기</button>
+	                      	  	<button class="btn btn-round btn-info" onclick="delalert();">삭제하기</button>
 	                      </div>
 	                      <div id="pageBarList">${pageBar}</div>
                       </div>
@@ -496,32 +443,32 @@
 										<span class="badge badge-info  badge-margin">이성록 사원</span>  -->
 										</div>								
 									  <ul class="dropdown-menu" style="width: 300px !important; height: 400px !important; overflow-y: auto;">
-												<div class="accordion" id="accordionPanelsStayOpenExample">
-														<c:forEach var="d" items="${organlist}" varStatus="status">
-														
-															<div class="accordion-item">
-															    <h2 class="accordion-header">
-															      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
-															     
-															      
-															        ${d.departmentName} 
-															      </button>
-															    </h2>
-												    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse">
-															      <div class="accordion-body" style='padding: 0!important;'>
-															         <div class="list-group" >
-														 				<c:forEach var="memberlist" items="${d.memberlist}">
-																		  <a href="javascript:memberselect(${memberlist.memberKey},'${memberlist.memberName}','${memberlist.jobName}')" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
-																		  
-														  				</c:forEach>
-																	</div>
-															      </div>
-															    </div>
+										<div class="accordion" id="accordionPanelsStayOpenExample">
+												<c:forEach var="d" items="${organlist}" varStatus="status">
+												
+													<div class="accordion-item">
+													    <h2 class="accordion-header">
+													      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${status.index}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${status.index}">
+													     
+													      
+													        ${d.departmentName} 
+													      </button>
+													    </h2>
+										    			<div id="panelsStayOpen-collapse${status.index}" class="accordion-collapse collapse">
+													      <div class="accordion-body" style='padding: 0!important;'>
+													         <div class="list-group" >
+												 				<c:forEach var="memberlist" items="${d.memberlist}">
+																  <a href="javascript:memberselect(${memberlist.memberKey},'${memberlist.memberName}','${memberlist.jobName}')" class="list-group-item list-group-item-action">&emsp;${memberlist.memberName} &nbsp; ${memberlist.jobName}</a>
+																  
+												  				</c:forEach>
 															</div>
-														
-														
-														</c:forEach>	
-													</div> 
+													      </div>
+													    </div>
+													</div>
+												
+												
+												</c:forEach>	
+											</div> 
 											
 									  </ul>
 									</div>
@@ -549,31 +496,8 @@
 			                          </div>
                     			   </div>		  
                     			   <div class="form-group">
-                    			   <div class="input-group-prepend" style="padding:0px;">
-										<button type="button" class="btn btn-outlime-primary" id="addFileButton" >
-				                		추가
-				                		</button>
-										<button type="button" class="btn btn-outlime-primary" id="delFileButton" >
-				                		삭제
-				                		</button>
-				                	</div>
-				                	<div class="form-group">
-				                	<form id="fileInputsContainer">
-				                	<div id="basicFileForm" class="input-group mb-3" style="padding:0px;">
-				                	 
-						                <div class="input-group-prepend" style="padding:0px;">
-						                	<span class="input-group-text1">첨부파일1</span>
-						                </div>
-						                <div class="custom-file">
-						               
-						                    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-						                
-						                </div>
-						                 
-						                
-						            </div>
-						            </form>
-						            </div>
+									
+					                     <input type="file" class="btn btn-black btn-border" name="upFile" id="upFile1" multiple >
                     			   </div>         	   
 								 <div class="form-group">
 							
@@ -586,10 +510,7 @@
 			  <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
+				         
 				           	  <div class="form-group">
 				           		   <h2>전체 쪽지</h2>
 				           	</div>   
@@ -601,6 +522,7 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleAll"
 			                              rows="1" cols="50"
+										  
 			                            ></textarea>
 			                          </div>
                     			   </div>		
@@ -615,33 +537,10 @@
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group">
-                    			   		<div class="input-group-prepend" style="padding:0px;">
-					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_addFile2();">
-					                			추가
-					                		</button>
-					                		<button type="button" class="btn btn-outlime-primary" onclick="fn_delFile2();">
-					                			삭제
-					                		</button>
-				                		</div>
-                    			   </div>
-                    			   <div class="form-group">
-				                	<form id="fileInputsContainer2">
-				                	<div id="basicFileForm2" class="input-group mb-3" style="padding:0px;">
-				                
-						                <div class="input-group-prepend" style="padding:0px;">
-						                	<span class="input-group-text2">첨부파일1</span>
-						                </div>
-						            	 <div class="custom-file">
-						               
-						                    <input type="file" class="custom-file-input" name="upFile2" id="upFile1" multiple >
-						                    
-						                </div>
-						                 
-						                
-						            </div>
-						            </form>
-						            </div>	           	   
+                    			
+                			   <div class="form-group">
+				                    <input type="file" class="btn btn-black btn-border" name="upFile2" id="upFile2" multiple >
+					            </div>	           	   
 								 <div class="form-group">
 								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
 								<button class="btn btn-primary btn-border close_btn" >닫기</button>
@@ -649,19 +548,21 @@
 				          </div>
 				    </div>
 			  </div>
+			  
+			  <!-- 쪽지 내용 모달-->
 			   <div class="modal">
 				    <div class="modal_popup">
 				         <div>
-				         <%--   	  <c:forEach var="d" items="${AllMemberList}">
-				           	    <input type="radio"  name="reMemberKey1" value="${d.memberKey }">
-				           	  	<p>${d.memberKey}<p>
-				           	  </c:forEach>  --%>
-				           	  
+				  
+							<div class="form-group">
+								<button type="button" class="btn-close close_btn" aria-label="Close" ></button>
+							</div>
+  	  
 				           	  <div class="form-group">
-				           	    <div class="namebox" >
-				           		  <!--  <h2>전체 쪽지</h2> -->
-				           		</div>
-				           	</div>   
+					           	    <div class="namebox" >
+					           		  <!--  <h2>전체 쪽지</h2> -->
+					           		</div>
+				           		</div>   
 				           		    <div class="form-group">
 			                          <div class="input-group">
 			                            <span class="input-group-text">제목</span>
@@ -670,8 +571,10 @@
 			                              aria-label="With textarea"
 			                              id="postMsgTitleRecOne"
 			                              rows="1" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
+									
                     			   </div>		
 								   <div class="form-group">
 			                          <div class="input-group">
@@ -681,22 +584,110 @@
 			                              aria-label="With textarea"
 			                              id="postMsgDetailRecOne"
 			                              rows="8" cols="50"
+										  readonly
 			                            ></textarea>
 			                          </div>
                     			   </div>	
-                    			   <div class="form-group" id="downloadButtonBox">
-                    			   	
-                    			   </div>	           	   
-								 <div class="form-group">
-								<button class="btn btn-primary" style="margin-right: 10px;" onclick="noteAllgo();">전송</button>
-								<button class="btn btn-primary btn-border close_btn" >닫기</button>
-								</div>
+								   <div class="form-group">
+   	                    			   <div class="form-group" id="downloadButtonBox">
+   	                    			   	
+   	                    			   </div>	           	   
+   								  </div>		           	   
+								
 				          </div>
 				    </div>
 			  </div>
-			
+			  <style>
+		  	     /* Disabled and readonly 스타일 재정의 */
+		  	     .form-control:disabled, .form-control[readonly] {
+		  	         opacity: 1 !important; /* 불투명도 설정 */
+		  			 background-color: #fff !important; /* 배경색 하얀색으로 설정 */
+		  	         color: #000 !important; /* 글자색 검정색으로 설정 */
+		  	     }
+		  	  </style>
 			<!-- 첨부파일 -->
 			 <script>
+				
+			/* 파일 갯수 제한 . 지금 쓰는 거*/
+							
+			 document.querySelector('input[name="upFile"]').addEventListener('change', function(event) {
+			     var files = event.target.files;
+			     var fileLimit = 5; // 파일 개수 제한
+			  
+			     if (files.length > fileLimit) {
+			       event.target.value = ''; // 선택된 파일을 초기화
+			      
+				   //== Class definition
+				      var SweetAlert2Demo = (function () {
+				        //== Demos
+				        var initDemos = function () {
+				          
+				            swal("최대 발송 파일 수를 초과하였습니다!", "파일 발송 개수는 5개 이하여야 합니다.", {
+				              icon: "error",
+				              buttons: {
+				                confirm: {
+				                  className: "btn btn-danger",
+				                },
+				              },
+				            });
+				          
+				        };
+				
+				        return {
+				          //== Init
+				          init: function () {
+				            initDemos();
+				          },
+				        };
+				      })();
+				
+				      //== Class Initialization
+				      jQuery(document).ready(function () {
+				        SweetAlert2Demo.init();
+				      });
+				   
+			     } 
+			   });
+			   
+			   document.querySelector('input[name="upFile2"]').addEventListener('change', function(event) {
+		   		     var files = event.target.files;
+		   		     var fileLimit = 5; // 파일 개수 제한
+		   		  
+		   		     if (files.length > fileLimit) {
+		   		       event.target.value = ''; // 선택된 파일을 초기화
+		   		      
+		   			   //== Class definition
+		   			      var SweetAlert2Demo = (function () {
+		   			        //== Demos
+		   			        var initDemos = function () {
+		   			          
+		   			            swal("최대 발송 파일 수를 초과하였습니다!", "파일 발송 개수는 5개 이하여야 합니다.", {
+		   			              icon: "error",
+		   			              buttons: {
+		   			                confirm: {
+		   			                  className: "btn btn-danger",
+		   			                },
+		   			              },
+		   			            });
+		   			          
+		   			        };
+		   			
+		   			        return {
+		   			          //== Init
+		   			          init: function () {
+		   			            initDemos();
+		   			          },
+		   			        };
+		   			      })();
+		   			
+		   			      //== Class Initialization
+		   			      jQuery(document).ready(function () {
+		   			        SweetAlert2Demo.init();
+		   			      });
+		   			   
+		   		     } 
+		   		   });
+				
 			 /* 개별발송 파일 추가 로직*/
 			 $(document).ready(function() {
 	 		     const addDelFunction = (function() {
@@ -783,10 +774,117 @@
 	
 	                // 'on' 클래스 추가
 	                modal[index].classList.remove('on');
+					
+					var namebox=document.getElementsByClassName("namebox");
+		      	 	document.getElementById('postMsgDetail').value='';
+		      		document.getElementById('postMsgTitle').value='';
+					document.getElementById('upFile1').value='';
+					
+					
+			    	namebox[0].innerHTML = '';
+					
+					document.getElementById('postMsgDetailAll').value='';
+		      		document.getElementById('postMsgTitleAll').value='';
+					document.getElementById('upFile2').value='';
 	            });
 	        });
           	
-         	/* 체크되어있는 체크박스의 값을 구해오는 로직 */
+          	/* 알람 띄우고 삭제 함수 실행하는 로직 */
+          	function delalert(){
+       	    var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
+            var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+          	if(checkedCount==0){
+          		
+          		 //== Class definition
+			      var SweetAlert2Demo = (function () {
+			        //== Demos
+			        var initDemos = function () {
+			          
+			            swal("삭제할 쪽지를 선택해주세요.", "쪽지가 선택되어있지 않아 삭제할 수 없습니다.", {
+			              icon: "error",
+			              buttons: {
+			                confirm: {
+			                  className: "btn btn-danger",
+			                },
+			              },
+			            });
+			          
+			        };
+			
+			        return {
+			          //== Init
+			          init: function () {
+			            initDemos();
+			          },
+			        };
+			      })();
+			
+			      //== Class Initialization
+			      jQuery(document).ready(function () {
+			        SweetAlert2Demo.init();
+			      });
+			      
+          	}else if(checkedCount>0){
+	            //== Class definition
+			      var SweetAlert2Demo = (function () {
+			        //== Demos
+			        var initDemos = function () {
+			          
+			        	swal({
+							title: '정말로 삭제하시겠습니까??',
+							text: "삭제를 원하신다면 네를 눌러주세요",
+							icon: 'warning',
+							buttons:{
+								confirm: {
+									text : '네',
+									className : 'btn btn-success'
+								},
+								cancel: {
+									visible: true,
+									text : '아니오',
+									className: 'btn btn-danger'
+								}
+							}
+						}).then((Delete) => {
+							console.log(Delete);
+							if (Delete) {
+								deleteSendGo();
+	
+								swal({
+									title: '삭제되었습니다.',
+									text: '화면이 기본페이지로 돌아갑니다.',
+									icon: 'success',
+									buttons : {
+										confirm: {
+											className : 'btn btn-success'
+										}
+									}
+								});
+							} else {
+								swal.close();
+							}
+							
+							
+						});
+			          
+			        };
+			
+			        return {
+			          //== Init
+			          init: function () {
+			            initDemos();
+			          },
+			        };
+			      })();
+			
+			      //== Class Initialization
+			      jQuery(document).ready(function () {
+			        SweetAlert2Demo.init();
+			      });
+         	  }
+          	}
+          	
+         	/* 체크되어있는 체크박스의 값을 구해오고 삭제하는 로직 */
           	function deleteSendGo(){
 			
           		 var checkboxes = document.querySelectorAll('input[name="deleteCheck"]');
@@ -864,7 +962,7 @@
 								 var newElement=document.createElement("button");
 					                newElement.classList.add("btn");
 					                newElement.classList.add("btn-success");
-					                
+									newElement.classList.add("downloadNoteBtn");
 					               	newElement.textContent=files[i].postMessageFileOri;
 					                
 					               	newElement.onclick = function() {
@@ -964,17 +1062,18 @@
       		}
 			
           	/* 타입 , 알람 , 수신인, 메세지  */
-         	function send(reMemberKey1, memberKey){
+         	function send(reMemberKey1, memberKey, memberName, jobName){
    		   	 console.log('send보내짐');
    		   		stompClient.send("/pub/msg/"+reMemberKey1,{},
    		   			JSON.stringify({
 						
 						alarmType : 'Note',
-						alarmPath : 'notein',
+						alarmPath : 'notehome',
 		   				alarmSendMember : memberKey,
 						alarmReMember : reMemberKey1,
-						alarmDate : new Date().toISOString()
-						
+						alarmDate : new Date().toISOString(),
+						memberName: memberName,
+						jobName : jobName
    		   				
    		   				
    		   			})
@@ -984,15 +1083,17 @@
    		   	}
 			
 			<!--전체 알람 함수-->
-			function sendAll(alarmSendMember){
+			function sendAll(alarmSendMember,memberName, jobName){
 					   	 console.log('send보내짐');
 						 
 					   		stompClient.send("/pub/all",{},
 					   			JSON.stringify({
 									alarmType : 'Note',
-									alarmPath : 'notein',
+									alarmPath : 'notehome',
 					   				alarmSendMember : alarmSendMember,
-									alarmDate : new Date().toISOString()
+									alarmDate : new Date().toISOString(),
+									memberName: memberName,
+									jobName : jobName
 					   			})
 					   				
 					   		);
@@ -1000,6 +1101,7 @@
         	
          	/* 파일 다운로드 버튼 로직 */
           	function fn_download(ori,post){
+          		
           		location.assign("${path}/note/filedownload?oriname="+ori+"&rename="+post);
           	}
         	
@@ -1026,6 +1128,8 @@
 				console.log(reMemberKey1);
 	            // 나머지 인풋 값들을 가져옴
 	            var memberKey = document.getElementById('memberKey').value;
+				var memberName='${loginMember.memberName}';
+				var jobName='${loginMember.jobName}';
 	            console.log(memberKey);
 	            var postMsgDetail = document.getElementById('postMsgDetail').value;
 	            console.log(postMsgDetail);
@@ -1057,7 +1161,7 @@
 		    		success : function(){
 		    			alert('성공');
 		    			for (let i=0; i<reMemberKey1.length;i++)	{
-		    				send(reMemberKey1[i], memberKey);
+		    				send(reMemberKey1[i], memberKey,memberName ,jobName);
 		    			}
 		    			
 		    			/* send(reMemberKey1, memberKey); */
@@ -1067,6 +1171,7 @@
 	      		var namebox=document.getElementsByClassName("namebox");
 	      	 	document.getElementById('postMsgDetail').value='';
 	      		document.getElementById('postMsgTitle').value='';
+				document.getElementById('upFile1').value='';
 		    	namebox[0].innerHTML = '';
 		    }
           	
@@ -1085,6 +1190,8 @@
             	}
 	          
 	            // 나머지 인풋 값들을 가져옴
+				var memberName='${loginMember.memberName}';
+				var jobName='${loginMember.jobName}';
 	            var memberKey = document.getElementById('memberKey').value;
 	            console.log(memberKey);
 	            var postMsgDetail = document.getElementById('postMsgDetailAll').value;
@@ -1107,15 +1214,18 @@
 			    	contentType: false, 
 		    		success : function(){
 		    			alert('성공');
-						sendAll(memberKey);
+						sendAll(memberKey,memberName ,jobName);
 
 		    			/* send(reMemberKey1, memberKey); */
 		    		}
 		    	});
 		    	
+				
+				
 		    	document.getElementById('postMsgDetailAll').value='';
 	      		document.getElementById('postMsgTitleAll').value='';
-		    	 modal[1].classList.remove('on');
+				document.getElementById('upFile2').value='';		    	 
+				modal[1].classList.remove('on');
 		    }
             
           	
@@ -1174,10 +1284,10 @@
 
 										<th>
 											<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
-										<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 				                    </tr>`;
 				                  	  tbody.append(row);
 									  
@@ -1186,10 +1296,10 @@
 				                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 										<th>
 											<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
-										<p>
-										<th>\${item.memberName} \${item.jobName}<p>
-				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-				                        <th>\${item.formattedPostMsgTime}<p>
+										</th>
+										<th>\${item.memberName} \${item.jobName}</th>
+				                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+				                        <th>\${item.formattedPostMsgTime}</th>
 										</tr>`;
 					                  	  tbody.append(row);	
 						  	}
@@ -1233,10 +1343,10 @@
 
 														<th>
 															<i class="far fa-star bookmarkN" data-key="\${item.postMsgRecKey}"></i>
-														<p>
-														<th>\${item.memberName} \${item.jobName}<p>
-								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
+														</th>
+														<th>\${item.memberName} \${item.jobName}</th>
+								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+								                        <th>\${item.formattedPostMsgTime}</th>
 								                  		</tr>`;
 								                    	tbody.append(row);
 															  
@@ -1245,10 +1355,10 @@
 								                    	<th><input type="checkbox" name="deleteCheck" value="\${item.postMsgRecKey}"></th>
 														<th>
 															<i class="fas fa-star bookmarkY" data-key="\${item.postMsgRecKey}"></i>
-														<p>
-														<th>\${item.memberName} \${item.jobName}<p>
-								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</p>
-								                        <th>\${item.formattedPostMsgTime}<p>
+														</th>
+														<th>\${item.memberName} \${item.jobName}</th>
+								                        <th class="modalDetailGo" onclick="modalDetailGo(\${item.postMsgRecKey},\${item.memberKey})">\${item.postMsgTitle}</th>
+								                        <th>\${item.formattedPostMsgTime}</th>
 														</tr>`;
 									                  	tbody.append(row);	
 												  	}
@@ -1280,7 +1390,7 @@
 					              },
 					              success: function(response) {
 					                starElement.removeClass('far').addClass('fas'); 
-									
+					                starElement.removeClass('bookmarkN').addClass('bookmarkY');
 									var SweetAlert2Demo = (function () {
 								        //== 검색창이 비어있습니다 얼럿창
 								        var initDemos = function () {
@@ -1329,7 +1439,8 @@
 				              },
 				              success: function(response) {
 				                starElement.removeClass('fas').addClass('far'); 
-								
+				                starElement.removeClass('bookmarkY').addClass('bookmarkN');
+				                
 								var SweetAlert2Demo = (function () {
 									//== 검색창이 비어있습니다 얼럿창
 							        var initDemos = function () {

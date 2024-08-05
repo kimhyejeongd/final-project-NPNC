@@ -10,13 +10,22 @@
 			<result column="ALARM_SEND_MEMBER" property="alarmSendMember"></result>
 			<result column="ALARM_DATE" property="alarmDate"></result>
 			<result column="ALARM_READ" property="alarmRead"></result>
+			<result column="ALARM_READ" property="alarmRead"></result>
+			<result column="MEMBER_NAME" property="memberName"></result>
+			<result column="JOB_NAME" property="jobName"></result>
+			
 		</resultMap>
 		
 	
 	
 	
 	<select id="alarmSelectAll" resultMap="alarmMap" parameterType="_int">
-		SELECT * FROM ALARM WHERE ALARM_READ='N' AND ALARM_RE_MEMBER=#{memberKey} ORDER BY ALARM_KEY DESC
+		SELECT * FROM alarm a 
+		JOIN MEMBER m 
+		ON a.ALARM_SEND_MEMBER=m.MEMBER_KEY 
+		JOIN JOB j 
+		ON m.JOB_KEY =j.JOB_KEY 
+		WHERE a.ALARM_READ='N' AND a.ALARM_RE_MEMBER=#{memberKey} ORDER BY a.ALARM_KEY 
 	</select>
 	<insert id="alarmInsert"  parameterType="alarmMessage">
  		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N')

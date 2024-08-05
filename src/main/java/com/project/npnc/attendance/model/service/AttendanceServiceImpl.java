@@ -1,5 +1,6 @@
 package com.project.npnc.attendance.model.service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,6 +16,8 @@ import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.attendance.model.dao.AttendanceDao;
 import com.project.npnc.attendance.model.dto.Attendance;
 import com.project.npnc.attendance.model.dto.AttendanceEdit;
+import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.VacationApply;
 
 import lombok.RequiredArgsConstructor;
 
@@ -76,51 +79,113 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public void updateAttendanceState(Attendance a,Map<Integer, Boolean> result) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		//승인된 오늘날짜의 휴가시작날짜
+		List<VacationApply> vApply=attendanceDao.selectVacationApplyApprove(session);
+		System.out.println("들어옴?"+vApply);
+
 		result.forEach((key, value) -> {
+			
 
 		    if (value) {
-			    	int startHour;
-			    	int endHour;
 			    	Attendance at=selectAttendanceByMemberKey(key);
 			    	a.setMember(AdminMember.builder().memberKey(key).build());
-			    	if(at.getAttendanceEnd()==null) {
-			    		a.setAttendanceState("결근");
-			    	}else {
-				    	try {		    			    	
-				    	Date startTime=sdf.parse(at.getAttendanceStart());
-				    	Date endTime=sdf.parse(at.getAttendanceEnd());
-				    	
-				    	Calendar startCal= Calendar.getInstance();
-				    	startCal.setTime(startTime);
-				    	startHour=startCal.get(Calendar.HOUR_OF_DAY);
-				    	
-				    	Calendar endCal= Calendar.getInstance();
-				    	endCal.setTime(endTime);
-				    	endHour=endCal.get(Calendar.HOUR_OF_DAY);
-				    			
-				    	if(startHour<9 && endHour>18) {
-				    		a.setAttendanceState("출근");
-				    	}else if(startHour<9 && endHour<18) {
-				    		a.setAttendanceState("조퇴");
-				    	}else if(startHour>16) {
-				    		a.setAttendanceState("결근");
-				    	}else if(startHour>9 && endHour>18) {
-				    		a.setAttendanceState("지각");
-				    	}else if(startHour>9 && endHour<18) {
-				    		a.setAttendanceState("조퇴");
-				    	}
 
-				    	}catch(ParseException e) {
-				    		e.printStackTrace();
+			    	//휴가승인이있는경우
+			    	
+				    	vApply.forEach(v->{
+				    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+				   	     	Timestamp start = v.getVacationStartDate();
+				   	     	Timestamp end = v.getVacationEndDate();
+				   	     
+			    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+			    	        System.out.println("Is date in range? " + isInRange);
+				    
+				    		System.out.println(isInRange&&v.getVacationMemberKey()==key);
+	//		    	        if(v.getVacationMemberKey()==key) {
+			    	        if(isInRange&&v.getVacationMemberKey()==key) {
+								if(v.getVacationKey()==1) {
+									a.setAttendanceState("휴가");
+								}else if(v.getVacationKey()==2) {
+									a.setAttendanceState("병가");
+								}else if(v.getVacationKey()==3) {
+									a.setAttendanceState("공가");
+								}else if(v.getVacationKey()==4) {
+									a.setAttendanceState("오전반차");
+								}else if(v.getVacationKey()==5) {
+									a.setAttendanceState("오후반차");
+								}
+							}
+			    	});
+			    
+			    	if(a.getAttendanceState()==null) {
+				    	if(at.getAttendanceEnd()==null) {
+				    		a.setAttendanceState("결근");
+				    	}else {
+					    	try {	
+						    	Date startTime=sdf.parse(at.getAttendanceStart());
+						    	Date endTime=sdf.parse(at.getAttendanceEnd());
+						    	
+						    	Calendar startCal= Calendar.getInstance();
+						    	startCal.setTime(startTime);
+						    	int startHour=startCal.get(Calendar.HOUR_OF_DAY);
+						    	
+						    	Calendar endCal= Calendar.getInstance();
+						    	endCal.setTime(endTime);
+						    	int endHour=endCal.get(Calendar.HOUR_OF_DAY);
+						    			
+						    	if(startHour<9 && endHour>18) {
+						    		a.setAttendanceState("출근");
+						    	}else if(startHour<9 && endHour<18) {
+						    		a.setAttendanceState("조퇴");
+						    	}else if(startHour>16) {
+						    		a.setAttendanceState("결근");
+						    	}else if(startHour>9 && endHour>18) {
+						    		a.setAttendanceState("지각");
+						    	}else if(startHour>9 && endHour<18) {
+						    		a.setAttendanceState("조퇴");
+						    	}
+	
+					    	}catch(ParseException e) {
+					    		e.printStackTrace();
+					    	}
 				    	}
 			    	}
-			    	attendanceDao.updateAttendanceState(session, a);
-		    	
 
+			    	attendanceDao.updateAttendanceState(session, a);
+			    	
 		    }else {
-		    	attendanceDao.insertAbsent(session, key);
-//		    	insertAbsent(key);
-		    }
+		    	
+		    		attendanceDao.insertAbsent(session, key); 	
+		    		a.setMember(AdminMember.builder().memberKey(key).build());
+		    		
+		    		vApply.forEach(v->{
+			    		Timestamp dateToCheck = new Timestamp(System.currentTimeMillis());
+			   	     	Timestamp start = v.getVacationStartDate();
+			   	     	Timestamp end = v.getVacationEndDate();
+			   	     
+		    	        boolean isInRange = isDateInRange(dateToCheck, start, end);
+		    	        System.out.println("Is date in range? " + isInRange);
+			    		
+			    		if(isInRange&&v.getVacationMemberKey()==key) {
+			    			if(v.getVacationKey()==1) {
+								a.setAttendanceState("휴가");
+							}else if(v.getVacationKey()==2) {
+								a.setAttendanceState("병가");
+							}else if(v.getVacationKey()==3) {
+								a.setAttendanceState("공가");
+							}else if(v.getVacationKey()==4) {
+								a.setAttendanceState("오전반차");
+							}else if(v.getVacationKey()==5) {
+								a.setAttendanceState("오후반차");
+							}
+			    			
+			    			attendanceDao.updateAttendanceState(session, a);
+						}
+//			    		attendanceDao.insertAttendanceVacation(session,key,status);
+					});
+ 						    		
+		    	}
+		    
 		    	 
 		});
 
@@ -136,6 +201,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return a;
 	}
 
+	public static boolean isDateInRange(Timestamp timestampToCheck, Timestamp startTimestamp, Timestamp endTimestamp) {
+        if (timestampToCheck == null || startTimestamp == null || endTimestamp == null) {
+            throw new IllegalArgumentException("Timestamps cannot be null");
+        }
+
+        // 시작 시간과 종료 시간이 올바른지 확인
+        if (startTimestamp.after(endTimestamp)) {
+            throw new IllegalArgumentException("Start timestamp cannot be after end timestamp");
+        }
+
+        // timestampToCheck가 시작 시간과 종료 시간 사이에 있는지 확인
+        return !timestampToCheck.before(startTimestamp) && !timestampToCheck.after(endTimestamp);
+    }
+	
 	
 	// 사원 근태관리 화면
 	
@@ -187,6 +266,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		a.setAttendanceState("조퇴");
 		attendanceCount.put("ealryLeave",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("병가");
+		attendanceCount.put("sick",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+		a.setAttendanceState("공가");
+		attendanceCount.put("gongga",attendanceDao.selectAttendanceMonthCount(session, a));
+		
+//		a.setAttendanceState("오전반차");
+//		attendanceCount.put("morning",attendanceDao.selectAttendanceMonthCount(session, a));
+//		
+//		a.setAttendanceState("오후반차");
+//		attendanceCount.put("afternoon",attendanceDao.selectAttendanceMonthCount(session, a));
 		
 		return attendanceCount;
 	}
@@ -316,7 +407,42 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendanceDao.searchAdminAttendanceCount(session, searchMap);
 	}
 
+	@Override
+	public int updateAdminAttendance(Attendance attendance) {
+		
+		return attendanceDao.updateAdminAttendance(session, attendance);
+	}
+	
+	
+	//overtime
+	
+	@Override
+	public List<OvertimeApply> selectoverworkByMemberKey(int memberKey,Map<String,Integer> page) {
+		
+		return attendanceDao.selectoverworkByMemberKey(session, memberKey,page);
+	}
 
+	@Override
+	public int selectoverworkByMemberKeyCount(int memberKey) {
+		
+		return attendanceDao.selectoverworkByMemberKeyCount(session, memberKey);
+	}
+
+	@Override
+	public List<OvertimeApply> searchoverworkByMemberKey(Map<String, Object> searchMap, Map<String, Integer> page) {
+		
+		return attendanceDao.searchoverworkByMemberKey(session, searchMap, page);
+	}
+
+	@Override
+	public int searchoverworkByMemberKeyCount(Map<String, Object> searchMap) {
+		
+		return attendanceDao.searchoverworkByMemberKeyCount(session, searchMap);
+	}
+
+
+
+	
 
 
 

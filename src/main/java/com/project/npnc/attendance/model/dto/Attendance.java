@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Attendance {
 	private int attendanceKey;
 	private AdminMember member;
-	private LocalDate attendanceDate;
+	private String attendanceDate;
 	private String attendanceStart;
 	private String attendanceEnd;
 	private String attendanceState;

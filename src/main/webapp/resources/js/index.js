@@ -8,6 +8,7 @@
 		console.log('진행문서');
 		$("#waitingTable").css('display', 'none');
 		$("#inproTable").css('display', 'table');
+		sessionStorage.setItem('selectedOptionDoc', this.value);
     });
 
     // 결재 대기 문서 버튼 클릭 이벤트
@@ -15,6 +16,7 @@
 		console.log('결재 대기 문서');
 		$("#waitingTable").css('display', 'table');
 		$("#inproTable").css('display', 'none');
+		sessionStorage.setItem('selectedOptionDoc', this.value);
     });
     $("#waitingTable").on('click', "button", function(e) {
         e.stopPropagation();
@@ -58,8 +60,10 @@
         selectable: false,
         droppable: false,
         editable: false,
+        expandedRows: true,
         locale: 'ko',
-        dayMaxEvents: true,
+        dayMaxEvents: 0,
+        fixedWeekCount:false,
         headerToolbar:{
 			left : 'prev',
 			center : 'title',

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import com.project.npnc.security.common.mappers.MemberMapper;
 import com.project.npnc.security.dto.Member;
 
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import lombok.RequiredArgsConstructor;
 
 @Component//자바 bean에 등록하라고 알려줌
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 	private final MemberMapper mapper;
 	private BCryptPasswordEncoder pwencoder=new BCryptPasswordEncoder();
+	
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -30,8 +30,8 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 		System.out.println();
 		Member loginMember=mapper.selectMemberById(userId);
 		System.out.println(loginMember);
-		//if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
-		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
+		if(loginMember!=null&&pwencoder.matches(password, loginMember.getPassword())) {
+//		if(loginMember!=null&&password.equals(loginMember.getPassword())) {
 			System.out.println("이우석");
 			
 			return new UsernamePasswordAuthenticationToken(loginMember,loginMember.getPassword(),loginMember.getAuthorities());
@@ -44,6 +44,7 @@ public class UserPasswordAuthencationProvider implements AuthenticationProvider{
 	public boolean supports(Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class
 					.isAssignableFrom(authentication);
+		
 	}
 
 }

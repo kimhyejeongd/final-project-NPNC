@@ -4,9 +4,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <sec:authentication var="loginMember" property="principal"/>
-<c:set var="aptarget" value="'memberKey=' + ${loginMember.memberKey}"/>
+<c:set var="aptarget" value="memberKey=${loginMember.memberKey}"/>
 <%
 	String lastPage = (String) session.getAttribute("lastPage");
+	String key = "list/";
+	int startIndex = lastPage.indexOf(key) + key.length();
+	String result = lastPage.substring(startIndex).replace(".jsp", "");
 %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -22,6 +25,9 @@
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.min.css" rel="stylesheet">
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.2/dist/sweetalert2.all.min.js"></script>
+  <!-- html2pdf -->
+  <script src="${path}/resources/assets/js/html2pdf.bundle.js"></script>
+  
   <link
     rel="icon"
     type="image/x-icon"
@@ -40,7 +46,15 @@
      	cursor: pointer;
      	text-decoration: underline !important;
      } */
+     .signature {
+            display: none;
+        }
+     .signed {
+         display: table-cell;
+         text-align: center !important;
+     }
  </style>
+ <script src="${path}/resources/jh/js/doc-alarm.js"></script>
  <script src="${path}/resources/jh/js/docDetail.js"></script>
  <script src="${path}/resources/jh/js/draft.js"></script>
  <script src="${path}/resources/jh/js/inprocess.js"></script>
@@ -48,23 +62,30 @@
 
 	<div class="wrapper">
       <!-- Sidebar -->
-      <c:import url="${path }/WEB-INF/views/document/documentSidebar.jsp"/>
+      <c:import url="/WEB-INF/views/document/documentSidebar.jsp"/>
       <!-- End Sidebar -->
 	  <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">
           </div>
           <!--  header Navbar 넣을 곳 -->
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <%@ include file="/WEB-INF/views/common/header_bar.jsp" %>
         </div>
 		<!-- 메인 내용 -->
-		
 		<div class="container">
+		<div id="docInfo" style="display:none;"
+	         data-writer-key="${l.erDocWriter}"
+	         data-writer-name="${l.writer}"
+	         data-writer-job-name="${l.writerJobName}"
+	         data-doc-serial="${l.erDocSerialKey}"></div>
+	         
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div>
               	<c:choose>
-              		<c:when test="${fn:contains(lastPage, 'inprocess') or (fn:contains(lastPage, 'home') and fn:contains(history, 'inprocess'))}">
+              		<c:when test="${fn:contains(lastPage, 'inprocess') or 
+              				(fn:contains(lastPage, 'home') and fn:contains(history, 'inprocess')) or
+							(loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'index'))}">
 		              	<h3 class="fw-bold text-center">진행 중 문서</h3>
 		            </c:when>
               		<c:when test="${fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
@@ -72,6 +93,15 @@
 		            </c:when>
 		            <c:when test="${fn:contains(lastPage, 'waiting') or (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting'))}">
 		              	<h3 class="fw-bold text-center">결재 대기 문서</h3>
+		            </c:when>
+		            <c:when test="${fn:contains(lastPage, 'complete') or (fn:contains(lastPage, 'home') and fn:contains(history, 'complete'))}">
+		              	<h3 class="fw-bold text-center">결재 완료 문서</h3>
+		            </c:when>
+		            <c:when test="${fn:contains(lastPage, 'reject') or (fn:contains(lastPage, 'home') and fn:contains(history, 'reject'))}">
+		              	<h3 class="fw-bold text-center">반려 문서</h3>
+		            </c:when>
+		            <c:when test="${fn:contains(lastPage, 'refer') or (fn:contains(lastPage, 'home') and fn:contains(history, 'refer'))}">
+		              	<h3 class="fw-bold text-center">참조 문서</h3>
 		            </c:when>
               	</c:choose>
               </div>
@@ -89,13 +119,15 @@
 							<!-- 재기안, 삭제 -->
 							<div class="d-flex">
 							<c:choose>
-								<c:when test="${loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')}">
-									<button class="btn btn-label-success btn-round btn-sm me-2">
+								<c:when test="${(loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'inprocess')) 
+											or (loginMember.memberKey eq l.erDocWriter and fn:contains(lastPage, 'index'))
+											or fn:contains(lastPage, 'pend') }">
+									<!-- <button class="btn btn-label-success btn-round btn-sm me-2">
 										<span class="btn-label">
 											<i class="fas fa-edit"></i>
 										</span>
 										내용 수정
-									</button>
+									</button> -->
 									<button class="btn btn-label-info btn-round btn-sm" onclick="modal('${l.erDocSerialKey}');">
 										<span class="btn-label">
 											<i class="fas fa-redo-alt"></i>
@@ -104,34 +136,39 @@
 									</button>
 								</c:when>
 								<c:when test="${fn:contains(lastPage, 'draft') or fn:contains(lastPage, 'retrieve') or (fn:contains(lastPage, 'home') and fn:contains(history, 'retrieve'))}">
-									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocKey}')">
+									<button class="btn btn-label-success btn-round me-2" onclick="rewriteModal('${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
 										</span>
 										다시 쓰기
 									</button>
-									<button class="btn btn-label-warning btn-round" onclick="deleteModal('${l.erDocKey}')">
+									<button class="btn btn-label-warning btn-round" onclick="deleteModal('${l.erDocKey}', '<%=result %>')">
 										<span class="btn-label">
 											<i class="fas fa-trash-alt"></i>
 										</span>
-										삭제
+										삭제 ${result }
 									</button>
 								</c:when>
-								<c:when test="${fn:contains(lastPage, 'waiting') or 
-							                  (fn:contains(lastPage, 'home') and fn:contains(history, 'waiting')) or 
-							                  fn:contains(approverStr, aptarget)}">
-									<a href="#" class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
+								<c:when test="${fn:contains(approverStr, aptarget) and !fn:contains(lastPage, 'complete')
+												and !fn:contains(lastPage, 'reject') and !fn:contains(lastPage, 'refer')}">
+									<button class="btn btn-label-info btn-round" onclick="approveModal('${loginMember.memberKey }', '${l.erDocSerialKey}')">
 										<span class="btn-label">
 											<i class="fa fa-pencil"></i>
 										</span>
 										결재
-									</a>
+									</button>
 								</c:when>
 							</c:choose>
-									<div class="d-flex align-items-center">
-										<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
-		           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button>
-	           						</div>
+								<div class="d-flex align-items-center">
+								<button class="btn btn-label-info btn-round" onclick='window.open(`${path}/document/view/inprocess/now?no=${l.erDocKey}`, "approveNow", "width=700, height=500, left=500, top=100, scrollbars=yes,resizable=yes");'>
+										<span class="btn-label">
+											<i class="fa fa-search"></i>
+										</span>
+										결재 내역
+									</button>
+									<!-- <button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="topBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-up"></i></button>
+	           						<button class="btn btn-sm btn-outline-secondary justify-content-center d-flex" id="downBtn" style="width: 30px; align-items: center; height:30px;"><i class="icon-arrow-down"></i></button> -->
+           						</div>
 							</div>
 						</div>
 					</div>
@@ -199,8 +236,8 @@
 			      </div>
 			    </div>
 	          	<c:if test="${l.files[0].fileKey ne 0}">
-			    <div class="form-group d-flex align-items-center">
-		          <label for="exampleFormControlFile1"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
+			    <div class="form-group d-flex align-items-top">
+		          <label for="exampleFormControlFile1 d-flex"><span class="h5 align-items-top" style="margin-right: 1.8rem !important;">첨부파일</span></label><br>
 		          <div class="border" style="width:100%; height: auto;">
 	          		<c:forEach items="${l.files }" var="f" varStatus="vs">
 					  <div class="m-0 p-2 d-flex align-items-center justify-content-between" id="approval1" style="width: 100%; font-size: larger; text-align: left; border-radius: 15px;">
@@ -209,8 +246,8 @@
 						  	<span href="#" id="approvers[${vs.index }].fileOriName" style="color: black;">${f.fileOriName }</span>
 					  	</div>
 					  	<div class="d-flex">
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button">자세히보기</button>
-						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileOriName }">다운로드</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileViewBtn" type="button" data-filename="${f.fileRename }">자세히보기</button>
+						  	<button class="btn btn-sm btn-outline-secondary ml-2 bringBtn ms-2" id="fileDownBtn" type="button" data-filename="${f.fileRename }">다운로드</button>
 					  	</div>
 					  </div>
 					</c:forEach>
@@ -218,7 +255,16 @@
 		        </div>
 	          	</c:if>
 			    <div class="form-group">
-		          	<label for="exampleFormControlFile1"><span class="h5">문서내용</span></label>
+		          	<label for="exampleFormControlFile1" class="d-flex justify-content-between"><span class="h5 d-inline">문서내용</span>
+		          	<c:if test="${fn:contains(lastPage, 'complete')}">
+						<button class="btn-sm btn-label-info btn-round d-inline" onclick="pdf_down('${l.erDocSerialKey}');">
+							<span class="btn-label">
+								<i class="fas fa-download"></i>
+							</span>
+							다운로드
+						</button>
+					</c:if>
+					</label>
 			        <div id="" class="scrollable-content" style="margin: 0px auto; width: 100%; height: 800px;">
 			        	<div id="content" class="" style="width: fit-content; height: 800px; margin: 0px auto; padding: 50px;">
 				        	<c:out value="${html }" escapeXml="false"/>
@@ -234,11 +280,37 @@
             </div>
           </div>
          </div>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
        </div>
       </div>
+<!-- 모달 HTML -->
+<div class="modal" id="fileDetailModal" tabindex="-1" role="dialog" aria-labelledby="fileDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fileDetailModalLabel">파일 상세 정보</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" onclick="fileModalClose();">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>파일 이름: <span id="fileDetailOriname"></span></p>
+        <p>파일 크기: <span id="fileDetailSize"></span></p>
+        <p>업로드 날짜: <span id="fileDetailUploadDate"></span></p>
+        <img id="fileDetailImage" src="" alt="File Image" style="width: 100%; display: none; border: 1px solid black;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fileModalClose();">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-	sessionStorage.setItem("path", "${pageContext.request.contextPath}");
+	sessionStorage.setItem("path", '${pageContext.request.contextPath}');
 	sessionStorage.setItem("formNo", "${l.docFormKey}");
+	function fileModalClose(){
+		$('#fileDetailModal').modal('hide');
+	};
 </script>
 </body>
 </html>

@@ -10,6 +10,10 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
+import com.project.npnc.admin.department.model.dao.DepartmentDao;
+import com.project.npnc.admin.department.model.dto.Department;
+import com.project.npnc.admin.job.model.dao.JobDao;
+import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.member.model.dao.AdminMemberDao;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 import com.project.npnc.memberVacation.model.dao.MemberVacationDao;
@@ -24,6 +28,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	private final AdminMemberDao dao;
 	private final MemberVacationDao memberVacationDao;
 	private final SqlSession session;
+	private final DepartmentDao deptDao;
+	private final JobDao jobDao;
 	
 	@Override
 	public List<AdminMember> selectMemeberAll(Map<String,Integer> page) {
@@ -122,6 +128,36 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return dao.searchMemberCount(session, searchMap);
 	}
 
+
+	@Override
+	public List<Department> selectMemberCountByDept() {
+		List<Department> dept=deptDao.selectDeptAll(session);
+		
+		dept.forEach(d->{
+			int deptCount=dao.selectMemberCountByDept(session,  d.getDeptKey());
+			d.setMemberDeptCount(deptCount);
+		});
+		return dept;
+	}
+
+	@Override
+	public List<Job> selectMemberCountByJob() {
+		List<Job> job= jobDao.selectJobAll(session);
+		
+		job.forEach(j->{
+			int jobCount=dao.selectMemberCountByJob(session, j.getJobKey());
+			j.setMemberJobCount(jobCount);	
+		});
+		
+		return job;
+	}
+
+	@Override
+	public int updatePw(int memberKey, String encodePw) {
+		
+		return dao.updatePw(session, memberKey, encodePw);
+	}
+	
 	
 	
 }

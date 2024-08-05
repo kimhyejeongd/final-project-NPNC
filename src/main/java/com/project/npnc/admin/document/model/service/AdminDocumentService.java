@@ -15,6 +15,8 @@ import com.project.npnc.admin.document.model.dao.AdminDocumentDao;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.document.model.dto.DocumentForm;
+import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.security.dto.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -148,5 +150,54 @@ public class AdminDocumentService {
 	public String selectParentFolderName(int folderGroup) {
 		return dao.selectParentFolderName(session,folderGroup);
 	}
-
+	public int updateStorageFolder(StorageFolder storageFolder) {
+		System.out.println(storageFolder);
+		StorageFolder updatingFolder = dao.selectStorageFolderAll(session, storageFolder.getFolderKey());
+		storageFolder.setFolderGroup(updatingFolder.getFolderGroup());
+		storageFolder.setFolderLevel(updatingFolder.getFolderLevel());
+		storageFolder.setFolderOrderBy(updatingFolder.getFolderOrderBy());
+		int result =dao.updateStorageFolder(session,storageFolder);
+		if(result>0) {
+			String folderParentName = dao.selectParentFolderName(session, storageFolder.getFolderGroup());
+			System.out.println(folderParentName);
+			String updatingFolderName = updatingFolder.getFolderName();
+			String path = uploadPath+"dochtml/";
+			path += folderParentName != null ? folderParentName+"/":"";
+			
+			File from = new File(path+updatingFolderName);
+			System.out.println(from);
+			updatingFolderName=storageFolder.getFolderName();
+			File to = new File(path+updatingFolderName);
+			System.out.println(to);
+			System.out.println("===========result=======");
+			try {
+				FileUtils.moveDirectory(from, to);
+				System.out.println("Directory moved successfully.");
+			}
+			catch (FileExistsException ex) {
+				ex.printStackTrace();
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public List<DocumentFormFolder>selectDocFormFolderAll(){
+		return dao.selectDocFormFolderAll(session);
+	}
+	public List<DocumentForm>selectForm(int folderKey){
+		return dao.selectForm(session,folderKey);	
+		}
+	public int createDocFolder(DocumentFormFolder folder) {
+		return dao.createDocFolder(session,folder);
+	}
+	public int updateDocFolder(DocumentFormFolder folder) {
+		return dao.updateDocFolder(session,folder);
+	}
+	public int removeDocFolder(int draggedFolderKey) {
+		return dao.removeDocFolder(session,draggedFolderKey);
+	}
+	public DocumentFormFolder selectDocFormFolderOne(int erFormFolderKey) {
+		return dao.selectDocFormFolderOne(session,erFormFolderKey);
+	}
 }

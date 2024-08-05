@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.admin.document.model.dto.Storage;
 import com.project.npnc.admin.document.model.dto.StorageFolder;
+import com.project.npnc.document.model.dto.DocumentForm;
+import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.security.dto.Member;
 
 @Repository
@@ -75,5 +77,25 @@ public class AdminDocumentDao {
 	public Storage selectStorage(SqlSessionTemplate session, int storageKey) {
 		return session.selectOne("admindoc.selectStorage",storageKey);
 	}
-
+	public int updateStorageFolder(SqlSessionTemplate session,StorageFolder storageFolder) {
+		return session.update("admindoc.updateStorageFolder",storageFolder);
+	}
+	public List<DocumentFormFolder>selectDocFormFolderAll(SqlSessionTemplate session){
+		return session.selectList("admindoc.selectDocFormFolderAll");
+	}
+	public List<DocumentForm>selectForm(SqlSessionTemplate session, int folderKey){
+		return session.selectList("admindoc.selectForm",folderKey);
+	}
+	public int createDocFolder(SqlSessionTemplate session,DocumentFormFolder folder) {
+		return session.insert("admindoc.createDocFolder",folder);
+	}
+	public int updateDocFolder(SqlSessionTemplate session,DocumentFormFolder folder) {
+		return session.update("admindoc.updateDocFolder",folder);
+	}
+	public int removeDocFolder(SqlSessionTemplate session, int draggedFolderKey) {
+		return session.delete("admindoc.removeDocFolder",draggedFolderKey);
+	}
+	public DocumentFormFolder selectDocFormFolderOne(SqlSessionTemplate session,int erFormFolderKey) {
+		return session.selectOne("admindoc.selectDocFormFolderOne",erFormFolderKey);
+	}
 }

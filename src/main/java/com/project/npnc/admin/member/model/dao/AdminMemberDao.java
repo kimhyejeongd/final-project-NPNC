@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 
 public interface AdminMemberDao {
@@ -21,5 +22,10 @@ public interface AdminMemberDao {
 	
 	List<AdminMember> searchMember(SqlSession session,Map searchMap, Map<String,Integer> page);
 	int searchMemberCount(SqlSession session,Map searchMap);
+	
+	int selectMemberCountByDept(SqlSession session,String deptKey);
+	int selectMemberCountByJob(SqlSession session,String jobKey);
+	
+	int updatePw(SqlSession session,int memberKey,String encodePw);
 	
 }

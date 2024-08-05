@@ -13,7 +13,6 @@
 		                            <th>근무날짜</th>
 		                            <th>출근시간</th>
 		                            <th>퇴근시간</th>
-		                            <th>초과근무시간</th>
 		                            <th>상태</th>
 		                          </tr>
 		                        </thead>
@@ -24,7 +23,6 @@
 				                            <td>${a.attendanceDate}</td>
 				                            <td>${fn:substring(a.attendanceStart, fn:length(a.attendanceStart) - 8, fn:length(a.attendanceStart))}</td>
             								<td>${fn:substring(a.attendanceEnd, fn:length(a.attendanceEnd) - 8, fn:length(a.attendanceEnd))}</td>
-				                            <td>${a.overtimeKey }</td>
 				                            <td>${a.attendanceState}</td>
 				                            <td>
 				                            	<button type="button" class="btn btn-dark btn-round" data-toggle="modal" data-target="#updateAttendanceModal" data-member-key="${a.attendanceKey}">

@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.npnc.admin.job.model.dto.Job;
 import com.project.npnc.admin.member.model.dto.AdminMember;
 
 @Repository
@@ -71,6 +72,25 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 		
 		return session.selectOne("adminmember.searchMemberCount",searchMap);
 	}
+
+	@Override
+	public int selectMemberCountByDept(SqlSession session, String deptKey) {
+		
+		return session.selectOne("adminmember.selectMemberCountByDept",deptKey);
+	}
+
+	@Override
+	public int selectMemberCountByJob(SqlSession session, String jobKey) {
+		
+		return session.selectOne("adminmember.selectMemberCountByJob",jobKey);
+	}
+
+	@Override
+	public int updatePw(SqlSession session, int memberKey, String encodePw) {
+		Map pm=Map.of("encodePw",encodePw,"memberKey",memberKey);
+		return session.update("adminmember.updatePw",pm);
+	}
+	
 	
 	
 	
