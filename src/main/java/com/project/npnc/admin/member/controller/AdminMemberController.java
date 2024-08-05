@@ -133,7 +133,7 @@ public class AdminMemberController {
 		response.put("member", member);
 		System.out.println("되나? : "+member);
 		System.out.println("되나? : "+response);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(response); 
 	}
 	
 	@PostMapping("/updatememberend.do")
