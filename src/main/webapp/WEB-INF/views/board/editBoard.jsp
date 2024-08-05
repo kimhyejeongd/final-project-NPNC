@@ -19,7 +19,7 @@
             <textarea name="BOARD_DETAIL">${board.BOARD_DETAIL}</textarea>
         </p>
         <p>
-            <input type="submit" value="수정" />
+            <input type="submit" value="수정"/>
             <a href="/admin/board/list">목록으로</a>
         </p>
     </form>

@@ -227,6 +227,7 @@
                 </div>
             </div>
             <!-- End Main Panel -->
+                  <c:import url="/WEB-INF/views/common/footer.jsp" />
         </div>
         <!-- End Wrapper -->
     </div>
