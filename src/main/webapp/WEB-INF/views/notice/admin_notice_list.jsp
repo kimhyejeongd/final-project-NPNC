@@ -60,8 +60,7 @@
                 <div class="title-container">
                     <h1 class="mb-4">공지사항 목록(관리자)</h1>
                     
-
-
+   		
                     <!-- Search Form -->
                     <form method="get" action="${path}/admin/notice" class="search-form">
                         <div class="row">

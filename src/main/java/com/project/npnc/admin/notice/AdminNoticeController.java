@@ -72,10 +72,5 @@ public class AdminNoticeController {
         noticeService.createNotice(notice);
         return "redirect:/notice/list"; // 생성 후 목록으로 리다이렉트
     }
-    // 공지사항 작성 폼 보기
-    @GetMapping("/create")
-    public String createNoticeForm(Model model) {
-        model.addAttribute("notice", new NoticeDto());
-        return "notice/create_notice";  // JSP 파일 경로
-    }
+    
 }
