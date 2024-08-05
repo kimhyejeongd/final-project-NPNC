@@ -34,41 +34,48 @@ body {
   padding: 40px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   max-width: 900px;
-  height: auto; /* ensures container height is dynamic based on content */
+  width: 100%;
 }
 
 .logo-container {
-  margin-right: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
 }
 
 .logo {
-  width: 400px;
+  max-width: 100%;
+  height: auto;
 }
 
 .separator {
   width: 2px;
   background-color: white;
-  height: 100%; /* full height of the container */
+  height: 100%;
 }
+
+
 
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 50%;
+  margin-right:40px;
+
 }
 
 label {
   color: white;
   font-size: 14px;
-  margin-bottom: 5px; /* space between label and input */
+  margin-bottom: 0px;
   align-self: flex-start;
-  margin-left: 10px;
 }
 
 fieldset {
   border: none;
-  margin: 20px 0; /* space between fieldsets */
+  margin: 10px 0;
   padding: 0;
   width: 100%;
 }
@@ -76,16 +83,17 @@ fieldset {
 input {
   border: none;
   background-color: rgba(255, 255, 255, 0.3);
-  font-size: 16px;
+  font-size: 14px; /* 글자 크기 줄이기 */
   color: white;
-  padding: 10px;
-  width: calc(100% - 20px);
-  margin: 0 10px;
-  border-radius: 20px; /* rounded corners */
+  padding: 8px; /* 세로 길이 줄이기 위해 padding 조정 */
+  width: 120%; /* 가로 길이 늘리기 */
+  margin: 0 0 5px 0;
+  border-radius: 20px;
 }
 
 input::placeholder {
   color: rgba(255, 255, 255, 0.7);
+  font-size: 12px; /* placeholder 글자 크기 줄이기 */
 }
 
 input:focus {
@@ -97,12 +105,12 @@ button {
   border: none;
   background-color: #3d97d7;
   color: white;
-  font-size: 16px;
-  padding: 10px;
-  width: 100%;
-  border-radius: 20px; /* rounded corners */
+  font-size: 16px; /* 버튼 글자 크기 줄이기 */
+  padding: 10px; /* 세로 길이 줄이기 위해 padding 조정 */
+  width: 120%; /* 가로 길이 늘리기 */
+  border-radius: 20px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 15px;
   transition: background-color 0.3s ease;
 }
 
@@ -130,18 +138,18 @@ button:hover {
     <div class="separator"></div>
     <div class="form-container">
         <form action="${pageContext.request.contextPath}/logincheck" method="post">
+            <label for="username">ID</label>
             <fieldset>
-                <label for="username">ID</label>
                 <input name="username" id="username" type="text" placeholder="아이디" />
             </fieldset>
 <!--             <div class="failure-message hide">아이디는 4~12글자이어야 합니다</div>
             <div class="failure-message2 hide">영어 또는 숫자만 가능합니다</div> -->
+            <label for="password">PASSWORD</label>
             <fieldset>
-                <label for="password">PASSWORD</label>
                 <input name="password" id="apassword" type="password" placeholder="비밀번호" />
             </fieldset>
 <!--             <div class="strongPassword-message hide">8글자 이상, 영문, 숫자, 특수문자(@$!%*#?&)를 사용하세요</div> -->
-            <button type="submit">로그인</button>
+            <button type="submit">login</button>
         </form>
     </div>
 </div>
