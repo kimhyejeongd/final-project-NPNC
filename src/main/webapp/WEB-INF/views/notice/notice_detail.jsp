@@ -51,7 +51,7 @@
 
         <div class="main-panel">
             <!-- Header Bar -->
-            <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+            <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
 
             <div class="container">
                 <div class="page-inner">

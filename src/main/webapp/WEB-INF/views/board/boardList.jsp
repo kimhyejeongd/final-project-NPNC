@@ -60,11 +60,11 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        <c:import url="${path}/WEB-INF/views/board/boardSidebar.jsp" />
+        <c:import url="/WEB-INF/views/board/boardSidebar.jsp" />
 
         <!-- Main Panel -->
         <div class="main-panel">
-          <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+          <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
           <div class="page-inner">
             
             <div class="container">
@@ -118,7 +118,7 @@
                 </div>
             </div>
           </div>
-          <c:import url="${path}/WEB-INF/views/common/footer.jsp" />
+          <c:import url="/WEB-INF/views/common/footer.jsp" />
         </div>
     </div>
     

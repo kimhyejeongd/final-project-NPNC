@@ -61,7 +61,7 @@
    
     <div class="main-panel">
         <!-- Header Bar -->
-      <c:import url="${path}/WEB-INF/views/common/header_bar.jsp"/>
+      <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
     	<div class="page-inner">
         <div class="container">
        <h1>관리자 게시판</h1>
@@ -115,7 +115,7 @@
             </div>
            </div>
            </div>
-             <c:import url="${path}/WEB-INF/views/common/footer.jsp" />
+             <c:import url="/WEB-INF/views/common/footer.jsp" />
         </div>
     </div>
     
