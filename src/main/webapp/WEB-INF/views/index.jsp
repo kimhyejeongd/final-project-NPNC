@@ -175,7 +175,7 @@
 		 .pagination-container {
             display: flex;
             justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
-           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
+           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ 
         }
         /* 전자결재 위젯 css */
     	#tablerow:hover{
@@ -292,7 +292,7 @@
 					  
 					  <div class=" right-container">
 					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
-					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
+					      <div class="weather_description weatherFont" style="font-size : 20pt; "></div>
 					      <div class="city weatherFont" style="font-size : 13pt"></div>
 					  </div>
 					   <div class="left-container" style="float : left; margin-top: 60px; font-size : 11pt">
@@ -851,7 +851,7 @@
 		    type: "GET",
 		    async: "false",
 		    success: function(resp) {
-				console.log((resp.weather[0].icon).substr(0,2));
+				console.log(resp.weather[0].main);
 				
 		        var $Icon = (resp.weather[0].icon).substr(0,2);
 		        var $weather_description = resp.weather[0].main;
@@ -865,7 +865,11 @@
 		        
 
 		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'"  />');
-		        $('.weather_description').prepend($weather_description);
+		        if($weather_description=='Thunderstorm'){
+		        	$('.weather_description').prepend('Storm');
+		        }else{
+		        	$('.weather_description').prepend($weather_description);
+		        }
 		        $('.current_temp').prepend($Temp);
 		        $('.humidity').prepend($humidity);
 		        $('.wind').prepend($wind);
