@@ -24,6 +24,10 @@ function refererAlarmSend(reMemberKey1, memberKey, memberName, jobName){
 
 function nextAproverAlarmSend(reMemberKey1, memberKey, memberName, jobName){
  console.log('결재자 알람 send');
+ console.log(reMemberKey1);
+ console.log(memberKey);
+ console.log(memberName);
+ console.log(jobName);
 	stompClient.send("/pub/msg/"+reMemberKey1,{},
 		JSON.stringify({
 			
@@ -42,7 +46,7 @@ function nextAproverAlarmSend(reMemberKey1, memberKey, memberName, jobName){
 	  
 }
 
-function docCompleteAlarmSend(reMemberKey1, memberKey, serialKey){
+function docCompleteAlarmSend(reMemberKey1, memberKey, memberName, jobName, serialKey){
  console.log('승인 완료 알람 send');
 	stompClient.send("/pub/msg/"+reMemberKey1,{},
 		JSON.stringify({
