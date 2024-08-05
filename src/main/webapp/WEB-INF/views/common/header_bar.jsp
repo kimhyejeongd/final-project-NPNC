@@ -70,31 +70,31 @@
 			}
 			
 			/* 줄 넘어가면 찌그러지는 것 해결 */
-			.navbar-expand-lg .navbar-nav .dropdown-menu {
+			#alertBoxLi .navbar-expand-lg .navbar-nav .dropdown-menu {
 			    left: auto;
 			    right: 0;
 			    z-index: 1001;
 			    width: max-content;
 		    }
-			.notif-center {
+			#alertBoxLi .notif-center {
 			    display: flex;
 			    flex-direction: column;
 			    align-items: start; /* 아이콘과 텍스트 수직 정렬 */
 			}
-			.notif-center a{
+			#alertBoxLi .notif-center a{
 				width: 100%;
 			}
-			.notif-icon {
+			#alertBoxLi .notif-icon {
 			    flex-shrink: 0; /* 아이콘이 줄어들지 않도록 설정 */
 			    margin-right: 10px; /* 아이콘과 텍스트 사이의 여백 */
 			    min-width: 40px; /* 아이콘의 최소 너비를 지정 */
 			}
 			
-			.notif-content {
+			#alertBoxLi .notif-content {
 			    flex-grow: 1; /* 내용이 가능한 한 공간을 차지하도록 설정 */
 			}
 			
-			.block {
+			#alertBoxLi .block {
 			    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
 			    overflow: hidden; /* 넘치는 텍스트를 숨김 */
 			    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
@@ -489,7 +489,7 @@
                       class="dropdown-menu notif-box animated fadeIn"
                       aria-labelledby="notifDropdown"
                     >
-                      <li>
+                      <li id="alertBoxLi">
                         <div class="dropdown-title">
                           읽지 않은 알람이 4개 있습니다.
                         </div>
