@@ -440,7 +440,15 @@ $(document).ready(function() {
 			                	 console.log(data.nextAprover);
 				                nextAproverAlarmSend(parseInt(data.nextAprover.memberKey), loginMemberKey, loginMemberName, loginMemberJobName);
 			                }
-			                alert('콘솔 확인용');
+			                //참조인 있으면 발송
+							if (data.referer != null && data.referer.length > 0) {
+								console.log(data.referer.length);
+								console.log('참조인 알람 send try');
+								// 각 참조인에 대해 반복 전송
+								$.each(data.referer, function(index, referer) {
+									refererAlarmSend(referer.memberKey, loginMemberKey, loginMemberName, loginMemberJobName, data.serialKey)
+								});
+							}
 			                
 			                // 성공 시 페이지 리다이렉트
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";

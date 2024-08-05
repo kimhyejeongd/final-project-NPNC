@@ -620,7 +620,11 @@ public class MemberDocumentController {
 			if(doc.getApprovers().size() <= 1) {
 				log.debug("결재자 한명인 문서로 바로 처리완료 됩니다.");
 				apserv.updateApproveDoc(doc.getErDocWriter(), doc.getErDocSerialKey(), msg, doc.getDocFormKey(), html);
-				
+				// 참조인 정보 전달
+			    response.put("referer", serv.selectReferer(doc.getErDocSerialKey()));
+			    //시리얼 키 전달
+			    response.put("serial", doc.getErDocSerialKey());
+			    
 			}
 		    
 			
@@ -736,13 +740,13 @@ public class MemberDocumentController {
 	}
 	
 	
-	//TODO 결재 대기문서 수신, 기안 문서 종결(처리상태 변경알림 = 반려 || 처리완료), 참조문서 수신 알람 기능 구현
-	//rewrite
+	//TODO 기안 문서 종결(처리상태 변경알림 = 반려), 참조문서 수신 알람 기능 구현
+		//rewrite
 	//TODO 일반문서 임시저장 재기안 확인 -> 회수 재기안 확인 이것만 하면 일반 문서 끝
 	
 	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
+		///document/vacation/check
 	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
-	//TODO 위아래 이동 기능 구현 (보류...)
 	//TODO 전체 문서 조회 및 상세 검색 기능 (보류???)
 	
 	
