@@ -486,6 +486,15 @@ $(document).ready(function() {
 				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
+				
+		        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
+		        let files = fileInput.files;
+		        
+		        //내용 확인
+		        formData.entries().forEach(e=>{
+	            	console.log(e);
+            	});
+				
 		     	// AJAX로 폼 데이터를 전송
 		        fetch(sessionStorage.getItem("path")+'/document/savedraft', {
 		            method: 'POST',
@@ -495,8 +504,8 @@ $(document).ready(function() {
 		        .then(data => {
 		            if (data.status === "success") {
 		                alert(data.message);
+		                
 		                // 성공 시 페이지 리다이렉트
-		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
 		                window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
 		            } else {
 		                alert(data.message);

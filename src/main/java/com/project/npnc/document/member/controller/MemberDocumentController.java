@@ -337,34 +337,34 @@ public class MemberDocumentController {
 		m.addAttribute("doc", d);
 		log.debug("{}", d);
 	
-		//양식번호
-		//날짜- 제거
-		String afterF = serial.substring(serial.indexOf("F"));
-		//뒤 -이후 제거
-		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
-		if(afterFbeforebar.contains("TEMP")) {
-			afterFbeforebar.replace("TEMP", "");
-		}
-		String formNo = afterFbeforebar.replace("F", "");
-		System.out.println(formNo);
-    	m.addAttribute("form", formNo);
+//		//양식번호
+//		//날짜- 제거
+//		String afterF = serial.substring(serial.indexOf("F"));
+//		//뒤 -이후 제거
+//		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
+//		if(afterFbeforebar.contains("TEMP")) {
+//			afterFbeforebar.replace("TEMP", "");
+//		}
+//		String formNo = afterFbeforebar.replace("F", "");
+//		System.out.println(formNo);
+//		int form = Integer.parseInt(formNo);
+    	m.addAttribute("form", d.getDocFormKey());
     	log.debug(m.getAttribute("form").toString());
-    	int form = Integer.parseInt(formNo);
     	
 //    	String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
     	String html = null;
     	String jsp = null;
 		//추가근무 신청폼인 경우 근무 현황 데이터 첨부
-		if(form == 2) {
+		if(d.getDocFormKey() == 2) {
 			log.debug("----추가근무 신청----");
-			html = s3Con.readHtmlFile("upload/docformhtml", form+".html");
+			html = s3Con.readHtmlFile("upload/docformhtml", d.getDocFormKey()+".html");
 			jsp = "document/rewrite/overwork";
 		}else
 
 		//휴가 신청폼인 경우 휴가 데이터 첨부
-		if(form ==3) {
+		if(d.getDocFormKey() ==3) {
 			log.debug("----휴가 신청----");
-			html = s3Con.readHtmlFile("upload/docformhtml", form+".html");
+			html = s3Con.readHtmlFile("upload/docformhtml", d.getDocFormKey()+".html");
 			html = html.replace("[잔여 연차]", serv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
 			
 			List<Vacation> vacation =vacserv.selectVacationAll();
@@ -759,8 +759,6 @@ public class MemberDocumentController {
 	
 	//TODO 기안 문서 종결(처리상태 변경알림 = 반려), 참조문서 수신 알람 기능 구현
 		//rewrite
-	//TODO 일반문서 임시저장 재기안 확인 -> 회수 재기안 확인 이것만 하면 일반 문서 끝
-	
 	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
 		///document/vacation/check
 	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인

@@ -35,6 +35,7 @@
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
   <script src="${path}/resources/jh/js/docwrite.js"></script>
   <script src="${path}/resources/jh/js/docDetail.js"></script>
+  <script src="${path}/resources/jh/js/doc-alarm.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
