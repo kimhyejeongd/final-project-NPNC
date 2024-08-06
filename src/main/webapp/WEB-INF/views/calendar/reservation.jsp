@@ -51,7 +51,7 @@
 
     <div class="main-panel">
       <!-- header_bar -->
- 	<c:if test="${loginMember.accessKey eq 2 }">
+ 	<c:if test="${loginMember.accessKey eq 2 }">	
  		<%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
  	</c:if>
  	<c:if test="${loginMember.accessKey != 2 }">
