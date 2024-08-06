@@ -38,7 +38,7 @@
               <div>
                 <h3 class="fw-bold mb-3">문서 작성</h3>
                 <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-					<div class="input-group">
+					<!-- <div class="input-group">
 						<div class="input-group-prepend pe-1">
 							<div class="btn-search pe-1">
 								<i class="fa fa-search search-icon"></i>
@@ -46,7 +46,7 @@
 						</div>
 						<input type="text" placeholder="양식명으로 검색" class="form-control" id="formsearchtarget">
 						<button class="btn btn-primary" id="formsearchbtn">검색</button>
-					</div>
+					</div> -->
 				</nav>
               </div>
               <div class="ms-md-auto py-2 py-md-0">

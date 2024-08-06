@@ -57,12 +57,19 @@
 </head>
 <body>
 	<div class="wrapper">
-    <c:import url="${path}/WEB-INF/views/admin/adminsidebar.jsp"/> 
-   
-
-    <div class="main-panel">
-        <!-- Header Bar -->
-      <c:import url="/WEB-INF/views/common/header_bar.jsp"/>
+<c:if test="${loginMember.accessKey eq 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/manageadminsidebar.jsp" %> 
+ 	</c:if>
+ 	<c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminsidebar.jsp" %> 
+ 	</c:if>
+ 	<div class="main-panel">
+ 	<c:if test="${loginMember.accessKey eq 2 }">
+  		<%@ include file="/WEB-INF/views/common/header_bar.jsp" %> 
+  	</c:if>
+  	 <c:if test="${loginMember.accessKey != 2 }">
+ 		<%@ include file="/WEB-INF/views/admin/adminheader_bar.jsp" %>  
+ 	</c:if>	
     	<div class="page-inner">
         <div class="container">
        <h1>관리자 게시판</h1>

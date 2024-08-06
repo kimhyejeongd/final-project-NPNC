@@ -21,7 +21,7 @@ public class Document {
 	private String erDocSerialKey;
 	private int erDocWriter;
 	private String writerDeptKey;//join용 writer_name memeberTable
-	private String writer;
+	private String writerName;
 	private String writerDeptName;//join용 writer_dept_name
 	private String writerJobKey;//join용 writer_job_key
 	private String writerJobName;//join용 writer_job_name

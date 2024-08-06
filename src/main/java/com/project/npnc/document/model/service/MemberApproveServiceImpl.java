@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberApproveServiceImpl implements MemberApproveService {
 	private final SqlSession session;
 	private final MemberDocumentDao dao;
-	private final MemberDocumentService serv;
 	private final DocS3Controller scCon;
 	private final AlarmWebsocketController alarm;
 	
@@ -69,13 +68,13 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 				switch(formNo) {
 				case 2:
 					//추가근무 문서라면 승인상태 적용
-					result = serv.updateOvertiemApply(serial, "승인");
+					result = dao.updateOvertimeApply(session, serial, "승인");
 					if(result <= 0) throw new Exception("추가근무 신청 상태 승인으로 변경 실패");
 					log.debug("추가근무 신청 상태 -> 승인");
 					break;
 				case 3:
 					//휴가 문서라면 승인상태 적용
-					result = serv.updateVacationApply(serial, "승인");
+					result = dao.updateVacationApply(session, serial, "승인");
 					if(result <= 0) throw new Exception("휴가 신청 상태 승인으로 변경 실패");
 					log.debug("휴가 신청 상태 -> 승인");
 					
@@ -85,19 +84,6 @@ public class MemberApproveServiceImpl implements MemberApproveService {
 					log.debug("휴가 차감 성공");
 					break;
 				}
-				
-				//승인 완료 알람 발송
-//				log.debug("----- 승인 완료 알람 발송 -----");
-//				int writerKey = dao.selecetDocWriter(session, serial);
-//				AlarmMessage a = AlarmMessage.builder()
-//							.alarmType("DocComplete")
-//							.alarmPath("document/list/employee/complete")
-//							.alarmReMember(writerKey) //글 작성자
-//							.alarmSendMember(0)
-//							.docSerialKey(serial)
-//							.build();
-//				log.debug(a.toString());
-//				alarm.test(writerKey, a);
 				
 			}
 		}catch(Exception e) {

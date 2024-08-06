@@ -33,8 +33,6 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-   <script src="${path}/resources/jh/js/docwrite.js"></script>
-   <script src="${path}/resources/jh/js/doc-alarm.js"></script>
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -195,7 +193,7 @@
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
 				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="fileinputDiv">
-								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+								<span class="m-0 w-100 d-flex" id="dragspan" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center"> </span> 
 					          	<input type="file" class="form-control" id="formFile" name="upfile" multiple style="display:none;">
 					          	<!-- 추가된 파일 출력 위치 -->
 					      </div>
@@ -231,6 +229,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <!-- Summernote JS -->
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+  
+    <script src="${path}/resources/jh/js/docwrite.js"></script>
+   <script src="${path}/resources/jh/js/doc-alarm.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -440,7 +441,15 @@ $(document).ready(function() {
 			                	 console.log(data.nextAprover);
 				                nextAproverAlarmSend(parseInt(data.nextAprover.memberKey), loginMemberKey, loginMemberName, loginMemberJobName);
 			                }
-			                alert('콘솔 확인용');
+			                //참조인 있으면 발송
+							if (data.referer != null && data.referer.length > 0) {
+								console.log(data.referer.length);
+								console.log('참조인 알람 send try');
+								// 각 참조인에 대해 반복 전송
+								$.each(data.referer, function(index, referer) {
+									refererAlarmSend(referer.memberKey, loginMemberKey, loginMemberName, loginMemberJobName, data.serialKey)
+								});
+							}
 			                
 			                // 성공 시 페이지 리다이렉트
 			                window.location.href = sessionStorage.getItem("path")+"/document/home";
@@ -478,6 +487,15 @@ $(document).ready(function() {
 				$("<input>").val($("#summernote").data('form')).css('display', 'none').attr('name', 'docFormKey').prependTo($("#docForm"));
 				// 폼 데이터를 수집
 		        let formData = new FormData(document.getElementById("docForm"));
+				
+		        let fileInput = document.getElementById('formFile'); // fileInput 요소 가져오기
+		        let files = fileInput.files;
+		        
+		        //내용 확인
+		        formData.entries().forEach(e=>{
+	            	console.log(e);
+            	});
+				
 		     	// AJAX로 폼 데이터를 전송
 		        fetch(sessionStorage.getItem("path")+'/document/savedraft', {
 		            method: 'POST',
@@ -487,8 +505,8 @@ $(document).ready(function() {
 		        .then(data => {
 		            if (data.status === "success") {
 		                alert(data.message);
+		                
 		                // 성공 시 페이지 리다이렉트
-		                //window.location.href = sessionStorage.getItem("path")+"/document/view/docDetail?docId="+data.no;
 		                window.location.href = sessionStorage.getItem("path")+"/document/list/employee/draft";
 		            } else {
 		                alert(data.message);

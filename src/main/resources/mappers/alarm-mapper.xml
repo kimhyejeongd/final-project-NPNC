@@ -10,10 +10,9 @@
 			<result column="ALARM_SEND_MEMBER" property="alarmSendMember"></result>
 			<result column="ALARM_DATE" property="alarmDate"></result>
 			<result column="ALARM_READ" property="alarmRead"></result>
-			<result column="ALARM_READ" property="alarmRead"></result>
 			<result column="MEMBER_NAME" property="memberName"></result>
 			<result column="JOB_NAME" property="jobName"></result>
-			
+			<result column="er_doc_serial_key" property="docSerialKey"></result>
 		</resultMap>
 		
 	
@@ -28,7 +27,7 @@
 		WHERE a.ALARM_READ='N' AND a.ALARM_RE_MEMBER=#{memberKey} ORDER BY a.ALARM_KEY 
 	</select>
 	<insert id="alarmInsert"  parameterType="alarmMessage">
- 		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N')
+ 		INSERT INTO ALARM VALUES(SEQ_ALARM.NEXTVAL ,#{alarmType} ,#{alarmPath},#{alarmReMember} ,#{alarmSendMember} ,SYSDATE ,'N', #{docSerialKey})
 
 	</insert>
 	<update id="alarmDeleteAll" parameterType="_int">

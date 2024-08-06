@@ -41,6 +41,7 @@ import com.project.npnc.document.model.dto.Document;
 import com.project.npnc.document.model.dto.DocumentForm;
 import com.project.npnc.document.model.dto.DocumentFormFolder;
 import com.project.npnc.document.model.dto.OvertimeApply;
+import com.project.npnc.document.model.dto.Referer;
 import com.project.npnc.document.model.dto.VacationApply;
 import com.project.npnc.document.model.service.MemberApproveService;
 import com.project.npnc.document.model.service.MemberDocumentService;
@@ -197,6 +198,9 @@ public class MemberDocumentController {
 		
 		//로그인 유저가 결재자에 해당하는지 확인할 수 있는 데이터 생성
 		List<Approver> aps = document.getApprovers();
+		m.addAttribute("writerName", aps.get(0).getMemberName());
+		m.addAttribute("writerJobName", aps.get(0).getMemberJobName());
+		
 		aps.removeIf(e-> e.getCategory().equals("기안"));
 		log.debug(aps.toString());
 		m .addAttribute("approverStr", Arrays.asList(aps).toString());
@@ -321,37 +325,46 @@ public class MemberDocumentController {
 		log.debug("----전자문서 재작성----");
 		//기존 작성 내용 불러오기
 		Document d = serv.selectDocBySerial(serial);
+		
+		//참조인 내용 전달
+		List<Referer> ref = serv.selectReferer(serial);
+		d.setReferers(ref);
+		
+		//보관함 내용 전달
+		Map<String, String> ad = serv.selectStorageAndFolder(d.getErDocStorageKey());
+		m.addAttribute("storage", ad);
+		
 		m.addAttribute("doc", d);
 		log.debug("{}", d);
-		
-		//양식번호
-		//날짜- 제거
-		String afterF = serial.substring(serial.indexOf("F"));
-		//뒤 -이후 제거
-		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
-		if(afterFbeforebar.contains("TEMP")) {
-			afterFbeforebar.replace("TEMP", "");
-		}
-		String formNo = afterFbeforebar.replace("F", "");
-		System.out.println(formNo);
-    	m.addAttribute("form", formNo);
+	
+//		//양식번호
+//		//날짜- 제거
+//		String afterF = serial.substring(serial.indexOf("F"));
+//		//뒤 -이후 제거
+//		String afterFbeforebar = afterF.substring(0, afterF.indexOf("-"));
+//		if(afterFbeforebar.contains("TEMP")) {
+//			afterFbeforebar.replace("TEMP", "");
+//		}
+//		String formNo = afterFbeforebar.replace("F", "");
+//		System.out.println(formNo);
+//		int form = Integer.parseInt(formNo);
+    	m.addAttribute("form", d.getDocFormKey());
     	log.debug(m.getAttribute("form").toString());
-    	int form = Integer.parseInt(formNo);
     	
 //    	String html = DocHtmlController.readHtmlFile("docformhtml", form+".html", uploadDir);
     	String html = null;
     	String jsp = null;
 		//추가근무 신청폼인 경우 근무 현황 데이터 첨부
-		if(form == 2) {
+		if(d.getDocFormKey() == 2) {
 			log.debug("----추가근무 신청----");
-			html = s3Con.readHtmlFile("upload/docformhtml", form+".html");
+			html = s3Con.readHtmlFile("upload/docformhtml", d.getDocFormKey()+".html");
 			jsp = "document/rewrite/overwork";
 		}else
 
 		//휴가 신청폼인 경우 휴가 데이터 첨부
-		if(form ==3) {
+		if(d.getDocFormKey() ==3) {
 			log.debug("----휴가 신청----");
-			html = s3Con.readHtmlFile("upload/docformhtml", form+".html");
+			html = s3Con.readHtmlFile("upload/docformhtml", d.getDocFormKey()+".html");
 			html = html.replace("[잔여 연차]", serv.selectRemainingVac(getCurrentUser().getMemberKey())+"");
 			
 			List<Vacation> vacation =vacserv.selectVacationAll();
@@ -378,7 +391,14 @@ public class MemberDocumentController {
 		//기안자
 		html = html.replace("[기안자]", getCurrentUser().getJobName()+ " " + getCurrentUser().getMemberName());
 		
-		log.debug(html);
+		//시리얼 있으면 초기화, 값전달
+		if(html.contains(d.getErDocSerialKey())) {
+			html = html.replace(d.getErDocSerialKey(), "[문서번호]");
+			m.addAttribute("oriSerialKey", d.getErDocSerialKey());
+		}
+		
+		
+		log.debug(html); 
 		m.addAttribute("html", html);
 		return jsp;
 	}
@@ -509,6 +529,38 @@ public class MemberDocumentController {
 		return ResponseEntity.ok(response);
 	}
 	
+	//휴가 기존 신청 내용 조회
+	@PostMapping("/vacation/check")
+	public ResponseEntity<Map<String,Object>> selectVacApply(
+			Model m, 
+			@RequestParam(required = false) String vacationUseCount,
+	        @RequestParam(required = false) String vacationReason,
+	        @RequestParam(required = false) String vacationKey,
+			@RequestParam(name="vacationStartDate", required = false) String startDate, 
+			@RequestParam(name = "vacationEndDate", required = false) String endDate,
+	        @RequestParam(name="vacationStartTime", required = false) String startTime, 
+	        @RequestParam(name= "vacationEndTime", required = false) String endTime){
+		Member user = getCurrentUser();
+		log.debug("----- " + user.getMemberKey() + "휴가 신청 내역 조회 -----");
+		log.debug(startDate + " " + startTime);
+		log.debug(endDate + " " + endTime);
+		
+		Map<String,Object> response = new HashMap<>();
+		
+		//일자 변환
+		Timestamp start = convertToTimestamp(startDate, startTime);
+		Timestamp end = convertToTimestamp(endDate, endTime);
+		
+		int result = serv.selectVacApply(user.getMemberKey(), start, end);
+		if(result<= 0) {
+			response.put("status", "fail");
+			response.put("message", "선택하신 일자를 기준으로 이미 신청한 휴가가 있습니다.");
+			return ResponseEntity.ok(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
+	}
+	
 	
 	//휴가 신청 문서 임시저장
 	@PostMapping(path="/savedraft/vacation", consumes = {"multipart/form-data"})
@@ -612,6 +664,19 @@ public class MemberDocumentController {
 		try { 
 			log.debug(user.getMemberName()+ "사원의 문서 기안 -> " + msg);
 			serv.insertDoc(doc, file, html);
+			
+			//결재자 한명이면 바로 승인처리
+			if(doc.getApprovers().size() <= 1) {
+				log.debug("결재자 한명인 문서로 바로 처리완료 됩니다.");
+				apserv.updateApproveDoc(doc.getErDocWriter(), doc.getErDocSerialKey(), msg, doc.getDocFormKey(), html);
+				// 참조인 정보 전달
+			    response.put("referer", serv.selectReferer(doc.getErDocSerialKey()));
+			    //시리얼 키 전달
+			    response.put("serial", doc.getErDocSerialKey());
+			    
+			}
+		    
+			
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -724,13 +789,9 @@ public class MemberDocumentController {
 	}
 	
 	
-	//TODO 결재 대기문서 수신, 기안 문서 종결(처리상태 변경알림 = 반려 || 처리완료), 참조문서 수신 알람 기능 구현
-	//rewrite
-	//TODO 일반문서 임시저장 재기안 확인 -> 회수 재기안 확인 이것만 하면 일반 문서 끝
-	
 	//TODO 휴가 신청 일정 중복 확인 로직 구현 후 연차 계산 -> 기안되는지 확인 -> 임시저장 확인 -> 회수 확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
+		///document/vacation/check
 	//TODO 초과 신청 역시 기존 신청내역 확인 로직 구현 후 기안되는지 확인 -> 임시저장 확인 -> 회수확인 -> 임시저장 재기안 확인 -> 회수 재기안 확인
-	//TODO 위아래 이동 기능 구현 (보류...)
 	//TODO 전체 문서 조회 및 상세 검색 기능 (보류???)
 	
 	

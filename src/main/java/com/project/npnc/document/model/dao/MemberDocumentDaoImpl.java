@@ -1,5 +1,6 @@
 package com.project.npnc.document.model.dao;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +186,16 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 	}
 
 	@Override
+	public int selectVacApply(SqlSession session, int memberKey, Timestamp start, Timestamp end) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("memberKey", memberKey);
+		log.debug("{}", map);
+		return session.selectOne("document.selectVacApply", map);
+	}
+
+	@Override
 	public int deleteDraftDoc(SqlSession session, String erDocSerialKey) {
 		return session.delete("document.deleteDraftDoc", erDocSerialKey);
 	}
@@ -303,6 +314,11 @@ public class MemberDocumentDaoImpl implements MemberDocumentDao{
 		map.put("memberKey", memberKey);
 		map.put("serial", serial);
 		return session.selectOne("document.selectApproverByKey", map);
+	}
+
+	@Override
+	public Map<String, String> selectStorageAndFolder(SqlSession session, int erDocStorageKey) {
+		return session.selectOne("document.selectStorageAndFolder", erDocStorageKey);
 	}
 	
 }

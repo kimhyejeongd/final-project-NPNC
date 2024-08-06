@@ -53,6 +53,7 @@ public class BoardController {
         } else {
             boards = boardService.getAllBoards();
         }
+        
         model.addAttribute("boardList", boards);
         return "board/boardList";
     }

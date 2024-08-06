@@ -7,16 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,29 +28,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.npnc.mypage.service.MemberService;
 import com.project.npnc.security.dto.Member;
 
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 
 
 @Controller
 @RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
+	
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     private final MemberService memberService;
     private final JavaMailSender mailSender;
     private String generatedCode;
+    private final BCryptPasswordEncoder pwencoder;
 
-    @Autowired
-    public MemberController(MemberService memberService, JavaMailSender mailSender) {
-        this.memberService = memberService;
-        this.mailSender = mailSender;
-    }
+	/*
+	 * @Autowired public MemberController(MemberService memberService,
+	 * JavaMailSender mailSender) { this.memberService = memberService;
+	 * this.mailSender = mailSender; }
+	 */
     
     @GetMapping("/mypage")
     public String mypage(Model m) {
@@ -140,11 +146,11 @@ public class MemberController {
     public Map<String, Object> changePassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String newPassword = request.get("newPassword");
-
+        String encodePw=pwencoder.encode(newPassword);
         Member member = memberService.getMemberByEmail(email);
         Map<String, Object> response = new HashMap<>();
         if (member != null) {
-            memberService.changePassword(member.getMemberId(), newPassword);
+            memberService.changePassword(member.getMemberId(), encodePw);
             response.put("success", true);
         } else {
             response.put("success", false);
@@ -157,19 +163,21 @@ public class MemberController {
     }
     
     @PostMapping("/updateProfileImage")
-    public String updateProfileImage(@RequestParam("profileImage") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Map<String, String>> updateProfileImage(@RequestParam("profileImage") MultipartFile file) {
         Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String, String> response = new HashMap<>();
         try {
             memberService.updateProfileImage(loginMember.getMemberId(), file);
-            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully.");
+            String newImageUrl = "/member/profileImage/" + loginMember.getMemberId();
+            response.put("newImageUrl", newImageUrl);
+            response.put("message", "Profile image updated successfully.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update profile image.");
+            response.put("error", "Failed to update profile image.");
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return "redirect:/member/mypage";
     }
-    @Value("${file.upload-dir}")
-    private String uploadDir;
 
     @GetMapping("/profileImage/{memberId}")
     @ResponseBody
@@ -183,25 +191,34 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+
     
     @PostMapping("/updateAddress")
     public @ResponseBody Map<String, Object> updateAddress(
-        @RequestParam("roadAddress") String roadAddress,
-        @RequestParam("detailedAddress") String detailedAddress,
-        @RequestParam("postcode") String postcode,
+        @RequestBody Map<String, String> addressData, 
         HttpSession session) {
+
         Map<String, Object> response = new HashMap<>();
-        Member loginMember = (Member) session.getAttribute("loginMember");
-        if (loginMember != null) {
-            memberService.updateAddress(loginMember.getMemberId(),roadAddress, detailedAddress,postcode);
-            response.put("success", true);
-            response.put("updatedAddress", roadAddress + " " + detailedAddress+" "+postcode);
-        } else {
-            response.put("success", false);	
-            response.put("error", "User not logged in.");
-        }
+
+        // JSON에서 받은 데이터
+        String roadAddress = addressData.get("roadAddress");
+        String detailedAddress = addressData.get("detailedAddress");
+        String postcode = addressData.get("postcode");
+
+        // SecurityContextHolder에서 로그인 사용자 정보를 가져옵니다.
+        Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            // 주소 업데이트 서비스 호출
+            memberService.updateAddress(loginMember.getMemberId(), roadAddress, detailedAddress,postcode);
+            
         return response;
     }
+
+
+
+
+
+
+
 
 
 }

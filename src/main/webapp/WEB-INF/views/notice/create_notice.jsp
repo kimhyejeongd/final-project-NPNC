@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -102,7 +103,7 @@
                 <div class="page-inner">
                     <h1 class="mb-4">공지사항 작성</h1>
 
-                    <form action="${path}/notice" method="post">
+                    <form action="${path}/admin/create1" method="post">
                         <div class="form-group">
                             <label for="noticeTitle">제목</label>
                             <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" required>
@@ -118,7 +119,7 @@
             </div>
 
             <!-- Footer -->
-            <c:import url="${path}/WEB-INF/views/common/footer.jsp"/>
+            <c:import url="/WEB-INF/views/common/footer.jsp"/>
         </div>
     </div>
 

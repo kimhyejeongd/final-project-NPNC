@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <sec:authentication var="loginMember" property="principal"/>
 
 <!DOCTYPE html>
@@ -127,7 +129,6 @@
 	border: none;
 	cursor: pointer;
 	font-size: 1.5em;
-	position: relative;
 	left: 230px;	
 }
 
@@ -135,7 +136,6 @@
 	display: none;
 	position: absolute;
 	right: 0;
-	top: 40px;
 	background-color: white;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
@@ -341,7 +341,6 @@ body{
 	
 
 	<div class="container1">
-			<button class="menu-button">&#9776;</button>
 			<div class="dropdown-menu1">
 				<a href="#" id="newChatButton">새로운 채팅</a>
 			</div>
@@ -357,7 +356,7 @@ body{
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}"><img
-							src="/resources/assets/img/unname.png" alt="프로필 사진">
+							src="${path}/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
 								<div class="friend-name">${m.memberId}</div>
 								<div class="friend-status">${m.departmentName }</div>
@@ -369,6 +368,7 @@ body{
 		<div id="chat" class="content active">
 			<ul class="room-list" id="roomList">
 				<c:forEach var="room" items="${mychatRoomList}">
+					<c:if test="${room.chatRoomKey!=-1 }">
 					<li class="room-item" id="room-${room.chatRoomKey}">
 						<form class="roomForm" method="post" action="${path}/chat">
 							<input type="hidden" name="roomId" value="${room.chatRoomKey}">
@@ -387,7 +387,16 @@ body{
 							</div>
 						</form>
 					</li>
+					</c:if>
 				</c:forEach>
+				<div id="aiChat">
+					<div class="demo-icon" style="margin-bottom: 0px;justify-content: center;">
+						 <div class="icon-preview">
+						 	<i class="fas fa-robot"></i>
+					 	</div> 
+				 		<div class="icon-class">Ai 챗봇</div> 
+				 	</div>
+				</div>
 			</ul>
 		</div>
 	</div>
@@ -395,30 +404,32 @@ body{
 
 
 	<!-- 모달 -->
-	<div id="newChatModal" class="modal">
-		<div class="modal-content">
+	<div id="newChatModal" class="modal" style="display: hidden;">
+		<div class="modal-content"style="height: 80%;width: 15%;overflow: scroll;">
 			<span class="close">&times;</span>
 			<h2>새로운 채팅</h2>
 			<input type="text" id="searchUser" class="search-bar"
 				placeholder="유저 검색">
+				
 			<ul class="friend-list" id="modalFriendList">
 				<c:forEach var="m" items="${members}">
 					<c:if test="${m.memberId != loginMember.memberId}">
 						<li class="friend-item" data-member-no="${m.memberKey}">
-						<img src="profile1.jpg" alt="프로필 사진">
+						<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">
 							<div class="friend-info">
-								<div class="friend-name">${m.memberId}</div>
-								<div class="friend-status">부서이름</div>
+								<div class="friend-name">${m.memberName}</div>
+								<div class="friend-status">${m.departmentName }</div>
 							</div></li>
 					</c:if>
 				</c:forEach>
 			</ul>
-			<button type="button" id="createNewChatButton">채팅방 만들기</button>
+			<button class="btn btn-primary" type="button" id="createNewChatButton">채팅방 만들기</button>
 		</div>
 	</div>
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript">
+	
 
     //친구검색기능
     $('#searchFriend').on('input', function() {
@@ -434,9 +445,7 @@ body{
 
         var selectedMembers = [];
         var myRoomMemberList = JSON.parse('${myRoomMemberListJ}');
-        console.log("1fhnsdlfdanklsnmdklnklndlk");
-        console.log(myChatRoomList);
-        console.log(myRoomMemberList);
+
 
         function getRoomMemberImages(members,thisEle) {
             var memberImagesHtml = '';
@@ -446,7 +455,7 @@ body{
             if (memberCount === 2) {
                 for (var i = 0; i < memberCount; i++) {
                     if (members[i].memberKey !== ${loginMember.memberKey}) {  // 현재 사용자가 아닌 경우만 추가
-                        memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진" style="width: 18%;height: 100%;margin-top: 0;margin-right: 6%;">';
+                        memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진" style="width: 18%;height: 100%;margin-top: 0;margin-right: 6%;">';
                         thisEle.find('.roomForm').prepend(memberImagesHtml);
                         thisEle.find('.room-icon').remove();
                     }
@@ -455,12 +464,12 @@ body{
 
             } else if  (memberCount <= 4) {
                 for (var i = 0; i < memberCount; i++) {
-                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">';
                     thisEle.find('.room-icon').html(memberImagesHtml);
                 }
             } else {
                 for (var i = 0; i < 4; i++) {
-                    memberImagesHtml += '<img src="/resources/assets/img/unname.png" alt="프로필 사진">';
+                    memberImagesHtml += '<img src="${path}/resources/assets/img/unname.png" alt="프로필 사진">';
                     thisEle.find('.room-icon').html(memberImagesHtml);
 
                 }
@@ -521,9 +530,7 @@ body{
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 const index = selectedMembers.indexOf(memberNo);
-                if (index > -1) {
-                    selectedMembers.splice(index, 1);
-                }
+         
             } else {
                 $(this).addClass('selected');
                 selectedMembers.push(memberNo);
@@ -534,11 +541,22 @@ body{
         // 새로운 채팅방 만들기
         $('#createNewChatButton').click(function() {
           	 event.stopPropagation(); 
+             // 팝업 창의 옵션 설정
+           var popupWidth = 400;
+            var popupHeight = 520;
+             var left = (screen.width - popupWidth) / 2;
+             var top = (screen.height - popupHeight) / 2;
+
+             // 팝업 창 생성
+   			 var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + top + ',left=' + left;
+             var popup = window.open('', 'newChatPopup', popupOptions);
 
         	
             var form = $('<form>', {
                 'method': 'post',
-                'action': '${path}/chat'
+                'action': '${path}/chat',
+                'target': 'newChatPopup'
+
             });
 
             // 선택한 멤버들을 히든 필드로 추가
@@ -582,13 +600,13 @@ body{
 
             // 팝업 창 생성
             var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop;
-            var popup = window.open('', 'chatPopup', popupOptions);
+            var popup = window.open('', 'aiPopup', popupOptions);
 
             // 폼 생성 및 전송
             var form = $('<form>', {
                 'method': 'post',
                 'action': '${path}/chat',
-                'target': 'chatPopup'
+                'target': 'aiPopup'
 
             }).append($('<input>', {
                 'type': 'hidden',
@@ -601,6 +619,34 @@ body{
 
             form.appendTo('body').submit();
         });
+     
+        $('#aiChat').click(e=>{
+        	e.stopPropagation();
+        });
+        $('#aiChat').dblclick(function() {
+            console.log("test");
+
+            // 팝업 창의 옵션 설정
+            var popupWidth = 400;
+            var popupHeight = 520;
+            var popupLeft = (screen.width - popupWidth) / 2;
+            var popupTop = (screen.height - popupHeight) / 2;
+
+            // 팝업 창 생성
+            var popupOptions = 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop;
+            var popup = window.open('', 'chatPopup', popupOptions);
+
+            // 폼 생성 및 전송
+            var form = $('<form>', {
+                'method': 'post',
+                'action': '${path}/aiChat',
+                'target': 'chatPopup'
+            });
+
+            form.appendTo('body').submit();
+            form.remove(); // 폼 제거
+        });
+    	
 
         // 탭 전환 기능
         $('.tab').click(function() {
@@ -672,13 +718,8 @@ body{
                     var roomItem = $("#room-" + roomId);
                     roomItem.prependTo("#roomList");
                     
-                    console.log("==================")
                     	
                     if(currentSession != null){
-	                    console.log(currentSession);
-	                    console.log("=============currentSession================");
-	                    console.log(currentSession.roomId);
-	                    console.log(Object.keys(currentSession.memberSessions));
 	                    deleteReadBadge(currentSession.roomId,Object.keys(currentSession.memberSessions));
                     }
                     
@@ -747,7 +788,7 @@ body{
     });
 
 
-
+/* 
         // 친구 클릭 이벤트
         $('.friend-list').on('click', '.friend-item', function() {
           	 event.stopPropagation(); 
@@ -764,7 +805,7 @@ body{
             
             // 모달 표시
             $('#profileModal').show();
-        });
+        }); */
 
         // "채팅 시작" 버튼 클릭 이벤트
         $('#profileModal .start-chat-btn').click(function() {

@@ -33,8 +33,7 @@
   <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- Summernote CSS -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-  <script src="${path}/resources/jh/js/docwrite.js"></script>
-  <script src="${path}/resources/jh/js/docDetail.js"></script>
+
   <style>
   	#approvalDiv{
 	    font-size: .875rem !important;
@@ -264,7 +263,7 @@
 			          <span class="h5" style="margin-right: 2.1rem !important;">첨부파일</span>
 			          <div class="col w-100 align-items-center p-0">
 				          <div class="border col" style="height: auto; min-height: 30px; width: 100%;" id="approvalDiv">
-								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center">드래그 앤 드롭</span> 
+								<span class="m-0 w-100 d-flex" style="color: gray; font-size: 15px; justify-content: center; height: 50px; align-items: center"> </span> 
 					          	<input type="file" class="form-control" id="exampleFormControlFile1" name="file">
 					      </div>
 				     </div>
@@ -298,6 +297,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <!-- Summernote JS -->
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+  <script src="${path}/resources/jh/js/docwrite.js"></script>
+  <script src="${path}/resources/jh/js/docDetail.js"></script>
 
 <script>
 $(document).ready(function() {

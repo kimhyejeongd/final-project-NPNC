@@ -23,12 +23,13 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -239,8 +240,29 @@ public class ChatController {
 
     }
     
+    @PostMapping("/aiChat")
+    public String aiChat(Model model) {
+    	int memberKey = getCurrentUser().getMemberKey();
+    	int roomNo = -1;
+    	
+    	
+    	
+    	model.addAttribute("roomNo",roomNo);
+    	List<ChattingMessage> aiChatList = service.selectAiChat(roomNo);
+    	model.addAttribute("aiChatList",aiChatList);
+    	return "chatting/NewFile";
+    	
+    }
+    
+    @PostMapping("/aiChatUpload")
+    public void aiChatUpload(@RequestBody ChattingMessage message) {
+    	System.out.println(message.getMemberKey());
+    	service.insertAiMessage(message);
+    }
+    
     private Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Member) authentication.getPrincipal();
     }
+
 }

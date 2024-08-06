@@ -175,7 +175,7 @@
 		 .pagination-container {
             display: flex;
             justify-content: center; /* Flexbox를 사용하여 중앙으로 정렬 */
-           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ */
+           /*  margin-top: 20px; /* 위쪽 여백 추가 (선택사항) */ 
         }
         /* 전자결재 위젯 css */
     	#tablerow:hover{
@@ -224,6 +224,12 @@
 			flex-direction: row;
 			flex-wrap: noWrap;
 			justify-content: space-around;
+		}
+		
+		#boardMainTable th{
+		
+			font-weight: normal !important;
+			
 		}
 	</style>	
   <body>
@@ -286,7 +292,7 @@
 					  
 					  <div class=" right-container">
 					      <div class="current_temp weatherFont" style="font-size : 35pt; "></div>
-					      <div class="weather_description weatherFont" style="font-size : 20pt"></div>
+					      <div class="weather_description weatherFont" style="font-size : 20pt; "></div>
 					      <div class="city weatherFont" style="font-size : 13pt"></div>
 					  </div>
 					   <div class="left-container" style="float : left; margin-top: 60px; font-size : 11pt">
@@ -654,53 +660,36 @@
                 </div>
               </div>
             </div> -->
-			
+            
+			<!-- 게시물 위젯 -->
 			    <div class="card">
                   <div class="card-header">
-                    <div class="card-title">오늘의 게시물</div>
+                    <div class="card-title">최신 게시물</div>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body" >
                     
-                    <table class="table table-head-bg-primary mt-4">
+                    <table class="table table-head-bg-primary mt-4" id="boardMainTable" style="margin-top: 0px!important;">
                       <thead>
                         <tr>
                           <th scope="col">NUMBER</th>
                           <th scope="col">TITLE</th>
                           <th scope="col">WRITER</th>
-                          <th scope="col">DATE</th>
+                          <th scope="col" style="width:300px;">DATE</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                         <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                         <tr>
-                          <td>2</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
+                      <c:forEach items="${boards}" var="board" varStatus="status">
+						    <c:if test="${status.index < 5}">
+						        <tr>
+						            <th>${board.BOARD_KEY}</th>
+						            <th><a href="${path}/board/detail/boardKey?boardKey=${board.BOARD_KEY}" style="color:black;">${board.BOARD_TITLE} </a></th>
+						            <th>${board.MEMBER_NAME}</th>
+						            <th>
+						                <fmt:formatDate value="${board.BOARD_ENROLL_DATE}" pattern="yyyy-MM-dd HH:mm:ss" />
+						            </th>
+						        </tr>
+						    </c:if>
+					  </c:forEach>
                         
                       </tbody>
                       
@@ -862,7 +851,7 @@
 		    type: "GET",
 		    async: "false",
 		    success: function(resp) {
-				console.log((resp.weather[0].icon).substr(0,2));
+				console.log(resp.weather[0].main);
 				
 		        var $Icon = (resp.weather[0].icon).substr(0,2);
 		        var $weather_description = resp.weather[0].main;
@@ -876,7 +865,11 @@
 		        
 
 		        $('.weather_icon').append('<img src="' + weatherIcon[$Icon] +'"  />');
-		        $('.weather_description').prepend($weather_description);
+		        if($weather_description=='Thunderstorm'){
+		        	$('.weather_description').prepend('Storm');
+		        }else{
+		        	$('.weather_description').prepend($weather_description);
+		        }
 		        $('.current_temp').prepend($Temp);
 		        $('.humidity').prepend($humidity);
 		        $('.wind').prepend($wind);

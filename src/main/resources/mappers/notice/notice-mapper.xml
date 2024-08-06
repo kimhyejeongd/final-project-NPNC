@@ -30,7 +30,7 @@
     <!-- 공지사항 추가 -->
     <insert id="insertNotice" parameterType="NoticeDto">
         INSERT INTO NOTICE (NOTICE_TITLE, NOTICE_DETAIL, MEMBER_KEY, NOTICE_ENROLL_DATE, NOTICE_UPDATE_DATE, NOTICE_DELETE)
-        VALUES (#{noticeTitle}, #{noticeDetail}, #{memberKey}, #{noticeEnrollDate}, #{noticeUpdateDate}, #{noticeDelete})
+        VALUES (#{noticeTitle}, #{noticeDetail}, #{memberKey},SYSDATE, #{noticeUpdateDate}, #{noticeDelete})
     </insert>
 
     <!-- 공지사항 수정 -->

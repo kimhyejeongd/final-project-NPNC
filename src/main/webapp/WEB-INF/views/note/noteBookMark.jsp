@@ -633,7 +633,7 @@
 							</div>
 
 				           	  <div class="form-group">
-					           	    <div class="namebox" >
+					           	    <div class="namebox" style="width : 513px;">
 					           		  <!--  <h2>전체 쪽지</h2> -->
 					           		</div>
 				           		</div>   

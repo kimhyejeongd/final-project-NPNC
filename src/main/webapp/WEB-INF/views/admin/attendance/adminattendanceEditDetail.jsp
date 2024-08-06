@@ -275,7 +275,7 @@
 					}
 				
 				
-				function deleteModal(){
+				/* function deleteModal(){
 					Swal.fire({
 						title: '삭제 확인',
 						html: '<h4>정말 삭제하시겠습니까?</h4>',
@@ -315,6 +315,6 @@
 						   location.replace("${path}/admin/attendance/selectAdminAttendanceEditAll");
 					   }
 					   
-					}
+					} */
 
 				</script> 

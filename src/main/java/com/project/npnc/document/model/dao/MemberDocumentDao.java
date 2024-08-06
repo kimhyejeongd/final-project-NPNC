@@ -1,10 +1,12 @@
 package com.project.npnc.document.model.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.npnc.admin.document.model.dto.AdminDocument;
 import com.project.npnc.document.model.dto.Approver;
 import com.project.npnc.document.model.dto.ApproverLine;
 import com.project.npnc.document.model.dto.ApproverLineStorage;
@@ -79,4 +81,6 @@ public interface MemberDocumentDao {
 	List<Document> selectMyPendingDocs(SqlSession session, int no);
 	Approver selectApproverByKey(SqlSession session, int memberKey, String serial);
 	Document selectInprocessDocApproveNow(SqlSession session, int docId);
+	Map<String, String> selectStorageAndFolder(SqlSession session, int erDocStorageKey);
+	int selectVacApply(SqlSession session, int memberKey, Timestamp start, Timestamp end);
 }

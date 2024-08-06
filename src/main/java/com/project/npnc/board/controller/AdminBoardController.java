@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import com.project.npnc.board.model.dto.BoardCommentDto;
 import com.project.npnc.board.model.dto.BoardDto;
 import com.project.npnc.board.model.dto.BoardFileDto;
 import com.project.npnc.board.model.service.BoardService;
+import com.project.npnc.security.dto.Member;
 
 @Controller
 @RequestMapping("/admin/board")
@@ -31,8 +34,10 @@ public class AdminBoardController {
     }
 
     @GetMapping("/list")
-    public String getAllBoards(@RequestParam(value = "searchKeyword", required = false) String searchKeyword, Model model) {
+    public String getAllBoards(@RequestParam(value = "searchKeyword", required = false) String searchKeyword,Authentication authentication, Model model) {
         List<BoardDto> boards;
+		Member loginMem=(Member)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		model.addAttribute("loginMember",loginMem);
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
             boards = boardService.searchBoardsByTitle(searchKeyword);
         } else {
