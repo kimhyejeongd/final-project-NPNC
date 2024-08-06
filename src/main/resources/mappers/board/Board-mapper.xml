@@ -50,7 +50,7 @@
     <delete id="deleteBoard" parameterType="int">
         DELETE FROM BOARD WHERE BOARD_KEY = #{BOARD_KEY}
     </delete>
-
+    
     <insert id="insertBoard" parameterType="com.project.npnc.board.model.dto.BoardDto">
         <selectKey keyProperty="BOARD_KEY" order="AFTER" resultType="int">
             SELECT board_seq.CURRVAL FROM DUAL
@@ -61,7 +61,6 @@
             #{BOARD_CATEGORY_KEY}, #{MEMBER_KEY}, #{BOARD_DETAIL}, SYSDATE, SYSDATE, 'N', #{BOARD_TITLE}
         )
     </insert>
-
 
     <insert id="insertBoardFile" parameterType="com.project.npnc.board.model.dto.BoardFileDto">
         INSERT INTO BOARD_FILE (
