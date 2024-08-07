@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class DocHtmlController {
-	@Value("${file.upload-dir}")
+	@Value("${file.upload-dir}") 
     private String uploadDir; // src/main/resources/upload/
 
 	//기안시 문서 내 결재라인 내용 작성
