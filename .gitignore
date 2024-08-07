@@ -34,5 +34,8 @@ build/
 
 /bin/
 #src/main/resources/*.properties
+#src/main/resources/*.xml
 **/.DS_Store
+dbeaver-scripts/
+*.sql
 .dbeaver
